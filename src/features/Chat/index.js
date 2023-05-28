@@ -16,8 +16,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouteMatch } from 'react-router';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
 import renderWidthDrawer from 'utils/DrawerResponsive';
 import DrawerPinMessage from './components/DrawerPinMessage';
 import GroupNews from './components/GroupNews';
@@ -319,7 +318,7 @@ function Chat({ socket, idNewMessage }) {
             socket.on(
                 'user-last-view',
                 ({ conversationId, userId, lastView, channelId }) => {
-                    if (userId != user._id) {
+                    if (userId !== user._id) {
                         dispatch(
                             updateLastViewOfMembers({
                                 conversationId,

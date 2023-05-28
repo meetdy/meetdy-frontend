@@ -6,7 +6,7 @@ import PersonalIcon from 'features/Chat/components/PersonalIcon';
 import { Menu, Dropdown, Button } from 'antd';
 import conversationApi from 'api/conversationApi';
 import { fetchListMessages, setConversations, setCurrentConversation } from 'features/Chat/slice/chatSlice';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import dateUtils from 'utils/dateUtils';
 

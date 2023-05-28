@@ -367,7 +367,7 @@ const chatSlice = createSlice({
 
             // lấy index của message
             const index = state.messages.findIndex(
-                (message) => message._id == id
+                (message) => message._id === id
             );
 
             // tạo message mới
@@ -497,7 +497,7 @@ const chatSlice = createSlice({
             if (channelId) {
                 if (state.currentChannel === channelId) {
                     const index = state.lastViewOfMember.findIndex(
-                        (ele) => ele.user._id == userId
+                        (ele) => ele.user._id === userId
                     );
                     state.lastViewOfMember[index].lastView = lastView;
                 }
@@ -507,7 +507,7 @@ const chatSlice = createSlice({
                     !state.currentChannel
                 ) {
                     const index = state.lastViewOfMember.findIndex(
-                        (ele) => ele.user._id == userId
+                        (ele) => ele.user._id === userId
                     );
                     state.lastViewOfMember[index].lastView = lastView;
                 }
@@ -737,7 +737,7 @@ const chatSlice = createSlice({
 
             tempMembers.forEach((member) => {
                 state.friends.forEach((friend) => {
-                    if (member._id == friend._id) {
+                    if (member._id === friend._id) {
                         member = { ...member, isFriend: true };
                         return;
                     }

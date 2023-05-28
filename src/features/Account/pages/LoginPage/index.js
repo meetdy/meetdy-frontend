@@ -11,7 +11,7 @@ import { FastField, Form, Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import IMAGE_ACCOUNT_PAGE from 'assets/images/account/account-bg.png';
 

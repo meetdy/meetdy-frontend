@@ -1,7 +1,5 @@
 import { DatePicker } from 'antd';
 import locale from 'antd/es/date-picker/locale/vi_VN';
-import 'moment/locale/vi';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 

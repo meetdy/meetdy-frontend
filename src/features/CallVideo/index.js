@@ -2,7 +2,7 @@ import React, { createRef, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 import h from 'utils/callVideoHelpers';
-import { useRouteMatch } from 'react-router';
+import { useRouteMatch } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ActionNavbar from './components/ActionNavbar';
 import MyVideo from './components/MyVideo';

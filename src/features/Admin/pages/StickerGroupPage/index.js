@@ -23,7 +23,7 @@ import {
 } from 'antd';
 import adminApi from 'api/adminApi';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 const { Search } = Input;
 StickerGroupPage.propTypes = {};

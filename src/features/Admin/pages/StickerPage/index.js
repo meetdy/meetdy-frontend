@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRouteMatch } from 'react-router';
+import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     Table,
@@ -23,7 +23,6 @@ import {
 import adminApi from 'api/adminApi';
 import { DeleteOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
 import './style.scss';
 
 StickerPage.propTypes = {};

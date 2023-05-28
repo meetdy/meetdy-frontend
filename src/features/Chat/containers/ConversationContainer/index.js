@@ -37,7 +37,7 @@ function ConversationContainer({ valueClassify, onClickConver }) {
     const checkConverInClassify = (idMember) => {
         if (tempClassify === 0) return true;
         const index = tempClassify.conversationIds.findIndex(
-            (ele) => ele == idMember
+            (ele) => ele === idMember
         );
         return index > -1;
     };
@@ -59,7 +59,7 @@ function ConversationContainer({ valueClassify, onClickConver }) {
     };
 
     const handleOnClickItem = (e, id) => {
-        if (e.key == 1) {
+        if (e.key === 1) {
             confirm(id);
         }
     };

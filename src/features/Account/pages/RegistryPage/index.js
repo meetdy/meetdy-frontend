@@ -18,8 +18,7 @@ import { registryValues } from 'features/Account/initValues';
 import { FastField, Form, Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 const RESEND_OTP_TIME_LIMIT = 60;
 const { Text, Title } = Typography;

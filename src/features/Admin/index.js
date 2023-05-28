@@ -1,7 +1,7 @@
 import { Button, Layout } from 'antd';
 import NotFoundPage from 'components/NotFoundPage';
 import React from 'react';
-import { Route, Switch, useHistory, useRouteMatch } from 'react-router';
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import AdminFooter from './components/AdminFooter';
 import SiderBar from './components/SiderBar';
 import StickerPage from './pages/StickerPage';

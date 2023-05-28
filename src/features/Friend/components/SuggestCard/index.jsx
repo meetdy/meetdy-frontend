@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import PersonalIcon from 'features/Chat/components/PersonalIcon'
 import './style.scss';
-import { Button, message } from 'antd';
-import friendApi from 'api/friendApi';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateSuggestFriend } from '../../friendSlice';
+// import { Button, message } from 'antd';
+// import friendApi from 'api/friendApi';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { updateSuggestFriend } from '../../friendSlice';
 
 SuggestCard.propTypes = {
     data: PropTypes.object,
