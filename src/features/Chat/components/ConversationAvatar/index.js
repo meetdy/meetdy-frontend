@@ -150,7 +150,7 @@ function ConversationAvatar({
         <div className="avatar_conversation">
             {typeof avatar === 'string' ? (
                 // <Avatar size={48} src={avatar ? avatar : DEFAULT_AVATAR} />
-                <Badge dot={isActived} offset={[-5, 40]} color="green">
+                <Badge dot={isActived} offset={[-5, 40]} color={isActived ? 'green' : 'red'}>
                     <AvatarCustom
                         size={sizeAvatar}
                         src={avatar}
