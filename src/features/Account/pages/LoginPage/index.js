@@ -70,7 +70,7 @@ function LoginPage(props) {
         <div className="account-common-page">
             <div className="account-wrapper">
                 <div className="account_left">
-                    <img src={IMAGE_ACCOUNT_PAGE} alt="zelo_login" />
+                    <img src={IMAGE_ACCOUNT_PAGE} alt="meetdy.com/login" />
                 </div>
 
                 <div className="account_right">

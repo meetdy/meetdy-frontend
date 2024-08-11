@@ -37,7 +37,7 @@ function Footer({ data }) {
             </div>
 
             <h2 className="copyright">
-                {!data.copyright ? data.copyright : `Bản quyền thuộc về © Zala Chat ${new Date().getFullYear()}`}
+                {!data.copyright ? data.copyright : `Bản quyền thuộc về © Meetdy.com ${new Date().getFullYear()}`}
             </h2>
         </div>
     )

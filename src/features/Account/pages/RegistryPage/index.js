@@ -127,7 +127,7 @@ function RegistryPage(props) {
         <div className="account-common-page">
             <div className="account-wrapper">
                 <div className="account_left">
-                    <img src={IMAGE_ACCOUNT_PAGE} alt="zelo_forgot" />
+                    <img src={IMAGE_ACCOUNT_PAGE} alt="meetdy.com/forgot" />
                 </div>
                 <div className="account_right">
                     <Title level={2} style={{ textAlign: 'center' }}>

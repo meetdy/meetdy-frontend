@@ -1,4 +1,3 @@
-import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -24,7 +23,7 @@ function Navbar() {
                             alt="logo"
                         />
                     ),
-                    text: 'ZALA',
+                    text: 'MEETDY',
                 }}
                 renderWrapper={({ itemElement, props }) => {
                     const routerMap = {
