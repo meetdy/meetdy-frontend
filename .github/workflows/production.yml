@@ -11,6 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Set version variable
+        id: vars
+        run: echo "VERSION=$(date +%s)" >> $GITHUB_ENV
+
       - name: Build the Docker image with both tags
-        run: docker build . --file Dockerfile --tag nghiaphamln/meetdy-frontend:latest
-          --tag nghiaphamln/meetdy-frontend:$(date +%s)
+        run: |
+          docker build . --file Dockerfile --tag nghiaphamln/meetdy-frontend:latest \
+          --tag nghiaphamln/meetdy-frontend:${{ env.VERSION }}
+
+      - name: Push the Docker image to Docker Hub
+        run: |
+          docker push nghiaphamln/meetdy-frontend:latest
+          docker push nghiaphamln/meetdy-frontend:${{ env.VERSION }}
