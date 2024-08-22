@@ -9,7 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env: VERSION=$(echo $(git rev-parse --short HEAD)-$(date +%Y%m%d))
+    env:
+      VERSION=$(echo $(git rev-parse --short HEAD)-$(date +%Y%m%d))
     steps:
       - uses: actions/checkout@v4
       - name: Build the Docker image with both tags
