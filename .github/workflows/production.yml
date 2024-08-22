@@ -1,0 +1,17 @@
+name: Deploy Production
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env: VERSION=$(echo $(git rev-parse --short HEAD)-$(date +%Y%m%d))
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the Docker image with both tags
+        run: docker build . --file Dockerfile --tag nghiaphamln/meetdy-frontend:latest
+          --tag nghiaphamln/meetdy-frontend:${VERSION}
