@@ -49,5 +49,7 @@ jobs:
           sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no -t $VPS_USER@$VPS_HOST << EOF
             cd ./docker/meetdy-frontend || exit
             docker compose pull
-            docker compose restart
+            docker compose down
+            docker compose up -d
+            docker image prune -f
           EOF
