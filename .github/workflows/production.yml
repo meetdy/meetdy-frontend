@@ -18,9 +18,8 @@ jobs:
           [ -e .env ] && rm .env
           [ -e Dockerfile ] && rm Dockerfile
           [ -e nginx.conf ] && rm nginx.conf
-          cp infrastructure-config/meetdy-frontend/.env ./
-          cp infrastructure-config/meetdy-frontend/Dockerfile ./
-          cp infrastructure-config/meetdy-frontend/nginx.conf ./
+          [ -e .dockerignore ] && rm .dockerignore
+          cp -a infrastructure-config/meetdy-frontend/. ./
       
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
