@@ -31,14 +31,15 @@ import {
 } from 'features/Friend/friendSlice';
 import { fetchInfoWebs } from 'features/Home/homeSlice';
 import useWindowUnloadEffect from 'hooks/useWindowUnloadEffect';
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { init, socket } from 'utils/socketClient';
+
 init();
 
 function ChatLayout(props) {
-    const { url } = useRouteMatch();
     const dispatch = useDispatch();
     const { conversations } = useSelector((state) => state.chat);
     const { isJoinChatLayout, user } = useSelector((state) => state.global);
@@ -199,7 +200,6 @@ function ChatLayout(props) {
 
     return (
         <div>
-            {/* <button onClick={leaveApp} >test scoket</button> */}
             <Row gutter={[0, 0]}>
                 <Col
                     span={1}
@@ -220,34 +220,29 @@ function ChatLayout(props) {
                     sm={{ span: 21 }}
                     xs={{ span: 20 }}
                 >
-                    <Switch>
+                    <Routes>
                         <Route
-                            exact
-                            path={url}
-                            render={(props) => (
+                            index
+                            element={
                                 <Chat
-                                    {...props}
                                     socket={socket}
                                     authed={true}
                                     idNewMessage={idNewMessage}
                                 />
-                            )}
+                            }
                         />
-
                         <Route
-                            exact
-                            path={`${url}/friends`}
-                            render={(props) => (
+                            path="friends"
+                            element={
                                 <Friend
-                                    {...props}
                                     socket={socket}
                                     authed={true}
                                 />
-                            )}
+                            }
                         />
-
-                        <Route component={NotFoundPage} />
-                    </Switch>
+                        {/* 404 */}
+                        <Route path="*" element={<NotFoundPage />} />
+                    </Routes>
                 </Col>
             </Row>
         </div>

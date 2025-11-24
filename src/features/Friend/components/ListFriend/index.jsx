@@ -5,7 +5,7 @@ import userApi from 'api/userApi';
 import UserCard from 'components/UserCard';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import Scrollbars from 'react-custom-scrollbars';
+import Scrollbars from 'react-custom-scrollbars-2';
 import { useDispatch } from 'react-redux';
 import { fetchFriends } from '../../friendSlice';
 import FriendItem from '../FriendItem';

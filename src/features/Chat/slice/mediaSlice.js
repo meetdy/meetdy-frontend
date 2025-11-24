@@ -1,36 +1,38 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import mediaApi from 'api/mediaApi';
+
 const KEY = 'MEDIA';
 
 export const fetchAllMedia = createAsyncThunk(
     `${KEY}/fetchAllMedia`,
-    async (params, thunkApi) => {
-        const { conversationId } = params;
+    async ({ conversationId }, thunkApi) => {
         const media = await mediaApi.fetchAllMedia(conversationId);
         return media;
     }
 );
 
-export const fetchMediaByType = createAsyncThunk(
-    `${KEY}/fetchMediaByType`,
-    async (params, thunkApi) => {}
-);
+const initialState = {
+    media: {},
+    isLoading: false,
+};
 
 const mediaSlice = createSlice({
     name: KEY,
-    initialState: {
-        media: {},
-        isLoading: false,
-    },
+    initialState,
     reducers: {},
-    extraReducers: {
-        [fetchAllMedia.fulfilled]: (state, action) => {
-            state.media = action.payload;
-        },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchAllMedia.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchAllMedia.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.media = action.payload;
+            })
+            .addCase(fetchAllMedia.rejected, (state) => {
+                state.isLoading = false;
+            });
     },
 });
 
-const { reducer, actions } = mediaSlice;
-//export const { setLoading } = actions;
-
-export default reducer;
+export default mediaSlice.reducer;

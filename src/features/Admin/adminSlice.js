@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import adminApi from 'api/adminApi';
+import { createSlice } from '@reduxjs/toolkit';
 
 const KEY = 'ADMIN';
 
@@ -13,7 +12,6 @@ const adminSlice = createSlice({
             state.isLoading = action.payload;
         },
     },
-    extraReducers: {},
 });
 
 const { reducer, actions } = adminSlice;

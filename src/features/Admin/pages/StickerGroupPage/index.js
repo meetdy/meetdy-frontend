@@ -23,7 +23,7 @@ import {
 } from 'antd';
 import adminApi from 'api/adminApi';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const { Search } = Input;
 StickerGroupPage.propTypes = {};
@@ -35,7 +35,7 @@ function StickerGroupPage(props) {
     const [visible1, setVisible1] = useState(false);
     const [visible2, setVisible2] = useState(false);
     const [visible3, setVisible3] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [dataSource, setDataSource] = useState([]);
     const [dataTemp, setDataTemp] = useState([]);
     const [file, setFile] = useState([]);
@@ -137,7 +137,7 @@ function StickerGroupPage(props) {
         try {
             const list = await adminApi.getAllGroupSticker();
             return list;
-        } catch (error) {}
+        } catch (error) { }
     };
     useEffect(() => {
         handleGetAllGruopSricker()
@@ -207,12 +207,11 @@ function StickerGroupPage(props) {
 
     const handleViewSticker = async (_id, stickers) => {
         try {
-            history.push({
-                pathname: `/admin/stickers/${_id}`,
+            navigate(`/admin/stickers/${_id}`, {
                 state: stickers,
             });
             console.log(stickers);
-        } catch (error) {}
+        } catch (error) { }
     };
 
     const handleFileChange = async ({ file, fileList }) => {

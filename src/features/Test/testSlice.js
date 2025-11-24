@@ -4,55 +4,65 @@ import messageApi from 'api/messageApi';
 
 const KEY = 'chat';
 
+// Fetch conversations
 export const fetchListConversations = createAsyncThunk(
     `${KEY}/fetchListConversations`,
-    async (params, thunkApi) => {
+    async () => {
         const conversations = await conversationApi.fetchListConversations();
         return conversations;
     }
 );
 
+// Fetch messages for a conversation
 export const fetchListMessages = createAsyncThunk(
     `${KEY}/fetchListMessages`,
-    async (params, thunkApi) => {
-        const { conversationId } = params;
+    async ({ conversationId }) => {
         const messages = await messageApi.fetchListMessages(conversationId);
-
         return messages;
     }
 );
 
+const initialState = {
+    isLoading: false,
+    conversations: [],
+    messages: [],
+};
+
 const chatSlice = createSlice({
     name: KEY,
-    initialState: {
-        isLoading: false,
-        conversations: [],
-        messages: [],
-    },
+    initialState,
     reducers: {
         addMessage: (state, action) => {
             state.messages.push(action.payload);
         },
     },
-    extraReducers: {
-        [fetchListConversations.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-        [fetchListConversations.fulfilled]: (state, action) => {
-            state.isLoading = false;
-            state.conversations = action.payload;
-        },
-        [fetchListMessages.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-        [fetchListMessages.fulfilled]: (state, action) => {
-            state.isLoading = false;
-            state.messages = action.payload;
-        },
+    extraReducers: (builder) => {
+        builder
+            // Conversations
+            .addCase(fetchListConversations.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchListConversations.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.conversations = action.payload;
+            })
+            .addCase(fetchListConversations.rejected, (state) => {
+                state.isLoading = false;
+            })
+
+            // Messages
+            .addCase(fetchListMessages.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchListMessages.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.messages = action.payload;
+            })
+            .addCase(fetchListMessages.rejected, (state) => {
+                state.isLoading = false;
+            });
     },
 });
 
-const { reducer, actions } = chatSlice;
-export const { addMessage } = actions;
-
-export default reducer;
+export const { addMessage } = chatSlice.actions;
+export default chatSlice.reducer;

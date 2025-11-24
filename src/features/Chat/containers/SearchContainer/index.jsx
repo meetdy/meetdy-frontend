@@ -8,7 +8,7 @@ import ModalCreateGroup from 'features/Chat/components/ModalCreateGroup';
 import { createGroup } from 'features/Chat/slice/chatSlice';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
-import Scrollbars from 'react-custom-scrollbars';
+import Scrollbars from 'react-custom-scrollbars-2';
 import { useDispatch, useSelector } from 'react-redux';
 SearchContainer.propTypes = {
     onVisibleFilter: PropTypes.func,

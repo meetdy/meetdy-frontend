@@ -5,7 +5,7 @@ import ConversationAvatar from 'features/Chat/components/ConversationAvatar';
 import { Empty } from 'antd';
 import { useDispatch } from 'react-redux';
 import { fetchListMessages, setCurrentConversation } from 'features/Chat/slice/chatSlice';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 ConverMutipleSearch.propTypes = {
     data: PropTypes.array,
@@ -17,16 +17,14 @@ ConverMutipleSearch.defaultProps = {
 
 function ConverMutipleSearch({ data }) {
     const dispatch = useDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
 
 
     const handleClickItem = (value) => {
         dispatch(fetchListMessages({ conversationId: value._id, size: 10 }));
         dispatch(setCurrentConversation(value._id));
 
-        history.push({
-            pathname: '/chat',
-        });
+        navigate('/chat')
     }
 
     return (

@@ -5,7 +5,7 @@ import PersonalIcon from 'features/Chat/components/PersonalIcon';
 import { Menu, Dropdown, Button } from 'antd';
 import conversationApi from 'api/conversationApi';
 import { fetchListMessages, setConversations, setCurrentConversation } from 'features/Chat/slice/chatSlice';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import dateUtils from 'utils/dateUtils';
 
@@ -19,7 +19,7 @@ FriendItem.defaultProps = {
 };
 
 function FriendItem({ data, onClickMenu }) {
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleClickMenu = ({ key }) => {
@@ -40,9 +40,7 @@ function FriendItem({ data, onClickMenu }) {
         dispatch(fetchListMessages({ conversationId: _id, size: 10 }));
         dispatch(setCurrentConversation(_id));
 
-        history.push({
-            pathname: '/chat',
-        });
+        navigate('/chat');
     }
 
     const menu = (

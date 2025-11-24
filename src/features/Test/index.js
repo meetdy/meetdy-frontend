@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useResolvedPath } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import NotFoundPage from 'components/NotFoundPage';
 import { Spin } from 'antd';
@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 Test.propTypes = {};
 
 function Test(props) {
-    const { url } = useRouteMatch();
+    const { url } = useResolvedPath();
     const { isLoading } = useSelector((state) => state.chat);
 
     return (

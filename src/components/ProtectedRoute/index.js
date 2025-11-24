@@ -1,29 +1,14 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, Route } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
-const ProtectedRoute = ({ component: Component, ...rest }) => {
+const ProtectedRoute = () => {
     const { user } = useSelector((state) => state.global);
 
-    return (
-        <Route
-            {...rest}
-            render={(props) => {
-                if (user && !user.isAdmin) return <Component {...props} />;
-
-                return (
-                    <Redirect
-                        to={{
-                            pathname: '/account/login',
-                            state: {
-                                from: props.location,
-                            },
-                        }}
-                    />
-                );
-            }}
-        />
-    );
+    if (!user || user.isAdmin) {
+        return <Navigate to="/account/login" replace />;
+    }
+    return <Outlet />;
 };
 
 export default ProtectedRoute;

@@ -18,7 +18,7 @@ import { forgotValues } from 'features/Account/initValues';
 import { FastField, Form, Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import {useHistory, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const RESEND_OTP_TIME_LIMIT = 60;
 const { Text, Title } = Typography;
@@ -26,7 +26,7 @@ function ForgotPage(props) {
     const dispatch = useDispatch();
     let resendOTPTimerInterval;
     const [isError, setError] = useState('');
-    const history = useHistory();
+    const navigate = useNavigate();
     //set time counter
     const [counter, setCounter] = useState(0);
     //set OTP value
@@ -44,10 +44,10 @@ function ForgotPage(props) {
         Modal.success({
             content: 'Cập nhật tài khoản thành công !',
             onOk: () => {
-                history.push('/account/login');
+                navigate('/account/login')
             },
             onCancel: () => {
-                history.push('/account/login');
+                navigate('/account/login')
             },
         });
     }
@@ -125,7 +125,7 @@ function ForgotPage(props) {
         try {
             await loginApi.forgot(username);
             openNotification(`Đã gửi lại mã OTP đến  ${username}`);
-        } catch (error) {}
+        } catch (error) { }
         dispatch(setLoading(false));
     };
 
@@ -231,11 +231,10 @@ function ForgotPage(props) {
                                                             }
                                                         >
                                                             Gửi lại OTP{' '}
-                                                            {`${
-                                                                counter > 0
-                                                                    ? `sau ${counter}`
-                                                                    : ''
-                                                            }`}
+                                                            {`${counter > 0
+                                                                ? `sau ${counter}`
+                                                                : ''
+                                                                }`}
                                                         </Button>
                                                     </Col>
 

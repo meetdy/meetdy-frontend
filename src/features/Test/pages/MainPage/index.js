@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useRouteMatch } from 'react-router-dom';
+import { useResolvedPath } from 'react-router-dom';
 import { Col, Divider, Input, Row } from 'antd';
 import ConversationList from 'features/Chat/components/ConversationList';
 import UserOnlineList from 'features/Chat/components/UserOnlineList';
@@ -12,7 +12,6 @@ import {
     fetchListConversations,
     fetchListMessages,
 } from 'features/Test/testSlice';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 const { Search } = Input;
 

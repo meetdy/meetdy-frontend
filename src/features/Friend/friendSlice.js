@@ -6,7 +6,7 @@ const KEY = 'friend';
 
 export const fetchListRequestFriend = createAsyncThunk(
     `${KEY}/fetchListRequestFriend`,
-    async (params, thunkApi) => {
+    async () => {
         const data = await friendApi.fetchListRequestFriend();
         return data;
     }
@@ -14,7 +14,7 @@ export const fetchListRequestFriend = createAsyncThunk(
 
 export const fetchListMyRequestFriend = createAsyncThunk(
     `${KEY}/fetchListMyRequestFriend`,
-    async (params, thunkApi) => {
+    async () => {
         const data = await friendApi.fetchMyRequestFriend();
         return data;
     }
@@ -22,7 +22,7 @@ export const fetchListMyRequestFriend = createAsyncThunk(
 
 export const fetchFriends = createAsyncThunk(
     `${KEY}/fetchFriends`,
-    async (params, thunkApi) => {
+    async (params) => {
         const { name } = params;
         const data = await friendApi.fetchFriends(name);
         return data;
@@ -30,7 +30,7 @@ export const fetchFriends = createAsyncThunk(
 );
 export const fetchListGroup = createAsyncThunk(
     `${KEY}/fetchListGroup`,
-    async (param, thunkApi) => {
+    async (param) => {
         const { name, type } = param;
         const data = await conversationApi.fetchListConversations(name, type);
         return data;
@@ -39,7 +39,7 @@ export const fetchListGroup = createAsyncThunk(
 
 export const fetchPhoneBook = createAsyncThunk(
     `${KEY}/fetchPhoneBook`,
-    async (param, thunkApi) => {
+    async () => {
         const data = await phoneBookApi.fetchPhoneBook();
         return data;
     }
@@ -47,7 +47,7 @@ export const fetchPhoneBook = createAsyncThunk(
 
 export const fetchSuggestFriend = createAsyncThunk(
     `${KEY}/fetchSuggestFriend`,
-    async (params, thunkApi) => {
+    async () => {
         const data = await friendApi.fetchSuggestFriend();
         return data;
     }
@@ -114,83 +114,81 @@ const friendSlice = createSlice({
             );
         },
     },
-    extraReducers: {
-        [fetchListRequestFriend.fulfilled]: (state, action) => {
-            state.isLoading = false;
-            state.requestFriends = action.payload;
-            state.amountNotify = action.payload.length;
-        },
-        [fetchListRequestFriend.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-        [fetchListRequestFriend.rejected]: (state, action) => {
-            state.isLoading = false;
-        },
+    extraReducers: (builder) => {
+        builder
+            // Request friends
+            .addCase(fetchListRequestFriend.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchListRequestFriend.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.requestFriends = action.payload;
+                state.amountNotify = action.payload.length;
+            })
+            .addCase(fetchListRequestFriend.rejected, (state) => {
+                state.isLoading = false;
+            })
 
-        [fetchListMyRequestFriend.fulfilled]: (state, action) => {
-            state.isLoading = false;
-            state.myRequestFriend = action.payload;
-        },
+            // My requests
+            .addCase(fetchListMyRequestFriend.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchListMyRequestFriend.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.myRequestFriend = action.payload;
+            })
+            .addCase(fetchListMyRequestFriend.rejected, (state) => {
+                state.isLoading = false;
+            })
 
-        [fetchListMyRequestFriend.pending]: (state, action) => {
-            state.isLoading = true;
-        },
+            // Friends
+            .addCase(fetchFriends.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchFriends.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.friends = action.payload;
+            })
+            .addCase(fetchFriends.rejected, (state) => {
+                state.isLoading = false;
+            })
 
-        [fetchListMyRequestFriend.rejected]: (state, action) => {
-            state.isLoading = false;
-        },
+            // Groups
+            .addCase(fetchListGroup.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchListGroup.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.groups = action.payload;
+            })
+            .addCase(fetchListGroup.rejected, (state) => {
+                state.isLoading = false;
+            })
 
-        [fetchFriends.fulfilled]: (state, action) => {
-            state.friends = action.payload;
-            state.isLoading = false;
-        },
+            // Phone book
+            .addCase(fetchPhoneBook.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchPhoneBook.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.phoneBook = action.payload;
+            })
+            .addCase(fetchPhoneBook.rejected, (state) => {
+                state.isLoading = false;
+            })
 
-        [fetchFriends.rejected]: (state, action) => {
-            state.isLoading = false;
-        },
-
-        [fetchFriends.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-
-        [fetchListGroup.fulfilled]: (state, action) => {
-            state.groups = action.payload;
-            state.isLoading = false;
-        },
-
-        [fetchListGroup.rejected]: (state, action) => {
-            state.isLoading = false;
-        },
-
-        [fetchListGroup.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-
-        [fetchPhoneBook.fulfilled]: (state, action) => {
-            state.phoneBook = action.payload;
-            state.isLoading = false;
-        },
-
-        [fetchPhoneBook.rejected]: (state, action) => {
-            state.isLoading = false;
-        },
-
-        [fetchPhoneBook.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-        [fetchSuggestFriend.fulfilled]: (state, action) => {
-            state.suggestFriends = action.payload;
-            state.isLoading = false;
-        },
-
-        [fetchSuggestFriend.rejected]: (state, action) => {
-            state.isLoading = false;
-        },
-
-        [fetchSuggestFriend.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-    },
+            // Suggested friends
+            .addCase(fetchSuggestFriend.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchSuggestFriend.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.suggestFriends = action.payload;
+            })
+            .addCase(fetchSuggestFriend.rejected, (state) => {
+                state.isLoading = false;
+            });
+    }
 });
 
 const { reducer, actions } = friendSlice;

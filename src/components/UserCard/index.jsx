@@ -18,7 +18,7 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import dateUtils from 'utils/dateUtils';
 import getSummaryName from 'utils/nameHelper';
 
@@ -48,13 +48,13 @@ function UserCard(props) {
 
     const coverImage = 'https://miro.medium.com/max/1124/1*92adf06PCF91kCYu1nPLQg.jpeg';
     const dispatch = useDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { status, numberCommonGroup } = user;
     const { amountNotify } = useSelector((state) => state.friend)
     const { conversations } = useSelector((state) => state.chat)
 
 
-    const handleOnCancle = () => {
+    const handleOnCancel = () => {
         if (onCancel) {
             onCancel();
         }
@@ -80,12 +80,9 @@ function UserCard(props) {
         dispatch(fetchListMessages({ conversationId: _id, size: 10 }));
         dispatch(setCurrentConversation(_id));
 
+        navigate('/chat');
 
-        history.push({
-            pathname: '/chat',
-        });
-
-        handleOnCancle()
+        handleOnCancel()
     }
 
 
@@ -101,7 +98,7 @@ function UserCard(props) {
             await friendApi.sendRequestFriend(user._id);
             dispatch(fetchListMyRequestFriend());
             dispatch(fetchPhoneBook());
-            handleOnCancle();
+            handleOnCancel();
             message.success('Gửi lời mời kết bạn thành công');
         } catch (error) {
             message.error('Gửi lời mời kết bạn thất bại');
@@ -114,7 +111,7 @@ function UserCard(props) {
         dispatch(fetchFriends({ name: '' }));
         dispatch(fetchListFriends({ name: '' }));
         dispatch(setAmountNotify(amountNotify - 1))
-        handleOnCancle()
+        handleOnCancel()
         message.success('Thêm bạn thành công');
     }
 
@@ -122,7 +119,7 @@ function UserCard(props) {
         await friendApi.deleteSentRequestFriend(user._id);
         dispatch(fetchListMyRequestFriend());
         dispatch(fetchPhoneBook());
-        handleOnCancle();
+        handleOnCancel();
     }
 
 
@@ -144,7 +141,7 @@ function UserCard(props) {
             await friendApi.deleteFriend(user._id);
             dispatch(fetchFriends({ name: '' }))
             message.success('Xóa thành công');
-            handleOnCancle();
+            handleOnCancel();
             dispatch(fetchPhoneBook());
         } catch (error) {
             message.error('Xóa thất bại');
@@ -155,7 +152,7 @@ function UserCard(props) {
         <Modal
             title={title}
             visible={isVisible}
-            onCancel={handleOnCancle}
+            onCancel={handleOnCancel}
             footer={null}
             width={360}
             bodyStyle={UserCardStyle.styleModal}

@@ -3,7 +3,7 @@ import { Dropdown, Menu, message, Modal, Tag } from 'antd';
 import conversationApi from 'api/conversationApi';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Scrollbars from 'react-custom-scrollbars';
+import Scrollbars from 'react-custom-scrollbars-2';
 import { useDispatch, useSelector } from 'react-redux';
 import InfoTitle from '../InfoTitle';
 import PersonalIcon from '../PersonalIcon';

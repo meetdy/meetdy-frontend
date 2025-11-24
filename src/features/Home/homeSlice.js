@@ -3,6 +3,7 @@ import InfoWebApi from 'api/infoWebApi';
 
 const KEY = 'HOME';
 
+// Async thunk
 export const fetchInfoWebs = createAsyncThunk(
     `${KEY}/fetchInfoWebApp`,
     async () => {
@@ -11,46 +12,43 @@ export const fetchInfoWebs = createAsyncThunk(
     }
 );
 
+const initialState = {
+    developers: [],
+    infoApp: {},
+    isLoading: false,
+    features: [],
+    infoWebApps: {},
+};
+
 const homeSlice = createSlice({
     name: KEY,
-    initialState: {
-        developers: [],
-        infoApp: {},
-        isLoading: false,
-        features: [],
-        infoWebApps: {},
-    },
+    initialState,
     reducers: {
         setLoading: (state, action) => {
             state.isLoading = action.payload;
         },
     },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchInfoWebs.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchInfoWebs.fulfilled, (state, action) => {
+                const data = action.payload;
 
-    extraReducers: {
-        [fetchInfoWebs.fulfilled]: (state, action) => {
-            const data = action.payload;
-            state.infoWebApps = data.find(
-                (ele) => ele.name === 'infoweb'
-            ).value;
-            state.developers = data.find(
-                (ele) => ele.name === 'developers'
-            ).value;
-            state.infoApp = data.find((ele) => ele.name === 'infoapp').value;
-            state.features = data.find((ele) => ele.name === 'features').value;
-            state.isLoading = false;
-        },
+                const findValue = (name) => data.find((ele) => ele.name === name)?.value ?? null;
 
-        [fetchInfoWebs.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-
-        [fetchInfoWebs.rejected]: (state, action) => {
-            state.isLoading = false;
-        },
+                state.infoWebApps = findValue('infoweb');
+                state.developers = findValue('developers');
+                state.infoApp = findValue('infoapp');
+                state.features = findValue('features');
+                state.isLoading = false;
+            })
+            .addCase(fetchInfoWebs.rejected, (state) => {
+                state.isLoading = false;
+            });
     },
 });
 
-const { reducer, actions } = homeSlice;
-export const { setLoading } = actions;
-
-export default reducer;
+export const { setLoading } = homeSlice.actions;
+export default homeSlice.reducer;

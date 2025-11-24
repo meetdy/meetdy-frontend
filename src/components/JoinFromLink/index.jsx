@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 JoinFromLink.propTypes = {
 
@@ -9,11 +9,11 @@ JoinFromLink.propTypes = {
 
 function JoinFromLink(props) {
     const { conversationId } = useParams();
-    const history = useHistory();
-    history.push({
-        pathname: '/chat',
+    const navigate = useNavigate();
+
+    navigate('/chat', {
         state: { conversationId }
-    })
+    });
 
     return (
         <div>

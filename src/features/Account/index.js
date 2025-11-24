@@ -1,37 +1,42 @@
-import { Spin } from 'antd';
-import NotFoundPage from 'components/NotFoundPage';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Route, Switch, useRouteMatch, useHistory } from 'react-router-dom';
+
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { Spin } from "antd";
+
 import ForgotPage from './pages/ForgotPage';
 import LoginPage from './pages/LoginPage';
 import RegistryPage from './pages/RegistryPage';
+import NotFoundPage from 'components/NotFoundPage';
 
+function Account() {
+    const navigate = useNavigate();
 
-function Account(props) {
-    const { url } = useRouteMatch();
-    const history = useHistory();
     const { isLoading } = useSelector((state) => state.account);
     const { user } = useSelector((state) => state.global);
     const { infoWebApps } = useSelector((state) => state.home);
 
-    if (user) {
-        if (user.isAdmin) history.push('/admin');
-        else history.push('/chat');
-    }
+    useEffect(() => {
+        if (user) {
+            if (user.isAdmin) navigate("/admin", { replace: true });
+            else navigate("/chat", { replace: true });
+        }
+    }, [user, navigate]);
 
     return (
         <Spin spinning={isLoading}>
             <div id="account_page">
-                <Switch>
-                    <Route path={`${url}/login`} component={LoginPage} />
-                    <Route path={`${url}/registry`} component={RegistryPage} />
-                    <Route path={`${url}/forgot`} component={ForgotPage} />
-                    <Route component={NotFoundPage} />
-                </Switch>
+                <Routes>
+                    <Route path="login" element={<LoginPage />} />
+                    <Route path="registry" element={<RegistryPage />} />
+                    <Route path="forgot" element={<ForgotPage />} />
+
+                    <Route path="*" element={<NotFoundPage />} />
+                </Routes>
             </div>
         </Spin>
     );
 }
 
 export default Account;
+

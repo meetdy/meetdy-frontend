@@ -9,7 +9,7 @@ import { getValueFromKey } from 'constants/filterFriend';
 import SearchContainer from 'features/Chat/containers/SearchContainer';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
-import Scrollbars from 'react-custom-scrollbars';
+import Scrollbars from 'react-custom-scrollbars-2';
 import { useDispatch, useSelector } from 'react-redux';
 import { sortGroup } from 'utils/groupUtils';
 import HeaderFriend from './components/HeaderFiend';

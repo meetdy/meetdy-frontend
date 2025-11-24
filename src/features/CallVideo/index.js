@@ -2,7 +2,7 @@ import React, { createRef, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 import h from 'utils/callVideoHelpers';
-import { useRouteMatch } from 'react-router-dom';
+import { useResolvedPath } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ActionNavbar from './components/ActionNavbar';
 import MyVideo from './components/MyVideo';
@@ -16,7 +16,7 @@ let socket = io(process.env.REACT_APP_SOCKET_URL, {
 });
 
 function CallVideo(props) {
-    const match = useRouteMatch();
+    const match = useResolvedPath();
     const { conversationId } = match.params;
     const { user } = useSelector((state) => state.global);
     const { _id } = user;

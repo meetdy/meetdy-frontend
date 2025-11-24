@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import classifyUtils from 'utils/classifyUtils';
 
 GroupCard.propTypes = {
@@ -23,7 +23,7 @@ GroupCard.defaultProps = {
 function GroupCard({ data, onRemove }) {
     const { classifies } = useSelector(state => state.chat);
     const [classify, setClassify] = useState(null);
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
 
@@ -65,9 +65,7 @@ function GroupCard({ data, onRemove }) {
 
         dispatch(fetchListMessages({ conversationId: data._id, size: 10 }));
         dispatch(setCurrentConversation(data._id));
-        history.push({
-            pathname: '/chat',
-        });
+        navigate('/chat');
     }
 
     console.log('data card', data);

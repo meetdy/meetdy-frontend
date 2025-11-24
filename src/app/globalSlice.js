@@ -3,25 +3,27 @@ import meApi from 'api/meApi';
 
 const KEY = 'global';
 
+// Async thunk
 export const fetchUserProfile = createAsyncThunk(
     `${KEY}/fetchUser`,
-    async (params, thunkApi) => {
+    async (_, thunkApi) => {
         const user = await meApi.fetchProfile();
         return user;
     }
 );
 
+const initialState = {
+    isLoading: false,
+    isLogin: false,
+    user: null,
+    isJoinChatLayout: false,
+    isJoinFriendLayout: false,
+    tabActive: 0,
+};
+
 const globalSlice = createSlice({
     name: KEY,
-    initialState: {
-        isLoading: false,
-        isLogin: false,
-        user: null,
-        isJoinChatLayout: false,
-        isJoinFriendLayout: false,
-        tabActive: 0,
-    },
-
+    initialState,
     reducers: {
         setLoading: (state, action) => {
             state.isLoading = action.payload;
@@ -39,30 +41,29 @@ const globalSlice = createSlice({
             state.tabActive = action.payload;
         },
         setAvatarProfile: (state, action) => {
-            state.user.avatar = action.payload;
+            if (state.user) {
+                state.user.avatar = action.payload;
+            }
         },
     },
-
-    extraReducers: {
-        [fetchUserProfile.pending]: (state, action) => {
-            state.isLoading = false;
-        },
-
-        [fetchUserProfile.fulfilled]: (state, action) => {
-            state.isLoading = true;
-            state.isLogin = true;
-            state.user = action.payload;
-        },
-
-        [fetchUserProfile.rejected]: (state, action) => {
-            state.isLoading = true;
-            state.isLogin = false;
-            localStorage.removeItem('token');
-        },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchUserProfile.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchUserProfile.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isLogin = true;
+                state.user = action.payload;
+            })
+            .addCase(fetchUserProfile.rejected, (state) => {
+                state.isLoading = false;
+                state.isLogin = false;
+                localStorage.removeItem('token');
+            });
     },
 });
 
-const { reducer, actions } = globalSlice;
 export const {
     setLoading,
     setLogin,
@@ -70,5 +71,6 @@ export const {
     setJoinFriendLayout,
     setTabActive,
     setAvatarProfile,
-} = actions;
-export default reducer;
+} = globalSlice.actions;
+
+export default globalSlice.reducer;

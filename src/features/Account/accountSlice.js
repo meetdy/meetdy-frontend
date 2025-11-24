@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const KEY = 'account';
 
@@ -12,7 +12,6 @@ const accountSlice = createSlice({
             state.isLoading = action.payload;
         },
     },
-    extraReducers: {},
 });
 
 const { reducer, actions } = accountSlice;

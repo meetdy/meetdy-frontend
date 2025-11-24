@@ -1,4 +1,7 @@
-import { fetchUserProfile } from 'app/globalSlice';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import AdminProtectedRoute from 'components/AdminProtectedRoute';
 import JoinFromLink from 'components/JoinFromLink';
 import NotFoundPage from 'components/NotFoundPage';
@@ -8,20 +11,25 @@ import Admin from 'features/Admin';
 import CallVideo from 'features/CallVideo';
 import Home from 'features/Home';
 import ChatLayout from 'layout/ChatLayout';
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
+import { fetchUserProfile } from 'app/globalSlice';
 import { fetchInfoWebs } from 'features/Home/homeSlice';
 
 function App() {
     const dispatch = useDispatch();
     const [isFetch, setIsFetch] = useState(false);
 
+    const user = useSelector(state => state.global.user);
+    const isAuth = !!user;
+    const isAdmin = user?.role === 'admin';
+
     useEffect(() => {
         const fetchProfile = async () => {
             const token = localStorage.getItem('token');
 
-            if (token) await dispatch(fetchUserProfile());
+            if (token) {
+                await dispatch(fetchUserProfile());
+            }
 
             setIsFetch(true);
         };
@@ -38,22 +46,31 @@ function App() {
     return (
         <BrowserRouter>
             <div className="App">
-                <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route
-                        exact
-                        path="/jf-link/:conversationId"
-                        component={JoinFromLink}
-                    />
-                    <ProtectedRoute path="/chat" component={ChatLayout} />
-                    <AdminProtectedRoute path="/admin" component={Admin} />
-                    <ProtectedRoute
-                        path="/call-video/:conversationId"
-                        component={CallVideo}
-                    />
-                    <Route path="/account" component={Account} />
-                    <Route component={NotFoundPage} />
-                </Switch>
+                <Routes>
+
+                    {/* Public */}
+                    <Route path="/" element={<Home />} />
+                    <Route path="/jf-link/:conversationId" element={<JoinFromLink />} />
+                    <Route path="/account/*" element={<Account />} />
+
+                    {/* Protected */}
+                    <Route element={<ProtectedRoute isAuth={isAuth} />}>
+                        <Route path="/chat/*" element={<ChatLayout />} />
+                        <Route
+                            path="/call-video/:conversationId"
+                            element={<CallVideo />}
+                        />
+                    </Route>
+
+                    {/* Admin */}
+                    <Route element={<AdminProtectedRoute isAdmin={isAdmin} />}>
+                        <Route path="/admin/*" element={<Admin />} />
+                    </Route>
+
+                    {/* 404 */}
+                    <Route path="*" element={<NotFoundPage />} />
+
+                </Routes>
             </div>
         </BrowserRouter>
     );

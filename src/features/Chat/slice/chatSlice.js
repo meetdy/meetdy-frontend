@@ -639,178 +639,162 @@ const chatSlice = createSlice({
             }
         },
     },
-    extraReducers: {
-        [fetchListConversations.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-        [fetchListConversations.fulfilled]: (state, action) => {
-            state.isLoading = false;
-            state.conversations = action.payload;
-        },
-        [fetchListMessages.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-        [fetchListMessages.fulfilled]: (state, action) => {
-            state.isLoading = false;
+    extraReducers: (builder) => {
+        builder
+            // Conversations
+            .addCase(fetchListConversations.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchListConversations.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.conversations = action.payload;
+            })
+            .addCase(fetchListMessages.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchListMessages.fulfilled, (state, action) => {
+                state.isLoading = false;
 
-            // xét currentConversation
-            const conversationId = action.payload.conversationId;
-            const conversationIndex = state.conversations.findIndex(
-                (conversationEle) => conversationEle._id === conversationId
-            );
+                const { conversationId, messages } = action.payload;
+                const conversationIndex = state.conversations.findIndex(
+                    (conv) => conv._id === conversationId
+                );
 
-            state.conversations[conversationIndex] = {
-                ...state.conversations[conversationIndex],
-                numberUnread: 0,
-            };
+                if (conversationIndex >= 0) {
+                    state.conversations[conversationIndex] = {
+                        ...state.conversations[conversationIndex],
+                        numberUnread: 0,
+                    };
+                }
 
-            state.currentConversation = conversationId;
+                state.currentConversation = conversationId;
+                state.messages = messages.data;
+                state.currentPage = messages.page;
+                state.totalPages = messages.totalPages;
+            })
 
-            // state.messagesPage = action.payload.messages;
-            state.messages = action.payload.messages.data;
-            state.currentPage = action.payload.messages.page;
-            state.totalPages = action.payload.messages.totalPages;
-        },
-        // fetchMessageInChannel
-        [fetchMessageInChannel.fulfilled]: (state, action) => {
-            state.isLoading = false;
+            // fetchMessageInChannel
+            .addCase(fetchMessageInChannel.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchMessageInChannel.fulfilled, (state, action) => {
+                state.isLoading = false;
 
-            // xét currentConversation
-            const { messages, channelId } = action.payload;
-            const channelIndex = state.channels.findIndex(
-                (channel) => channel._id === channelId
-            );
+                const { messages, channelId } = action.payload;
+                const channelIndex = state.channels.findIndex((c) => c._id === channelId);
 
-            state.channels[channelIndex] = {
-                ...state.channels[channelIndex],
-                numberUnread: 0,
-            };
+                if (channelIndex >= 0) {
+                    state.channels[channelIndex] = {
+                        ...state.channels[channelIndex],
+                        numberUnread: 0,
+                    };
+                }
 
-            state.currentChannel = channelId;
+                state.currentChannel = channelId;
+                state.messages = messages.data;
+                state.currentPage = messages.page;
+                state.totalPages = messages.totalPages;
+            })
+            .addCase(fetchMessageInChannel.rejected, (state) => {
+                state.isLoading = false;
+            })
 
-            // state.messagesPage = action.payload.messages;
-            state.messages = messages.data;
-            state.currentPage = messages.page;
-            state.totalPages = messages.totalPages;
-        },
-        [fetchMessageInChannel.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-        [fetchMessageInChannel.rejected]: (state, action) => {
-            state.isLoading = false;
-        },
+            // Pagination
+            .addCase(fetchNextPageMessage.fulfilled, (state, action) => {
+                state.messages = [...action.payload.messages.data, ...state.messages];
+                state.currentPage = action.payload.messages.page;
+            })
+            .addCase(fetchNextPageMessageOfChannel.fulfilled, (state, action) => {
+                state.messages = [...action.payload.data, ...state.messages];
+                state.currentPage = action.payload.page;
+            })
 
-        [fetchNextPageMessage.fulfilled]: (state, action) => {
-            state.messages = [
-                ...action.payload.messages.data,
-                ...state.messages,
-            ];
-            state.currentPage = action.payload.messages.page;
-        },
+            // Friends
+            .addCase(fetchListFriends.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchListFriends.fulfilled, (state, action) => {
+                state.friends = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(fetchListFriends.rejected, (state) => {
+                state.isLoading = false;
+            })
 
-        [fetchNextPageMessageOfChannel.fulfilled]: (state, action) => {
-            state.messages = [...action.payload.data, ...state.messages];
-            state.currentPage = action.payload.page;
-        },
-        // FRIEND
-        [fetchListFriends.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-        [fetchListFriends.rejected]: (state, action) => {
-            state.isLoading = false;
-        },
-        [fetchListFriends.fulfilled]: (state, action) => {
-            state.friends = action.payload;
-            state.isLoading = false;
-        },
+            // Single conversation
+            .addCase(fetchConversationById.fulfilled, (state, action) => {
+                state.conversations = [action.payload, ...state.conversations];
+            })
 
-        // Conversation
-
-        [fetchConversationById.fulfilled]: (state, action) => {
-            const conversations = action.payload;
-            state.conversations = [conversations, ...state.conversations];
-        },
-
-        [getMembersConversation.fulfilled]: (state, action) => {
-            const tempMembers = [...action.payload];
-            const temp = [];
-
-            tempMembers.forEach((member) => {
-                state.friends.forEach((friend) => {
-                    if (member._id === friend._id) {
-                        member = { ...member, isFriend: true };
-                        return;
-                    }
+            // Members
+            .addCase(getMembersConversation.fulfilled, (state, action) => {
+                state.memberInConversation = action.payload.map((member) => {
+                    const isFriend = state.friends.some((f) => f._id === member._id);
+                    return { ...member, isFriend };
                 });
-                temp.push(member);
+            })
+
+            // Classify
+            .addCase(fetchListClassify.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchListClassify.fulfilled, (state, action) => {
+                state.classifies = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(fetchListClassify.rejected, (state, action) => {
+                state.classifies = action.payload;
+                state.isLoading = false;
+            })
+
+            // Colors
+            .addCase(fetchListColor.fulfilled, (state, action) => {
+                state.colors = action.payload;
+            })
+
+            // Pin messages
+            .addCase(fetchPinMessages.fulfilled, (state, action) => {
+                state.pinMessages = action.payload.reverse();
+            })
+
+            // Last view
+            .addCase(getLastViewOfMembers.fulfilled, (state, action) => {
+                state.lastViewOfMember = action.payload;
+            })
+            .addCase(getLastViewChannel.fulfilled, (state, action) => {
+                state.lastViewOfMember = action.payload;
+            })
+
+            // Channels
+            .addCase(fetchChannels.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchChannels.fulfilled, (state, action) => {
+                state.channels = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(fetchChannels.rejected, (state) => {
+                state.isLoading = false;
+            })
+
+            // Stickers
+            .addCase(fetchAllSticker.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchAllSticker.fulfilled, (state, action) => {
+                state.stickers = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(fetchAllSticker.rejected, (state) => {
+                state.isLoading = false;
+            })
+
+            // Votes
+            .addCase(fetchVotes.fulfilled, (state, action) => {
+                state.votes = action.payload.data;
+                state.totalPagesVote = action.payload.totalPages;
             });
-
-            state.memberInConversation = temp;
-        },
-
-        // classify
-        [fetchListClassify.fulfilled]: (state, action) => {
-            state.classifies = action.payload;
-            state.isLoading = false;
-        },
-        [fetchListClassify.rejected]: (state, action) => {
-            state.classifies = action.payload;
-            state.isLoading = false;
-        },
-        [fetchListClassify.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-
-        [fetchListColor.fulfilled]: (state, action) => {
-            state.colors = action.payload;
-        },
-
-        [fetchPinMessages.fulfilled]: (state, action) => {
-            state.pinMessages = action.payload.reverse();
-        },
-
-        [fetchPinMessages.fulfilled]: (state, action) => {
-            state.pinMessages = action.payload.reverse();
-        },
-        [getLastViewOfMembers.fulfilled]: (state, action) => {
-            state.lastViewOfMember = action.payload;
-        },
-
-        [getLastViewChannel.fulfilled]: (state, action) => {
-            state.lastViewOfMember = action.payload;
-        },
-
-        // Channel
-
-        [fetchChannels.fulfilled]: (state, action) => {
-            state.channels = action.payload;
-            state.isLoading = false;
-        },
-        [fetchChannels.rejected]: (state, action) => {
-            state.isLoading = false;
-        },
-        [fetchChannels.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-
-        // Sticker
-
-        [fetchAllSticker.fulfilled]: (state, action) => {
-            state.stickers = action.payload;
-            state.isLoading = false;
-        },
-        [fetchAllSticker.rejected]: (state, action) => {
-            state.isLoading = true;
-        },
-        [fetchAllSticker.pending]: (state, action) => {
-            state.isLoading = false;
-        },
-
-        [fetchVotes.fulfilled]: (state, action) => {
-            state.votes = action.payload.data;
-            state.totalPagesVote = action.payload.totalPages;
-        },
-    },
+    }
 });
 
 const { reducer, actions } = chatSlice;

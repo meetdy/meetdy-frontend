@@ -16,7 +16,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
+import { useNavigate, useResolvedPath, useLocation } from 'react-router-dom';
 import renderWidthDrawer from 'utils/DrawerResponsive';
 import DrawerPinMessage from './components/DrawerPinMessage';
 import GroupNews from './components/GroupNews';
@@ -76,7 +76,7 @@ function Chat({ socket, idNewMessage }) {
         currentChannel,
         channels,
     } = useSelector((state) => state.chat);
-    const { path } = useRouteMatch();
+    const { path } = useResolvedPath();
     const [scrollId, setScrollId] = useState('');
     // const [idNewMessage, setIdNewMessage] = useState('')
     const [isShow, setIsShow] = useState(false);
@@ -90,7 +90,7 @@ function Chat({ socket, idNewMessage }) {
     const [visibleNews, setVisibleNews] = useState(false);
     const [tabActiveInNews, setTabActiveNews] = useState(0);
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [isVisibleModalJoinGroup, setIsVisibleJoinGroup] = useState(false);
     const [summaryGroup, setSummary] = useState({});
     const refCurrentConversation = useRef();
@@ -172,7 +172,7 @@ function Chat({ socket, idNewMessage }) {
                     dispatch(getLastViewOfMembers({ conversationId: tempId }));
                 }
 
-                history.replace({
+                navigate({
                     state: {
                         conversationId: null,
                     },
@@ -571,7 +571,7 @@ function Chat({ socket, idNewMessage }) {
                 2
             );
             setMutipleConverFilter(mutiple);
-        } catch (error) {}
+        } catch (error) { }
     };
 
     const handleOnFilterClassfiy = (value) => {
@@ -600,9 +600,8 @@ function Chat({ socket, idNewMessage }) {
                     >
                         <div className="main-conversation">
                             <div
-                                className={`main-conversation_search-bar ${
-                                    visibleFilter ? 'fillter ' : ''
-                                }`}
+                                className={`main-conversation_search-bar ${visibleFilter ? 'fillter ' : ''
+                                    }`}
                             >
                                 <SearchContainer
                                     onSearchChange={handleOnSearchChange}
@@ -708,7 +707,7 @@ function Chat({ socket, idNewMessage }) {
                                                             isHover={false}
                                                             isItem={
                                                                 pinMessages.length >
-                                                                1
+                                                                    1
                                                                     ? false
                                                                     : true
                                                             }
@@ -734,13 +733,11 @@ function Chat({ socket, idNewMessage }) {
 
                                             <div
                                                 id="back-top-button"
-                                                className={`${
-                                                    isShow ? 'show' : 'hide'
-                                                } ${
-                                                    hasMessage
+                                                className={`${isShow ? 'show' : 'hide'
+                                                    } ${hasMessage
                                                         ? 'new-message'
                                                         : ''
-                                                }`}
+                                                    }`}
                                                 onClick={hanldeOnClickScroll}
                                             >
                                                 {hasMessage ? (
@@ -765,23 +762,22 @@ function Chat({ socket, idNewMessage }) {
                                                                 <span>
                                                                     {index <
                                                                         3 && (
-                                                                        <>
-                                                                            {index ===
-                                                                            usersTyping.length -
-                                                                                1
-                                                                                ? `${ele.name} `
-                                                                                : `${ele.name}, `}
-                                                                        </>
-                                                                    )}
+                                                                            <>
+                                                                                {index ===
+                                                                                    usersTyping.length -
+                                                                                    1
+                                                                                    ? `${ele.name} `
+                                                                                    : `${ele.name}, `}
+                                                                            </>
+                                                                        )}
                                                                 </span>
                                                             )
                                                         )}
 
                                                         {usersTyping.length > 3
-                                                            ? `và ${
-                                                                  usersTyping.length -
-                                                                  3
-                                                              } người khác`
+                                                            ? `và ${usersTyping.length -
+                                                            3
+                                                            } người khác`
                                                             : ''}
 
                                                         <span>

@@ -10,7 +10,7 @@ import { FastField, Form, Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import IMAGE_ACCOUNT_PAGE from 'assets/images/account/account-bg.png';
 
@@ -25,7 +25,7 @@ function LoginPage(props) {
     const [isError, setError] = useState(false);
     const [isVerify, setVerify] = useState(true);
     const [keyGoogleCaptcha, setKeyGoogleCaptcha] = useState(null);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleSubmit = async (values) => {
         const { username, password } = values;
@@ -36,15 +36,18 @@ function LoginPage(props) {
                     username,
                     password
                 );
-                console.log('🚀 submit ~ token:', token)
+                console.log('🚀 => token:', token)
+
                 localStorage.setItem('token', token);
                 localStorage.setItem('refreshToken', refreshToken);
                 dispatch(setLogin(true));
                 const { isAdmin } = unwrapResult(
                     await dispatch(fetchUserProfile())
                 );
-                if (isAdmin) history.push('/admin');
-                else history.push('/chat');
+                if (isAdmin) navigate('/admin');
+                else {
+                    navigate('/chat')
+                };
             } else {
                 message.error('Hãy xác thực capcha', 5);
             }

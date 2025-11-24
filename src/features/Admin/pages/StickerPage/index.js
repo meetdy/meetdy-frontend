@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useResolvedPath, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     Table,
@@ -28,12 +28,12 @@ import React, { useEffect, useState } from 'react';
 StickerPage.propTypes = {};
 function StickerPage(props) {
     const stickers = props.location.state;
-    const history = useHistory();
+    const navigate = useNavigate();
     const [dataSource, setDataSource] = useState([]);
     const [sticker, setSticker] = useState([]);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(4);
-    const match = useRouteMatch();
+    const match = useResolvedPath();
 
     function cancel(e) {
         console.log(e);
@@ -111,7 +111,7 @@ function StickerPage(props) {
     const handleDeleteSticker = (urlstickers) => {
         try {
             adminApi.deleteSticker(id, urlstickers);
-            history.push(`/admin/stickers`);
+            navigate(`/admin/stickers`);
             window.location.reload();
             message.success('Đã xoá sticker', 5);
         } catch (error) {

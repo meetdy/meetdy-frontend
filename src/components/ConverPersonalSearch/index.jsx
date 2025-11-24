@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import PersonalIcon from 'features/Chat/components/PersonalIcon';
 import { Empty } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { fetchListMessages, setCurrentConversation } from 'features/Chat/slice/chatSlice';
 
@@ -18,15 +18,13 @@ ConverPersonalSearch.defaultProps = {
 function ConverPersonalSearch({ data }) {
 
     const dispatch = useDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleClickItem = (value) => {
         dispatch(fetchListMessages({ conversationId: value._id, size: 10 }));
         dispatch(setCurrentConversation(value._id));
 
-        history.push({
-            pathname: '/chat',
-        });
+        navigate('/chat');
     }
     return (
         <div className='list-filter_single-conver'>
