@@ -23,6 +23,7 @@ import dateUtils from 'utils/dateUtils';
 import getSummaryName from 'utils/nameHelper';
 
 import UserCardStyle from './UserCardStyle';
+
 UserCard.propTypes = {
     title: PropTypes.string,
     user: PropTypes.object.isRequired,

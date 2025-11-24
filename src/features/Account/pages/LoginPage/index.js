@@ -1,6 +1,5 @@
-import { CloseCircleOutlined, HomeOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined } from '@ant-design/icons';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { Button, Col, Divider, message, Row, Tag, Typography } from 'antd';
 import axiosClient from 'api/axiosClient';
 import loginApi from 'api/loginApi';
 import { fetchUserProfile, setLogin } from 'app/globalSlice';
@@ -15,6 +14,8 @@ import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import IMAGE_ACCOUNT_PAGE from 'assets/images/account/account-bg.png';
 
+import { Button, Col, Divider, message, Row, Tag, Typography } from 'antd';
+
 const { Text, Title } = Typography;
 
 LoginPage.propTypes = {};
@@ -22,13 +23,12 @@ LoginPage.propTypes = {};
 function LoginPage(props) {
     const dispatch = useDispatch();
     const [isError, setError] = useState(false);
-    const [isVerify, setVerify] = useState(false);
+    const [isVerify, setVerify] = useState(true);
     const [keyGoogleCaptcha, setKeyGoogleCaptcha] = useState(null);
     const history = useHistory();
 
     const handleSubmit = async (values) => {
         const { username, password } = values;
-        console.log(isVerify);
         try {
             if (isVerify) {
                 dispatch(setLoading(true));
@@ -36,7 +36,7 @@ function LoginPage(props) {
                     username,
                     password
                 );
-                console.log('🚀 handleSubmit ~ token:', token)
+                console.log('🚀 submit ~ token:', token)
                 localStorage.setItem('token', token);
                 localStorage.setItem('refreshToken', refreshToken);
                 dispatch(setLogin(true));
@@ -55,8 +55,7 @@ function LoginPage(props) {
         dispatch(setLoading(false));
     };
 
-    const onChange = (value) => {
-        // console.log('Captcha value:', value);
+    const onChange = () => {
         setError(false)
         setVerify(true)
     };
@@ -114,8 +113,7 @@ function LoginPage(props) {
                                                     inputCol={24}
                                                 />
                                             </Col>
-                                            <Col span={24}>
-                                                {/* <br /> */}
+                                            {/* <Col span={24}>
                                                 {keyGoogleCaptcha && (
                                                     <ReCAPTCHA
                                                         sitekey={
@@ -124,7 +122,7 @@ function LoginPage(props) {
                                                         onChange={onChange}
                                                     />
                                                 )}
-                                            </Col>
+                                            </Col> */}
                                             {isError ? (
                                                 <Col span={24}>
                                                     <Tag
