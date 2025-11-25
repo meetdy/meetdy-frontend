@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Image } from 'antd';
-import { fallback } from 'assets/images/fallbackImage';
+import { fallback } from '@/assets/images/fallbackImage';
 
 StickerMessage.propTypes = {
   content: PropTypes.string.isRequired,

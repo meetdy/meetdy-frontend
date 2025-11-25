@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ICON_FRIEND from 'assets/images/icon/icon_friend.png';
-import ICON_GROUP from 'assets/images/icon/icon_group.png';
-import ICON_CONTACT from 'assets/images/icon/contacts_icon.png';
+import ICON_FRIEND from '@/assets/images/icon/icon_friend.png';
+import ICON_GROUP from '@/assets/images/icon/icon_group.png';
+import ICON_CONTACT from '@/assets/images/icon/contacts_icon.png';
 import { LeftOutlined } from '@ant-design/icons';
 
 HeaderFriend.propTypes = {

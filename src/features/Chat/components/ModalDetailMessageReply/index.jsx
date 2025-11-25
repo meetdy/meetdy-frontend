@@ -1,6 +1,6 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import { Image, Modal } from 'antd';
-import VIDEO_LOGO from 'assets/images/icon/video-logo.png';
+import VIDEO_LOGO from '@/assets/images/icon/video-logo.png';
 import ModalVideoCustom from '@/components/ModalVideoCustom';
 import OverlayImage from '@/components/OverlayImage';
 import parse from 'html-react-parser';

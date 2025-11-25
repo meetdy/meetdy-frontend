@@ -6,13 +6,15 @@ import { fetchUserProfile, setLogin } from '@/app/globalSlice';
 import InputField from '@/customfield/InputField';
 import { setLoading } from '@/features/Account/accountSlice';
 import { loginValues } from '@/features/Account/initValues';
+
 import { FastField, Form, Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import IMAGE_ACCOUNT_PAGE from 'assets/images/account/account-bg.png';
+
+import IMAGE_ACCOUNT_PAGE from '@/assets/images/account/account-bg.png';
 
 import { Button, Col, Divider, message, Row, Tag, Typography } from 'antd';
 

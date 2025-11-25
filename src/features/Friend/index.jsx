@@ -1,9 +1,9 @@
 import { CaretDownOutlined, FilterOutlined } from '@ant-design/icons';
 import { Button, Col, Dropdown, Menu, Row, Spin } from 'antd';
 import conversationApi from '@/api/conversationApi';
-import ICON_CONTACT from 'assets/images/icon/contacts_icon.png';
-import ICON_FRIEND from 'assets/images/icon/icon_friend.png';
-import ICON_GROUP from 'assets/images/icon/icon_group.png';
+import ICON_CONTACT from '@/assets/images/icon/contacts_icon.png';
+import ICON_FRIEND from '@/assets/images/icon/icon_friend.png';
+import ICON_GROUP from '@/assets/images/icon/icon_group.png';
 import FilterContainer from '@/components/FilterContainer';
 import { getValueFromKey } from '@/constants/filterFriend';
 import SearchContainer from '@/features/Chat/containers/SearchContainer';

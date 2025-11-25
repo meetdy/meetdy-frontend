@@ -1,18 +1,33 @@
 import path from 'path';
 import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react-swc';
 
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import tsconfigPaths from 'vite-tsconfig-paths';
+import runtimeEnv from 'vite-plugin-runtime-env';
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  return {
-    plugins: [react(), tailwindcss(), tsconfigPaths()],
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src'),
-      },
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+    runtimeEnv({
+      variableName: 'window.env',
+      substitutionSyntax: 'dollar-curly',
+    }),
+  ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
     },
-  };
+  },
+  server: {
+    host: true,
+    port: 9000,
+  },
+  build: {
+    outDir: path.resolve(__dirname, 'dist'),
+    emptyOutDir: true,
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+  },
 });

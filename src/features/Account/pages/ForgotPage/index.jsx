@@ -11,7 +11,7 @@ import {
   Typography,
 } from 'antd';
 import loginApi from '@/api/loginApi';
-import IMAGE_ACCOUNT_PAGE from 'assets/images/account/account-bg.png';
+import IMAGE_ACCOUNT_PAGE from '@/assets/images/account/account-bg.png';
 import InputField from '@/customfield/InputField';
 import { setLoading } from '@/features/Account/accountSlice';
 import { forgotValues } from '@/features/Account/initValues';
