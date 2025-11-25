@@ -14,826 +14,808 @@ const KEY = 'chat';
 // Classify
 
 export const fetchListColor = createAsyncThunk(
-    `${KEY}/fetchListColor`,
-    async (params, thunkApi) => {
-        const colors = await ClassifyApi.getColors();
-        return colors;
-    }
+  `${KEY}/fetchListColor`,
+  async (params, thunkApi) => {
+    const colors = await ClassifyApi.getColors();
+    return colors;
+  },
 );
 
 export const fetchListClassify = createAsyncThunk(
-    `${KEY}/fetchListClassify`,
-    async (params, thunkApi) => {
-        const classifies = await ClassifyApi.getClassifies();
-        return classifies;
-    }
+  `${KEY}/fetchListClassify`,
+  async (params, thunkApi) => {
+    const classifies = await ClassifyApi.getClassifies();
+    return classifies;
+  },
 );
 
 export const fetchListConversations = createAsyncThunk(
-    `${KEY}/fetchListConversations`,
-    async (params, thunkApi) => {
-        const { name, type } = params;
-        const conversations = await conversationApi.fetchListConversations(
-            name,
-            type
-        );
+  `${KEY}/fetchListConversations`,
+  async (params, thunkApi) => {
+    const { name, type } = params;
+    const conversations = await conversationApi.fetchListConversations(
+      name,
+      type,
+    );
 
-        return conversations;
-    }
+    return conversations;
+  },
 );
 
 export const fetchListMessages = createAsyncThunk(
-    `${KEY}/fetchListMessages`,
-    async (params, thunkApi) => {
-        const { conversationId, page, size } = params;
+  `${KEY}/fetchListMessages`,
+  async (params, thunkApi) => {
+    const { conversationId, page, size } = params;
 
-        const messages = await messageApi.fetchListMessages(
-            conversationId,
-            page,
-            size
-        );
+    const messages = await messageApi.fetchListMessages(
+      conversationId,
+      page,
+      size,
+    );
 
-        return {
-            messages,
-            conversationId,
-        };
-    }
+    return {
+      messages,
+      conversationId,
+    };
+  },
 );
 
 export const fetchNextPageMessage = createAsyncThunk(
-    `${KEY}/fetchNextPageMessage`,
-    async (params, thunkApi) => {
-        const { conversationId, page, size } = params;
+  `${KEY}/fetchNextPageMessage`,
+  async (params, thunkApi) => {
+    const { conversationId, page, size } = params;
 
-        const messages = await messageApi.fetchListMessages(
-            conversationId,
-            page,
-            size
-        );
+    const messages = await messageApi.fetchListMessages(
+      conversationId,
+      page,
+      size,
+    );
 
-        return {
-            messages,
-        };
-    }
+    return {
+      messages,
+    };
+  },
 );
 
 export const fetchNextPageMessageOfChannel = createAsyncThunk(
-    `${KEY}/fetchNextPageMessageOfChannel`,
-    async (params, thunkApi) => {
-        const { page, size, channelId } = params;
+  `${KEY}/fetchNextPageMessageOfChannel`,
+  async (params, thunkApi) => {
+    const { page, size, channelId } = params;
 
-        const messages = await channelApi.getMessageInChannel(
-            channelId,
-            page,
-            size
-        );
-        return messages;
-    }
+    const messages = await channelApi.getMessageInChannel(
+      channelId,
+      page,
+      size,
+    );
+    return messages;
+  },
 );
 
 // FRIEND API
 
 export const fetchListFriends = createAsyncThunk(
-    `${KEY}/fetchListFriends`,
-    async (params, thunkApi) => {
-        const { name } = params;
-        const friends = await friendApi.fetchFriends(name);
-        return friends;
-    }
+  `${KEY}/fetchListFriends`,
+  async (params, thunkApi) => {
+    const { name } = params;
+    const friends = await friendApi.fetchFriends(name);
+    return friends;
+  },
 );
 
 // CONVERSATION API
 
 // Create a group chat
 export const createGroup = createAsyncThunk(
-    `${KEY}/createGroup`,
-    async (params, thunkApi) => {
-        const { name, userIds } = params;
-        const idNewGroup = await conversationApi.createGroup(name, userIds);
-        return idNewGroup;
-    }
+  `${KEY}/createGroup`,
+  async (params, thunkApi) => {
+    const { name, userIds } = params;
+    const idNewGroup = await conversationApi.createGroup(name, userIds);
+    return idNewGroup;
+  },
 );
 
 export const fetchConversationById = createAsyncThunk(
-    `${KEY}/fetchConversationById`,
-    async (params, thunkApi) => {
-        const { conversationId } = params;
-        const conversation = await conversationApi.getConversationById(
-            conversationId
-        );
+  `${KEY}/fetchConversationById`,
+  async (params, thunkApi) => {
+    const { conversationId } = params;
+    const conversation = await conversationApi.getConversationById(
+      conversationId,
+    );
 
-        return conversation;
-    }
+    return conversation;
+  },
 );
 
 export const deleteConversation = createAsyncThunk(
-    `${KEY}/deleteConversation/`,
-    async (params, thunkApi) => {
-        const { conversationId } = params;
-        await conversationApi.deleteConversation(conversationId);
-        return conversationId;
-    }
+  `${KEY}/deleteConversation/`,
+  async (params, thunkApi) => {
+    const { conversationId } = params;
+    await conversationApi.deleteConversation(conversationId);
+    return conversationId;
+  },
 );
 
 export const getMembersConversation = createAsyncThunk(
-    `${KEY}/getMembersConversation`,
-    async (params, thunkApi) => {
-        const { conversationId } = params;
-        const members = await conversationApi.getMemberInConversation(
-            conversationId
-        );
-        return members;
-    }
+  `${KEY}/getMembersConversation`,
+  async (params, thunkApi) => {
+    const { conversationId } = params;
+    const members = await conversationApi.getMemberInConversation(
+      conversationId,
+    );
+    return members;
+  },
 );
 
 // ============ PIN MESSAGE ==============
 
 export const fetchPinMessages = createAsyncThunk(
-    `${KEY}/fetchPinMessages`,
-    async (params, _) => {
-        const { conversationId } = params;
-        const pinMessages = await pinMessageApi.getPinMessages(conversationId);
-        return pinMessages;
-    }
+  `${KEY}/fetchPinMessages`,
+  async (params, _) => {
+    const { conversationId } = params;
+    const pinMessages = await pinMessageApi.getPinMessages(conversationId);
+    return pinMessages;
+  },
 );
 
 // ============
 
 // ============
 export const getLastViewOfMembers = createAsyncThunk(
-    `${KEY}/getLastViewOfMembers`,
-    async (params, _) => {
-        const { conversationId } = params;
-        const lastViews = await conversationApi.getLastViewOfMembers(
-            conversationId
-        );
+  `${KEY}/getLastViewOfMembers`,
+  async (params, _) => {
+    const { conversationId } = params;
+    const lastViews = await conversationApi.getLastViewOfMembers(
+      conversationId,
+    );
 
-        return lastViews;
-    }
+    return lastViews;
+  },
 );
 
 // =============== Channel ===============
 
 export const fetchChannels = createAsyncThunk(
-    `${KEY}/fetchChannels`,
-    async (params, _) => {
-        const { conversationId } = params;
-        const data = await channelApi.fetchChannel(conversationId);
-        return data;
-    }
+  `${KEY}/fetchChannels`,
+  async (params, _) => {
+    const { conversationId } = params;
+    const data = await channelApi.fetchChannel(conversationId);
+    return data;
+  },
 );
 
 export const fetchMessageInChannel = createAsyncThunk(
-    `${KEY}/fetchMessageInChannel`,
-    async (params, _) => {
-        const { channelId, page, size } = params;
-        const data = await channelApi.getMessageInChannel(
-            channelId,
-            page,
-            size
-        );
+  `${KEY}/fetchMessageInChannel`,
+  async (params, _) => {
+    const { channelId, page, size } = params;
+    const data = await channelApi.getMessageInChannel(channelId, page, size);
 
-        return {
-            messages: data,
-            channelId,
-        };
-    }
+    return {
+      messages: data,
+      channelId,
+    };
+  },
 );
 
 export const getLastViewChannel = createAsyncThunk(
-    `${KEY}/getLastViewChannel`,
-    async (params, _) => {
-        const { channelId } = params;
-        const lastViews = await channelApi.getLastViewChannel(channelId);
+  `${KEY}/getLastViewChannel`,
+  async (params, _) => {
+    const { channelId } = params;
+    const lastViews = await channelApi.getLastViewChannel(channelId);
 
-        return lastViews;
-    }
+    return lastViews;
+  },
 );
 
 export const fetchAllSticker = createAsyncThunk(
-    `${KEY}/fetchAllSticker`,
-    async () => {
-        const data = await stickerApi.fetchAllSticker();
-        return data;
-    }
+  `${KEY}/fetchAllSticker`,
+  async () => {
+    const data = await stickerApi.fetchAllSticker();
+    return data;
+  },
 );
 
 export const fetchVotes = createAsyncThunk(
-    `${KEY}/fetchVotes`,
-    async (params, _) => {
-        const { conversationId, page, size } = params;
-        const data = await voteApi.getVotes(conversationId, page, size);
-        return data;
-    }
+  `${KEY}/fetchVotes`,
+  async (params, _) => {
+    const { conversationId, page, size } = params;
+    const data = await voteApi.getVotes(conversationId, page, size);
+    return data;
+  },
 );
 
 const chatSlice = createSlice({
-    name: KEY,
-    initialState: {
-        isLoading: false,
-        conversations: [],
-        currentConversation: '',
-        messages: [],
-        friends: [],
-        memberInConversation: [],
-        type: false,
-        currentPage: '',
-        totalPages: '',
-        toTalUnread: 0,
-        classifies: [],
-        colors: [],
-        pinMessages: [],
-        lastViewOfMember: [],
-        currentChannel: '',
-        channels: [],
-        totalChannelNotify: 0,
-        stickers: [],
-        votes: [],
-        totalPagesVote: 0,
+  name: KEY,
+  initialState: {
+    isLoading: false,
+    conversations: [],
+    currentConversation: '',
+    messages: [],
+    friends: [],
+    memberInConversation: [],
+    type: false,
+    currentPage: '',
+    totalPages: '',
+    toTalUnread: 0,
+    classifies: [],
+    colors: [],
+    pinMessages: [],
+    lastViewOfMember: [],
+    currentChannel: '',
+    channels: [],
+    totalChannelNotify: 0,
+    stickers: [],
+    votes: [],
+    totalPagesVote: 0,
+  },
+  reducers: {
+    addMessage: (state, action) => {
+      const newMessage = action.payload;
+
+      const { conversationId } = newMessage;
+      // tìm conversation
+      const index = state.conversations.findIndex(
+        (conversationEle) => conversationEle._id === conversationId,
+      );
+
+      const seachConversation = state.conversations[index];
+
+      seachConversation.numberUnread = seachConversation.numberUnread + 1;
+      seachConversation.lastMessage = {
+        ...newMessage,
+        createdAt: dateUtils.toTime(newMessage.createdAt),
+      };
+      // xóa conversation đó ra
+      const conversationTempt = state.conversations.filter(
+        (conversationEle) => conversationEle._id !== conversationId,
+      );
+
+      if (
+        conversationId === state.currentConversation &&
+        !state.currentChannel
+      ) {
+        state.messages.push(action.payload);
+        seachConversation.numberUnread = 0;
+      }
+
+      state.conversations = [seachConversation, ...conversationTempt];
     },
-    reducers: {
-        addMessage: (state, action) => {
-            const newMessage = action.payload;
 
-            const { conversationId } = newMessage;
-            // tìm conversation
-            const index = state.conversations.findIndex(
-                (conversationEle) => conversationEle._id === conversationId
-            );
+    addMessageInChannel: (state, action) => {
+      const { conversationId, channelId, message } = action.payload;
 
-            const seachConversation = state.conversations[index];
+      const index = state.channels.findIndex(
+        (channel) => channel._id === channelId,
+      );
 
-            seachConversation.numberUnread = seachConversation.numberUnread + 1;
-            seachConversation.lastMessage = {
-                ...newMessage,
-                createdAt: dateUtils.toTime(newMessage.createdAt),
-            };
-            // xóa conversation đó ra
-            const conversationTempt = state.conversations.filter(
-                (conversationEle) => conversationEle._id !== conversationId
-            );
+      const searchChannel = state.channels[index];
 
-            if (
-                conversationId === state.currentConversation &&
-                !state.currentChannel
-            ) {
-                state.messages.push(action.payload);
-                seachConversation.numberUnread = 0;
-            }
+      const channelTemps = state.channels.filter(
+        (channel) => channel._id !== channelId,
+      );
+      if ('numberUnread' in searchChannel) {
+        searchChannel.numberUnread = searchChannel.numberUnread + 1;
+      } else {
+        searchChannel.numberUnread = 1;
+      }
 
-            state.conversations = [seachConversation, ...conversationTempt];
-        },
+      if (
+        state.currentConversation === conversationId &&
+        state.currentChannel === channelId
+      ) {
+        state.messages.push(message);
+        searchChannel.numberUnread = 0;
+      }
 
-        addMessageInChannel: (state, action) => {
-            const { conversationId, channelId, message } = action.payload;
-
-            const index = state.channels.findIndex(
-                (channel) => channel._id === channelId
-            );
-
-            const searchChannel = state.channels[index];
-
-            const channelTemps = state.channels.filter(
-                (channel) => channel._id !== channelId
-            );
-            if ('numberUnread' in searchChannel) {
-                searchChannel.numberUnread = searchChannel.numberUnread + 1;
-            } else {
-                searchChannel.numberUnread = 1;
-            }
-
-            if (
-                state.currentConversation === conversationId &&
-                state.currentChannel === channelId
-            ) {
-                state.messages.push(message);
-                searchChannel.numberUnread = 0;
-            }
-
-            state.channels = [searchChannel, ...channelTemps];
-        },
-
-        setTotalChannelNotify: (state, action) => {
-            let notify = state.conversations.find(
-                (ele) => ele._id === state.currentConversation
-            ).numberUnread;
-
-            if (state.channels.length > 0) {
-                state.channels.forEach((ele) => {
-                    if (ele.numberUnread && ele.numberUnread > 0) {
-                        notify = notify + 1;
-                    }
-                });
-            }
-
-            state.totalChannelNotify = notify;
-        },
-        setRaisePage: (state, action) => {
-            if (state.currentPage < state.totalPages - 1) {
-                state.currentPage = state.currentPage + 1;
-            }
-        },
-
-        setFriends: (state, action) => {
-            state.friends = action.payload;
-        },
-
-        removeConversation: (state, action) => {
-            const conversationId = action.payload;
-            const newConversations = state.conversations.filter(
-                (ele) => ele._id !== conversationId
-            );
-            state.conversations = newConversations;
-            state.currentConversation = '';
-        },
-
-        setTypeOfConversation: (state, action) => {
-            const conversationId = action.payload;
-            const conversation = state.conversations.find(
-                (ele) => ele._id === conversationId
-            );
-            if (conversation) {
-                state.type = conversation.type;
-            }
-        },
-
-        setRedoMessage: (state, action) => {
-            const { id, conversationId } = action.payload;
-            // lấy mesage đã thu hồi
-            const oldMessage = state.messages.find(
-                (message) => message._id === id
-            );
-            const { _id, user, createdAt } = oldMessage;
-
-            // lấy index của message
-            const index = state.messages.findIndex(
-                (message) => message._id === id
-            );
-
-            // tạo message mới
-            const newMessage = {
-                _id,
-                user,
-                createdAt,
-                isDeleted: 'true',
-            };
-            // chèn vào vị trí index 'message đã thu hồi'
-            state.messages[index] = newMessage;
-
-            // lastMessage ở conver
-            if (conversationId) {
-                const indexConver = state.conversations.findIndex(
-                    (ele) => ele._id === conversationId
-                );
-                state.conversations[indexConver].lastMessage.isDeleted = true;
-            }
-        },
-        deleteMessageClient: (state, action) => {
-            const id = action.payload;
-            const newMessages = state.messages.filter(
-                (message) => message._id !== id
-            );
-            state.messages = newMessages;
-        },
-
-        setToTalUnread: (state, action) => {
-            let tempCount = 0;
-            state.conversations.forEach((ele, index) => {
-                if (ele.numberUnread > 0) tempCount += 1;
-            });
-            state.toTalUnread = tempCount;
-        },
-        setReactionMessage: (state, action) => {
-            const { messageId, user, type } = action.payload;
-
-            const index = state.messages.findIndex(
-                (message) => message._id === messageId
-            );
-            const currentMessage = state.messages.find(
-                (message) => message._id === messageId
-            );
-
-            const checkIsExist = currentMessage.reacts.findIndex(
-                (ele) => ele.user._id === user._id
-            );
-            //  có 2 trường hợp
-
-            //  người dùng thả 1 react mới
-            if (checkIsExist >= 0) {
-                state.messages[index].reacts[checkIsExist] = {
-                    ...state.messages[index].reacts[checkIsExist],
-                    type,
-                };
-            } else {
-                let reacts = [...currentMessage.reacts, { user, type }];
-                state.messages[index].reacts = reacts;
-            }
-        },
-        leaveGroup: (state, action) => {
-            const conversationId = action.payload;
-            const newConvers = state.conversations.filter(
-                (ele) => ele._id !== conversationId
-            );
-            state.conversations = newConvers;
-            state.currentConversation = '';
-        },
-        isDeletedFromGroup: (state, action) => {
-            const idConver = action.payload;
-            const newConver = state.conversations.filter(
-                (ele) => ele._id !== idConver
-            );
-            state.conversations = newConver;
-        },
-        setCurrentConversation: (state, action) => {
-            state.currentConversation = action.payload;
-        },
-        updateClassifyToConver: (state, action) => {
-            state.conversations = action.payload;
-        },
-        setConversations: (state, action) => {
-            const conversation = action.payload;
-            state.conversations = [conversation, ...state.conversations];
-        },
-        setNumberUnreadForNewFriend: (state, action) => {
-            const id = action.payload;
-            const index = state.conversations.findIndex(
-                (ele) => ele._id === id
-            );
-            const numberUnread = state.conversations[index].numberUnread + 1;
-            state.conversations[index] = {
-                ...state.conversations[index],
-                numberUnread,
-            };
-        },
-        updateTimeForConver: (state, action) => {
-            const { isOnline, id, lastLogin } = action.payload;
-            const index = state.conversations.findIndex(
-                (ele) => ele._id === id
-            );
-            const newConver = {
-                ...state.conversations[index],
-                isOnline,
-                lastLogin,
-            };
-            state.conversations[index] = newConver;
-        },
-        updateNameOfConver: (state, action) => {
-            const { conversationId, conversationName } = action.payload;
-
-            const index = state.conversations.findIndex(
-                (ele) => ele._id === conversationId
-            );
-
-            state.conversations[index] = {
-                ...state.conversations[index],
-                name: conversationName,
-            };
-        },
-
-        updateLastViewOfMembers: (state, action) => {
-            const { conversationId, userId, lastView, channelId } =
-                action.payload;
-
-            if (channelId) {
-                if (state.currentChannel === channelId) {
-                    const index = state.lastViewOfMember.findIndex(
-                        (ele) => ele.user._id === userId
-                    );
-                    state.lastViewOfMember[index].lastView = lastView;
-                }
-            } else {
-                if (
-                    conversationId === state.currentConversation &&
-                    !state.currentChannel
-                ) {
-                    const index = state.lastViewOfMember.findIndex(
-                        (ele) => ele.user._id === userId
-                    );
-                    state.lastViewOfMember[index].lastView = lastView;
-                }
-            }
-        },
-        updateChannel: (state, action) => {
-            const { _id, name, createdAt } = action.payload;
-            state.channels = [{ _id, name, createdAt }, ...state.channels];
-        },
-
-        setCurrentChannel: (state, action) => {
-            state.currentChannel = action.payload;
-        },
-        removeChannel: (state, action) => {
-            const { channelId } = action.payload;
-            const newChannels = state.channels.filter(
-                (ele) => ele._id !== channelId
-            );
-            state.channels = newChannels;
-        },
-        updateNameChannel: (state, action) => {
-            const { name, channelId } = action.payload;
-
-            const index = state.channels.findIndex(
-                (ele) => ele._id === channelId
-            );
-            state.channels[index] = { ...state.channels[index], name };
-        },
-        updateAvavarConver: (state, action) => {
-            const { conversationId, conversationAvatar } = action.payload;
-            const index = state.conversations.findIndex(
-                (ele) => ele._id === conversationId
-            );
-            state.conversations[index] = {
-                ...state.conversations[index],
-                avatar: conversationAvatar,
-            };
-        },
-        updateVoteMessage: (state, action) => {
-            const { voteMessage } = action.payload;
-            const index = state.messages.findIndex(
-                (ele) => ele._id === voteMessage._id
-            );
-
-            if (index > -1) {
-                state.messages[index] = voteMessage;
-            }
-        },
-        updateFriendChat: (state, action) => {
-            const id = action.payload;
-            state.friends = state.friends.filter((ele) => ele._id !== id);
-        },
-
-        deletedMember: (state, action) => {
-            const { conversationId } = action.payload;
-            const index = state.conversations.findIndex(
-                (ele) => ele._id === conversationId
-            );
-            if (index > -1) {
-                state.conversations[index].totalMembers =
-                    state.conversations[index].totalMembers - 1;
-            }
-        },
-
-        addManagers: (state, action) => {
-            const { conversationId, managerIds } = action.payload;
-            if (conversationId === state.currentConversation) {
-                const index = state.conversations.findIndex(
-                    (ele) => ele._id === conversationId
-                );
-
-                const tempManagerIds =
-                    state.conversations[index].managerIds.concat(managerIds);
-                if (index > -1) {
-                    state.conversations[index] = {
-                        ...state.conversations[index],
-                        managerIds: tempManagerIds,
-                    };
-                }
-            }
-        },
-
-        deleteManager: (state, action) => {
-            const { conversationId, managerIds } = action.payload;
-            if (conversationId === state.currentConversation) {
-                const index = state.conversations.findIndex(
-                    (ele) => ele._id === conversationId
-                );
-
-                const tempManagerIds = state.conversations[
-                    index
-                ].managerIds.filter((ele) => ele !== managerIds[0]);
-                if (index > -1) {
-                    state.conversations[index] = {
-                        ...state.conversations[index],
-                        managerIds: tempManagerIds,
-                    };
-                }
-            }
-        },
-
-        updateVote: (state, action) => {
-            state.votes = action.payload;
-        },
-        updateMemberInconver: (state, action) => {
-            const { conversationId, newMember } = action.payload;
-            state.memberInConversation = newMember;
-            const index = state.conversations.findIndex(
-                (ele) => ele._id === conversationId
-            );
-            if (index > -1) {
-                state.conversations[index].totalMembers = newMember.length;
-            }
-        },
-
-        updateAvatarWhenUpdateMember: (state, action) => {
-            const { conversationId, avatar, totalMembers } = action.payload;
-
-            const index = state.conversations.findIndex(
-                (ele) => ele._id === conversationId
-            );
-
-            state.conversations[index].totalMembers = totalMembers;
-            if (
-                index > -1 &&
-                typeof state.conversations[index].avatar === 'object'
-            ) {
-                state.conversations[index].avatar = avatar;
-            }
-        },
+      state.channels = [searchChannel, ...channelTemps];
     },
-    extraReducers: (builder) => {
-        builder
-            // Conversations
-            .addCase(fetchListConversations.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(fetchListConversations.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.conversations = action.payload;
-            })
-            .addCase(fetchListMessages.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(fetchListMessages.fulfilled, (state, action) => {
-                state.isLoading = false;
 
-                const { conversationId, messages } = action.payload;
-                const conversationIndex = state.conversations.findIndex(
-                    (conv) => conv._id === conversationId
-                );
+    setTotalChannelNotify: (state, action) => {
+      let notify = state.conversations.find(
+        (ele) => ele._id === state.currentConversation,
+      ).numberUnread;
 
-                if (conversationIndex >= 0) {
-                    state.conversations[conversationIndex] = {
-                        ...state.conversations[conversationIndex],
-                        numberUnread: 0,
-                    };
-                }
+      if (state.channels.length > 0) {
+        state.channels.forEach((ele) => {
+          if (ele.numberUnread && ele.numberUnread > 0) {
+            notify = notify + 1;
+          }
+        });
+      }
 
-                state.currentConversation = conversationId;
-                state.messages = messages.data;
-                state.currentPage = messages.page;
-                state.totalPages = messages.totalPages;
-            })
+      state.totalChannelNotify = notify;
+    },
+    setRaisePage: (state, action) => {
+      if (state.currentPage < state.totalPages - 1) {
+        state.currentPage = state.currentPage + 1;
+      }
+    },
 
-            // fetchMessageInChannel
-            .addCase(fetchMessageInChannel.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(fetchMessageInChannel.fulfilled, (state, action) => {
-                state.isLoading = false;
+    setFriends: (state, action) => {
+      state.friends = action.payload;
+    },
 
-                const { messages, channelId } = action.payload;
-                const channelIndex = state.channels.findIndex((c) => c._id === channelId);
+    removeConversation: (state, action) => {
+      const conversationId = action.payload;
+      const newConversations = state.conversations.filter(
+        (ele) => ele._id !== conversationId,
+      );
+      state.conversations = newConversations;
+      state.currentConversation = '';
+    },
 
-                if (channelIndex >= 0) {
-                    state.channels[channelIndex] = {
-                        ...state.channels[channelIndex],
-                        numberUnread: 0,
-                    };
-                }
+    setTypeOfConversation: (state, action) => {
+      const conversationId = action.payload;
+      const conversation = state.conversations.find(
+        (ele) => ele._id === conversationId,
+      );
+      if (conversation) {
+        state.type = conversation.type;
+      }
+    },
 
-                state.currentChannel = channelId;
-                state.messages = messages.data;
-                state.currentPage = messages.page;
-                state.totalPages = messages.totalPages;
-            })
-            .addCase(fetchMessageInChannel.rejected, (state) => {
-                state.isLoading = false;
-            })
+    setRedoMessage: (state, action) => {
+      const { id, conversationId } = action.payload;
+      // lấy mesage đã thu hồi
+      const oldMessage = state.messages.find((message) => message._id === id);
+      const { _id, user, createdAt } = oldMessage;
 
-            // Pagination
-            .addCase(fetchNextPageMessage.fulfilled, (state, action) => {
-                state.messages = [...action.payload.messages.data, ...state.messages];
-                state.currentPage = action.payload.messages.page;
-            })
-            .addCase(fetchNextPageMessageOfChannel.fulfilled, (state, action) => {
-                state.messages = [...action.payload.data, ...state.messages];
-                state.currentPage = action.payload.page;
-            })
+      // lấy index của message
+      const index = state.messages.findIndex((message) => message._id === id);
 
-            // Friends
-            .addCase(fetchListFriends.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(fetchListFriends.fulfilled, (state, action) => {
-                state.friends = action.payload;
-                state.isLoading = false;
-            })
-            .addCase(fetchListFriends.rejected, (state) => {
-                state.isLoading = false;
-            })
+      // tạo message mới
+      const newMessage = {
+        _id,
+        user,
+        createdAt,
+        isDeleted: 'true',
+      };
+      // chèn vào vị trí index 'message đã thu hồi'
+      state.messages[index] = newMessage;
 
-            // Single conversation
-            .addCase(fetchConversationById.fulfilled, (state, action) => {
-                state.conversations = [action.payload, ...state.conversations];
-            })
+      // lastMessage ở conver
+      if (conversationId) {
+        const indexConver = state.conversations.findIndex(
+          (ele) => ele._id === conversationId,
+        );
+        state.conversations[indexConver].lastMessage.isDeleted = true;
+      }
+    },
+    deleteMessageClient: (state, action) => {
+      const id = action.payload;
+      const newMessages = state.messages.filter(
+        (message) => message._id !== id,
+      );
+      state.messages = newMessages;
+    },
 
-            // Members
-            .addCase(getMembersConversation.fulfilled, (state, action) => {
-                state.memberInConversation = action.payload.map((member) => {
-                    const isFriend = state.friends.some((f) => f._id === member._id);
-                    return { ...member, isFriend };
-                });
-            })
+    setToTalUnread: (state, action) => {
+      let tempCount = 0;
+      state.conversations.forEach((ele, index) => {
+        if (ele.numberUnread > 0) tempCount += 1;
+      });
+      state.toTalUnread = tempCount;
+    },
+    setReactionMessage: (state, action) => {
+      const { messageId, user, type } = action.payload;
 
-            // Classify
-            .addCase(fetchListClassify.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(fetchListClassify.fulfilled, (state, action) => {
-                state.classifies = action.payload;
-                state.isLoading = false;
-            })
-            .addCase(fetchListClassify.rejected, (state, action) => {
-                state.classifies = action.payload;
-                state.isLoading = false;
-            })
+      const index = state.messages.findIndex(
+        (message) => message._id === messageId,
+      );
+      const currentMessage = state.messages.find(
+        (message) => message._id === messageId,
+      );
 
-            // Colors
-            .addCase(fetchListColor.fulfilled, (state, action) => {
-                state.colors = action.payload;
-            })
+      const checkIsExist = currentMessage.reacts.findIndex(
+        (ele) => ele.user._id === user._id,
+      );
+      //  có 2 trường hợp
 
-            // Pin messages
-            .addCase(fetchPinMessages.fulfilled, (state, action) => {
-                state.pinMessages = action.payload.reverse();
-            })
+      //  người dùng thả 1 react mới
+      if (checkIsExist >= 0) {
+        state.messages[index].reacts[checkIsExist] = {
+          ...state.messages[index].reacts[checkIsExist],
+          type,
+        };
+      } else {
+        let reacts = [...currentMessage.reacts, { user, type }];
+        state.messages[index].reacts = reacts;
+      }
+    },
+    leaveGroup: (state, action) => {
+      const conversationId = action.payload;
+      const newConvers = state.conversations.filter(
+        (ele) => ele._id !== conversationId,
+      );
+      state.conversations = newConvers;
+      state.currentConversation = '';
+    },
+    isDeletedFromGroup: (state, action) => {
+      const idConver = action.payload;
+      const newConver = state.conversations.filter(
+        (ele) => ele._id !== idConver,
+      );
+      state.conversations = newConver;
+    },
+    setCurrentConversation: (state, action) => {
+      state.currentConversation = action.payload;
+    },
+    updateClassifyToConver: (state, action) => {
+      state.conversations = action.payload;
+    },
+    setConversations: (state, action) => {
+      const conversation = action.payload;
+      state.conversations = [conversation, ...state.conversations];
+    },
+    setNumberUnreadForNewFriend: (state, action) => {
+      const id = action.payload;
+      const index = state.conversations.findIndex((ele) => ele._id === id);
+      const numberUnread = state.conversations[index].numberUnread + 1;
+      state.conversations[index] = {
+        ...state.conversations[index],
+        numberUnread,
+      };
+    },
+    updateTimeForConver: (state, action) => {
+      const { isOnline, id, lastLogin } = action.payload;
+      const index = state.conversations.findIndex((ele) => ele._id === id);
+      const newConver = {
+        ...state.conversations[index],
+        isOnline,
+        lastLogin,
+      };
+      state.conversations[index] = newConver;
+    },
+    updateNameOfConver: (state, action) => {
+      const { conversationId, conversationName } = action.payload;
 
-            // Last view
-            .addCase(getLastViewOfMembers.fulfilled, (state, action) => {
-                state.lastViewOfMember = action.payload;
-            })
-            .addCase(getLastViewChannel.fulfilled, (state, action) => {
-                state.lastViewOfMember = action.payload;
-            })
+      const index = state.conversations.findIndex(
+        (ele) => ele._id === conversationId,
+      );
 
-            // Channels
-            .addCase(fetchChannels.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(fetchChannels.fulfilled, (state, action) => {
-                state.channels = action.payload;
-                state.isLoading = false;
-            })
-            .addCase(fetchChannels.rejected, (state) => {
-                state.isLoading = false;
-            })
+      state.conversations[index] = {
+        ...state.conversations[index],
+        name: conversationName,
+      };
+    },
 
-            // Stickers
-            .addCase(fetchAllSticker.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(fetchAllSticker.fulfilled, (state, action) => {
-                state.stickers = action.payload;
-                state.isLoading = false;
-            })
-            .addCase(fetchAllSticker.rejected, (state) => {
-                state.isLoading = false;
-            })
+    updateLastViewOfMembers: (state, action) => {
+      const { conversationId, userId, lastView, channelId } = action.payload;
 
-            // Votes
-            .addCase(fetchVotes.fulfilled, (state, action) => {
-                state.votes = action.payload.data;
-                state.totalPagesVote = action.payload.totalPages;
-            });
-    }
+      if (channelId) {
+        if (state.currentChannel === channelId) {
+          const index = state.lastViewOfMember.findIndex(
+            (ele) => ele.user._id === userId,
+          );
+          state.lastViewOfMember[index].lastView = lastView;
+        }
+      } else {
+        if (
+          conversationId === state.currentConversation &&
+          !state.currentChannel
+        ) {
+          const index = state.lastViewOfMember.findIndex(
+            (ele) => ele.user._id === userId,
+          );
+          state.lastViewOfMember[index].lastView = lastView;
+        }
+      }
+    },
+    updateChannel: (state, action) => {
+      const { _id, name, createdAt } = action.payload;
+      state.channels = [{ _id, name, createdAt }, ...state.channels];
+    },
+
+    setCurrentChannel: (state, action) => {
+      state.currentChannel = action.payload;
+    },
+    removeChannel: (state, action) => {
+      const { channelId } = action.payload;
+      const newChannels = state.channels.filter((ele) => ele._id !== channelId);
+      state.channels = newChannels;
+    },
+    updateNameChannel: (state, action) => {
+      const { name, channelId } = action.payload;
+
+      const index = state.channels.findIndex((ele) => ele._id === channelId);
+      state.channels[index] = { ...state.channels[index], name };
+    },
+    updateAvavarConver: (state, action) => {
+      const { conversationId, conversationAvatar } = action.payload;
+      const index = state.conversations.findIndex(
+        (ele) => ele._id === conversationId,
+      );
+      state.conversations[index] = {
+        ...state.conversations[index],
+        avatar: conversationAvatar,
+      };
+    },
+    updateVoteMessage: (state, action) => {
+      const { voteMessage } = action.payload;
+      const index = state.messages.findIndex(
+        (ele) => ele._id === voteMessage._id,
+      );
+
+      if (index > -1) {
+        state.messages[index] = voteMessage;
+      }
+    },
+    updateFriendChat: (state, action) => {
+      const id = action.payload;
+      state.friends = state.friends.filter((ele) => ele._id !== id);
+    },
+
+    deletedMember: (state, action) => {
+      const { conversationId } = action.payload;
+      const index = state.conversations.findIndex(
+        (ele) => ele._id === conversationId,
+      );
+      if (index > -1) {
+        state.conversations[index].totalMembers =
+          state.conversations[index].totalMembers - 1;
+      }
+    },
+
+    addManagers: (state, action) => {
+      const { conversationId, managerIds } = action.payload;
+      if (conversationId === state.currentConversation) {
+        const index = state.conversations.findIndex(
+          (ele) => ele._id === conversationId,
+        );
+
+        const tempManagerIds =
+          state.conversations[index].managerIds.concat(managerIds);
+        if (index > -1) {
+          state.conversations[index] = {
+            ...state.conversations[index],
+            managerIds: tempManagerIds,
+          };
+        }
+      }
+    },
+
+    deleteManager: (state, action) => {
+      const { conversationId, managerIds } = action.payload;
+      if (conversationId === state.currentConversation) {
+        const index = state.conversations.findIndex(
+          (ele) => ele._id === conversationId,
+        );
+
+        const tempManagerIds = state.conversations[index].managerIds.filter(
+          (ele) => ele !== managerIds[0],
+        );
+        if (index > -1) {
+          state.conversations[index] = {
+            ...state.conversations[index],
+            managerIds: tempManagerIds,
+          };
+        }
+      }
+    },
+
+    updateVote: (state, action) => {
+      state.votes = action.payload;
+    },
+    updateMemberInconver: (state, action) => {
+      const { conversationId, newMember } = action.payload;
+      state.memberInConversation = newMember;
+      const index = state.conversations.findIndex(
+        (ele) => ele._id === conversationId,
+      );
+      if (index > -1) {
+        state.conversations[index].totalMembers = newMember.length;
+      }
+    },
+
+    updateAvatarWhenUpdateMember: (state, action) => {
+      const { conversationId, avatar, totalMembers } = action.payload;
+
+      const index = state.conversations.findIndex(
+        (ele) => ele._id === conversationId,
+      );
+
+      state.conversations[index].totalMembers = totalMembers;
+      if (index > -1 && typeof state.conversations[index].avatar === 'object') {
+        state.conversations[index].avatar = avatar;
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Conversations
+      .addCase(fetchListConversations.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchListConversations.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.conversations = action.payload;
+      })
+      .addCase(fetchListMessages.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchListMessages.fulfilled, (state, action) => {
+        state.isLoading = false;
+
+        const { conversationId, messages } = action.payload;
+        const conversationIndex = state.conversations.findIndex(
+          (conv) => conv._id === conversationId,
+        );
+
+        if (conversationIndex >= 0) {
+          state.conversations[conversationIndex] = {
+            ...state.conversations[conversationIndex],
+            numberUnread: 0,
+          };
+        }
+
+        state.currentConversation = conversationId;
+        state.messages = messages.data;
+        state.currentPage = messages.page;
+        state.totalPages = messages.totalPages;
+      })
+
+      // fetchMessageInChannel
+      .addCase(fetchMessageInChannel.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchMessageInChannel.fulfilled, (state, action) => {
+        state.isLoading = false;
+
+        const { messages, channelId } = action.payload;
+        const channelIndex = state.channels.findIndex(
+          (c) => c._id === channelId,
+        );
+
+        if (channelIndex >= 0) {
+          state.channels[channelIndex] = {
+            ...state.channels[channelIndex],
+            numberUnread: 0,
+          };
+        }
+
+        state.currentChannel = channelId;
+        state.messages = messages.data;
+        state.currentPage = messages.page;
+        state.totalPages = messages.totalPages;
+      })
+      .addCase(fetchMessageInChannel.rejected, (state) => {
+        state.isLoading = false;
+      })
+
+      // Pagination
+      .addCase(fetchNextPageMessage.fulfilled, (state, action) => {
+        state.messages = [...action.payload.messages.data, ...state.messages];
+        state.currentPage = action.payload.messages.page;
+      })
+      .addCase(fetchNextPageMessageOfChannel.fulfilled, (state, action) => {
+        state.messages = [...action.payload.data, ...state.messages];
+        state.currentPage = action.payload.page;
+      })
+
+      // Friends
+      .addCase(fetchListFriends.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchListFriends.fulfilled, (state, action) => {
+        state.friends = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchListFriends.rejected, (state) => {
+        state.isLoading = false;
+      })
+
+      // Single conversation
+      .addCase(fetchConversationById.fulfilled, (state, action) => {
+        state.conversations = [action.payload, ...state.conversations];
+      })
+
+      // Members
+      .addCase(getMembersConversation.fulfilled, (state, action) => {
+        state.memberInConversation = action.payload.map((member) => {
+          const isFriend = state.friends.some((f) => f._id === member._id);
+          return { ...member, isFriend };
+        });
+      })
+
+      // Classify
+      .addCase(fetchListClassify.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchListClassify.fulfilled, (state, action) => {
+        state.classifies = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchListClassify.rejected, (state, action) => {
+        state.classifies = action.payload;
+        state.isLoading = false;
+      })
+
+      // Colors
+      .addCase(fetchListColor.fulfilled, (state, action) => {
+        state.colors = action.payload;
+      })
+
+      // Pin messages
+      .addCase(fetchPinMessages.fulfilled, (state, action) => {
+        state.pinMessages = action.payload.reverse();
+      })
+
+      // Last view
+      .addCase(getLastViewOfMembers.fulfilled, (state, action) => {
+        state.lastViewOfMember = action.payload;
+      })
+      .addCase(getLastViewChannel.fulfilled, (state, action) => {
+        state.lastViewOfMember = action.payload;
+      })
+
+      // Channels
+      .addCase(fetchChannels.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchChannels.fulfilled, (state, action) => {
+        state.channels = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchChannels.rejected, (state) => {
+        state.isLoading = false;
+      })
+
+      // Stickers
+      .addCase(fetchAllSticker.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchAllSticker.fulfilled, (state, action) => {
+        state.stickers = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchAllSticker.rejected, (state) => {
+        state.isLoading = false;
+      })
+
+      // Votes
+      .addCase(fetchVotes.fulfilled, (state, action) => {
+        state.votes = action.payload.data;
+        state.totalPagesVote = action.payload.totalPages;
+      });
+  },
 });
 
 const { reducer, actions } = chatSlice;
 export const {
-    addMessage,
-    setFriends,
-    removeConversation,
-    setTypeOfConversation,
-    setRaisePage,
-    setRedoMessage,
-    deleteMessageClient,
-    setToTalUnread,
-    setReactionMessage,
-    updateConversationWhenAddMember,
-    leaveGroup,
-    updateMemberLeaveGroup,
-    isDeletedFromGroup,
-    setCurrentConversation,
-    updateClassifyToConver,
-    setConversations,
-    setNumberUnreadForNewFriend,
-    updateTimeForConver,
-    updateNameOfConver,
-    updateLastViewOfMembers,
-    updateChannel,
-    setCurrentChannel,
-    addMessageInChannel,
-    updateNameChannel,
-    updateAvavarConver,
-    removeChannel,
-    setTotalChannelNotify,
-    updateVoteMessage,
-    updateFriendChat,
-    deletedMember,
-    updateVote,
-    addManagers,
-    deleteManager,
-    updateMemberInconver,
-    updateAvatarWhenUpdateMember,
+  addMessage,
+  setFriends,
+  removeConversation,
+  setTypeOfConversation,
+  setRaisePage,
+  setRedoMessage,
+  deleteMessageClient,
+  setToTalUnread,
+  setReactionMessage,
+  updateConversationWhenAddMember,
+  leaveGroup,
+  updateMemberLeaveGroup,
+  isDeletedFromGroup,
+  setCurrentConversation,
+  updateClassifyToConver,
+  setConversations,
+  setNumberUnreadForNewFriend,
+  updateTimeForConver,
+  updateNameOfConver,
+  updateLastViewOfMembers,
+  updateChannel,
+  setCurrentChannel,
+  addMessageInChannel,
+  updateNameChannel,
+  updateAvavarConver,
+  removeChannel,
+  setTotalChannelNotify,
+  updateVoteMessage,
+  updateFriendChat,
+  deletedMember,
+  updateVote,
+  addManagers,
+  deleteManager,
+  updateMemberInconver,
+  updateAvatarWhenUpdateMember,
 } = actions;
 
 export default reducer;

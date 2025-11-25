@@ -3,43 +3,42 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Navbar from '../Navbar';
 
-
-
 Header.propTypes = {
-    data: PropTypes.object,
+  data: PropTypes.object,
 };
-
 
 Header.defaultProps = {
-    data: {}
+  data: {},
 };
 
-
 function Header({ data }) {
-    return (
-        <>
-            <Navbar />
-            <section className="home" id="home">
-                <div className="content">
-                    <h3>
-                        {data.title}
-                        <br />
-                        <span>{data.appname}</span>
-                    </h3>
-                    <p>
-                        {data.description}
-                    </p>
-                    <a href={data.linkDownload} target='_blank' rel="noreferrer" className="btn">
-                        <DownloadOutlined /> Tải ngay phiên bản mobile
-                    </a>
-                </div>
+  return (
+    <>
+      <Navbar />
+      <section className="home" id="home">
+        <div className="content">
+          <h3>
+            {data.title}
+            <br />
+            <span>{data.appname}</span>
+          </h3>
+          <p>{data.description}</p>
+          <a
+            href={data.linkDownload}
+            target="_blank"
+            rel="noreferrer"
+            className="btn"
+          >
+            <DownloadOutlined /> Tải ngay phiên bản mobile
+          </a>
+        </div>
 
-                <div className="image">
-                    <img src={data.image} alt="img" />
-                </div>
-            </section>
-        </>
-    )
+        <div className="image">
+          <img src={data.image} alt="img" />
+        </div>
+      </section>
+    </>
+  );
 }
 
-export default Header
+export default Header;

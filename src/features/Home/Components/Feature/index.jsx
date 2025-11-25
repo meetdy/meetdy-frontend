@@ -2,30 +2,26 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import FeatureBox from '../FeatureBox';
 
-
 Feature.propTypes = {
-    data: PropTypes.array,
+  data: PropTypes.array,
 };
 
 Feature.defaultProps = {
-    data: [],
+  data: [],
 };
 
 function Feature({ data }) {
-    return (
-        <section className="features" id="features">
-            <h1 className="heading">Tính năng </h1>
+  return (
+    <section className="features" id="features">
+      <h1 className="heading">Tính năng </h1>
 
-            <div className="box-container">
-                {data.map((ele, index) => (
-                    <FeatureBox
-                        data={ele}
-                        key={index}
-                    />
-                ))}
-            </div>
-        </section>
-    )
+      <div className="box-container">
+        {data.map((ele, index) => (
+          <FeatureBox data={ele} key={index} />
+        ))}
+      </div>
+    </section>
+  );
 }
 
-export default Feature
+export default Feature;

@@ -7,36 +7,30 @@ import { fetchListMyRequestFriend } from 'features/Friend/friendSlice';
 import { useDispatch } from 'react-redux';
 
 ListMyFriendRequest.propTypes = {
-    data: PropTypes.array,
+  data: PropTypes.array,
 };
 
 function ListMyFriendRequest({ data }) {
+  const dispatch = useDispatch();
+  const handleRemoveMyRequest = async (value) => {
+    await friendApi.deleteSentRequestFriend(value._id);
+    dispatch(fetchListMyRequestFriend());
+  };
 
-    const dispatch = useDispatch();
-    const handleRemoveMyRequest = async (value) => {
-        await friendApi.deleteSentRequestFriend(value._id);
-        dispatch(fetchListMyRequestFriend());
-    }
-
-
-    return (
-        <div className='list-my-friend-request'>
-
-            {(data && data.length > 0) &&
-                data.map((ele, index) => (
-                    <FriendCard
-                        key={index}
-                        isMyRequest={true}
-                        data={ele}
-                        onCancel={handleRemoveMyRequest}
-                    />
-
-                ))
-            }
-
-
-        </div>
-    );
+  return (
+    <div className="list-my-friend-request">
+      {data &&
+        data.length > 0 &&
+        data.map((ele, index) => (
+          <FriendCard
+            key={index}
+            isMyRequest={true}
+            data={ele}
+            onCancel={handleRemoveMyRequest}
+          />
+        ))}
+    </div>
+  );
 }
 
 export default ListMyFriendRequest;

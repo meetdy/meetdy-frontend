@@ -1,106 +1,106 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DashOutlined, DeleteOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import {
+  DashOutlined,
+  DeleteOutlined,
+  InfoCircleOutlined,
+} from '@ant-design/icons';
 import PersonalIcon from 'features/Chat/components/PersonalIcon';
 import { Menu, Dropdown, Button } from 'antd';
 import conversationApi from 'api/conversationApi';
-import { fetchListMessages, setConversations, setCurrentConversation } from 'features/Chat/slice/chatSlice';
-import { useNavigate } from "react-router-dom";
+import {
+  fetchListMessages,
+  setConversations,
+  setCurrentConversation,
+} from 'features/Chat/slice/chatSlice';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import dateUtils from 'utils/dateUtils';
 
 FriendItem.propTypes = {
-    data: PropTypes.object.isRequired,
-    onClickMenu: PropTypes.func,
+  data: PropTypes.object.isRequired,
+  onClickMenu: PropTypes.func,
 };
 
 FriendItem.defaultProps = {
-    onClickMenu: null
+  onClickMenu: null,
 };
 
 function FriendItem({ data, onClickMenu }) {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const handleClickMenu = ({ key }) => {
-        if (onClickMenu) {
-            onClickMenu(key, data._id);
-        }
+  const handleClickMenu = ({ key }) => {
+    if (onClickMenu) {
+      onClickMenu(key, data._id);
+    }
+  };
+
+  const handleClickFriendItem = async () => {
+    const response = await conversationApi.createConversationIndividual(
+      data._id,
+    );
+    const { _id, isExists } = response;
+
+    if (!isExists) {
+      const conver = await conversationApi.getConversationById(data._id);
+      dispatch(setConversations(conver));
     }
 
-    const handleClickFriendItem = async () => {
-        const response = await conversationApi.createConversationIndividual(data._id);
-        const { _id, isExists } = response;
+    dispatch(fetchListMessages({ conversationId: _id, size: 10 }));
+    dispatch(setCurrentConversation(_id));
 
-        if (!isExists) {
-            const conver = await conversationApi.getConversationById(data._id);
-            dispatch(setConversations(conver));
-        }
+    navigate('/chat');
+  };
 
-        dispatch(fetchListMessages({ conversationId: _id, size: 10 }));
-        dispatch(setCurrentConversation(_id));
+  const menu = (
+    <Menu onClick={handleClickMenu}>
+      <Menu.Item key="1" icon={<InfoCircleOutlined />}>
+        <span className="menu-item--highlight">Xem thông tin</span>
+      </Menu.Item>
+      <Menu.Item key="2" danger icon={<DeleteOutlined />}>
+        <span className="menu-item--highlight">Xóa bạn</span>
+      </Menu.Item>
+    </Menu>
+  );
 
-        navigate('/chat');
-    }
+  return (
+    <Dropdown overlay={menu} trigger={['contextMenu']}>
+      <div id="friend-item">
+        <div className="friend-item_left" onClick={handleClickFriendItem}>
+          <div className="friend-item-avatar">
+            <PersonalIcon
+              isActive={data.isOnline && data.isOnline}
+              avatar={data.avatar}
+              name={data.name}
+              color={data.avatarColor}
+            />
+          </div>
 
-    const menu = (
-        <Menu onClick={handleClickMenu}>
-            <Menu.Item key="1" icon={<InfoCircleOutlined />}>
-                <span className='menu-item--highlight'>Xem thông tin</span>
-            </Menu.Item>
-            <Menu.Item key="2" danger icon={<DeleteOutlined />}>
-                <span className='menu-item--highlight'>Xóa bạn</span>
-            </Menu.Item>
-        </Menu>
-    );
+          <div className="friend-item-name">
+            {data.name}
 
-
-    return (
-
-        <Dropdown overlay={menu} trigger={['contextMenu']}>
-            <div id='friend-item' >
-                <div className="friend-item_left" onClick={handleClickFriendItem}>
-                    <div className="friend-item-avatar">
-                        <PersonalIcon
-                            isActive={data.isOnline && data.isOnline}
-                            avatar={data.avatar}
-                            name={data.name}
-                            color={data.avatarColor}
-                        />
-                    </div>
-
-                    <div className="friend-item-name">
-                        {data.name}
-
-                        {data.lastLogin && (
-                            <div className="recent-login">
-                                {`Truy cập ${dateUtils.toTime(data.lastLogin)} trước`}
-                            </div>
-                        )}
-                    </div>
-
-
-                </div>
-                <div className="friend-item_right">
-                    <div className="friend-item-interact">
-                        <Dropdown overlay={menu} trigger={['click']}>
-                            <Button
-                                type='text'
-                                icon={<DashOutlined />}
-                                style={{ background: 'eeeff2' }}
-                            />
-
-                        </Dropdown>
-
-
-                    </div>
-                </div>
-
-
-            </div>
-        </Dropdown>
-
-    );
+            {data.lastLogin && (
+              <div className="recent-login">
+                {`Truy cập ${dateUtils.toTime(data.lastLogin)} trước`}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="friend-item_right">
+          <div className="friend-item-interact">
+            <Dropdown overlay={menu} trigger={['click']}>
+              <Button
+                type="text"
+                icon={<DashOutlined />}
+                style={{ background: 'eeeff2' }}
+              />
+            </Dropdown>
+          </div>
+        </div>
+      </div>
+    </Dropdown>
+  );
 }
 
 export default FriendItem;

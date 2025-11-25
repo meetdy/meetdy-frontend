@@ -11,41 +11,41 @@ import UserPage from './pages/UserPage';
 const { Content } = Layout;
 
 function Admin(props) {
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        window.location.reload();
-    };
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    window.location.reload();
+  };
 
-    return (
-        <Layout style={{ minHeight: '100vh' }}>
-            <SiderBar />
-            <Layout className="site-layout">
-                <div style={{ backgroundColor: 'white', padding: '20px' }}>
-                    <Button onClick={handleLogout}>Đăng xuất</Button>
-                </div>
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      <SiderBar />
+      <Layout className="site-layout">
+        <div style={{ backgroundColor: 'white', padding: '20px' }}>
+          <Button onClick={handleLogout}>Đăng xuất</Button>
+        </div>
 
-                <Content
-                    style={{
-                        margin: '10px 10px',
-                        background: 'white',
-                    }}
-                >
-                    <Routes>
-                        <Route index element={<UserPage />} />
+        <Content
+          style={{
+            margin: '10px 10px',
+            background: 'white',
+          }}
+        >
+          <Routes>
+            <Route index element={<UserPage />} />
 
-                        <Route path="stickers" element={<StickerGroupPage />} />
+            <Route path="stickers" element={<StickerGroupPage />} />
 
-                        <Route path="stickers/:id" element={<StickerPage />} />
+            <Route path="stickers/:id" element={<StickerPage />} />
 
-                        <Route path="*" element={<NotFoundPage />} />
-                    </Routes>
-                </Content>
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Content>
 
-                <AdminFooter />
-            </Layout>
-        </Layout>
-    );
+        <AdminFooter />
+      </Layout>
+    </Layout>
+  );
 }
 
 export default Admin;

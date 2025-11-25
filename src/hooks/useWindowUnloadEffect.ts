@@ -1,20 +1,20 @@
 import { useEffect, useRef } from 'react';
 const useWindowUnloadEffect = (handler, callOnCleanup) => {
-    const cb = useRef();
+  const cb = useRef();
 
-    cb.current = handler;
+  cb.current = handler;
 
-    useEffect(() => {
-        const handler = () => cb.current();
+  useEffect(() => {
+    const handler = () => cb.current();
 
-        window.addEventListener('beforeunload', handler);
+    window.addEventListener('beforeunload', handler);
 
-        return () => {
-            if (callOnCleanup) handler();
+    return () => {
+      if (callOnCleanup) handler();
 
-            window.removeEventListener('beforeunload', handler);
-        };
-    }, [cb, callOnCleanup]);
+      window.removeEventListener('beforeunload', handler);
+    };
+  }, [cb, callOnCleanup]);
 };
 
 export default useWindowUnloadEffect;

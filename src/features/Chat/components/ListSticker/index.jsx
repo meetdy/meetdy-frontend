@@ -3,33 +3,30 @@ import PropTypes from 'prop-types';
 import StickerItem from '../StickerItem';
 
 ListSticker.propTypes = {
-    data: PropTypes.array,
-    onClose: PropTypes.func,
-    onScroll: PropTypes.func,
+  data: PropTypes.array,
+  onClose: PropTypes.func,
+  onScroll: PropTypes.func,
 };
 
 ListSticker.propTypes = {
-    data: [],
-    onClose: null,
-    onScroll: null
-
+  data: [],
+  onClose: null,
+  onScroll: null,
 };
 
-
 function ListSticker({ data, onClose, onScroll }) {
-    return (
-        <div id='sticker-list'>
-            {data.map((ele, index) => (
-                <StickerItem
-                    key={index}
-                    data={ele}
-                    onClose={onClose}
-                    onScroll={onScroll}
-                />
-            ))}
-
-        </div>
-    );
+  return (
+    <div id="sticker-list">
+      {data.map((ele, index) => (
+        <StickerItem
+          key={index}
+          data={ele}
+          onClose={onClose}
+          onScroll={onScroll}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default ListSticker;

@@ -3,28 +3,32 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 DevInfoBox.propTypes = {
-    data: PropTypes.object,
+  data: PropTypes.object,
 };
 
-
 DevInfoBox.defaultProps = {
-    data: {}
+  data: {},
 };
 
 function DevInfoBox({ data }) {
-    return (
-        <div className="box">
-            <div className="user">
-                <img src={data.image} alt="dev" />
-                <h3>{data.name}</h3>
-                <div className="contact-info">
-                    <span><MailTwoTone />&nbsp;Email: {data.email}</span>
-                    <span><GithubOutlined />&nbsp;Github: <a href={data.github}>{data.github}</a></span>
-
-                </div>
-            </div>
+  return (
+    <div className="box">
+      <div className="user">
+        <img src={data.image} alt="dev" />
+        <h3>{data.name}</h3>
+        <div className="contact-info">
+          <span>
+            <MailTwoTone />
+            &nbsp;Email: {data.email}
+          </span>
+          <span>
+            <GithubOutlined />
+            &nbsp;Github: <a href={data.github}>{data.github}</a>
+          </span>
         </div>
-    )
+      </div>
+    </div>
+  );
 }
 
 export default DevInfoBox;

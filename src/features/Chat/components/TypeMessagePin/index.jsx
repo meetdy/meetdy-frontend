@@ -7,107 +7,81 @@ import { defaultStyles, FileIcon } from 'react-file-icon';
 import fileHelpers from 'utils/fileHelpers';
 
 TypeMessagePin.propTypes = {
-    type: PropTypes.string,
-    content: PropTypes.string,
-    name: PropTypes.string,
+  type: PropTypes.string,
+  content: PropTypes.string,
+  name: PropTypes.string,
 };
-
 
 TypeMessagePin.defaultProps = {
-    type: '',
-    content: '',
-    name: ''
+  type: '',
+  content: '',
+  name: '',
 };
 
-
-
 function TypeMessagePin({ type, content, name }) {
+  const fileName = type === 'FILE' ? fileHelpers.getFileName(content) : '';
+  const fileExtension =
+    type === 'FILE' ? fileHelpers.getFileExtension(fileName) : '';
 
+  return (
+    <div className="type-pin-message">
+      {type === 'TEXT' && (
+        <div className="text-pin">{`${name}: ${content}`}</div>
+      )}
 
-    const fileName = type === 'FILE' ? fileHelpers.getFileName(content) : '';
-    const fileExtension = type === 'FILE' ? fileHelpers.getFileExtension(fileName) : '';
+      {type === 'IMAGE' && (
+        <div className="type-pin-message_IMAGE">
+          <div className="type-pin-message_name">{name}:&nbsp;</div>
 
-    return (
-        <div className='type-pin-message'>
-            {
-                type === 'TEXT' && (
-                    <div className='text-pin'>{`${name}: ${content}`}</div>
-                )
-            }
-
-            {
-                type === 'IMAGE' && (
-                    <div className='type-pin-message_IMAGE'>
-                        <div className="type-pin-message_name">
-                            {name}:&nbsp;
-                        </div>
-
-                        <div className="type-pin-message_des">
-                            <Image
-                                height={20}
-                                src={content}
-                                preview={{ mask: <OverlayImage />, visible: false }}
-                            />
-                        </div>
-
-                    </div>
-
-                )
-            }
-
-            {
-                type === 'HTML' && (
-                    <div className='type-pin-message_HTML'>
-                        <div className="type-pin-message_name">
-                            {name}:&nbsp;
-                        </div>
-
-                        <div className="type-pin-message_des">
-                            <FontColorsOutlined /> văn bản
-                        </div>
-                    </div>
-                )
-            }
-
-            {
-                type === 'VIDEO' && (
-                    <div className='type-pin-message_VIDEO'>
-                        <div className="type-pin-message_name">
-                            {name}:&nbsp;
-                        </div>
-
-                        <div className="type-pin-message_des">
-                            video&nbsp;<PlaySquareOutlined />
-                        </div>
-                    </div>
-                )
-            }
-
-            {
-                type === 'FILE' && (
-                    <div className='type-pin-message_FILE'>
-                        <div className="type-pin-message_name">
-                            {name}:&nbsp;
-                        </div>
-
-                        <div className="type-pin-message_des_FILE">
-                            <div className="file_info-icon">
-                                <FileIcon
-                                    extension={fileExtension}
-                                    {...defaultStyles[fileExtension]}
-                                />
-                            </div>
-
-                            <div className="file_info-name">
-                                {fileName}
-                            </div>
-                        </div>
-
-                    </div>
-                )
-            }
+          <div className="type-pin-message_des">
+            <Image
+              height={20}
+              src={content}
+              preview={{ mask: <OverlayImage />, visible: false }}
+            />
+          </div>
         </div>
-    );
+      )}
+
+      {type === 'HTML' && (
+        <div className="type-pin-message_HTML">
+          <div className="type-pin-message_name">{name}:&nbsp;</div>
+
+          <div className="type-pin-message_des">
+            <FontColorsOutlined /> văn bản
+          </div>
+        </div>
+      )}
+
+      {type === 'VIDEO' && (
+        <div className="type-pin-message_VIDEO">
+          <div className="type-pin-message_name">{name}:&nbsp;</div>
+
+          <div className="type-pin-message_des">
+            video&nbsp;
+            <PlaySquareOutlined />
+          </div>
+        </div>
+      )}
+
+      {type === 'FILE' && (
+        <div className="type-pin-message_FILE">
+          <div className="type-pin-message_name">{name}:&nbsp;</div>
+
+          <div className="type-pin-message_des_FILE">
+            <div className="file_info-icon">
+              <FileIcon
+                extension={fileExtension}
+                {...defaultStyles[fileExtension]}
+              />
+            </div>
+
+            <div className="file_info-name">{fileName}</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default TypeMessagePin;

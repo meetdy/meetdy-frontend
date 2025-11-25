@@ -9,18 +9,18 @@ import { useSelector } from 'react-redux';
 Test.propTypes = {};
 
 function Test(props) {
-    const { url } = useResolvedPath();
-    const { isLoading } = useSelector((state) => state.chat);
+  const { url } = useResolvedPath();
+  const { isLoading } = useSelector((state) => state.chat);
 
-    return (
-        <Spin spinning={isLoading}>
-            <Switch>
-                <Route exact path={url} component={MainPage} />
+  return (
+    <Spin spinning={isLoading}>
+      <Switch>
+        <Route exact path={url} component={MainPage} />
 
-                <Route component={NotFoundPage} />
-            </Switch>
-        </Spin>
-    );
+        <Route component={NotFoundPage} />
+      </Switch>
+    </Spin>
+  );
 }
 
 export default Chat;

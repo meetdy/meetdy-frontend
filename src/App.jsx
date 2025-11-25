@@ -16,64 +16,59 @@ import { fetchUserProfile } from 'app/globalSlice';
 import { fetchInfoWebs } from 'features/Home/homeSlice';
 
 function App() {
-    const dispatch = useDispatch();
-    const [isFetch, setIsFetch] = useState(false);
+  const dispatch = useDispatch();
+  const [isFetch, setIsFetch] = useState(false);
 
-    const user = useSelector(state => state.global.user);
-    const isAuth = !!user;
-    const isAdmin = user?.role === 'admin';
+  const user = useSelector((state) => state.global.user);
+  const isAuth = !!user;
+  const isAdmin = user?.role === 'admin';
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            const token = localStorage.getItem('token');
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem('token');
 
-            if (token) {
-                await dispatch(fetchUserProfile());
-            }
+      if (token) {
+        await dispatch(fetchUserProfile());
+      }
 
-            setIsFetch(true);
-        };
+      setIsFetch(true);
+    };
 
-        fetchProfile();
-    }, []);
+    fetchProfile();
+  }, []);
 
-    useEffect(() => {
-        dispatch(fetchInfoWebs());
-    }, []);
+  useEffect(() => {
+    dispatch(fetchInfoWebs());
+  }, []);
 
-    if (!isFetch) return '';
+  if (!isFetch) return '';
 
-    return (
-        <BrowserRouter>
-            <div className="App">
-                <Routes>
+  return (
+    <BrowserRouter>
+      <div className="App">
+        <Routes>
+          {/* Public */}
+          <Route path="/" element={<Home />} />
+          <Route path="/jf-link/:conversationId" element={<JoinFromLink />} />
+          <Route path="/account/*" element={<Account />} />
 
-                    {/* Public */}
-                    <Route path="/" element={<Home />} />
-                    <Route path="/jf-link/:conversationId" element={<JoinFromLink />} />
-                    <Route path="/account/*" element={<Account />} />
+          {/* Protected */}
+          <Route element={<ProtectedRoute isAuth={isAuth} />}>
+            <Route path="/chat/*" element={<ChatLayout />} />
+            <Route path="/call-video/:conversationId" element={<CallVideo />} />
+          </Route>
 
-                    {/* Protected */}
-                    <Route element={<ProtectedRoute isAuth={isAuth} />}>
-                        <Route path="/chat/*" element={<ChatLayout />} />
-                        <Route
-                            path="/call-video/:conversationId"
-                            element={<CallVideo />}
-                        />
-                    </Route>
+          {/* Admin */}
+          <Route element={<AdminProtectedRoute isAdmin={isAdmin} />}>
+            <Route path="/admin/*" element={<Admin />} />
+          </Route>
 
-                    {/* Admin */}
-                    <Route element={<AdminProtectedRoute isAdmin={isAdmin} />}>
-                        <Route path="/admin/*" element={<Admin />} />
-                    </Route>
-
-                    {/* 404 */}
-                    <Route path="*" element={<NotFoundPage />} />
-
-                </Routes>
-            </div>
-        </BrowserRouter>
-    );
+          {/* 404 */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
 }
 
 export default App;

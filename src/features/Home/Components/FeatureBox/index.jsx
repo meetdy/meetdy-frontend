@@ -2,23 +2,21 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 FeatureBox.propTypes = {
-    data: PropTypes.object,
+  data: PropTypes.object,
 };
 
 FeatureBox.defaultProps = {
-    data: {},
+  data: {},
 };
 
 function FeatureBox({ data }) {
-    return (
-        <div className="box">
-            <img src={data.image} alt='feature' />
-            <h3>{data.title}</h3>
-            <p>
-                {data.descrpition}
-            </p>
-        </div>
-    );
+  return (
+    <div className="box">
+      <img src={data.image} alt="feature" />
+      <h3>{data.title}</h3>
+      <p>{data.descrpition}</p>
+    </div>
+  );
 }
 
 export default FeatureBox;

@@ -7,14 +7,14 @@ const { Text } = Typography;
 Footer.propTypes = {};
 
 function Footer(props) {
-    return (
-        <div style={{ textAlign: 'center' }}>
-            <Divider></Divider>
-            <Text strong style={{ fontSize: '20px' }}>
-                Footer
-            </Text>
-        </div>
-    );
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <Divider></Divider>
+      <Text strong style={{ fontSize: '20px' }}>
+        Footer
+      </Text>
+    </div>
+  );
 }
 
 export default Footer;

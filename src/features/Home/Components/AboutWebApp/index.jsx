@@ -4,44 +4,43 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 AboutWebApp.propTypes = {
-    data: PropTypes.object,
+  data: PropTypes.object,
 };
-
 
 AboutWebApp.defaultProps = {
-    data: {}
+  data: {},
 };
 
-
-
 function AboutWebApp({ data }) {
-    return (
-        <section className="about" id="about">
-            <h1 className="heading">Ứng dụng</h1>
+  return (
+    <section className="about" id="about">
+      <h1 className="heading">Ứng dụng</h1>
 
-            <div className="column">
-                <div className="image">
-                    <img src={data.image} alt="intro" />
-                </div>
+      <div className="column">
+        <div className="image">
+          <img src={data.image} alt="intro" />
+        </div>
 
-                <div className="content">
-                    <h3>{data.title}</h3>
+        <div className="content">
+          <h3>{data.title}</h3>
 
-                    {data.desciption && data.desciption.map((ele, index) => (
-                        <p key={index}>
-                            <CheckCircleTwoTone />&nbsp;{ele}
-                        </p>
-                    ))}
+          {data.desciption &&
+            data.desciption.map((ele, index) => (
+              <p key={index}>
+                <CheckCircleTwoTone />
+                &nbsp;{ele}
+              </p>
+            ))}
 
-                    <div className="buttons center">
-                        <Link to='/account/login' className="btn">
-                            <FireOutlined /> Trải nghiệm phiên bản Web
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        </section>
-    )
+          <div className="buttons center">
+            <Link to="/account/login" className="btn">
+              <FireOutlined /> Trải nghiệm phiên bản Web
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
-export default AboutWebApp
+export default AboutWebApp;

@@ -1,14 +1,10 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ],
+  "extends": "./tsconfig.json",
   "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "allowJs": true,
+    "checkJs": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
@@ -23,5 +19,6 @@
       "layout/*": ["./src/layout/*"],
       "utils/*": ["./src/utils/*"]
     }
-  }
+  },
+  "include": ["src"]
 }

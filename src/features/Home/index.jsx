@@ -9,17 +9,18 @@ import Footer from './Components/Footer';
 import Header from './Components/Header';
 
 function Home(props) {
-    const { developers, infoApp, isLoading, features, infoWebApps } =
-        useSelector((state) => state.home);
+  const { developers, infoApp, isLoading, features, infoWebApps } = useSelector(
+    (state) => state.home,
+  );
 
-    return (
-        <Spin size="large" spinning={isLoading}>
-            <div className="home_page">
-                <Header data={infoApp} />
-                <Footer data={infoWebApps} />
-            </div>
-        </Spin>
-    );
+  return (
+    <Spin size="large" spinning={isLoading}>
+      <div className="home_page">
+        <Header data={infoApp} />
+        <Footer data={infoWebApps} />
+      </div>
+    </Spin>
+  );
 }
 
 export default Home;

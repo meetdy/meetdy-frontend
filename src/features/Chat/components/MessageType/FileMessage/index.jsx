@@ -5,85 +5,58 @@ import fileHelpers from 'utils/fileHelpers';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 
 FileMessage.propTypes = {
-    content: PropTypes.string.isRequired,
-    dateAt: PropTypes.object.isRequired,
-    isSeen: PropTypes.bool,
+  content: PropTypes.string.isRequired,
+  dateAt: PropTypes.object.isRequired,
+  isSeen: PropTypes.bool,
 };
 
 FileMessage.defaultProps = {
-    isSeen: false
-
+  isSeen: false,
 };
 
 function FileMessage({ content, children, dateAt, isSeen }) {
+  const handleOnClickDownLoad = () => {
+    window.open(content, '_blank');
+  };
 
-    const handleOnClickDownLoad = () => {
-        window.open(content, '_blank');
-    };
+  const handleOnClickShare = () => {};
 
-    const handleOnClickShare = () => {
+  const fileName = fileHelpers.getFileName(content);
+  const fileExtension = fileHelpers.getFileExtension(fileName);
 
-    }
+  return (
+    <>
+      <div className="file_info-wrapper message">
+        <div className="file_info">
+          <div className="file_info-icon">
+            <FileIcon
+              extension={fileExtension}
+              {...defaultStyles[fileExtension]}
+            />
+          </div>
 
-    const fileName = fileHelpers.getFileName(content);
-    const fileExtension =
-        fileHelpers.getFileExtension(fileName);
+          <div className="file_info-name">{fileName}</div>
+        </div>
 
+        <div className="icon-download" onClick={handleOnClickDownLoad}>
+          <DownloadOutlined />
+        </div>
+      </div>
 
-    return (
-        <>
-            <div className='file_info-wrapper message'>
-                <div className="file_info">
-                    <div className="file_info-icon">
-                        <FileIcon
-                            extension={fileExtension}
-                            {...defaultStyles[fileExtension]}
-                        />
-                    </div>
+      <div className="time-and-last_view">
+        <div className="time-send">
+          <span>
+            {`0${dateAt.getHours()}`.slice(-2)}:
+            {`0${dateAt.getMinutes()}`.slice(-2)}
+          </span>
+        </div>
 
-                    <div className="file_info-name">
-                        {fileName}
-                    </div>
-                </div>
+        {isSeen && <div className="is-seen-message">Đã xem</div>}
+      </div>
 
-                <div className="icon-download" onClick={handleOnClickDownLoad}>
-                    <DownloadOutlined />
-                </div>
-
-            </div>
-
-
-            <div className="time-and-last_view">
-
-                <div className="time-send">
-                    <span>
-                        {`0${dateAt.getHours()}`.slice(
-                            -2
-                        )}
-                        :
-                        {`0${dateAt.getMinutes()}`.slice(
-                            -2
-                        )}
-                    </span>
-
-                </div>
-
-                {
-                    isSeen && (
-                        <div className="is-seen-message">
-                            Đã xem
-                        </div>
-                    )
-
-                }
-            </div>
-
-            {children}
-
-
-
-        </>
-    );
+      {children}
+    </>
+  );
 }
 
 export default FileMessage;
