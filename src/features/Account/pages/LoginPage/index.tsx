@@ -21,8 +21,9 @@ import { Separator } from '@/components/ui/separator';
 function LoginPage() {
   const dispatch = useDispatch();
   const [isError, setError] = useState(false);
-  const [isVerify, setVerify] = useState(true);
   const navigate = useNavigate();
+
+  const isVerify = true;
 
   const handleSubmit = async (values) => {
     const { username, password } = values;
