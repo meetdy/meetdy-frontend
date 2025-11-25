@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import FriendCard from '../FriendCard';
-import friendApi from 'api/friendApi';
-import { fetchListMyRequestFriend } from 'features/Friend/friendSlice';
+import friendApi from '@/api/friendApi';
+import { fetchListMyRequestFriend } from '@/features/Friend/friendSlice';
 import { useDispatch } from 'react-redux';
 
 ListMyFriendRequest.propTypes = {

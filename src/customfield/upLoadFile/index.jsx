@@ -1,6 +1,6 @@
 import { message, Upload } from 'antd';
-import messageApi from 'api/messageApi';
-import ACCEPT_FILE from 'constants/acceptFile';
+import messageApi from '@/api/messageApi';
+import ACCEPT_FILE from '@/constants/acceptFile';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';

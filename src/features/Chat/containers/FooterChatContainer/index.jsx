@@ -1,10 +1,10 @@
 import { LikeTwoTone, SendOutlined, SmileOutlined } from '@ant-design/icons';
 import { Mentions } from 'antd';
-import messageApi from 'api/messageApi';
-import NavigationChatBox from 'features/Chat/components/NavigationChatBox';
-import PersonalIcon from 'features/Chat/components/PersonalIcon';
-import ReplyBlock from 'features/Chat/components/ReplyBlock';
-import TextEditor from 'features/Chat/components/TextEditor';
+import messageApi from '@/api/messageApi';
+import NavigationChatBox from '@/features/Chat/components/NavigationChatBox';
+import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import ReplyBlock from '@/features/Chat/components/ReplyBlock';
+import TextEditor from '@/features/Chat/components/TextEditor';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';

@@ -2,7 +2,7 @@ import { TagFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import classifyUtils from 'utils/classifyUtils';
+import classifyUtils from '@/utils/classifyUtils';
 import ConversationAvatar from '../ConversationAvatar';
 import ShortMessage from '../ShortMessage';
 

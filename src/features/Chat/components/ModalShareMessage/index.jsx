@@ -1,7 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { Checkbox, Col, Divider, Input, message, Modal, Row } from 'antd';
-import conversationApi from 'api/conversationApi';
-import messageApi from 'api/messageApi';
+import conversationApi from '@/api/conversationApi';
+import messageApi from '@/api/messageApi';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import ConversationAvatar from '../ConversationAvatar';

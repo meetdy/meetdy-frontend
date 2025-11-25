@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { CaretDownOutlined } from '@ant-design/icons';
 import ImageItem from '../ImageItem';
 import { Image } from 'antd';
-import ModalVideoCustom from 'components/ModalVideoCustom';
-import ThumbnailCustom from 'components/ThumbnailCustom';
+import ModalVideoCustom from '@/components/ModalVideoCustom';
+import ThumbnailCustom from '@/components/ThumbnailCustom';
 
 ArchiveMedia.propTypes = {
   viewMediaClick: PropTypes.func,

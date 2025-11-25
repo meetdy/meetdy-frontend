@@ -4,18 +4,18 @@ import {
   UndoOutlined,
 } from '@ant-design/icons';
 import { Button, Dropdown, Menu, message as mesageNotify } from 'antd';
-import messageApi from 'api/messageApi';
-import pinMessageApi from 'api/pinMessageApi';
-import ModalChangePinMessage from 'components/ModalChangePinMessage';
-import MESSAGE_STYLE from 'constants/MessageStyle/messageStyle';
-import PersonalIcon from 'features/Chat/components/PersonalIcon';
+import messageApi from '@/api/messageApi';
+import pinMessageApi from '@/api/pinMessageApi';
+import ModalChangePinMessage from '@/components/ModalChangePinMessage';
+import MESSAGE_STYLE from '@/constants/MessageStyle/messageStyle';
+import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import { FaReplyAll } from 'react-icons/fa';
 import { MdQuestionAnswer } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkLeader } from 'utils/groupUtils';
+import { checkLeader } from '@/utils/groupUtils';
 import { deleteMessageClient, fetchPinMessages } from '../../slice/chatSlice';
 import LastView from '../LastView';
 import ListReaction from '../ListReaction';

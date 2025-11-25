@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import MESSAGE_STYLE from 'constants/MessageStyle/messageStyle';
+import MESSAGE_STYLE from '@/constants/MessageStyle/messageStyle';
 VideoMessage.propTypes = {
   content: PropTypes.string,
   dateAt: PropTypes.object,

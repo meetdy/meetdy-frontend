@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import friendApi from 'api/friendApi';
-import conversationApi from 'api/conversationApi';
-import phoneBookApi from 'api/phoneBookApi';
+import friendApi from '@/api/friendApi';
+import conversationApi from '@/api/conversationApi';
+import phoneBookApi from '@/api/phoneBookApi';
 const KEY = 'friend';
 
 export const fetchListRequestFriend = createAsyncThunk(

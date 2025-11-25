@@ -1,8 +1,8 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { message, Modal } from 'antd';
-import friendApi from 'api/friendApi';
-import userApi from 'api/userApi';
-import UserCard from 'components/UserCard';
+import friendApi from '@/api/friendApi';
+import userApi from '@/api/userApi';
+import UserCard from '@/components/UserCard';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';

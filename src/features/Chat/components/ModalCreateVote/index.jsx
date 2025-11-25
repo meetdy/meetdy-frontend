@@ -1,6 +1,6 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message, Modal } from 'antd';
-import voteApi from 'api/voteApi';
+import voteApi from '@/api/voteApi';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';

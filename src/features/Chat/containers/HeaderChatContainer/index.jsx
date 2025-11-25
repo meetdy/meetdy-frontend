@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
-import HeaderOptional from 'features/Chat/components/HeaderOptional';
+import HeaderOptional from '@/features/Chat/components/HeaderOptional';
 
 HeaderChatContainer.propTypes = {
   onPopUpInfo: PropTypes.func,

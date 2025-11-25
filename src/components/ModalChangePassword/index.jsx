@@ -1,9 +1,9 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Form, Input, message, Modal } from 'antd';
-import meApi from 'api/meApi';
+import meApi from '@/api/meApi';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import generateCode from 'utils/generateCode';
+import generateCode from '@/utils/generateCode';
 
 ModalChangePassword.propTypes = {
   visible: PropTypes.bool.isRequired,

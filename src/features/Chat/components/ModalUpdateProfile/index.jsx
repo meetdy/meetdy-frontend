@@ -1,11 +1,11 @@
 import { Col, Modal, Row, Select } from 'antd';
-import meApi from 'api/meApi';
-import { setAvatarProfile } from 'app/globalSlice';
-import UploadAvatar from 'components/UploadAvatar';
-import UploadCoverImage from 'components/UploadConverImage';
-import DateOfBirthField from 'customfield/DateOfBirthField';
-import GenderRadioField from 'customfield/GenderRadioField';
-import InputFieldNotTitle from 'customfield/InputFieldNotTitle';
+import meApi from '@/api/meApi';
+import { setAvatarProfile } from '@/app/globalSlice';
+import UploadAvatar from '@/components/UploadAvatar';
+import UploadCoverImage from '@/components/UploadConverImage';
+import DateOfBirthField from '@/customfield/DateOfBirthField';
+import GenderRadioField from '@/customfield/GenderRadioField';
+import InputFieldNotTitle from '@/customfield/InputFieldNotTitle';
 import { FastField, Form, Formik } from 'formik';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';

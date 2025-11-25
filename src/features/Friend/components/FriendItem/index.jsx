@@ -5,17 +5,17 @@ import {
   DeleteOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
-import PersonalIcon from 'features/Chat/components/PersonalIcon';
+import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 import { Menu, Dropdown, Button } from 'antd';
-import conversationApi from 'api/conversationApi';
+import conversationApi from '@/api/conversationApi';
 import {
   fetchListMessages,
   setConversations,
   setCurrentConversation,
-} from 'features/Chat/slice/chatSlice';
+} from '@/features/Chat/slice/chatSlice';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import dateUtils from 'utils/dateUtils';
+import dateUtils from '@/utils/dateUtils';
 
 FriendItem.propTypes = {
   data: PropTypes.object.isRequired,

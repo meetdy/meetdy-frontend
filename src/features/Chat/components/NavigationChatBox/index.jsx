@@ -6,7 +6,7 @@ import {
   SmileOutlined,
 } from '@ant-design/icons';
 import { Button, Dropdown, Menu, Popover } from 'antd';
-import UploadFile from 'customfield/upLoadFile';
+import UploadFile from '@/customfield/upLoadFile';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { BsNewspaper } from 'react-icons/bs';

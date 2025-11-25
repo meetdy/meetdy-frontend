@@ -3,8 +3,8 @@ import {
   UserDeleteOutlined,
 } from '@ant-design/icons';
 import { Button, Image, message, Modal, Avatar } from 'antd';
-import conversationApi from 'api/conversationApi';
-import friendApi from 'api/friendApi';
+import conversationApi from '@/api/conversationApi';
+import friendApi from '@/api/friendApi';
 import DEFAULT_AVATAR from 'assets/images/user/user_default.jpg';
 import {
   fetchChannels,
@@ -13,20 +13,20 @@ import {
   getLastViewOfMembers,
   setConversations,
   setCurrentConversation,
-} from 'features/Chat/slice/chatSlice';
+} from '@/features/Chat/slice/chatSlice';
 import {
   fetchFriends,
   fetchListMyRequestFriend,
   fetchListRequestFriend,
   fetchPhoneBook,
   setAmountNotify,
-} from 'features/Friend/friendSlice';
+} from '@/features/Friend/friendSlice';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import dateUtils from 'utils/dateUtils';
-import getSummaryName from 'utils/nameHelper';
+import dateUtils from '@/utils/dateUtils';
+import getSummaryName from '@/utils/nameHelper';
 
 import UserCardStyle from './UserCardStyle';
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { defaultStyles, FileIcon } from 'react-file-icon';
 import { MdQuestionAnswer } from 'react-icons/md';
-import fileHelpers from 'utils/fileHelpers';
+import fileHelpers from '@/utils/fileHelpers';
 
 ReplyBlock.propTypes = {
   replyMessage: PropTypes.object,

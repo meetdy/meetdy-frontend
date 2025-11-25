@@ -1,7 +1,7 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import io from 'socket.io-client';
-import h from 'utils/callVideoHelpers';
+import h from '@/utils/callVideoHelpers';
 import { useResolvedPath } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ActionNavbar from './components/ActionNavbar';
@@ -11,7 +11,7 @@ import Peer from 'peerjs';
 
 CallVideo.propTypes = {};
 
-let socket = io(process.env.REACT_APP_SOCKET_URL, {
+let socket = io(import.meta.env.VITE_SOCKET_URL, {
   transports: ['websocket'],
 });
 

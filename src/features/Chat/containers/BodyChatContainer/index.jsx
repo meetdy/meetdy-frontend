@@ -1,7 +1,7 @@
 import { Modal, Spin } from 'antd';
-import DividerCustom from 'features/Chat/components/DividerCustom';
-import ModalShareMessage from 'features/Chat/components/ModalShareMessage';
-import UserMessage from 'features/Chat/components/UserMessage';
+import DividerCustom from '@/features/Chat/components/DividerCustom';
+import ModalShareMessage from '@/features/Chat/components/ModalShareMessage';
+import UserMessage from '@/features/Chat/components/UserMessage';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';

@@ -6,19 +6,19 @@ import {
   UsergroupAddOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import conversationApi from 'api/conversationApi';
+import conversationApi from '@/api/conversationApi';
 import {
   createGroup,
   fetchListMessages,
   getLastViewOfMembers,
   setCurrentChannel,
   setCurrentConversation,
-} from 'features/Chat/slice/chatSlice';
-import useWindowDimensions from 'hooks/useWindowDimensions';
+} from '@/features/Chat/slice/chatSlice';
+import useWindowDimensions from '@/hooks/useWindowDimensions';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import dateUtils from 'utils/dateUtils';
+import dateUtils from '@/utils/dateUtils';
 import ConversationAvatar from '../ConversationAvatar';
 import ModalAddMemberToConver from '../ModalAddMemberToConver';
 

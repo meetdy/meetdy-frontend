@@ -21,7 +21,7 @@ import {
   Table,
   Upload,
 } from 'antd';
-import adminApi from 'api/adminApi';
+import adminApi from '@/api/adminApi';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

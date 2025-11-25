@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PersonalIcon from 'features/Chat/components/PersonalIcon';
+import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 // import { Button, message } from 'antd';
-// import friendApi from 'api/friendApi';
+// import friendApi from '@/api/friendApi';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { updateSuggestFriend } from '../../friendSlice';
 

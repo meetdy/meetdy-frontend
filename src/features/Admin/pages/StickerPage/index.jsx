@@ -20,7 +20,7 @@ import {
   Upload,
   Popconfirm,
 } from 'antd';
-import adminApi from 'api/adminApi';
+import adminApi from '@/api/adminApi';
 import { DeleteOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 

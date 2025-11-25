@@ -13,7 +13,7 @@ import { GrGroup } from 'react-icons/gr';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { message, Modal } from 'antd';
-import conversationApi from 'api/conversationApi';
+import conversationApi from '@/api/conversationApi';
 
 InfoMember.propTypes = {
   viewMemberClick: PropTypes.func,
@@ -66,7 +66,7 @@ function InfoMember(props) {
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(
-      `${process.env.REACT_APP_URL}/jf-link/${currentConversation}`,
+      `${import.meta.env.VITE_API_URL}/jf-link/${currentConversation}`,
     );
     message.info('Đã sao chép link');
   };
@@ -132,7 +132,7 @@ function InfoMember(props) {
             </div>
 
             <div className="info_member-interact_link-des">
-              {`${process.env.REACT_APP_URL}/jf-link/${currentConversation}`}
+              {`${import.meta.env.VITE_API_URL}/jf-link/${currentConversation}`}
             </div>
           </div>
 

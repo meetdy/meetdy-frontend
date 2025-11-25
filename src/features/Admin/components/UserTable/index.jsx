@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Popconfirm, Table, Menu, Tag, Typography } from 'antd';
-import commonFuc from 'utils/commonFuc';
+import commonFuc from '@/utils/commonFuc';
 
 const { Text } = Typography;
 

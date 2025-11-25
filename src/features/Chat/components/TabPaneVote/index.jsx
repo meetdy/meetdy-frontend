@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import VoteMessage from '../MessageType/VoteMessage';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { fetchVotes, updateVote } from 'features/Chat/slice/chatSlice';
+import { fetchVotes, updateVote } from '@/features/Chat/slice/chatSlice';
 import { Button } from 'antd';
 import { CaretDownOutlined } from '@ant-design/icons';
-import voteApi from 'api/voteApi';
+import voteApi from '@/api/voteApi';
 
 function TabPaneVote() {
   const { currentConversation, votes, totalPagesVote } = useSelector(

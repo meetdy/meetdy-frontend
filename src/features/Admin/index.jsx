@@ -1,5 +1,5 @@
 import { Button, Layout } from 'antd';
-import NotFoundPage from 'components/NotFoundPage';
+import NotFoundPage from '@/components/NotFoundPage';
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import AdminFooter from './components/AdminFooter';

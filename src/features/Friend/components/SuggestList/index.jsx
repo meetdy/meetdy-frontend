@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import SuggestCard from '../SuggestCard';
 import { Col, Row } from 'antd';
-import UserCard from 'components/UserCard';
+import UserCard from '@/components/UserCard';
 
 SuggestList.propTypes = {
   data: PropTypes.array,

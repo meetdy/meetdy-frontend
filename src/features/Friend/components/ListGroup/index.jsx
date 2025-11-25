@@ -1,11 +1,11 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Col, message, Modal, Row } from 'antd';
-import conversationApi from 'api/conversationApi';
-import { fetchListGroup } from 'features/Friend/friendSlice';
+import conversationApi from '@/api/conversationApi';
+import { fetchListGroup } from '@/features/Friend/friendSlice';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { socket } from 'utils/socketClient';
+import { socket } from '@/utils/socketClient';
 import GroupCard from '../GroupCard';
 
 ListGroup.propTypes = {

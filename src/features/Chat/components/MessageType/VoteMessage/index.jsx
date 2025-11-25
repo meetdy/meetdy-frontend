@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Button, Modal } from 'antd';
 import { CaretRightOutlined } from '@ant-design/icons';
 import ModalDetailVote from '../../ModalDetailVote';
-import ModalViewOption from 'components/ModalViewOption';
+import ModalViewOption from '@/components/ModalViewOption';
 
 VoteMessage.propTypes = {
   data: PropTypes.object,

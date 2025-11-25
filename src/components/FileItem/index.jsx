@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { FileIcon, defaultStyles } from 'react-file-icon';
-import fileHelpers from 'utils/fileHelpers';
+import fileHelpers from '@/utils/fileHelpers';
 import { CloudDownloadOutlined, ShareAltOutlined } from '@ant-design/icons';
 
 FileItem.propTypes = {

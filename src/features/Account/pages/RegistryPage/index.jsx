@@ -10,11 +10,11 @@ import {
   Tag,
   Typography,
 } from 'antd';
-import loginApi from 'api/loginApi';
+import loginApi from '@/api/loginApi';
 import IMAGE_ACCOUNT_PAGE from 'assets/images/account/account-bg.png';
-import InputField from 'customfield/InputField';
-import { setLoading } from 'features/Account/accountSlice';
-import { registryValues } from 'features/Account/initValues';
+import InputField from '@/customfield/InputField';
+import { setLoading } from '@/features/Account/accountSlice';
+import { registryValues } from '@/features/Account/initValues';
 import { FastField, Form, Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';

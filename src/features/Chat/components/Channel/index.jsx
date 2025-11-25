@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 
 import ChannelItem from '../ChannelItem';
 import { Input, message, Modal } from 'antd';
-import channelApi from 'api/channelApi';
+import channelApi from '@/api/channelApi';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchListMessages,
   getLastViewOfMembers,
   setCurrentChannel,
-} from 'features/Chat/slice/chatSlice';
+} from '@/features/Chat/slice/chatSlice';
 
 Channel.propTypes = {
   onViewChannel: PropTypes.func,

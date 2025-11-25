@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Tag } from 'antd';
-import PersonalIcon from 'features/Chat/components/PersonalIcon';
-import UserCard from 'components/UserCard';
+import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import UserCard from '@/components/UserCard';
 import { useState } from 'react';
-import userApi from 'api/userApi';
+import userApi from '@/api/userApi';
 
 ContactItem.propTypes = {
   data: PropTypes.object,

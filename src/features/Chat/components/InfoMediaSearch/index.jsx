@@ -1,5 +1,5 @@
 import { Tabs } from 'antd';
-import mediaApi from 'api/mediaApi';
+import mediaApi from '@/api/mediaApi';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';

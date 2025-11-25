@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DownloadOutlined } from '@ant-design/icons';
-import fileHelpers from 'utils/fileHelpers';
+import fileHelpers from '@/utils/fileHelpers';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 
 FileMessage.propTypes = {

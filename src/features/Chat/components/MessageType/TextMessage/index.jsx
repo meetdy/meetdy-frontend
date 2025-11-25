@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import CheckLink, {
   replaceConentWithouLink,
   replaceContentToLink,
-} from 'utils/linkHelper';
+} from '@/utils/linkHelper';
 import { LinkPreview } from '@dhaiwat10/react-link-preview';
 import parse from 'html-react-parser';
 

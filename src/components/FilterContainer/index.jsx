@@ -1,6 +1,6 @@
 import { Tabs } from 'antd';
-import ConverMutipleSearch from 'components/ConverMutipleSearch';
-import ConverPersonalSearch from 'components/ConverPersonalSearch';
+import ConverMutipleSearch from '@/components/ConverMutipleSearch';
+import ConverPersonalSearch from '@/components/ConverPersonalSearch';
 import PropTypes from 'prop-types';
 import React from 'react';
 

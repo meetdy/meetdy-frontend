@@ -1,14 +1,14 @@
 import { DeleteFilled, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, message, Modal } from 'antd';
-import conversationApi from 'api/conversationApi';
-import SubMenuClassify from 'components/SubMenuClassify';
-import ConversationSingle from 'features/Chat/components/ConversationSingle';
+import conversationApi from '@/api/conversationApi';
+import SubMenuClassify from '@/components/SubMenuClassify';
+import ConversationSingle from '@/features/Chat/components/ConversationSingle';
 import {
   fetchChannels,
   fetchListMessages,
   getLastViewOfMembers,
   setCurrentChannel,
-} from 'features/Chat/slice/chatSlice';
+} from '@/features/Chat/slice/chatSlice';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';

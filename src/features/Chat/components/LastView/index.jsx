@@ -1,5 +1,5 @@
 import { Avatar } from 'antd';
-import AvatarCustom from 'components/AvatarCustom';
+import AvatarCustom from '@/components/AvatarCustom';
 import PropTypes from 'prop-types';
 import React from 'react';
 

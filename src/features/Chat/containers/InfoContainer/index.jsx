@@ -1,21 +1,21 @@
-import Channel from 'features/Chat/components/Channel';
-import AnotherSetting from 'features/Chat/components/AnotherSetting';
-import ArchiveFile from 'features/Chat/components/ArchiveFile';
-import ArchiveMedia from 'features/Chat/components/ArchiveMedia';
-import InfoFriendSearch from 'features/Chat/components/InfoFriendSearch';
-import InfoMediaSearch from 'features/Chat/components/InfoMediaSearch';
-import InfoMember from 'features/Chat/components/InfoMember';
-import InfoNameAndThumbnail from 'features/Chat/components/InfoNameAndThumbnail';
-import InfoTitle from 'features/Chat/components/InfoTitle';
-import { fetchAllMedia } from 'features/Chat/slice/mediaSlice';
+import Channel from '@/features/Chat/components/Channel';
+import AnotherSetting from '@/features/Chat/components/AnotherSetting';
+import ArchiveFile from '@/features/Chat/components/ArchiveFile';
+import ArchiveMedia from '@/features/Chat/components/ArchiveMedia';
+import InfoFriendSearch from '@/features/Chat/components/InfoFriendSearch';
+import InfoMediaSearch from '@/features/Chat/components/InfoMediaSearch';
+import InfoMember from '@/features/Chat/components/InfoMember';
+import InfoNameAndThumbnail from '@/features/Chat/components/InfoNameAndThumbnail';
+import InfoTitle from '@/features/Chat/components/InfoTitle';
+import { fetchAllMedia } from '@/features/Chat/slice/mediaSlice';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import UserCard from 'components/UserCard';
+import UserCard from '@/components/UserCard';
 
-import userApi from 'api/userApi';
+import userApi from '@/api/userApi';
 InfoContainer.propTypes = {
   socket: PropTypes.object,
   onViewChannel: PropTypes.func,

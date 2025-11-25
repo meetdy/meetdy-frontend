@@ -7,17 +7,17 @@ import {
   Row,
   Spin,
 } from 'antd';
-import conversationApi from 'api/conversationApi';
-import { setJoinChatLayout } from 'app/globalSlice';
-import FilterContainer from 'components/FilterContainer';
-import ModalJoinGroupFromLink from 'components/ModalJoinGroupFromLink';
-import Slider from 'components/Slider';
-import useWindowDimensions from 'hooks/useWindowDimensions';
+import conversationApi from '@/api/conversationApi';
+import { setJoinChatLayout } from '@/app/globalSlice';
+import FilterContainer from '@/components/FilterContainer';
+import ModalJoinGroupFromLink from '@/components/ModalJoinGroupFromLink';
+import Slider from '@/components/Slider';
+import useWindowDimensions from '@/hooks/useWindowDimensions';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useResolvedPath, useLocation } from 'react-router-dom';
-import renderWidthDrawer from 'utils/DrawerResponsive';
+import renderWidthDrawer from '@/utils/DrawerResponsive';
 import DrawerPinMessage from './components/DrawerPinMessage';
 import GroupNews from './components/GroupNews';
 import NutshellPinMessage from './components/NutshellPinMessage/NutshellPinMessage';

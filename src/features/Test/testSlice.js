@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import conversationApi from 'api/conversationApi';
-import messageApi from 'api/messageApi';
+import conversationApi from '@/api/conversationApi';
+import messageApi from '@/api/messageApi';
 
 const KEY = 'chat';
 

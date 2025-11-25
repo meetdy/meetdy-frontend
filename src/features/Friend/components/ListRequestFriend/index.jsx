@@ -1,11 +1,11 @@
 import { message } from 'antd';
-import friendApi from 'api/friendApi';
-import { fetchListFriends } from 'features/Chat/slice/chatSlice';
+import friendApi from '@/api/friendApi';
+import { fetchListFriends } from '@/features/Chat/slice/chatSlice';
 import {
   fetchFriends,
   fetchListRequestFriend,
   setAmountNotify,
-} from 'features/Friend/friendSlice';
+} from '@/features/Friend/friendSlice';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';

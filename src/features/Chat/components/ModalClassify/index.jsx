@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Input, message, Modal, Popover } from 'antd';
 import Text from 'antd/lib/typography/Text';
-import ClassifyApi from 'api/ClassifyApi';
+import ClassifyApi from '@/api/ClassifyApi';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

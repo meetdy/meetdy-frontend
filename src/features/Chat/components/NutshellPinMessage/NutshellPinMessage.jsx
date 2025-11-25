@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Dropdown, Menu, message as MessageNotify, Modal } from 'antd';
 import NutshellPinMessageStyle from './NutshellPinMessageStyle';
-import pinMessageApi from 'api/pinMessageApi';
+import pinMessageApi from '@/api/pinMessageApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPinMessages } from '../../slice/chatSlice';
 import TypeMessagePin from '../TypeMessagePin';

@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useResolvedPath } from 'react-router-dom';
 import { Col, Divider, Input, Row } from 'antd';
-import ConversationList from 'features/Chat/components/ConversationList';
-import UserOnlineList from 'features/Chat/components/UserOnlineList';
-import MessageList from 'features/Chat/components/MessageList';
+import ConversationList from '@/features/Chat/components/ConversationList';
+import UserOnlineList from '@/features/Chat/components/UserOnlineList';
+import MessageList from '@/features/Chat/components/MessageList';
 import io from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addMessage,
   fetchListConversations,
   fetchListMessages,
-} from 'features/Test/testSlice';
+} from '@/features/Test/testSlice';
 
 const { Search } = Input;
 

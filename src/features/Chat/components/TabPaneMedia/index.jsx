@@ -1,8 +1,8 @@
 import { Col, Row, Select } from 'antd';
-import RangeCalendarCustom from 'components/RangeCalendarCustom';
+import RangeCalendarCustom from '@/components/RangeCalendarCustom';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import fileHelpers from 'utils/fileHelpers';
+import fileHelpers from '@/utils/fileHelpers';
 import PersonalIcon from '../PersonalIcon';
 
 TabPaneMedia.propTypes = {

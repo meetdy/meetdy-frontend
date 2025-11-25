@@ -5,9 +5,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import ConversationAvatar from '../ConversationAvatar';
 import { useDispatch, useSelector } from 'react-redux';
 
-import conversationApi from 'api/conversationApi';
-import { updateNameOfConver } from 'features/Chat/slice/chatSlice';
-import UploadAvatar from 'components/UploadAvatar';
+import conversationApi from '@/api/conversationApi';
+import { updateNameOfConver } from '@/features/Chat/slice/chatSlice';
+import UploadAvatar from '@/components/UploadAvatar';
 
 InfoNameAndThumbnail.propTypes = {
   conversation: PropTypes.object,

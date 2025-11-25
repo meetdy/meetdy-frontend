@@ -6,12 +6,12 @@ import {
   UsergroupAddOutlined,
 } from '@ant-design/icons';
 import { Input, message, Radio } from 'antd';
-import userApi from 'api/userApi';
-import ModalAddFriend from 'components/ModalAddFriend';
-import UserCard from 'components/UserCard';
-import ModalClassify from 'features/Chat/components/ModalClassify';
-import ModalCreateGroup from 'features/Chat/components/ModalCreateGroup';
-import { createGroup } from 'features/Chat/slice/chatSlice';
+import userApi from '@/api/userApi';
+import ModalAddFriend from '@/components/ModalAddFriend';
+import UserCard from '@/components/UserCard';
+import ModalClassify from '@/features/Chat/components/ModalClassify';
+import ModalCreateGroup from '@/features/Chat/components/ModalCreateGroup';
+import { createGroup } from '@/features/Chat/slice/chatSlice';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';

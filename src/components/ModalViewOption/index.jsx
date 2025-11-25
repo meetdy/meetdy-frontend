@@ -13,12 +13,12 @@ import {
   Modal,
   Spin,
 } from 'antd';
-import voteApi from 'api/voteApi';
-import PersonalIcon from 'features/Chat/components/PersonalIcon';
+import voteApi from '@/api/voteApi';
+import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { equalsArray } from 'utils/arrayHelper';
+import { equalsArray } from '@/utils/arrayHelper';
 import MODAL_OPTION_STYLE from './ModalViewOptionStyle';
 
 ModalViewOption.propTypes = {

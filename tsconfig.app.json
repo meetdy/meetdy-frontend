@@ -3,21 +3,15 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
+    "moduleResolution": "node",
+
     "allowJs": true,
     "checkJs": false,
+
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "api/*": ["./src/api/*"],
-      "app/*": ["./src/app/*"],
-      "assets/*": ["./src/assets/*"],
-      "components/*": ["./src/components/*"],
-      "constants/*": ["./src/constants/*"],
-      "customfield/*": ["./src/customfield/*"],
-      "features/*": ["./src/features/*"],
-      "hooks/*": ["./src/hooks/*"],
-      "layout/*": ["./src/layout/*"],
-      "utils/*": ["./src/utils/*"]
+      "assets/*": ["./src/assets/*"]
     }
   },
   "include": ["src"]

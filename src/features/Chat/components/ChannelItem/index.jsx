@@ -12,9 +12,9 @@ import {
   fetchMessageInChannel,
   getLastViewChannel,
   setCurrentChannel,
-} from 'features/Chat/slice/chatSlice';
+} from '@/features/Chat/slice/chatSlice';
 import { Dropdown, Menu, message, Modal } from 'antd';
-import channelApi from 'api/channelApi';
+import channelApi from '@/api/channelApi';
 import ModalChangeNameChannel from '../ModalChangeNameChannel';
 
 ChannelItem.propTypes = {

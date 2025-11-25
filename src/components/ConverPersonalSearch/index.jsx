@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import PersonalIcon from 'features/Chat/components/PersonalIcon';
+import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 import { Empty } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
   fetchListMessages,
   setCurrentConversation,
-} from 'features/Chat/slice/chatSlice';
+} from '@/features/Chat/slice/chatSlice';
 
 ConverPersonalSearch.propTypes = {
   data: PropTypes.array,

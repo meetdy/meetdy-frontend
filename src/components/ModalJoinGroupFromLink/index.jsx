@@ -1,7 +1,7 @@
 import { Col, Divider, message, Modal, Row } from 'antd';
-import conversationApi from 'api/conversationApi';
-import ConversationAvatar from 'features/Chat/components/ConversationAvatar';
-import PersonalIcon from 'features/Chat/components/PersonalIcon';
+import conversationApi from '@/api/conversationApi';
+import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
+import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 import PropTypes from 'prop-types';
 import React from 'react';
 import MODAL_JOIN_FROM_LINK_STYLE from './ModalJoinGroupFromLinkStyle';

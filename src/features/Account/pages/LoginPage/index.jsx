@@ -1,11 +1,11 @@
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { unwrapResult } from '@reduxjs/toolkit';
-import axiosClient from 'api/axiosClient';
-import loginApi from 'api/loginApi';
-import { fetchUserProfile, setLogin } from 'app/globalSlice';
-import InputField from 'customfield/InputField';
-import { setLoading } from 'features/Account/accountSlice';
-import { loginValues } from 'features/Account/initValues';
+import axiosClient from '@/api/axiosClient';
+import loginApi from '@/api/loginApi';
+import { fetchUserProfile, setLogin } from '@/app/globalSlice';
+import InputField from '@/customfield/InputField';
+import { setLoading } from '@/features/Account/accountSlice';
+import { loginValues } from '@/features/Account/initValues';
 import { FastField, Form, Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';

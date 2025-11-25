@@ -7,10 +7,10 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Badge, Button, Popover } from 'antd';
-import { setTabActive } from 'app/globalSlice';
-import ModalChangePassword from 'components/ModalChangePassword';
-import ModalUpdateProfile from 'features/Chat/components/ModalUpdateProfile';
-import PersonalIcon from 'features/Chat/components/PersonalIcon';
+import { setTabActive } from '@/app/globalSlice';
+import ModalChangePassword from '@/components/ModalChangePassword';
+import ModalUpdateProfile from '@/features/Chat/components/ModalUpdateProfile';
+import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

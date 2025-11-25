@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import channelApi from 'api/channelApi';
-import ClassifyApi from 'api/ClassifyApi';
-import conversationApi from 'api/conversationApi';
-import friendApi from 'api/friendApi';
-import messageApi from 'api/messageApi';
-import pinMessageApi from 'api/pinMessageApi';
-import stickerApi from 'api/stickerApi';
-import voteApi from 'api/voteApi';
-import dateUtils from 'utils/dateUtils';
+import channelApi from '@/api/channelApi';
+import ClassifyApi from '@/api/ClassifyApi';
+import conversationApi from '@/api/conversationApi';
+import friendApi from '@/api/friendApi';
+import messageApi from '@/api/messageApi';
+import pinMessageApi from '@/api/pinMessageApi';
+import stickerApi from '@/api/stickerApi';
+import voteApi from '@/api/voteApi';
+import dateUtils from '@/utils/dateUtils';
 
 const KEY = 'chat';
 

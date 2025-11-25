@@ -7,7 +7,7 @@ import { Spin } from 'antd';
 import ForgotPage from './pages/ForgotPage';
 import LoginPage from './pages/LoginPage';
 import RegistryPage from './pages/RegistryPage';
-import NotFoundPage from 'components/NotFoundPage';
+import NotFoundPage from '@/components/NotFoundPage';
 
 function Account() {
   const navigate = useNavigate();

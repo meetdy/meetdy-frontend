@@ -1,16 +1,16 @@
 import { Badge, Button, Dropdown, Menu } from 'antd';
-import SubMenuClassify from 'components/SubMenuClassify';
-import ConversationAvatar from 'features/Chat/components/ConversationAvatar';
+import SubMenuClassify from '@/components/SubMenuClassify';
+import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
 import {
   fetchListMessages,
   setCurrentConversation,
-} from 'features/Chat/slice/chatSlice';
+} from '@/features/Chat/slice/chatSlice';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import classifyUtils from 'utils/classifyUtils';
+import classifyUtils from '@/utils/classifyUtils';
 
 GroupCard.propTypes = {
   data: PropTypes.object,

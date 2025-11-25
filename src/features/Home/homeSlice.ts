@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import InfoWebApi from 'api/infoWebApi';
+import InfoWebApi from '@/api/infoWebApi';
 
 const KEY = 'HOME';
 

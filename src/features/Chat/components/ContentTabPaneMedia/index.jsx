@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import ImageItem from '../ImageItem';
 
 import { Image } from 'antd';
-import ModalVideoCustom from 'components/ModalVideoCustom';
-import ThumbnailCustom from 'components/ThumbnailCustom';
+import ModalVideoCustom from '@/components/ModalVideoCustom';
+import ThumbnailCustom from '@/components/ThumbnailCustom';
 ContentTabPaneMedia.propTypes = {
   items: PropTypes.array,
   type: PropTypes.string,

@@ -5,7 +5,7 @@ import {
   KeyOutlined,
 } from '@ant-design/icons';
 import { Avatar, Tooltip } from 'antd';
-import AvatarCustom from 'components/AvatarCustom';
+import AvatarCustom from '@/components/AvatarCustom';
 import parse from 'html-react-parser';
 import PropTypes from 'prop-types';
 import React from 'react';

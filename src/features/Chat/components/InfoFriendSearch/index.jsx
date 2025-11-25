@@ -5,7 +5,7 @@ import {
   UserSwitchOutlined,
 } from '@ant-design/icons';
 import { Dropdown, Menu, message, Modal, Tag } from 'antd';
-import conversationApi from 'api/conversationApi';
+import conversationApi from '@/api/conversationApi';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';

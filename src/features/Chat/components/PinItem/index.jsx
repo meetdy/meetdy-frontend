@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import PersonalIcon from '../PersonalIcon';
 import { MessageTwoTone } from '@ant-design/icons';
-import dateUtils from 'utils/dateUtils';
+import dateUtils from '@/utils/dateUtils';
 import { date } from 'yup';
 
 PinItem.propTypes = {

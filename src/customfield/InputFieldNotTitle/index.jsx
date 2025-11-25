@@ -1,5 +1,5 @@
 import { Input, Typography } from 'antd';
-import TagCustom from 'components/TagCustom';
+import TagCustom from '@/components/TagCustom';
 import { ErrorMessage } from 'formik';
 import PropTypes from 'prop-types';
 import React from 'react';

@@ -1,8 +1,8 @@
 import { MessageTwoTone } from '@ant-design/icons';
 import { Alert, Modal, Radio, message as messageNotify } from 'antd';
-import pinMessageApi from 'api/pinMessageApi';
-import TypeMessagePin from 'features/Chat/components/TypeMessagePin';
-import { fetchPinMessages } from 'features/Chat/slice/chatSlice';
+import pinMessageApi from '@/api/pinMessageApi';
+import TypeMessagePin from '@/features/Chat/components/TypeMessagePin';
+import { fetchPinMessages } from '@/features/Chat/slice/chatSlice';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

@@ -1,13 +1,13 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import { Image, Modal } from 'antd';
 import VIDEO_LOGO from 'assets/images/icon/video-logo.png';
-import ModalVideoCustom from 'components/ModalVideoCustom';
-import OverlayImage from 'components/OverlayImage';
+import ModalVideoCustom from '@/components/ModalVideoCustom';
+import OverlayImage from '@/components/OverlayImage';
 import parse from 'html-react-parser';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { defaultStyles, FileIcon } from 'react-file-icon';
-import fileHelpers from 'utils/fileHelpers';
+import fileHelpers from '@/utils/fileHelpers';
 import PersonalIcon from '../PersonalIcon';
 
 ModalDetailMessageReply.propTypes = {

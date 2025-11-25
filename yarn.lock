@@ -8081,7 +8081,7 @@ magic-string@^0.25.0, magic-string@^0.25.7:
   dependencies:
     sourcemap-codec "^1.4.8"
 
-magic-string@^0.30.21:
+magic-string@^0.30.0, magic-string@^0.30.21:
   version "0.30.21"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.21.tgz#56763ec09a0fa8091df27879fd94d19078c00d91"
   integrity sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==
@@ -11962,6 +11962,13 @@ vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
+
+vite-plugin-runtime-env@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-runtime-env/-/vite-plugin-runtime-env-1.0.0.tgz#a4357a19e843bc1346907c5ce64966b611e35239"
+  integrity sha512-0fV4NGeIubM632bQLQ4WijAyfFrrWw2zbar8b/HUGj6hNmKXQ6HUdWAcBPGILInOIgY3qm5hSOhWDJEvhFF64g==
+  dependencies:
+    magic-string "^0.30.0"
 
 vite-tsconfig-paths@^4.3.2:
   version "4.3.2"

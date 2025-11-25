@@ -6,7 +6,7 @@ import {
 import { Avatar, Badge } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
-import getSummaryName from 'utils/nameHelper';
+import getSummaryName from '@/utils/nameHelper';
 
 PersonalIcon.propTypes = {
   avatar: PropTypes.string,

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PersonalIcon from 'features/Chat/components/PersonalIcon';
+import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 import { Button } from 'antd';
 
 FriendCard.propTypes = {

@@ -1,10 +1,10 @@
 import { FontColorsOutlined, PlaySquareOutlined } from '@ant-design/icons';
 import { Image, Tag } from 'antd';
-import OverlayImage from 'components/OverlayImage';
+import OverlayImage from '@/components/OverlayImage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { defaultStyles, FileIcon } from 'react-file-icon';
-import fileHelpers from 'utils/fileHelpers';
+import fileHelpers from '@/utils/fileHelpers';
 
 TypeMessagePin.propTypes = {
   type: PropTypes.string,

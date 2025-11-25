@@ -1,9 +1,9 @@
 import { Col, Row } from 'antd';
-import conversationApi from 'api/conversationApi';
-import { setTabActive } from 'app/globalSlice';
-import NotFoundPage from 'components/NotFoundPage';
-import Chat from 'features/Chat';
-import NavbarContainer from 'features/Chat/containers/NavbarContainer';
+import conversationApi from '@/api/conversationApi';
+import { setTabActive } from '@/app/globalSlice';
+import NotFoundPage from '@/components/NotFoundPage';
+import Chat from '@/features/Chat';
+import NavbarContainer from '@/features/Chat/containers/NavbarContainer';
 import {
   addMessage,
   addMessageInChannel,
@@ -14,8 +14,8 @@ import {
   fetchListConversations,
   updateAvatarWhenUpdateMember,
   updateFriendChat,
-} from 'features/Chat/slice/chatSlice';
-import Friend from 'features/Friend';
+} from '@/features/Chat/slice/chatSlice';
+import Friend from '@/features/Friend';
 import {
   fetchFriends,
   fetchListGroup,
@@ -28,14 +28,14 @@ import {
   updateFriend,
   updateMyRequestFriend,
   updateRequestFriends,
-} from 'features/Friend/friendSlice';
-import { fetchInfoWebs } from 'features/Home/homeSlice';
-import useWindowUnloadEffect from 'hooks/useWindowUnloadEffect';
+} from '@/features/Friend/friendSlice';
+import { fetchInfoWebs } from '@/features/Home/homeSlice';
+import useWindowUnloadEffect from '@/hooks/useWindowUnloadEffect';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
-import { init, socket } from 'utils/socketClient';
+import { init, socket } from '@/utils/socketClient';
 
 init();
 

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Image } from 'antd';
 import { fallback } from 'assets/images/fallbackImage';
-import MESSAGE_STYLE from 'constants/MessageStyle/messageStyle';
-import OverlayImage from 'components/OverlayImage';
+import MESSAGE_STYLE from '@/constants/MessageStyle/messageStyle';
+import OverlayImage from '@/components/OverlayImage';
 ImageMessage.propTypes = {
   content: PropTypes.string,
   dateAt: PropTypes.object,

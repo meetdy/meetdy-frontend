@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import mediaApi from 'api/mediaApi';
+import mediaApi from '@/api/mediaApi';
 
 const KEY = 'MEDIA';
 
