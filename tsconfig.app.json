@@ -4,6 +4,7 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
+    "jsx": "react-jsx",
 
     "allowJs": true,
     "checkJs": false,

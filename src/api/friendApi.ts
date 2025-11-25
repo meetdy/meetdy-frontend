@@ -1,50 +1,62 @@
-import axiosClient from './axiosClient';
+import { get, post, del } from "@/api/instance/httpMethod";
+import { TFetchFriends, IFriend, IRequestFriend, ISuggestFriend } from "@/models/friend.model";
 
-const API_URL = '/friends';
+const PATH = "/friends";
 
-const friendApi = {
-    fetchFriends: (name) => {
-        return axiosClient.get(`${API_URL}`, {
-            params: {
-                name,
-            },
-        });
-    },
-    acceptRequestFriend: (userId) => {
-        return axiosClient.post(`${API_URL}/${userId}`);
+const FriendService = {
+    fetchFriends: async (params: TFetchFriends): Promise<IFriend[]> => {
+        const url = PATH;
+        const response = await get<IFriend[]>(url, { params });
+        return response.data;
     },
 
-    deleteFriend: (userId) => {
-        return axiosClient.delete(`${API_URL}/${userId}`);
+    acceptRequestFriend: async (userId: string): Promise<void> => {
+        const url = `${PATH}/${userId}`;
+        const response = await post<void>(url);
+        return response.data;
     },
 
-    fetchListRequestFriend: () => {
-        return axiosClient.get(`${API_URL}/invites`);
+    deleteFriend: async (userId: string): Promise<void> => {
+        const url = `${PATH}/${userId}`;
+        const response = await del<void>(url);
+        return response.data;
     },
 
-    deleteRequestFriend: (userId) => {
-        return axiosClient.delete(`${API_URL}/invites/${userId}`);
+    fetchListRequestFriend: async (): Promise<IRequestFriend[]> => {
+        const url = `${PATH}/invites`;
+        const response = await get<IRequestFriend[]>(url);
+        return response.data;
     },
 
-    sendRequestFriend: (userId) => {
-        return axiosClient.post(`${API_URL}/invites/me/${userId}`);
+    deleteRequestFriend: async (userId: string): Promise<void> => {
+        const url = `${PATH}/invites/${userId}`;
+        const response = await del<void>(url);
+        return response.data;
     },
 
-    deleteSentRequestFriend: (userId) => {
-        return axiosClient.delete(`${API_URL}/invites/me/${userId}`);
+    sendRequestFriend: async (userId: string): Promise<void> => {
+        const url = `${PATH}/invites/me/${userId}`;
+        const response = await post<void>(url);
+        return response.data;
     },
 
-    fetchMyRequestFriend: () => {
-        return axiosClient.get(`${API_URL}/invites/me`);
+    deleteSentRequestFriend: async (userId: string): Promise<void> => {
+        const url = `${PATH}/invites/me/${userId}`;
+        const response = await del<void>(url);
+        return response.data;
     },
-    fetchSuggestFriend: (page = 0, size = 12) => {
-        return axiosClient.get(`${API_URL}/suggest`, {
-            params: {
-                page,
-                size,
-            },
-        });
+
+    fetchMyRequestFriend: async (): Promise<IRequestFriend[]> => {
+        const url = `${PATH}/invites/me`;
+        const response = await get<IRequestFriend[]>(url);
+        return response.data;
+    },
+
+    fetchSuggestFriend: async (page = 0, size = 12): Promise<ISuggestFriend[]> => {
+        const url = `${PATH}/suggest`;
+        const response = await get<ISuggestFriend[]>(url, { params: { page, size } });
+        return response.data;
     },
 };
 
-export default friendApi;
+export default FriendService;

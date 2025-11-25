@@ -1,49 +1,44 @@
-import axiosClient from './axiosClient';
+import { get, post, del } from "@/api/instance/httpMethod";
+import { IVote } from "@/models/vote.model";
 
-const API_URL = '/votes';
+const PATH = "/votes";
 
-const voteApi = {
-    createVote: (content, options, conversationId) => {
-        return axiosClient.post(`${API_URL}`, {
-            content,
-            options,
-            conversationId,
-        });
+const ServiceVote = {
+    createVote: async (
+        content: string,
+        options: string[],
+        conversationId: string
+    ): Promise<any> => {
+        const url = PATH;
+        const response = await post<any>(url, { content, options, conversationId });
+        return response.data;
     },
 
-    addVote: (messageId, options) => {
-        return axiosClient.post(`${API_URL}/${messageId}`, {
-            options,
-        });
+    addVote: async (messageId: string, options: string[]): Promise<any> => {
+        const url = `${PATH}/${messageId}`;
+        const response = await post<any>(url, { options });
+        return response.data;
     },
 
-    deleteVote: (messageId, options) => {
-        return axiosClient.delete(`${API_URL}/${messageId}`, {
-            options,
-        });
+    selectVote: async (messageId: string, options: string[]): Promise<any> => {
+        const url = `${PATH}/${messageId}/choices`;
+        const response = await post<any>(url, { options });
+        return response.data;
     },
 
-    selectVote: (messageId, options) => {
-        return axiosClient.post(`${API_URL}/${messageId}/choices`, {
-            options,
+    deleteSelect: async (messageId: string, options: string[]): Promise<any> => {
+        const url = `${PATH}/${messageId}/choices`;
+        const response = await del<any>(url, {
+            data: { options },
         });
+        return response.data;
     },
 
-    deleteSelect: (messageId, options) => {
-        return axiosClient.delete(`${API_URL}/${messageId}/choices`, {
-            data: {
-                options,
-            },
-        });
-    },
-    getVotes: (conversationId, page, size) => {
-        return axiosClient.get(`${API_URL}/${conversationId}/`, {
-            params: {
-                page,
-                size,
-            },
-        });
+    fetchVotes: async (conversationId: string, page: number, size: number): Promise<IVote> => {
+        const url = `${PATH}/${conversationId}`;
+        const response = await get<IVote>(url, { params: { page, size } });
+        return response.data;
     },
 };
 
-export default voteApi;
+export default ServiceVote;

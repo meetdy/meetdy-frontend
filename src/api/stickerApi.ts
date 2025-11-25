@@ -1,11 +1,13 @@
-import axiosClient from './axiosClient';
+import { get } from "@/api/instance/httpMethod";
 
-const BASE_URL = '/stickers';
+const PATH = "/stickers";
 
-const stickerApi = {
-    fetchAllSticker: () => {
-        return axiosClient.get(`${BASE_URL}`);
+const ServiceSticker = {
+    fetchAllSticker: async (): Promise<any> => {
+        const url = PATH;
+        const response = await get<any>(url);
+        return response.data;
     },
 };
 
-export default stickerApi;
+export default ServiceSticker;

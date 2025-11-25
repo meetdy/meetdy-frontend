@@ -1,41 +1,61 @@
-import axiosClient from './axiosClient';
+import { get, put, patch, del } from "@/api/instance/httpMethod";
+import { IUserProfile } from "@/models/auth.model";
+import {
+    TUpdateProfile,
+    IAvatarResponse,
+    ICoverImageResponse,
+    IChangePassword,
+    IRevokeTokenResponse,
+    TRevokeToken,
+} from "@/models/me.model";
 
-const API_URL = '/me';
+const PATH = "/me";
 
-const meApi = {
-    fetchProfile: () => {
-        return axiosClient.get(`${API_URL}/profile`);
+const ServiceMe = {
+    fetchProfile: async (): Promise<IUserProfile> => {
+        const url = `${PATH}/profile`;
+        const response = await get<IUserProfile>(url);
+        return response.data;
     },
 
-    updateProfile: (name, dateOfBirth, gender) => {
-        return axiosClient.put(`${API_URL}/profile`, {
-            name,
-            dateOfBirth,
-            gender,
+    updateProfile: async ({ gender, ...params }: TUpdateProfile): Promise<void> => {
+        const url = `${PATH}/profile`;
+        const response = await put<void>(url, {
+            gender: gender ? 1 : 0,
+            ...params,
         });
+        return response.data;
     },
 
-    updateAvatar: (file) => {
-        return axiosClient.patch(`${API_URL}/avatar`, file);
+    updateAvatar: async (data: FormData): Promise<IAvatarResponse> => {
+        const url = `${PATH}/avatar`;
+        const response = await patch<IAvatarResponse>(url, data, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        return response.data;
     },
 
-    updateCoverImage: (file) => {
-        return axiosClient.patch(`${API_URL}/cover-image`, file);
-    },
-    changePasswod: (oldPassword, newPassword) => {
-        return axiosClient.patch(`${API_URL}/password`, {
-            oldPassword,
-            newPassword,
+    updateCoverImage: async (data: FormData): Promise<ICoverImageResponse> => {
+        const url = `${PATH}/cover-image`;
+        const response = await patch<ICoverImageResponse>(url, data, {
+            headers: { "Content-Type": "multipart/form-data" },
         });
+        return response.data;
     },
-    revokeToken: (password, key) => {
-        return axiosClient.delete(`${API_URL}/revoke-token`, {
-            data: {
-                password,
-                key,
-            },
+
+    changePassword: async (params: IChangePassword): Promise<void> => {
+        const url = `${PATH}/password`;
+        const response = await patch<void>(url, params);
+        return response.data;
+    },
+
+    revokeToken: async (params: TRevokeToken): Promise<IRevokeTokenResponse> => {
+        const url = `${PATH}/revoke-token`;
+        const response = await del<IRevokeTokenResponse>(url, {
+            data: params,
         });
+        return response.data;
     },
 };
 
-export default meApi;
+export default ServiceMe;

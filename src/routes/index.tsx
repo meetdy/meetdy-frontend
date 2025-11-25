@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import AdminProtectedRoute from '@/components/AdminProtectedRoute';
+import AdminProtectedRoute from '@/routes/AdminProtected';
 import JoinFromLink from '@/components/JoinFromLink';
 import NotFoundPage from '@/components/NotFoundPage';
 import ProtectedRoute from '@/components/ProtectedRoute';

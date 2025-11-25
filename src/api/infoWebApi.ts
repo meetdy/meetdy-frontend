@@ -1,11 +1,21 @@
-import axiosClient from './axiosClient';
+import { get } from "@/api/instance/httpMethod";
 
-const API_URL = '/common/web-info';
+export type IWebInfoValue = Record<string, any> | any[];
 
-const InfoWebApi = {
-    getInfoWeb: () => {
-        return axiosClient.get(`${API_URL}`);
+export interface IWebInfo {
+    _id: string;
+    name: string;
+    value: IWebInfoValue;
+}
+
+const PATH = "/common/web-info";
+
+const ServiceInfoWeb = {
+    fetchInfoWeb: async (): Promise<IWebInfo[]> => {
+        const url = PATH;
+        const response = await get<IWebInfo[]>(url);
+        return response.data;
     },
 };
 
-export default InfoWebApi;
+export default ServiceInfoWeb;

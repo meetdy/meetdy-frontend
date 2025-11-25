@@ -1,42 +1,50 @@
-import axiosClient from './axiosClient';
+import { get, post, put, del } from "@/api/instance/httpMethod";
+import { IMessage } from "@/models/message.model";
 
-const API_URL = '/channels';
+const PATH = "/channels";
 
-const channelApi = {
-    fetchChannel: (conversationId) => {
-        return axiosClient.get(`${API_URL}/${conversationId}`);
+const ServiceChannel = {
+    fetchChannel: async (conversationId: string): Promise<any> => {
+        const url = `${PATH}/${conversationId}`;
+        const response = await get<any>(url);
+        return response.data;
     },
 
-    addChannel: (name, conversationId) => {
-        return axiosClient.post(`${API_URL}`, {
-            name,
-            conversationId,
+    addChannel: async (name: string, conversationId: string): Promise<any> => {
+        const url = PATH;
+        const response = await post<any>(url, { name, conversationId });
+        return response.data;
+    },
+
+    renameChannel: async (name: string, _id: string): Promise<any> => {
+        const url = PATH;
+        const response = await put<any>(url, { _id, name });
+        return response.data;
+    },
+
+    deleteChannel: async (channelId: string): Promise<void> => {
+        const url = `${PATH}/${channelId}`;
+        const response = await del<void>(url);
+        return response.data;
+    },
+
+    fetchMessageInChannel: async (
+        channelId: string,
+        page: number,
+        size: number
+    ): Promise<{ data: IMessage[]; total: number }> => {
+        const url = `/messages/channel/${channelId}`;
+        const response = await get<{ data: IMessage[]; total: number }>(url, {
+            params: { page, size },
         });
+        return response.data;
     },
 
-    renameChannel: (name, _id) => {
-        return axiosClient.put(`${API_URL}`, {
-            _id,
-            name,
-        });
-    },
-
-    deleteChannel: (channelId) => {
-        return axiosClient.delete(`${API_URL}/${channelId}`);
-    },
-
-    getMessageInChannel: (channelId, page, size) => {
-        return axiosClient.get(`/messages/channel/${channelId}`, {
-            params: {
-                page,
-                size,
-            },
-        });
-    },
-
-    getLastViewChannel: (channelId) => {
-        return axiosClient.get(`${API_URL}/${channelId}/last-view`);
+    fetchLastViewChannel: async (channelId: string): Promise<{ lastViewedAt: string }> => {
+        const url = `${PATH}/${channelId}/last-view`;
+        const response = await get<{ lastViewedAt: string }>(url);
+        return response.data;
     },
 };
 
-export default channelApi;
+export default ServiceChannel;

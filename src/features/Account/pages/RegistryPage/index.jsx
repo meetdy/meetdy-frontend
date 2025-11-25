@@ -10,7 +10,7 @@ import {
   Tag,
   Typography,
 } from 'antd';
-import loginApi from '@/api/loginApi';
+import authApi from '@/api/authApi';
 import IMAGE_ACCOUNT_PAGE from '@/assets/images/account/account-bg.png';
 import InputField from '@/customfield/InputField';
 import { setLoading } from '@/features/Account/accountSlice';

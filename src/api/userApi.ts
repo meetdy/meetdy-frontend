@@ -1,10 +1,14 @@
-import axiosClient from './axiosClient';
-const BASE_URL = 'users';
+import { get } from "@/api/instance/httpMethod";
+import { ISuggestFriend } from "@/models/friend.model";
 
-const userApi = {
-    fetchUser: (username) => {
-        return axiosClient.get(`${BASE_URL}/search/username/${username}`);
+const PATH = "/users/search/username";
+
+const ServiceUser = {
+    fetchUser: async (username: string): Promise<ISuggestFriend> => {
+        const url = `${PATH}/${username}`;
+        const response = await get<ISuggestFriend>(url);
+        return response.data;
     },
 };
 
-export default userApi;
+export default ServiceUser;
