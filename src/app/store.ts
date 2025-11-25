@@ -6,7 +6,6 @@ import friend from 'features/Friend/friendSlice';
 import admin from 'features/Admin/adminSlice';
 import media from 'features/Chat/slice/mediaSlice';
 import home from 'features/Home/homeSlice';
-import callVideo from 'features/CallVideo/callVideoSlice';
 
 const rootReducer = {
     global,
@@ -15,7 +14,6 @@ const rootReducer = {
     friend,
     admin,
     media,
-    callVideo,
     home,
 };
 
