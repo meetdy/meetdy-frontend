@@ -1,10 +1,4 @@
-import { Col, Radio, Row, Typography } from 'antd';
-import PropTypes from 'prop-types';
-import React from 'react';
-
-GenderRadioField.propTypes = {};
-
-GenderRadioField.defaultProps = {};
+import { Radio } from 'antd';
 
 function GenderRadioField({ field }) {
   const { name, value } = field;
