@@ -1,17 +1,13 @@
 import { CaretDownOutlined, FilterOutlined } from '@ant-design/icons';
 import { Button, Col, Dropdown, Menu, Row, Spin } from 'antd';
-import conversationApi from '@/api/conversationApi';
-import ICON_CONTACT from '@/assets/images/icon/contacts_icon.png';
-import ICON_FRIEND from '@/assets/images/icon/icon_friend.png';
-import ICON_GROUP from '@/assets/images/icon/icon_group.png';
-import FilterContainer from '@/components/FilterContainer';
-import { getValueFromKey } from '@/constants/filterFriend';
-import SearchContainer from '@/features/Chat/containers/SearchContainer';
-import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+
+import { useEffect, useRef, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';
 import { useDispatch, useSelector } from 'react-redux';
-import { sortGroup } from '@/utils/groupUtils';
+
+import conversationApi from '@/api/conversationApi';
+import FilterContainer from '@/components/FilterContainer';
+import SearchContainer from '@/features/Chat/containers/SearchContainer';
 import HeaderFriend from './components/HeaderFiend';
 import ListContact from './components/ListContact';
 import ListFriend from './components/ListFriend';
@@ -27,15 +23,10 @@ import {
   fetchPhoneBook,
   fetchSuggestFriend,
 } from './friendSlice';
-import FRIEND_STYLE from './friendStyle';
-
-Friend.propTypes = {
-  socket: PropTypes.object,
-};
-
-Friend.defaultProps = {
-  socket: {},
-};
+import { getValueFromKey } from '@/constants/filterFriend';
+import { sortGroup } from '@/utils/groupUtils';
+import { Icon } from '@/components/ui/icon';
+import { TriangleAlert, User, Users } from 'lucide-react';
 
 function Friend({ socket }) {
   const {
@@ -212,7 +203,7 @@ function Friend({ socket }) {
                       }}
                     >
                       <div className="main-friend_sidebar_option_img">
-                        <img src={ICON_FRIEND} alt="ICON_FRIEND" />
+                        <Icon icon={User} />
                       </div>
 
                       <div className="main-friend_sidebar_option_text">
@@ -228,7 +219,7 @@ function Friend({ socket }) {
                       }}
                     >
                       <div className="main-friend_sidebar_option_img">
-                        <img src={ICON_GROUP} alt="ICON_GROUP" />
+                        <Icon icon={Users} />
                       </div>
 
                       <div className="main-friend_sidebar_option_text">
@@ -244,7 +235,7 @@ function Friend({ socket }) {
                       }}
                     >
                       <div className="main-friend_sidebar_option_img">
-                        <img src={ICON_CONTACT} alt="ICON_CONTACT" />
+                        <Icon icon={TriangleAlert} />
                       </div>
 
                       <div className="main-friend_sidebar_option_text">
@@ -296,11 +287,7 @@ function Friend({ socket }) {
                         <div className="main-friend_body__filter">
                           <div className="main-friend_body__filter--left">
                             <Dropdown overlay={menuLeft} placement="bottomLeft">
-                              <Button
-                                icon={<CaretDownOutlined />}
-                                type="text"
-                                style={FRIEND_STYLE.BUTTON_FILTER}
-                              >
+                              <Button icon={<CaretDownOutlined />} type="text">
                                 {` ${getValueFromKey(
                                   'LEFT',
                                   currentFilterLeft,
@@ -314,11 +301,7 @@ function Friend({ socket }) {
                               overlay={menuRight}
                               placement="bottomLeft"
                             >
-                              <Button
-                                icon={<FilterOutlined />}
-                                type="text"
-                                style={FRIEND_STYLE.BUTTON_FILTER}
-                              >
+                              <Button icon={<FilterOutlined />} type="text">
                                 {` ${getValueFromKey(
                                   'RIGHT',
                                   currentFilterRight,

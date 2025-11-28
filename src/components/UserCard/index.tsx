@@ -1,11 +1,14 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import {
   ExclamationCircleOutlined,
   UserDeleteOutlined,
 } from '@ant-design/icons';
 import { Button, Image, message, Modal, Avatar } from 'antd';
+
 import conversationApi from '@/api/conversationApi';
 import friendApi from '@/api/friendApi';
-import DEFAULT_AVATAR from '@/assets/images/user/user_default.jpg';
 import {
   fetchChannels,
   fetchListFriends,
@@ -21,21 +24,10 @@ import {
   fetchPhoneBook,
   setAmountNotify,
 } from '@/features/Friend/friendSlice';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import dateUtils from '@/utils/dateUtils';
 import getSummaryName from '@/utils/nameHelper';
 
 import UserCardStyle from './UserCardStyle';
-
-UserCard.propTypes = {
-  title: PropTypes.string,
-  user: PropTypes.object.isRequired,
-  isVisible: PropTypes.bool.isRequired,
-  onCancel: PropTypes.func,
-};
 
 UserCard.defaultProps = {
   title: 'Thông tin',
@@ -168,11 +160,7 @@ function UserCard(props) {
 
             <div className="user-card_avatar">
               {user.avatar ? (
-                <Image
-                  fallback={DEFAULT_AVATAR}
-                  src={user.avatar}
-                  style={UserCardStyle.avatarStyle}
-                />
+                <Image src={user.avatar} style={UserCardStyle.avatarStyle} />
               ) : (
                 <Avatar size={96} style={{ backgroundColor: user.avatarColor }}>
                   <span style={{ fontSize: '3rem' }}>

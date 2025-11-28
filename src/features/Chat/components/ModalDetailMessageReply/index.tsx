@@ -1,20 +1,13 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import { Image, Modal } from 'antd';
-import VIDEO_LOGO from '@/assets/images/icon/video-logo.png';
+import { useState } from 'react';
+import { defaultStyles, FileIcon } from 'react-file-icon';
+import parse from 'html-react-parser';
+
 import ModalVideoCustom from '@/components/ModalVideoCustom';
 import OverlayImage from '@/components/OverlayImage';
-import parse from 'html-react-parser';
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import { defaultStyles, FileIcon } from 'react-file-icon';
 import fileHelpers from '@/utils/fileHelpers';
 import PersonalIcon from '../PersonalIcon';
-
-ModalDetailMessageReply.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  onCancel: PropTypes.func,
-  data: PropTypes.object,
-};
 
 ModalDetailMessageReply.defaultProps = {
   onCancel: null,

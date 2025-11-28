@@ -1,23 +1,7 @@
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Tooltip } from 'antd';
-import DEFAULT_AVATAR from '@/assets/images/user/user_default.jpg';
 import AvatarCustom from '@/components/AvatarCustom';
-import PropTypes from 'prop-types';
-import React from 'react';
 import COVERSATION_STYLE from './ConversationAvatarStyle';
-
-ConversationAvatar.propTypes = {
-  demension: PropTypes.number,
-  isGroupCard: PropTypes.bool,
-  totalMembers: PropTypes.number.isRequired,
-  type: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
-  isActived: PropTypes.bool,
-  avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  sizeAvatar: PropTypes.number,
-  frameSize: PropTypes.number,
-  avatarColor: PropTypes.string,
-};
 
 ConversationAvatar.defaultProps = {
   demension: 28,
@@ -139,7 +123,6 @@ function ConversationAvatar({
   return (
     <div className="avatar_conversation">
       {typeof avatar === 'string' ? (
-        // <Avatar size={48} src={avatar ? avatar : DEFAULT_AVATAR} />
         <Badge
           dot={isActived}
           offset={[-5, 40]}
@@ -217,11 +200,7 @@ function ConversationAvatar({
             </div>
           ) : (
             <div>
-              <Avatar
-                size={sizeAvatar}
-                src={avatar[0] ? avatar[0] : DEFAULT_AVATAR}
-                //     { width: `${frameSize}px`, height: `${frameSize}px` }
-              />
+              <Avatar size={sizeAvatar} src={avatar[0] ? avatar[0] : ''} />
             </div>
           )}
         </>

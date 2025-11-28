@@ -12,11 +12,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FastField, Form, Formik } from 'formik';
 import { unwrapResult } from '@reduxjs/toolkit';
 
-import IMAGE_ACCOUNT_PAGE from '@/assets/images/account/account-bg.png';
-
 import { Button } from '@/components/ui/button';
 import { Alert } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
+import Image from '@/components/ui/image';
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -53,8 +52,7 @@ function LoginPage() {
     <div className="flex min-h-screen bg-gray-50">
       {/* Left image */}
       <div className="hidden md:flex md:w-1/2">
-        <img
-          src={IMAGE_ACCOUNT_PAGE}
+        <Image
           alt="meetdy.com/account"
           className="object-cover w-full h-full"
         />

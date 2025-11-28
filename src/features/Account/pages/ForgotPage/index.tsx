@@ -8,10 +8,10 @@ import InputField from '@/customfield/InputField';
 import { setLoading } from '@/features/Account/accountSlice';
 import { forgotValues } from '@/features/Account/initValues';
 
-import IMAGE_ACCOUNT_PAGE from '@/assets/images/account/account-bg.png';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import TagCustom from '@/components/TagCustom';
+import Image from '@/components/ui/image';
 
 const RESEND_OTP_TIME_LIMIT = 60;
 
@@ -102,11 +102,7 @@ function ForgotPage() {
     <div className="flex min-h-screen bg-gray-50">
       {/* Left image */}
       <div className="hidden md:flex md:w-1/2">
-        <img
-          src={IMAGE_ACCOUNT_PAGE}
-          alt="meetdy.com/forgot"
-          className="object-cover w-full h-full"
-        />
+        <Image alt="meetdy.com/forgot" className="object-cover w-full h-full" />
       </div>
 
       {/* Right form */}
