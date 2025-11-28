@@ -1,9 +1,5 @@
-import { Modal, Spin } from 'antd';
-import DividerCustom from '@/features/Chat/components/DividerCustom';
-import ModalShareMessage from '@/features/Chat/components/ModalShareMessage';
-import UserMessage from '@/features/Chat/components/UserMessage';
-import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+import { Spin } from 'antd';
+import { useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -12,14 +8,9 @@ import {
   setRaisePage,
 } from '../../slice/chatSlice';
 
-BodyChatContainer.propTypes = {
-  scrollId: PropTypes.string,
-  onSCrollDown: PropTypes.string,
-  onBackToBottom: PropTypes.func,
-  onLoading: PropTypes.func,
-  onReply: PropTypes.func,
-  onMention: PropTypes.func,
-};
+import DividerCustom from '@/features/Chat/components/DividerCustom';
+import ModalShareMessage from '@/features/Chat/components/ModalShareMessage';
+import UserMessage from '@/features/Chat/components/UserMessage';
 
 BodyChatContainer.defaultProps = {
   scrollId: '',
@@ -29,8 +20,6 @@ BodyChatContainer.defaultProps = {
   onReply: null,
   onMention: null,
 };
-
-const HOURS_MINUS = 6;
 
 function BodyChatContainer({
   scrollId,
@@ -48,13 +37,14 @@ function BodyChatContainer({
     lastViewOfMember,
     currentChannel,
   } = useSelector((state) => state.chat);
-  const { user } = useSelector((state) => state.global);
-  const scrollbars = useRef();
-  const [position, setPosition] = useState(1);
   const dispatch = useDispatch();
-  const previousHieight = useRef();
-  const [loading, setLoading] = useState(false);
+  const scrollbars = useRef();
+  const previousHeight = useRef();
   const tempPosition = useRef();
+
+  const { user } = useSelector((state) => state.global);
+  const [position, setPosition] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [visibleModalShare, setVisibleModalShare] = useState(false);
   const [idMessageShare, setIdMessageShare] = useState('');
 
@@ -75,7 +65,7 @@ function BodyChatContainer({
   }, [turnOnScrollButoon]);
 
   useEffect(() => {
-    const fetchMesageWhenPageRaise = async () => {
+    const fetchMessageWhenPageRaise = async () => {
       if (currentChannel) {
         await dispatch(
           fetchNextPageMessageOfChannel({
@@ -99,12 +89,12 @@ function BodyChatContainer({
       if (currentPage > 0) {
         setLoading(true);
 
-        await fetchMesageWhenPageRaise();
+        await fetchMessageWhenPageRaise();
         setLoading(false);
         // setLoading(false)
 
         scrollbars.current.scrollTop(
-          scrollbars.current.getScrollHeight() - previousHieight.current,
+          scrollbars.current.getScrollHeight() - previousHeight.current,
         );
       }
     }
@@ -249,7 +239,7 @@ function BodyChatContainer({
     }
 
     if (scrollTop === 0) {
-      previousHieight.current = scrollHeight;
+      previousHeight.current = scrollHeight;
       dispatch(setRaisePage());
     }
 
@@ -297,22 +287,10 @@ function BodyChatContainer({
       onScrollFrame={handleOnScrolling}
       onScrollStop={handleOnStop}
     >
-      {/* <div className='main-body-conversation'> */}
-
       <div className="spinning-custom">
         <Spin spinning={loading} />
       </div>
-
       {renderMessages(messages)}
-
-      {/* <button onClick={() => {
-                document.getElementById('613dddc02f1e724484d09d82').scrollIntoView();
-            }}>
-                nust test
-            </button> */}
-
-      {/* </div>  */}
-
       <ModalShareMessage
         visible={visibleModalShare}
         onCancel={() => setVisibleModalShare(false)}

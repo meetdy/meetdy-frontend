@@ -1,27 +1,16 @@
+import { useState } from 'react';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Form, Input, message, Modal } from 'antd';
+
 import meApi from '@/api/meApi';
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
 import generateCode from '@/utils/generateCode';
-
-ModalChangePassword.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  onCancel: PropTypes.func,
-  onSaveCodeRevoke: PropTypes.func,
-};
-
-ModalChangePassword.defaultProps = {
-  onCancel: null,
-  onSaveCodeRevoke: null,
-};
 
 function ModalChangePassword({ onCancel, visible, onSaveCodeRevoke }) {
   const [form] = Form.useForm();
   const [confirmLoading, setConfirmLoading] = useState(false);
   const { confirm } = Modal;
 
-  const handleCancel = (e) => {
+  const handleCancel = () => {
     if (onCancel) {
       onCancel();
     }
@@ -34,7 +23,10 @@ function ModalChangePassword({ onCancel, visible, onSaveCodeRevoke }) {
       .then(async ({ oldpassword, password }) => {
         console.log('values :', oldpassword, password);
         try {
-          await meApi.changePasswod(oldpassword, password);
+          await meApi.changePassword({
+            oldPassword: oldpassword,
+            newPassword: password,
+          });
 
           message.success('Đổi mật khẩu thành công');
           showPromiseConfirm(password);

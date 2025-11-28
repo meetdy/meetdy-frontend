@@ -1,4 +1,3 @@
-import { Col, Row } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
@@ -192,44 +191,29 @@ function ChatLayout(props) {
     // dispatch(setJoinFriendLayout(true))
   }, []);
 
-  const handleSetCodeRevoke = (code) => {
+  const handleSetCodeRevoke = (code: string) => {
     setCodeRevoke(code);
     codeRevokeRef.current = code;
   };
 
   return (
-    <div>
-      <Row gutter={[0, 0]}>
-        <Col
-          span={1}
-          xl={{ span: 1 }}
-          lg={{ span: 1 }}
-          md={{ span: 2 }}
-          sm={{ span: 3 }}
-          xs={{ span: 4 }}
-        >
+    <div className="w-full">
+      <div className="grid grid-cols-24 gap-0">
+        <div className="col-span-1 md:col-span-2 sm:col-span-3 xs:col-span-4">
           <NavbarContainer onSaveCodeRevoke={handleSetCodeRevoke} />
-        </Col>
+        </div>
 
-        <Col
-          span={23}
-          xl={{ span: 23 }}
-          lg={{ span: 23 }}
-          md={{ span: 22 }}
-          sm={{ span: 21 }}
-          xs={{ span: 20 }}
-        >
+        <div className="col-span-23 md:col-span-22 sm:col-span-21 xs:col-span-20">
           <Routes>
             <Route
               index
               element={<Chat socket={socket} idNewMessage={idNewMessage} />}
             />
             <Route path="friends" element={<Friend socket={socket} />} />
-            {/* 404 */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 }

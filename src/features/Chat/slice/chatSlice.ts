@@ -388,7 +388,7 @@ const chatSlice = createSlice({
       state.messages = newMessages;
     },
 
-    setToTalUnread: (state, action) => {
+    setToTalUnread: (state) => {
       let tempCount = 0;
       state.conversations.forEach((ele, index) => {
         if (ele.numberUnread > 0) tempCount += 1;

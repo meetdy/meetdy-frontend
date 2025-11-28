@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
 import {
   ContactsOutlined,
   LockOutlined,
@@ -6,47 +9,40 @@ import {
   SettingOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Badge, Button, Popover } from 'antd';
+
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+
 import { setTabActive } from '@/app/globalSlice';
+import { setToTalUnread } from '../../slice/chatSlice';
+
 import ModalChangePassword from '@/components/ModalChangePassword';
 import ModalUpdateProfile from '@/features/Chat/components/ModalUpdateProfile';
 import PersonalIcon from '@/features/Chat/components/PersonalIcon';
-import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
-import { setToTalUnread } from '../../slice/chatSlice';
-import NavbarStyle from './NavbarStyle';
 
-NavbarContainer.propTypes = {
-  onSaveCodeRevoke: PropTypes.func,
-};
-
-NavbarContainer.defaultProps = {
-  onSaveCodeRevoke: null,
-};
-function NavbarContainer({ onSaveCodeRevoke }) {
-  const [visibleModalChangePassword, setvisibleModalChangePassword] =
-    useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const { user, tabActive } = useSelector((state) => state.global);
-
-  const { conversations, toTalUnread } = useSelector((state) => state.chat);
-  const { amountNotify } = useSelector((state) => state.friend);
-  //model
-  const [isModalUpdateProfileVisible, setIsModalUpdateProfileVisible] =
-    useState(false);
-
+export default function NavbarContainer({ onSaveCodeRevoke }) {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const checkCurrentPage = (iconName) => {
-    if (iconName === 'MESSAGE' && location.pathname === '/chat') {
+  const { user } = useSelector((state: any) => state.global);
+  const { conversations, toTalUnread } = useSelector(
+    (state: any) => state.chat,
+  );
+  const { amountNotify } = useSelector((state: any) => state.friend);
+
+  const [visibleModalChangePassword, setVisibleModalChangePassword] =
+    useState(false);
+  const [isModalUpdateProfileVisible, setIsModalUpdateProfileVisible] =
+    useState(false);
+
+  const checkCurrentPage = (iconName: string) => {
+    if (iconName === 'MESSAGE' && location.pathname === '/chat') return true;
+    if (iconName === 'FRIEND' && location.pathname === '/chat/friends')
       return true;
-    }
-    if (iconName === 'FRIEND' && location.pathname === '/chat/friends') {
-      return true;
-    }
     return false;
   };
 
@@ -60,71 +56,41 @@ function NavbarContainer({ onSaveCodeRevoke }) {
     window.location.reload();
   };
 
-  const handleSetTabActive = (value) => {
+  const handleSetTabActive = (value: number) => {
     dispatch(setTabActive(value));
   };
 
-  // --- HANDLE UPDATE PROFILE
-  const handleUpdateProfile = () => {
-    setIsModalUpdateProfileVisible(true);
-  };
-
-  const handleCancelModalUpdateProfile = (value) => {
-    setIsModalUpdateProfileVisible(value);
-  };
-
-  const handleOklModalUpdateProfile = (value) => {
-    setConfirmLoading(true);
-    setConfirmLoading(false);
-    setIsModalUpdateProfileVisible(false);
-  };
-
   const content = (
-    <div className="pop_up-personal">
-      <div className="pop_up-personal--item" onClick={handleUpdateProfile}>
-        <div className="pop_up-personal--item-icon">
-          <UserOutlined />
-        </div>
+    <div className="flex flex-col w-40">
+      <button
+        onClick={() => setIsModalUpdateProfileVisible(true)}
+        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-md"
+      >
+        <UserOutlined />
+        <span>Tài khoản</span>
+      </button>
 
-        <div className="pop_up-personal--item-text">Tài khoản</div>
-      </div>
-
-      <div className="pop_up-personal--item">
-        <div className="pop_up-personal--item-icon">
-          <LogoutOutlined />
-        </div>
-
-        <div className="pop_up-personal--item-text" onClick={handleLogout}>
-          Đăng xuất
-        </div>
-      </div>
-    </div>
-  );
-
-  const handleChangePassword = () => {
-    setvisibleModalChangePassword(true);
-  };
-
-  const setting = (
-    <div className="pop_up-personal">
-      <div className="pop_up-personal--item" onClick={handleChangePassword}>
-        <div className="pop_up-personal--item-icon">
-          <LockOutlined />
-        </div>
-
-        <div className="pop_up-personal--item-text">Đổi mật khẩu</div>
-      </div>
+      <button
+        onClick={handleLogout}
+        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-md"
+      >
+        <LogoutOutlined />
+        <span>Đăng xuất</span>
+      </button>
     </div>
   );
 
   return (
-    <div id="sidebar_wrapper">
-      <div className="sidebar-main">
-        <ul className="sidebar_nav">
-          <li className="sidebar_nav_item icon-avatar">
-            <Popover placement="bottomLeft" content={content} trigger="focus">
-              <Button style={NavbarStyle.BUTTON}>
-                <div className="user-icon-navbar">
+    <div className="h-full w-full">
+      <div className="flex flex-col items-center justify-between h-full py-4 bg-white border-r">
+        <ul className="flex flex-col gap-4">
+          <li>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="p-0 hover:bg-transparent rounded-full"
+                >
                   <PersonalIcon
                     isActive={true}
                     common={false}
@@ -132,69 +98,91 @@ function NavbarContainer({ onSaveCodeRevoke }) {
                     name={user.name}
                     color={user.avatarColor}
                   />
-                </div>
-              </Button>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent side="right">{content}</PopoverContent>
             </Popover>
           </li>
 
-          <Link className="link-icon" to="/chat">
+          <Link to="/chat">
             <li
-              className={`sidebar_nav_item  ${
-                checkCurrentPage('MESSAGE') ? 'active' : ''
+              className={`flex items-center justify-center h-10 w-10 rounded-xl cursor-pointer transition 
+              ${
+                checkCurrentPage('MESSAGE')
+                  ? 'bg-blue-100 text-blue-600'
+                  : 'hover:bg-gray-100'
               }`}
               onClick={() => handleSetTabActive(1)}
             >
-              <div className="sidebar_nav_item--icon">
-                <Badge count={toTalUnread > 0 ? toTalUnread : 0}>
-                  <MessageOutlined />
-                </Badge>
+              <div className="relative">
+                <MessageOutlined />
+                {toTalUnread > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
+                    {toTalUnread}
+                  </span>
+                )}
               </div>
             </li>
           </Link>
 
-          <Link className="link-icon" to="/chat/friends">
+          <Link to="/chat/friends">
             <li
-              className={`sidebar_nav_item  ${
-                checkCurrentPage('FRIEND') ? 'active' : ''
+              className={`flex items-center justify-center h-10 w-10 rounded-xl cursor-pointer transition 
+              ${
+                checkCurrentPage('FRIEND')
+                  ? 'bg-blue-100 text-blue-600'
+                  : 'hover:bg-gray-100'
               }`}
               onClick={() => handleSetTabActive(2)}
             >
-              <div className="sidebar_nav_item--icon">
-                <Badge count={amountNotify}>
-                  <ContactsOutlined />
-                </Badge>
+              <div className="relative">
+                <ContactsOutlined />
+                {amountNotify > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
+                    {amountNotify}
+                  </span>
+                )}
               </div>
             </li>
           </Link>
         </ul>
 
-        <ul className="sidebar_nav">
-          <li className="sidebar_nav_item">
-            <div className="sidebar_nav_item--icon">
-              <Popover placement="rightTop" content={setting} trigger="focus">
-                <Button style={NavbarStyle.BUTTON_SETTING}>
+        <ul>
+          <li>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-xl"
+                >
                   <SettingOutlined />
                 </Button>
-              </Popover>
-            </div>
+              </PopoverTrigger>
+              <PopoverContent side="right">
+                <button
+                  onClick={() => setVisibleModalChangePassword(true)}
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-md"
+                >
+                  <LockOutlined />
+                  <span>Đổi mật khẩu</span>
+                </button>
+              </PopoverContent>
+            </Popover>
           </li>
         </ul>
       </div>
 
-      <ModalUpdateProfile
-        isVisible={isModalUpdateProfileVisible}
-        onCancel={handleCancelModalUpdateProfile}
-        onOk={handleOklModalUpdateProfile}
-        loading={confirmLoading}
-      />
-
       <ModalChangePassword
         visible={visibleModalChangePassword}
-        onCancel={() => setvisibleModalChangePassword(false)}
-        onSaveCodeRevoke={onSaveCodeRevoke}
+        onSaveCodeRevoke={setVisibleModalChangePassword}
+        onCancel={undefined}
+      />
+
+      <ModalUpdateProfile
+        isVisible={isModalUpdateProfileVisible}
+        onCancel={setIsModalUpdateProfileVisible}
+        onOk={setIsModalUpdateProfileVisible}
       />
     </div>
   );
 }
-
-export default NavbarContainer;

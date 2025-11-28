@@ -1,18 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import HeaderOptional from '@/features/Chat/components/HeaderOptional';
-
-HeaderChatContainer.propTypes = {
-  onPopUpInfo: PropTypes.func,
-  onOpenDrawer: PropTypes.func,
-};
-
-HeaderChatContainer.defaultProps = {
-  onPopUpInfo: null,
-  onOpenDrawer: null,
-};
 
 function HeaderChatContainer({ onPopUpInfo, onOpenDrawer }) {
   const [detailConver, setDetailConver] = useState({});
