@@ -1,23 +1,6 @@
-import {
-  AntDesignOutlined,
-  KeyOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { KeyOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Badge } from 'antd';
-import PropTypes from 'prop-types';
-import React from 'react';
 import getSummaryName from '@/utils/nameHelper';
-
-PersonalIcon.propTypes = {
-  avatar: PropTypes.string,
-  isActive: PropTypes.bool,
-  demention: PropTypes.number,
-  common: PropTypes.bool,
-  isHost: PropTypes.bool,
-  name: PropTypes.string,
-  color: PropTypes.string,
-  noneUser: PropTypes.bool,
-};
 
 PersonalIcon.defaultProps = {
   avatar: '',

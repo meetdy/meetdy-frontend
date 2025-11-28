@@ -1,10 +1,3 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-DividerCustom.propTypes = {
-  dateString: PropTypes.object,
-};
-
 function DividerCustom({ dateString }) {
   const date = new Date(dateString);
   const currentDate = new Date();

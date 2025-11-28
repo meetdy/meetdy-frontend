@@ -1,37 +1,30 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
 import {
   CaretDownOutlined,
   DashOutlined,
   MessageTwoTone,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Dropdown, Menu, message as MessageNotify, Modal } from 'antd';
-import NutshellPinMessageStyle from './NutshellPinMessageStyle';
-import pinMessageApi from '@/api/pinMessageApi';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button, Dropdown, Menu, message as MessageNotify, Modal } from 'antd';
+
+import pinMessageApi from '@/api/pinMessageApi';
 import { fetchPinMessages } from '../../slice/chatSlice';
+
 import TypeMessagePin from '../TypeMessagePin';
 import ModalDetailMessagePin from '../ModalDetailMessagePin';
-import { useState } from 'react';
 
-NutshellPinMessage.propTypes = {
-  isItem: PropTypes.bool,
-  onOpenDrawer: PropTypes.func,
-  message: PropTypes.object,
-  quantity: PropTypes.number,
-  isCheckbox: PropTypes.bool,
-  isHover: PropTypes.bool,
-};
-
-NutshellPinMessage.defaultProps = {
-  isItem: false,
-  onOpenDrawer: null,
-  message: {},
-  quantity: 0,
-  isCheckbox: false,
-  isHover: true,
+const NutshellPinMessageStyle = {
+  BUTTON_LIST: {
+    fontSize: '1.3rem',
+    borderRadius: '10px',
+    padding: '0.2rem 1rem',
+    height: 'unset',
+  },
+  MENU_ITEM: {
+    fontSize: '1.3rem',
+    fontWeight: '500',
+  },
 };
 
 function NutshellPinMessage({

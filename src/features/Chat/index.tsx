@@ -60,6 +60,10 @@ import renderWidthDrawer from '@/utils/DrawerResponsive';
 
 function Chat({ socket, idNewMessage }) {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const path = useResolvedPath('').pathname;
+
   const {
     conversations,
     currentConversation,
@@ -68,18 +72,12 @@ function Chat({ socket, idNewMessage }) {
     currentChannel,
     channels,
   } = useSelector((state) => state.chat);
-  const path = useResolvedPath('').pathname;
-
-  const location = useLocation();
-  const navigate = useNavigate();
+  const { isJoinChatLayout, user } = useSelector((state) => state.global);
 
   const refCurrentConversation = useRef(null);
   const refConversations = useRef(null);
   const refCurrentChannel = useRef(null);
 
-  const { isJoinChatLayout, user } = useSelector((state) => state.global);
-
-  // const [idNewMessage, setIdNewMessage] = useState('')
   const [scrollId, setScrollId] = useState('');
   const [isShow, setIsShow] = useState(false);
   const [isScroll, setIsScroll] = useState(false);
@@ -441,7 +439,7 @@ function Chat({ socket, idNewMessage }) {
     setScrollId(value);
   };
 
-  const hanldeOnClickScroll = () => {
+  const handleOnClickScroll = () => {
     setIsScroll(true);
   };
 
@@ -657,7 +655,7 @@ function Chat({ socket, idNewMessage }) {
                         className={`${isShow ? 'show' : 'hide'} ${
                           hasMessage ? 'new-message' : ''
                         }`}
-                        onClick={hanldeOnClickScroll}
+                        onClick={handleOnClickScroll}
                       >
                         {hasMessage ? (
                           <div className="db-arrow-new-message">

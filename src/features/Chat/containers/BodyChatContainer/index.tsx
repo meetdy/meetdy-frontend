@@ -12,15 +12,6 @@ import DividerCustom from '@/features/Chat/components/DividerCustom';
 import ModalShareMessage from '@/features/Chat/components/ModalShareMessage';
 import UserMessage from '@/features/Chat/components/UserMessage';
 
-BodyChatContainer.defaultProps = {
-  scrollId: '',
-  onSCrollDown: '',
-  onBackToBottom: null,
-  onLoading: null,
-  onReply: null,
-  onMention: null,
-};
-
 function BodyChatContainer({
   scrollId,
   onSCrollDown,

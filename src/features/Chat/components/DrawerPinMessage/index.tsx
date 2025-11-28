@@ -1,25 +1,18 @@
-import React, { useRef } from 'react';
-import PropTypes from 'prop-types';
+import { useRef } from 'react';
 import { Drawer } from 'antd';
 
 import DrawerPinMessageStyle from './DrawerPinMessageStyle';
-import {
-  CaretDownOutlined,
-  CaretUpOutlined,
-  RightOutlined,
-} from '@ant-design/icons';
+import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import NutshellPinMessage from '../NutshellPinMessage/NutshellPinMessage';
-DrawerPinMessage.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onOpen: PropTypes.func,
-  onClose: PropTypes.func,
-  message: PropTypes.array,
-};
 
-DrawerPinMessage.defaultProps = {
-  onOpen: null,
-  onClose: null,
-  message: [],
+const DrawerPinMessageStyle = {
+  BODY_STYLE: {
+    minHeight: '5rem',
+  },
+  WRAPPER_STYLE: {
+    padding: 0,
+  },
+  HEIGHT: '50px',
 };
 
 function DrawerPinMessage({ isOpen, onClose, message }) {
@@ -35,6 +28,7 @@ function DrawerPinMessage({ isOpen, onClose, message }) {
     }
   };
   const myElem = useRef();
+
   return (
     <div id="drawer-pin">
       <div id="drawer-container" ref={myElem}>

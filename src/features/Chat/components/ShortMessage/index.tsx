@@ -15,8 +15,8 @@ import { FcBarChart } from 'react-icons/fc';
 import { useSelector } from 'react-redux';
 
 type ShortMessageProps = {
-  message: any;
-  type?: boolean;
+  message: any,
+  type?: boolean,
 };
 
 export default function ShortMessage({ message, type }: ShortMessageProps) {

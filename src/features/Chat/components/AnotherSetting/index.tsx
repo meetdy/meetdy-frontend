@@ -5,19 +5,11 @@ import {
   ExportOutlined,
 } from '@ant-design/icons';
 import { message, Modal } from 'antd';
-import conversationApi from '@/api/conversationApi';
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import conversationApi from '@/api/conversationApi';
 import { leaveGroup } from '../../slice/chatSlice';
-
-AnotherSetting.propTypes = {
-  socket: PropTypes.object,
-};
-
-AnotherSetting.defaultProps = {
-  socket: {},
-};
 
 const styleIconDrop = {
   transform: 'rotate(-90deg)',
