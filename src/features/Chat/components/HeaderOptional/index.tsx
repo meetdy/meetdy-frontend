@@ -6,6 +6,9 @@ import {
   UsergroupAddOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import conversationApi from '@/api/conversationApi';
 import {
   createGroup,
@@ -15,24 +18,10 @@ import {
   setCurrentConversation,
 } from '@/features/Chat/slice/chatSlice';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+
 import dateUtils from '@/utils/dateUtils';
 import ConversationAvatar from '../ConversationAvatar';
 import ModalAddMemberToConver from '../ModalAddMemberToConver';
-
-HeaderOptional.propTypes = {
-  avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  totalMembers: PropTypes.number,
-  name: PropTypes.string,
-  typeConver: PropTypes.bool.isRequired,
-  isLogin: PropTypes.bool,
-  lastLogin: PropTypes.object,
-  avatarColor: PropTypes.string,
-  onPopUpInfo: PropTypes.func,
-  onOpenDrawer: PropTypes.func,
-};
 
 HeaderOptional.defaultProps = {
   totalMembers: 0,

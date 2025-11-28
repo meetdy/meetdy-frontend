@@ -163,9 +163,9 @@ function InfoFriendSearch(props) {
               <strong>{`Danh sách thành viên (${members.length})`}</strong>
             </div>
             {/* 
-                        <div className="info_friend-searchbar">
-                            <Input placeholder="Tìm kiếm thành viên" prefix={<SearchOutlined />} />
-                        </div> */}
+            <div className="info_friend-searchbar">
+                <Input placeholder="Tìm kiếm thành viên" prefix={<SearchOutlined />} />
+            </div> */}
 
             <div className="info_friend-list">
               {members.map((ele, index) => (

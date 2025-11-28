@@ -11,20 +11,18 @@ import dateUtils from '@/utils/dateUtils';
 
 const KEY = 'chat';
 
-// Classify
-
 export const fetchListColor = createAsyncThunk(
   `${KEY}/fetchListColor`,
-  async (params, thunkApi) => {
-    const colors = await classifyApi.getColors();
+  async () => {
+    const colors = await classifyApi.fetchColors();
     return colors;
   },
 );
 
 export const fetchListClassify = createAsyncThunk(
   `${KEY}/fetchListClassify`,
-  async (params, thunkApi) => {
-    const classifies = await classifyApi.getClassifies();
+  async () => {
+    const classifies = await classifyApi.fetchClassifies();
     return classifies;
   },
 );
@@ -82,7 +80,7 @@ export const fetchNextPageMessageOfChannel = createAsyncThunk(
   async (params, thunkApi) => {
     const { page, size, channelId } = params;
 
-    const messages = await channelApi.getMessageInChannel(
+    const messages = await channelApi.fetchMessageInChannel(
       channelId,
       page,
       size,

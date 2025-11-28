@@ -4,214 +4,173 @@ import {
   SearchOutlined,
   UserAddOutlined,
   UsergroupAddOutlined,
-} from '@ant-design/icons';
-import { Input, message, Radio } from 'antd';
-import { useRef, useState } from 'react';
-import Scrollbars from 'react-custom-scrollbars-2';
-import { useDispatch, useSelector } from 'react-redux';
+} from "@ant-design/icons"
+import { useRef, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 
-import userApi from '@/api/userApi';
-import ModalAddFriend from '@/components/ModalAddFriend';
-import UserCard from '@/components/UserCard';
-import ModalClassify from '@/features/Chat/components/ModalClassify';
-import ModalCreateGroup from '@/features/Chat/components/ModalCreateGroup';
-import { createGroup } from '@/features/Chat/slice/chatSlice';
+import userApi from "@/api/userApi"
+import ModalAddFriend from "@/components/ModalAddFriend"
+import UserCard from "@/components/UserCard"
+import ModalCreateGroup from "@/features/Chat/components/ModalCreateGroup"
+import { createGroup } from "@/features/Chat/slice/chatSlice"
 
-function SearchContainer({
+import { Input } from "@/components/ui/input"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { toast } from "sonner"
+
+type Props = {
+  valueText: string
+  onSearchChange: (text: string) => void
+  onSubmitSearch: () => void
+  isFriendPage?: boolean
+  onFilterClasify?: (value: string) => void
+  valueClassify?: string
+}
+
+export default function SearchContainer({
   valueText,
   onSearchChange,
   onSubmitSearch,
   isFriendPage,
   onFilterClasify,
   valueClassify,
-}) {
-  const refDebounce = useRef(null);
-  const dispatch = useDispatch();
-  const { classifies } = useSelector((state) => state.chat);
+}: Props) {
+  const refDebounce = useRef<any>(null)
+  const dispatch = useDispatch()
+  const { classifies } = useSelector((state: any) => state.chat)
 
-  const [isModalCreateGroup, setIsModalCreateGroup] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [isShowModalClasify, setIsShowModalClasify] = useState(false);
-  const [isShowModalAddFriend, setShowModalAddFriend] = useState(false);
-  const [userIsFind, setUserIsFind] = useState({});
-  const [visibleUserCard, setVisbleUserCard] = useState(false);
+  const [isModalCreateGroup, setIsModalCreateGroup] = useState(false)
+  const [confirmLoading, setConfirmLoading] = useState(false)
+  const [isShowModalAddFriend, setShowModalAddFriend] = useState(false)
+  const [userIsFind, setUserIsFind] = useState<any>({})
+  const [visibleUserCard, setVisbleUserCard] = useState(false)
 
-  const handleCreateClasify = () => {
-    setIsShowModalClasify(true);
-  };
+  const handleOnChangeClassify = (value: string) => {
+    onFilterClasify?.(value)
+  }
 
-  const handleCancelClassifyModal = () => {
-    setIsShowModalClasify(false);
-  };
+  const handleCreateGroup = () => setIsModalCreateGroup(true)
+  const handleCancelCreateGroup = () => setIsModalCreateGroup(false)
+  const handleOkCreateGroup = (value: any) => {
+    setConfirmLoading(true)
+    dispatch(createGroup(value))
+    setConfirmLoading(false)
+    setIsModalCreateGroup(false)
+  }
 
-  const handleOpenModalClassify = () => {
-    setIsShowModalClasify(true);
-  };
+  const handleOpenModalAddFriend = () => setShowModalAddFriend(true)
+  const handleCancelAddFriend = () => setShowModalAddFriend(false)
 
-  const handleOnChange = (e) => {
-    const value = e.target.value;
-    console.log('value', value);
-    if (onFilterClasify) {
-      onFilterClasify(value);
-    }
-  };
-
-  const handleCreateGroup = () => {
-    setIsModalCreateGroup(true);
-  };
-
-  const handleCancelModalCreatGroup = (value) => {
-    setIsModalCreateGroup(value);
-  };
-
-  const handleOklModalCreatGroup = (value) => {
-    setConfirmLoading(true);
-    dispatch(createGroup(value));
-    setConfirmLoading(false);
-    setIsModalCreateGroup(false);
-  };
-
-  const handleOpenModalAddFriend = () => {
-    setShowModalAddFriend(true);
-  };
-
-  const handeCancelModalAddFriend = () => {
-    setShowModalAddFriend(false);
-  };
-
-  const handFindUser = async (value) => {
+  const handFindUser = async (value: string) => {
     try {
-      const user = await userApi.fetchUser(value);
-      setUserIsFind(user);
-      setVisbleUserCard(true);
-      setShowModalAddFriend(false);
+      const user = await userApi.fetchUser(value)
+      setUserIsFind(user)
+      setVisbleUserCard(true)
+      setShowModalAddFriend(false)
     } catch (error) {
-      message.error('Không tìm thấy người dùng');
+      toast.error("Không tìm thấy người dùng")
     }
-  };
-  const handOnSearchUser = (value) => {
-    handFindUser(value);
-  };
+  }
 
-  const handleOnEnter = (value) => {
-    handFindUser(value);
-  };
+  const handleInputChange = (e: any) => {
+    const value = e.target.value
+    onSearchChange?.(value)
 
-  const handleCancelModalUserCard = () => {
-    setVisbleUserCard(false);
-  };
+    if (refDebounce.current) clearTimeout(refDebounce.current)
 
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    if (onSearchChange) {
-      onSearchChange(value);
-    }
-
-    if (refDebounce.current) {
-      clearTimeout(refDebounce.current);
-    }
     refDebounce.current = setTimeout(() => {
-      if (onSubmitSearch) {
-        onSubmitSearch();
-      }
-    }, 400);
-
-    // setValueInput(value);
-  };
+      onSubmitSearch?.()
+    }, 400)
+  }
 
   return (
-    <div id="search-wrapper">
-      <div className="search-main">
-        <div className="search-top">
-          <div className="search-top_input-search">
+    <div className="w-full">
+      <div className="p-3 border-b bg-white">
+        <div className="flex items-center gap-3">
+          <div className="flex-1 relative">
+            <SearchOutlined className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <Input
               placeholder="Tìm kiếm"
-              prefix={<SearchOutlined />}
-              onChange={handleInputChange}
+              className="pl-9"
               value={valueText}
-              allowClear
+              onChange={handleInputChange}
             />
           </div>
 
-          <div
-            className="search-top_add-friend"
+          <button
+            className="p-2 hover:bg-gray-100 rounded-lg"
             onClick={handleOpenModalAddFriend}
           >
             <UserAddOutlined />
-          </div>
+          </button>
 
-          <div className="search-top_create-group" onClick={handleCreateGroup}>
+          <button
+            className="p-2 hover:bg-gray-100 rounded-lg"
+            onClick={handleCreateGroup}
+          >
             <UsergroupAddOutlined />
-          </div>
+          </button>
         </div>
 
-        {/* {!isFriendPage && (
-          <>
-            {!(valueText.trim().length > 0) && (
-              <div className="search-bottom">
-                <div className="classify-title">
-                  <div>
-                    <AlignLeftOutlined /> &nbsp;
-                    <span>Phân loại</span>
-                  </div>
-                  <div className="add-classify" onClick={handleCreateClasify}>
-                    <AppstoreAddOutlined />
-                  </div>
-                </div>
-                <div className="classify-element">
-                  <Scrollbars
-                    autoHide={true}
-                    autoHideTimeout={1000}
-                    autoHideDuration={200}
-                    style={{ height: '42px', width: '100%' }}
-                  >
-                    <Radio.Group
-                      onChange={handleOnChange}
-                      value={valueClassify}
-                      size="small"
-                    >
-                      <Radio value={'0'}>Tất cả</Radio>
-                      {classifies.map((ele, index) => (
-                        <Radio key={index} value={ele._id}>
-                          {ele.name}
-                        </Radio>
-                      ))}
-                    </Radio.Group>
-                  </Scrollbars>
-                </div>
+        {!isFriendPage && valueText.trim().length === 0 && (
+          <div className="mt-4">
+            <div className="flex justify-between items-center mb-2">
+              <div className="flex items-center gap-2 text-gray-700">
+                <AlignLeftOutlined />
+                <span>Phân loại</span>
               </div>
-            )}
-          </>
-        )} */}
+
+              <button className="p-2 hover:bg-gray-100 rounded-md">
+                <AppstoreAddOutlined />
+              </button>
+            </div>
+
+            <div className="overflow-x-auto scrollbar-thin">
+              <RadioGroup
+                value={valueClassify}
+                onValueChange={handleOnChangeClassify}
+                className="flex items-center gap-4 py-1"
+              >
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="0" id="all" />
+                  <label htmlFor="all" className="text-sm">
+                    Tất cả
+                  </label>
+                </div>
+
+                {classifies?.map((ele: any, idx: number) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <RadioGroupItem value={ele._id} id={ele._id} />
+                    <label htmlFor={ele._id} className="text-sm break-keep">
+                      {ele.name}
+                    </label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          </div>
+        )}
       </div>
 
       <ModalCreateGroup
         isVisible={isModalCreateGroup}
-        onCancel={handleCancelModalCreatGroup}
-        onOk={handleOklModalCreatGroup}
+        onCancel={handleCancelCreateGroup}
+        onOk={handleOkCreateGroup}
         loading={confirmLoading}
       />
 
-      {/* <ModalClassify
-        isVisible={isShowModalClasify}
-        onCancel={handleCancelClassifyModal}
-        onOpen={handleOpenModalClassify}
-      /> */}
-
       <ModalAddFriend
         isVisible={isShowModalAddFriend}
-        onCancel={handeCancelModalAddFriend}
-        onSearch={handOnSearchUser}
-        onEnter={handleOnEnter}
+        onCancel={handleCancelAddFriend}
+        onSearch={handFindUser}
+        onEnter={handFindUser}
       />
 
       <UserCard
         user={userIsFind}
         isVisible={visibleUserCard}
-        onCancel={handleCancelModalUserCard}
+        onCancel={() => setVisbleUserCard(false)}
       />
     </div>
-  );
+  )
 }
-
-export default SearchContainer;
