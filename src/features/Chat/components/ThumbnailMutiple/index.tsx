@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import './style.css';
 import { Avatar, Tooltip } from 'antd';
 
-ThumbnailMutiple.propTypes = {
+ThumbnailMulti.propTypes = {
   participants: PropTypes.number.isRequired,
 };
 
-ThumbnailMutiple.propTypes = {};
+ThumbnailMulti.propTypes = {};
 
 const styleGroup3 = {
   position: 'relative',
@@ -20,7 +20,7 @@ const styleGroup2 = {
   alignItems: 'center',
 };
 
-function ThumbnailMutiple(props) {
+function ThumbnailMulti(props) {
   const { participants } = props;
   return (
     <div id="thumbnail-mutiple">
@@ -131,4 +131,4 @@ function ThumbnailMutiple(props) {
   );
 }
 
-export default ThumbnailMutiple;
+export default ThumbnailMulti;

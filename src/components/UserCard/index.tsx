@@ -53,6 +53,7 @@ export default function UserCard({
   user,
   onCancel,
 }: UserCardProps) {
+  console.log('🚀 ~ UserCard ~ user:', user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

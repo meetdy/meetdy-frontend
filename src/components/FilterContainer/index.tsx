@@ -1,20 +1,9 @@
 import { Tabs } from 'antd';
-import ConverMutipleSearch from '@/components/ConverMutipleSearch';
+
+import ConverMultiSearch from '@/components/ConverMultiSearch';
 import ConverPersonalSearch from '@/components/ConverPersonalSearch';
-import PropTypes from 'prop-types';
-import React from 'react';
 
-FilterContainer.propTypes = {
-  dataSingle: PropTypes.array,
-  dataMutiple: PropTypes.array,
-};
-
-FilterContainer.defaultProps = {
-  dataMutiple: [],
-  dataSingle: [],
-};
-
-function FilterContainer({ dataMutiple, dataSingle }) {
+function FilterContainer({ dataMulti = [], dataSingle = [] }) {
   const { TabPane } = Tabs;
 
   return (
@@ -24,7 +13,7 @@ function FilterContainer({ dataMutiple, dataSingle }) {
           <ConverPersonalSearch data={dataSingle} />
         </TabPane>
         <TabPane tab="Nhóm" key="2">
-          <ConverMutipleSearch data={dataMutiple} />
+          <ConverMultiSearch data={dataMulti} />
         </TabPane>
       </Tabs>
     </div>

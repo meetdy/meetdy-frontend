@@ -79,51 +79,6 @@ export default function GroupCard({ data, onRemove }: GroupCardProps) {
     </DropdownMenuContent>
   );
 
-  const mainCard = (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <div className="relative cursor-pointer">
-          <div className="group-card flex flex-col items-center p-4 rounded-lg bg-white hover:bg-gray-50 shadow-sm">
-            <div className="mb-2">
-              <ConversationAvatar
-                avatar={data.avatar}
-                dimension={52}
-                type={data.type}
-                totalMembers={data.totalMembers}
-                isGroupCard={true}
-                sizeAvatar={48}
-                frameSize={96}
-              />
-            </div>
-
-            <div className="text-base font-semibold text-gray-800">
-              {data.name}
-            </div>
-
-            <div className="text-sm text-gray-500">
-              {data.totalMembers} thành viên
-            </div>
-
-            <div
-              className="absolute right-2 top-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="p-1 rounded hover:bg-gray-100">
-                    <BsThreeDotsVertical size={18} />
-                  </button>
-                </DropdownMenuTrigger>
-                {menu}
-              </DropdownMenu>
-            </div>
-          </div>
-        </div>
-      </DropdownMenuTrigger>
-      {menu}
-    </DropdownMenu>
-  );
-
   return (
     <div onClick={handleOnClick} className="relative">
       {classify && (
@@ -135,7 +90,48 @@ export default function GroupCard({ data, onRemove }: GroupCardProps) {
         </Badge>
       )}
 
-      {mainCard}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="relative cursor-pointer">
+            <div className="group-card flex flex-col items-center p-4 rounded-lg bg-white hover:bg-gray-50 shadow-sm">
+              <div className="mb-2">
+                <ConversationAvatar
+                  avatar={data.avatar}
+                  dimension={52}
+                  type={data.type}
+                  totalMembers={data.totalMembers}
+                  isGroupCard={true}
+                  sizeAvatar={48}
+                  frameSize={96}
+                />
+              </div>
+
+              <div className="text-base font-semibold text-gray-800">
+                {data.name}
+              </div>
+
+              <div className="text-sm text-gray-500">
+                {data?.totalMembers} thành viên
+              </div>
+
+              <div
+                className="absolute right-2 top-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="p-1 rounded hover:bg-gray-100">
+                      <BsThreeDotsVertical size={18} />
+                    </button>
+                  </DropdownMenuTrigger>
+                  {menu}
+                </DropdownMenu>
+              </div>
+            </div>
+          </div>
+        </DropdownMenuTrigger>
+        {menu}
+      </DropdownMenu>
     </div>
   );
 }

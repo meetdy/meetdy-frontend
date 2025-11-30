@@ -1,65 +1,86 @@
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Col, message, Modal, Row } from 'antd';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { toast } from 'sonner';
+import { AlertCircle } from 'lucide-react';
+
 import conversationApi from '@/api/conversationApi';
 import { fetchListGroup } from '@/features/Friend/friendSlice';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { useDispatch } from 'react-redux';
 import { socket } from '@/utils/socketClient';
 import GroupCard from '../GroupCard';
 
-ListGroup.propTypes = {
-  data: PropTypes.array,
-};
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+} from '@/components/ui/alert-dialog';
 
-ListGroup.defaultProps = {
-  data: [],
-};
-
-function ListGroup({ data }) {
+function ListGroup({ data = [] }) {
   const dispatch = useDispatch();
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
 
-  const handleOnRemoveGroup = (key, id) => {
-    confirm(id);
+  const openRemoveDialog = (groupId: string) => {
+    setSelectedGroupId(groupId);
+    setOpenConfirm(true);
   };
 
-  function confirm(id) {
-    Modal.confirm({
-      title: 'Cảnh báo',
-      icon: <ExclamationCircleOutlined />,
-      content: 'Bạn có thực sự muốn rời khỏi nhóm',
-      okText: 'Đồng ý',
-      cancelText: 'Hủy',
-      onOk: async () => {
-        try {
-          await conversationApi.leaveGroup(id);
-          message.success(`Rời nhóm thành công`);
-          socket.emit('leave-conversation', id);
-          dispatch(fetchListGroup({ name: '', type: 2 }));
-        } catch (error) {
-          message.error(`Rời nhóm thất bại`);
-        }
-      },
-    });
-  }
+  const handleConfirmRemove = async () => {
+    if (!selectedGroupId) return;
+
+    try {
+      await conversationApi.leaveGroup(selectedGroupId);
+
+      toast.success('Rời nhóm thành công');
+
+      socket.emit('leave-conversation', selectedGroupId);
+      dispatch(fetchListGroup({ name: '', type: 2 }));
+    } catch (error) {
+      toast.error('Rời nhóm thất bại');
+    }
+
+    setOpenConfirm(false);
+  };
 
   return (
-    <Row gutter={[16, 16]}>
-      {data &&
-        data.length > 0 &&
-        data.map((ele, index) => (
-          <Col
-            span={6}
-            xl={{ span: 6 }}
-            lg={{ span: 8 }}
-            md={{ span: 12 }}
-            sm={{ span: 12 }}
-            xs={{ span: 24 }}
-          >
-            <GroupCard data={ele} key={index} onRemove={handleOnRemoveGroup} />
-          </Col>
-        ))}
-    </Row>
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {data
+          .filter((i) => i.totalMembers > 2)
+          .map((group) => (
+            <GroupCard
+              key={group.id}
+              data={group}
+              onRemove={() => openRemoveDialog(group.id)}
+            />
+          ))}
+      </div>
+
+      <AlertDialog open={openConfirm} onOpenChange={setOpenConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-red-500" />
+              Cảnh báo
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn muốn rời khỏi nhóm này?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmRemove}>
+              Đồng ý
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
 

@@ -17,7 +17,7 @@ import FilterContainer from '@/components/FilterContainer';
 import SearchContainer from '@/features/Chat/containers/SearchContainer';
 
 import HeaderFriend from './components/HeaderFiend';
-import ListContact from './components/ListContact';
+import ContactItem from './components/ContactItem';
 import ListFriend from './components/ListFriend';
 import ListGroup from './components/ListGroup';
 import ListMyFriendRequest from './components/ListMyRequestFriend';
@@ -36,7 +36,6 @@ import {
 import { getValueFromKey } from '@/constants/filterFriend';
 import { sortGroup } from '@/utils/groupUtils';
 
-/* ------------------ Spinner ------------------ */
 function Spinner() {
   return (
     <div className="flex items-center justify-center py-10">
@@ -73,8 +72,6 @@ export default function Friend() {
 
   const [singleRoomResults, setSingleRoomResults] = useState([]);
   const [groupRoomResults, setGroupRoomResults] = useState([]);
-
-  const [isMobileDetailOpen, setMobileDetailOpen] = useState(false);
 
   useEffect(() => {
     if (groups.length > 0) {
@@ -142,13 +139,7 @@ export default function Friend() {
         <Spinner />
       ) : (
         <div className="grid grid-cols-12 w-full">
-          <div
-            className={
-              isMobileDetailOpen
-                ? 'hidden sm:block sm:col-span-0'
-                : 'col-span-12 sm:col-span-6 md:col-span-7 lg:col-span-6 xl:col-span-5'
-            }
-          >
+          <div className="col-span-12 sm:col-span-6 md:col-span-7 lg:col-span-6 xl:col-span-5">
             <div className="border-r h-full p-3">
               {/* Search */}
               <SearchContainer
@@ -161,7 +152,7 @@ export default function Friend() {
               {isFilterVisible ? (
                 <FilterContainer
                   dataSingle={singleRoomResults}
-                  dataMutiple={groupRoomResults}
+                  dataMulti={groupRoomResults}
                   valueText={searchText}
                 />
               ) : (
@@ -175,7 +166,6 @@ export default function Friend() {
                       label="Danh sách kết bạn"
                       onClick={() => {
                         setActiveTab(0);
-                        setMobileDetailOpen(true);
                       }}
                     />
 
@@ -184,7 +174,6 @@ export default function Friend() {
                       label="Danh sách nhóm"
                       onClick={() => {
                         setActiveTab(1);
-                        setMobileDetailOpen(true);
                       }}
                     />
 
@@ -193,7 +182,6 @@ export default function Friend() {
                       label="Danh bạ"
                       onClick={() => {
                         setActiveTab(2);
-                        setMobileDetailOpen(true);
                       }}
                     />
 
@@ -215,17 +203,12 @@ export default function Friend() {
           {/* ---------------- Body ---------------- */}
           <div
             className={
-              isMobileDetailOpen
-                ? 'col-span-12'
-                : 'hidden sm:block sm:col-span-6 md:col-span-5 lg:col-span-6 xl:col-span-7'
+              'hidden sm:block sm:col-span-6 md:col-span-5 lg:col-span-6 xl:col-span-7'
             }
           >
             <div className="h-full flex flex-col">
               <div className="border-b p-3">
-                <HeaderFriend
-                  onBack={() => setMobileDetailOpen(false)}
-                  subtab={activeTab}
-                />
+                <HeaderFriend subtab={activeTab} />
               </div>
 
               <div className="flex-1 overflow-hidden">
@@ -277,7 +260,13 @@ export default function Friend() {
                   {/* --- Contact Tab --- */}
                   {activeTab === 2 && (
                     <div className="p-3">
-                      <ListContact data={phoneBook} />
+                      {phoneBook &&
+                        phoneBook.length > 0 &&
+                        phoneBook.map((ele, index) => {
+                          if (ele.isExists) {
+                            return <ContactItem key={index} data={ele} />;
+                          }
+                        })}
                     </div>
                   )}
                 </Scrollbars>

@@ -9,7 +9,7 @@ import {
 } from '@/features/Chat/slice/chatSlice';
 import { useNavigate } from 'react-router-dom';
 
-function ConverMutipleSearch({ data }) {
+function ConverMultiSearch({ data }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -44,4 +44,4 @@ function ConverMutipleSearch({ data }) {
   );
 }
 
-export default ConverMutipleSearch;
+export default ConverMultiSearch;

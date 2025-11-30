@@ -95,7 +95,7 @@ function Chat({ socket, idNewMessage }) {
   const [visibleFilter, setVisbleFilter] = useState(false);
   const [valueInput, setValueInput] = useState('');
   const [singleConverFilter, setSingleConverFilter] = useState([]);
-  const [mutipleConverFilter, setMutipleConverFilter] = useState([]);
+  const [mutipleConverFilter, setMultiConverFilter] = useState([]);
   const [valueClassify, setValueClassify] = useState('0');
   const [isOpenInfo, setIsOpenInfo] = useState(true);
   const [openDrawerInfo, setOpenDrawerInfo] = useState(false);
@@ -527,7 +527,7 @@ function Chat({ socket, idNewMessage }) {
         valueInput,
         2,
       );
-      setMutipleConverFilter(mutiple);
+      setMultiConverFilter(mutiple);
     } catch (error) {}
   };
 
@@ -573,7 +573,7 @@ function Chat({ socket, idNewMessage }) {
               {visibleFilter ? (
                 <FilterContainer
                   dataSingle={singleConverFilter}
-                  dataMutiple={mutipleConverFilter}
+                  dataMulti={mutipleConverFilter}
                   valueText={valueInput}
                 />
               ) : (

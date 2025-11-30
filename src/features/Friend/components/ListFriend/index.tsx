@@ -1,22 +1,17 @@
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { message, Modal } from 'antd';
-import friendApi from '@/api/friendApi';
-import userApi from '@/api/userApi';
-import UserCard from '@/components/UserCard';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';
 import { useDispatch } from 'react-redux';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Modal } from 'antd';
+
+import { toast } from 'sonner';
+
+import friendApi from '@/api/friendApi';
+import userApi from '@/api/userApi';
 import { fetchFriends } from '../../friendSlice';
+
+import UserCard from '@/components/UserCard';
 import FriendItem from '../FriendItem';
-
-ListFriend.propTypes = {
-  data: PropTypes.array,
-};
-
-ListFriend.defaultProps = {
-  data: [],
-};
 
 function ListFriend({ data }) {
   const dispatch = useDispatch();
@@ -29,7 +24,7 @@ function ListFriend({ data }) {
     } else {
       setIsVisible(true);
       const tempUser = data.find((ele) => ele._id === id);
-      const realUser = await userApi.fetchUser(tempUser.username);
+      const realUser = await userApi.getUser(tempUser.username);
       setUserIsFind(realUser);
     }
   };
@@ -41,11 +36,11 @@ function ListFriend({ data }) {
   const handleOkModal = async (id) => {
     try {
       await friendApi.deleteFriend(id);
-      dispatch(fetchFriends({ name: '' }));
-      message.success('Xóa thành công');
+      dispatch(fetchFriends());
+      toast.success('Xóa thành công');
       setIsVisible(false);
     } catch (error) {
-      message.error('Xóa thất bại');
+      toast.error('Xóa thất bại');
     }
   };
 
@@ -78,9 +73,11 @@ function ListFriend({ data }) {
       style={{ height: '100%', width: '100%' }}
     >
       {data.length > 0 &&
-        data.map((ele, index) => (
-          <FriendItem key={index} data={ele} onClickMenu={handleOnClickMenu} />
-        ))}
+        data.map((e, index) => {
+          return (
+            <FriendItem key={index} data={e} onClickMenu={handleOnClickMenu} />
+          );
+        })}
 
       <UserCard
         user={userIsFind}
