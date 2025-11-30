@@ -10,7 +10,7 @@ import {
 const PATH = '/conversations';
 
 const ServiceConversation = {
-  fetchListConversations: async (
+  getListConversations: async (
     params: TGetListConversations,
   ): Promise<Array<IIndividualConversation | IGroupConversation>> => {
     const url = PATH;
@@ -36,7 +36,7 @@ const ServiceConversation = {
     return response.data;
   },
 
-  fetchConversationById: async (
+  getConversationById: async (
     id: string,
   ): Promise<IIndividualConversation | IGroupConversation> => {
     const url = `${PATH}/${id}`;
@@ -52,7 +52,7 @@ const ServiceConversation = {
     return response.data;
   },
 
-  fetchMemberInConversation: async (id: string): Promise<any> => {
+  getMemberInConversation: async (id: string): Promise<any> => {
     const url = `${PATH}/${id}/members`;
     const response = await get<any>(url);
     return response.data;
@@ -91,13 +91,13 @@ const ServiceConversation = {
     return response.data;
   },
 
-  fetchLastViewOfMembers: async (conversationId: string): Promise<any> => {
+  getLastViewOfMembers: async (conversationId: string): Promise<any> => {
     const url = `${PATH}/${conversationId}/last-view`;
     const response = await get<any>(url);
     return response.data;
   },
 
-  fetchSummaryInfoGroup: async (conversationId: string): Promise<any> => {
+  getSummaryInfoGroup: async (conversationId: string): Promise<any> => {
     const url = `${PATH}/${conversationId}/summary`;
     const response = await get<any>(url);
     return response.data;

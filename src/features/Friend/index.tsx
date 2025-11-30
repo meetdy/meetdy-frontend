@@ -1,13 +1,21 @@
 import { CaretDownOutlined, FilterOutlined } from '@ant-design/icons';
-import { Button, Col, Dropdown, Menu, Row, Spin } from 'antd';
-
 import { useEffect, useRef, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { Icon } from '@/components/ui/icon';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+
 import conversationApi from '@/api/conversationApi';
 import FilterContainer from '@/components/FilterContainer';
 import SearchContainer from '@/features/Chat/containers/SearchContainer';
+
 import HeaderFriend from './components/HeaderFiend';
 import ListContact from './components/ListContact';
 import ListFriend from './components/ListFriend';
@@ -15,6 +23,7 @@ import ListGroup from './components/ListGroup';
 import ListMyFriendRequest from './components/ListMyRequestFriend';
 import ListRequestFriend from './components/ListRequestFriend';
 import SuggestList from './components/SuggestList';
+
 import {
   fetchFriends,
   fetchListGroup,
@@ -23,12 +32,23 @@ import {
   fetchPhoneBook,
   fetchSuggestFriend,
 } from './friendSlice';
+
 import { getValueFromKey } from '@/constants/filterFriend';
 import { sortGroup } from '@/utils/groupUtils';
-import { Icon } from '@/components/ui/icon';
-import { TriangleAlert, User, Users } from 'lucide-react';
 
-function Friend({ socket }) {
+/* ------------------ Spinner ------------------ */
+function Spinner() {
+  return (
+    <div className="flex items-center justify-center py-10">
+      <div className="h-6 w-6 animate-spin rounded-full border-4 border-gray-300 border-t-gray-700" />
+    </div>
+  );
+}
+
+export default function Friend() {
+  const dispatch = useDispatch();
+  const refOriginalGroups = useRef(null);
+
   const {
     requestFriends,
     myRequestFriend,
@@ -37,320 +57,304 @@ function Friend({ socket }) {
     phoneBook,
     isLoading,
     suggestFriends,
-  } = useSelector((state) => state.friend);
-  const { user } = useSelector((state) => state.global);
+  } = useSelector((state: any) => state.friend);
 
-  const { isJoinFriendLayout } = useSelector((state) => state.global);
-  const [subTab, setSubTab] = useState(0);
-  const [currentFilterLeft, setCurrentFilterLeft] = useState('1');
-  const [currentFilterRight, setCurrentFilterRight] = useState('1');
-  const [groupCurrent, setGroupCurrent] = useState([]);
-  const [keySort, setKeySort] = useState(1);
-  const dispatch = useDispatch();
-  const refFiller = useRef();
+  const { user } = useSelector((state: any) => state.global);
 
-  // filter search
-  const [visibleFilter, setVisbleFilter] = useState(false);
-  const [valueInput, setValueInput] = useState('');
-  const [singleConverFilter, setSingleConverFilter] = useState([]);
-  const [mutipleConverFilter, setMutipleConverFilter] = useState([]);
+  const [activeTab, setActiveTab] = useState(0); // 0: friend, 1: group, 2: contact
+  const [groupFilterType, setGroupFilterType] = useState('1');
+  const [sortFilterType, setSortFilterType] = useState('1');
 
-  const [isActiveTab, setActiveTab] = useState(false);
+  const [filteredGroups, setFilteredGroups] = useState([]);
+  const [sortKey, setSortKey] = useState(1);
+
+  const [searchText, setSearchText] = useState('');
+  const [isFilterVisible, setFilterVisible] = useState(false);
+
+  const [singleRoomResults, setSingleRoomResults] = useState([]);
+  const [groupRoomResults, setGroupRoomResults] = useState([]);
+
+  const [isMobileDetailOpen, setMobileDetailOpen] = useState(false);
 
   useEffect(() => {
     if (groups.length > 0) {
-      const temp = sortGroup(groups, 1);
-      setGroupCurrent(temp);
-      refFiller.current = temp;
+      const sorted = sortGroup(groups, 1);
+      setFilteredGroups(sorted);
+      refOriginalGroups.current = sorted;
     }
   }, [groups]);
 
   useEffect(() => {
-    if (subTab === 2) {
-      dispatch(fetchPhoneBook());
-    }
-  }, [subTab]);
+    if (activeTab === 2) dispatch(fetchPhoneBook());
+  }, [activeTab]);
 
   useEffect(() => {
     dispatch(fetchListRequestFriend());
     dispatch(fetchListMyRequestFriend());
-    dispatch(
-      fetchFriends({
-        name: '',
-      }),
-    );
+    dispatch(fetchFriends({ name: '' }));
     dispatch(fetchListGroup({ name: '', type: 2 }));
     dispatch(fetchPhoneBook());
     dispatch(fetchSuggestFriend());
   }, []);
 
-  const handleMenuLeftSelect = ({ _, key }) => {
-    if (groups.length > 0) {
-      setCurrentFilterLeft(key);
-      if (key === '2') {
-        const newGroup = groupCurrent.filter(
-          (ele) => ele.leaderId === user._id,
-        );
+  const handleLeftFilter = (key: string) => {
+    setGroupFilterType(key);
 
-        setGroupCurrent(newGroup);
-      }
-      if (key === '1') {
-        console.log(refFiller.current);
-        setGroupCurrent(sortGroup(refFiller.current, keySort));
-      }
-    }
-  };
-
-  const handleMenuRightSelect = ({ _, key }) => {
-    if (groups.length > 0) {
-      setCurrentFilterRight(key);
-      let newGroup = [];
-      if (key === '2') {
-        newGroup = sortGroup(groupCurrent, 0);
-        setKeySort(0);
-      }
-      if (key === '1') {
-        newGroup = sortGroup(groupCurrent, 1);
-        setKeySort(1);
-      }
-
-      setGroupCurrent(newGroup);
-    }
-  };
-
-  const menuLeft = (
-    <Menu onClick={handleMenuLeftSelect}>
-      <Menu.Item key="1">Tất cả</Menu.Item>
-      <Menu.Item key="2">Nhóm tôi quản lý</Menu.Item>
-    </Menu>
-  );
-
-  const menuRight = (
-    <Menu onClick={handleMenuRightSelect}>
-      <Menu.Item key="1">Theo tên nhóm từ (A-Z)</Menu.Item>
-      <Menu.Item key="2">Theo tên nhóm từ (Z-A)</Menu.Item>
-    </Menu>
-  );
-
-  const handleOnVisibleFilter = (value) => {
-    if (value.trim().length > 0) {
-      setVisbleFilter(true);
+    if (key === '2') {
+      setFilteredGroups(
+        refOriginalGroups.current.filter((g) => g.leaderId === user._id),
+      );
     } else {
-      setVisbleFilter(false);
+      setFilteredGroups(sortGroup(refOriginalGroups.current, sortKey));
     }
   };
 
-  const handleOnSearchChange = (value) => {
-    setValueInput(value);
-    handleOnVisibleFilter(value);
+  const handleRightFilter = (key: string) => {
+    setSortFilterType(key);
+    const newSort = key === '1' ? 1 : 0;
+    setSortKey(newSort);
+    setFilteredGroups(sortGroup(filteredGroups, newSort));
   };
 
-  const handleOnSubmitSearch = async () => {
+  const handleSearchTextChange = (value: string) => {
+    setSearchText(value);
+    setFilterVisible(value.trim().length > 0);
+  };
+
+  const handleSearchSubmit = async () => {
     try {
-      const single = await conversationApi.fetchListConversations(
-        valueInput,
-        1,
-      );
-      const mutiple = await conversationApi.fetchListConversations(
-        valueInput,
-        2,
-      );
-      setSingleConverFilter(single);
-      setMutipleConverFilter(mutiple);
-    } catch (error) {}
+      const single = await conversationApi.getListConversations({
+        name: searchText,
+        type: 1,
+      });
+      const multiple = await conversationApi.getListConversations({
+        name: searchText,
+        type: 2,
+      });
+      setSingleRoomResults(single);
+      setGroupRoomResults(multiple);
+    } catch (_) {}
   };
 
   return (
-    <Spin spinning={isLoading}>
-      <div id="main-friend_wrapper">
-        <Row gutter={[0, 0]}>
-          <Col
-            span={5}
-            xl={{ span: 5 }}
-            lg={{ span: 6 }}
-            md={{ span: 7 }}
-            sm={{ span: isActiveTab ? 0 : 24 }}
-            xs={{ span: isActiveTab ? 0 : 24 }}
+    <div className="w-full">
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className="grid grid-cols-12 w-full">
+          <div
+            className={
+              isMobileDetailOpen
+                ? 'hidden sm:block sm:col-span-0'
+                : 'col-span-12 sm:col-span-6 md:col-span-7 lg:col-span-6 xl:col-span-5'
+            }
           >
-            <div className="main-friend_sidebar">
-              <div className="main-friend_sidebar_search-bar">
-                <SearchContainer
-                  onSearchChange={handleOnSearchChange}
-                  valueText={valueInput}
-                  onSubmitSearch={handleOnSubmitSearch}
-                  isFriendPage={true}
-                />
-              </div>
+            <div className="border-r h-full p-3">
+              {/* Search */}
+              <SearchContainer
+                onSearchChange={handleSearchTextChange}
+                valueText={searchText}
+                onSubmitSearch={handleSearchSubmit}
+                isFriendPage
+              />
 
-              {visibleFilter ? (
+              {isFilterVisible ? (
                 <FilterContainer
-                  dataSingle={singleConverFilter}
-                  dataMutiple={mutipleConverFilter}
-                  valueText={valueInput}
+                  dataSingle={singleRoomResults}
+                  dataMutiple={groupRoomResults}
+                  valueText={searchText}
                 />
               ) : (
-                <>
-                  <div className="divider-layout">
-                    <div></div>
-                  </div>
+                <div className="mt-4 space-y-4">
+                  <div className="h-px bg-gray-200" />
 
-                  <div className="main-friend_sidebar_bottom">
-                    <div
-                      className="main-friend_sidebar_option main-friend_sidebar_option--add-fiend"
+                  {/* Menu Items */}
+                  <div className="space-y-3">
+                    <SidebarItem
+                      icon="mdi:user"
+                      label="Danh sách kết bạn"
                       onClick={() => {
-                        setSubTab(0);
-                        setActiveTab(true);
+                        setActiveTab(0);
+                        setMobileDetailOpen(true);
                       }}
-                    >
-                      <div className="main-friend_sidebar_option_img">
-                        <Icon icon={User} />
-                      </div>
+                    />
 
-                      <div className="main-friend_sidebar_option_text">
-                        Danh sách kết bạn
-                      </div>
-                    </div>
-
-                    <div
-                      className="main-friend_sidebar_option main-friend_sidebar_option--groups"
+                    <SidebarItem
+                      icon="mdi:account-group"
+                      label="Danh sách nhóm"
                       onClick={() => {
-                        setSubTab(1);
-                        setActiveTab(true);
+                        setActiveTab(1);
+                        setMobileDetailOpen(true);
                       }}
-                    >
-                      <div className="main-friend_sidebar_option_img">
-                        <Icon icon={Users} />
-                      </div>
+                    />
 
-                      <div className="main-friend_sidebar_option_text">
-                        Danh sách nhóm
-                      </div>
-                    </div>
-
-                    <div
-                      className="main-friend_sidebar_option main-friend_sidebar_option--contact"
+                    <SidebarItem
+                      icon="mdi:contacts"
+                      label="Danh bạ"
                       onClick={() => {
-                        setSubTab(2);
-                        setActiveTab(true);
+                        setActiveTab(2);
+                        setMobileDetailOpen(true);
                       }}
-                    >
-                      <div className="main-friend_sidebar_option_img">
-                        <Icon icon={TriangleAlert} />
-                      </div>
+                    />
 
-                      <div className="main-friend_sidebar_option_text">
-                        Danh bạ
-                      </div>
-                    </div>
+                    <div className="h-px bg-gray-200 my-4" />
 
-                    <div className="divider-layout">
-                      <div></div>
-                    </div>
-
-                    <div className="main-friend_sidebar_list-friend">
-                      <div className="main-friend_sidebar_list-friend_title">
+                    {/* Friend List */}
+                    <div>
+                      <div className="text-sm font-medium mb-2">
                         Bạn bè ({friends.length})
                       </div>
                       <ListFriend data={friends} />
                     </div>
                   </div>
-                </>
+                </div>
               )}
             </div>
-          </Col>
+          </div>
 
-          <Col
-            span={19}
-            xl={{ span: 19 }}
-            lg={{ span: 18 }}
-            md={{ span: 17 }}
-            sm={{ span: isActiveTab ? 24 : 0 }}
-            xs={{ span: isActiveTab ? 24 : 0 }}
+          {/* ---------------- Body ---------------- */}
+          <div
+            className={
+              isMobileDetailOpen
+                ? 'col-span-12'
+                : 'hidden sm:block sm:col-span-6 md:col-span-5 lg:col-span-6 xl:col-span-7'
+            }
           >
-            <div className="main-friend_body">
-              <div className="main-friend_body__header">
+            <div className="h-full flex flex-col">
+              <div className="border-b p-3">
                 <HeaderFriend
-                  onBack={() => setActiveTab(false)}
-                  subtab={subTab}
+                  onBack={() => setMobileDetailOpen(false)}
+                  subtab={activeTab}
                 />
               </div>
-              <div className="main-friend_body__section">
-                <div className="main-friend_body_item">
-                  <Scrollbars
-                    autoHide={true}
-                    autoHideTimeout={1000}
-                    autoHideDuration={200}
-                    style={{ height: '100%' }}
-                  >
-                    {subTab === 1 && (
-                      <>
-                        <div className="main-friend_body__filter">
-                          <div className="main-friend_body__filter--left">
-                            <Dropdown overlay={menuLeft} placement="bottomLeft">
-                              <Button icon={<CaretDownOutlined />} type="text">
-                                {` ${getValueFromKey(
-                                  'LEFT',
-                                  currentFilterLeft,
-                                )} (${groupCurrent.length})`}
-                              </Button>
-                            </Dropdown>
-                          </div>
 
-                          <div className="main-friend_body__filter--right">
-                            <Dropdown
-                              overlay={menuRight}
-                              placement="bottomLeft"
-                            >
-                              <Button icon={<FilterOutlined />} type="text">
-                                {` ${getValueFromKey(
-                                  'RIGHT',
-                                  currentFilterRight,
-                                )}`}
-                              </Button>
-                            </Dropdown>
-                          </div>
-                        </div>
+              <div className="flex-1 overflow-hidden">
+                <Scrollbars
+                  autoHide
+                  autoHideTimeout={800}
+                  autoHideDuration={200}
+                >
+                  {/* --- Group Tab --- */}
+                  {activeTab === 1 && (
+                    <>
+                      <GroupFilters
+                        groupCount={filteredGroups.length}
+                        groupFilterType={groupFilterType}
+                        sortFilterType={sortFilterType}
+                        onLeftChange={handleLeftFilter}
+                        onRightChange={handleRightFilter}
+                      />
 
-                        <div className="main-friend_body__list-group">
-                          <ListGroup data={groupCurrent} />
-                        </div>
-                      </>
-                    )}
+                      <div className="p-3">
+                        <ListGroup data={filteredGroups} />
+                      </div>
+                    </>
+                  )}
 
-                    {subTab === 0 && (
-                      <div className="main-friend_body_list-request">
-                        <div className="main-friend_body_title-list">
-                          Lời mới kết bạn ({requestFriends.length})
-                        </div>
+                  {/* --- Friend Tab --- */}
+                  {activeTab === 0 && (
+                    <div className="p-3 space-y-6">
+                      <Section
+                        title={`Lời mời kết bạn (${requestFriends.length})`}
+                      >
                         <ListRequestFriend data={requestFriends} />
+                      </Section>
 
-                        <div className="main-friend_body_title-list">
-                          Đã gửi yêu cầu kết bạn ({myRequestFriend.length})
-                        </div>
+                      <Section
+                        title={`Đã gửi yêu cầu (${myRequestFriend.length})`}
+                      >
                         <ListMyFriendRequest data={myRequestFriend} />
+                      </Section>
 
-                        <div className="main-friend_body_title-list">
-                          Gợi ý kết bạn(
-                          {suggestFriends.length})
-                          <SuggestList data={suggestFriends} />
-                        </div>
-                      </div>
-                    )}
+                      <Section
+                        title={`Gợi ý kết bạn (${suggestFriends.length})`}
+                      >
+                        <SuggestList data={suggestFriends} />
+                      </Section>
+                    </div>
+                  )}
 
-                    {subTab === 2 && (
-                      <div>
-                        <ListContact data={phoneBook} />
-                      </div>
-                    )}
-                  </Scrollbars>
-                </div>
+                  {/* --- Contact Tab --- */}
+                  {activeTab === 2 && (
+                    <div className="p-3">
+                      <ListContact data={phoneBook} />
+                    </div>
+                  )}
+                </Scrollbars>
               </div>
             </div>
-          </Col>
-        </Row>
-      </div>
-    </Spin>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
-export default Friend;
+function SidebarItem({ icon, label, onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition"
+    >
+      <Icon icon={icon} className="text-xl" />
+      <span>{label}</span>
+    </div>
+  );
+}
+
+function Section({ title, children }) {
+  return (
+    <div>
+      <div className="text-sm font-medium mb-2">{title}</div>
+      {children}
+    </div>
+  );
+}
+
+function GroupFilters({
+  groupCount,
+  groupFilterType,
+  sortFilterType,
+  onLeftChange,
+  onRightChange,
+}) {
+  return (
+    <div className="flex justify-between p-3">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="flex items-center gap-2">
+            <CaretDownOutlined />
+            {getValueFromKey('LEFT', groupFilterType)} ({groupCount})
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={() => onLeftChange('1')}>
+            Theo tên nhóm A → Z
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onLeftChange('2')}>
+            Nhóm tôi quản lý
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="flex items-center gap-2">
+            <FilterOutlined />
+            {getValueFromKey('RIGHT', sortFilterType)}
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={() => onRightChange('1')}>
+            A → Z
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onRightChange('2')}>
+            Z → A
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+}

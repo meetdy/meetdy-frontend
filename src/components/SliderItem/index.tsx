@@ -1,36 +1,27 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import Image from '../ui/image';
 
-SliderItem.propTypes = {
-  src: PropTypes.string,
-  title: PropTypes.string,
-  detail: PropTypes.string,
-};
+interface SliderItemProps {
+  src?: string;
+  title?: string;
+  detail?: string;
+}
 
-SliderItem.defaultProps = {
-  src: '',
-  title: '',
-  detail: '',
-};
-
-function SliderItem({ src, title, detail }) {
+export default function SliderItem({
+  src = '',
+  title = '',
+  detail = '',
+}: SliderItemProps) {
   return (
-    <div className="carousel-slider--item">
-      <div className="slider-img">
-        <img src={src} alt="" />
+    <div className="flex flex-col items-center rounded-lg overflow-hidden shadow-sm bg-white">
+      <div className="w-full h-40 md:h-48 lg:h-56 bg-gray-100 flex items-center justify-center">
+        <Image src={src} alt="" className="w-full h-full object-cover" />
       </div>
 
-      <div className="slider-content">
-        <div className="slider-content--title">
-          <span>{title}</span>
-        </div>
+      <div className="p-4 space-y-2 text-center">
+        <div className="text-lg font-semibold text-gray-800">{title}</div>
 
-        <div className="slider-content-detail">
-          <span>{detail}</span>
-        </div>
+        <div className="text-sm text-gray-500">{detail}</div>
       </div>
     </div>
   );
 }
-
-export default SliderItem;

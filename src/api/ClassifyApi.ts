@@ -4,13 +4,13 @@ import { IAddClassify, IClassify, IColor } from "@/models/classify.model";
 const PATH = "/classifies";
 
 const ServiceClassify = {
-    fetchColors: async (): Promise<IColor[]> => {
+    getColors: async (): Promise<IColor[]> => {
         const url = `${PATH}/colors`;
         const response = await get<IColor[]>(url);
         return response.data;
     },
 
-    fetchClassifies: async (): Promise<IClassify[]> => {
+    getClassifies: async (): Promise<IClassify[]> => {
         const url = PATH;
         const response = await get<IClassify[]>(url);
         return response.data;

@@ -183,7 +183,7 @@ function ModalShareMessage({ visible, onCancel, idMessage }) {
                               avatar={element.avatar}
                               type={element.type}
                               name={element.name}
-                              demension={22}
+                              dimension={22}
                               sizeAvatar={40}
                               frameSize={36}
                               avatarColor={element.avatarColor}

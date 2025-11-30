@@ -4,7 +4,7 @@ import { IMessage } from "@/models/message.model";
 const PATH = "/channels";
 
 const ServiceChannel = {
-    fetchChannel: async (conversationId: string): Promise<any> => {
+    getChannel: async (conversationId: string): Promise<any> => {
         const url = `${PATH}/${conversationId}`;
         const response = await get<any>(url);
         return response.data;
@@ -28,7 +28,7 @@ const ServiceChannel = {
         return response.data;
     },
 
-    fetchMessageInChannel: async (
+    getMessageInChannel: async (
         channelId: string,
         page: number,
         size: number
@@ -40,7 +40,7 @@ const ServiceChannel = {
         return response.data;
     },
 
-    fetchLastViewChannel: async (channelId: string): Promise<{ lastViewedAt: string }> => {
+    getLastViewChannel: async (channelId: string): Promise<{ lastViewedAt: string }> => {
         const url = `${PATH}/${channelId}/last-view`;
         const response = await get<{ lastViewedAt: string }>(url);
         return response.data;

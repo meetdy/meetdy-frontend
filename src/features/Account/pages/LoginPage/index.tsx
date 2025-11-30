@@ -43,6 +43,7 @@ function LoginPage() {
         alert('Hãy xác thực captcha');
       }
     } catch (error) {
+      console.log('🚀 ~ handleSubmit ~ error:', error);
       setError(true);
     }
     dispatch(setLoading(false));

@@ -41,7 +41,7 @@ const ServiceAuth = {
         return response.data;
     },
 
-    fetchUser: async (username: string): Promise<IUser> => {
+    getUser: async (username: string): Promise<IUser> => {
         const url = `${PATH}/users/${username}`;
         const response = await get<IUser>(url);
         return response.data;

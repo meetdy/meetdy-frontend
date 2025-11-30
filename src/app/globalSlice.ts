@@ -7,7 +7,7 @@ const KEY = 'global';
 export const fetchUserProfile = createAsyncThunk(
   `${KEY}/fetchUser`,
   async (_, thunkApi) => {
-    const user = await meApi.fetchProfile();
+    const user = await meApi.getProfile();
     return user;
   },
 );

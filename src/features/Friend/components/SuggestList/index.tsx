@@ -1,18 +1,10 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
-import SuggestCard from '../SuggestCard';
 import { Col, Row } from 'antd';
+
+import SuggestCard from '../SuggestCard';
 import UserCard from '@/components/UserCard';
 
-SuggestList.propTypes = {
-  data: PropTypes.array,
-};
-
-SuggestList.defaultProps = {
-  data: [],
-};
-
-function SuggestList({ data }) {
+function SuggestList({ data = [] }) {
   const [visible, setVisible] = useState(false);
   const [user, setUser] = useState({});
 

@@ -10,7 +10,7 @@ export interface IAttachInfo {
 }
 
 const ServiceMessages = {
-    fetchListMessages: async (
+    getListMessages: async (
         conversationId: string,
         page?: number,
         size?: number

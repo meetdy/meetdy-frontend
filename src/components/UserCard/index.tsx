@@ -1,11 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
-import {
-  ExclamationCircleOutlined,
-  UserDeleteOutlined,
-} from '@ant-design/icons';
-import { Button, Image, message, Modal, Avatar } from 'antd';
+import { useState } from 'react';
+import { Trash2 } from 'lucide-react';
 
 import conversationApi from '@/api/conversationApi';
 import friendApi from '@/api/friendApi';
@@ -24,47 +20,65 @@ import {
   fetchPhoneBook,
   setAmountNotify,
 } from '@/features/Friend/friendSlice';
+
 import dateUtils from '@/utils/dateUtils';
 import getSummaryName from '@/utils/nameHelper';
 
-import UserCardStyle from './UserCardStyle';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
-UserCard.defaultProps = {
-  title: 'Thông tin',
-  onCancel: null,
-};
+import { toast } from 'sonner';
 
-function UserCard(props) {
-  const { title, isVisible, user, onCancel } = props;
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+
+interface UserCardProps {
+  title?: string;
+  isVisible: boolean;
+  user: any;
+  onCancel?: () => void;
+}
+
+export default function UserCard({
+  title = 'Thông tin',
+  isVisible,
+  user,
+  onCancel,
+}: UserCardProps) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { amountNotify } = useSelector((state: any) => state.friend);
+  const { conversations } = useSelector((state: any) => state.chat);
+
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
 
   const coverImage =
     'https://miro.medium.com/max/1124/1*92adf06PCF91kCYu1nPLQg.jpeg';
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { status, numberCommonGroup } = user;
-  const { amountNotify } = useSelector((state) => state.friend);
-  const { conversations } = useSelector((state) => state.chat);
 
-  const handleOnCancel = () => {
-    if (onCancel) {
-      onCancel();
-    }
-  };
   const handleClickMessage = async () => {
     const response = await conversationApi.createConversationIndividual(
       user._id,
     );
+
     const { _id, isExists } = response;
-    console.log('response', response);
 
     if (!isExists) {
       const conver = await conversationApi.getConversationById(_id);
       dispatch(setConversations(conver));
     }
 
-    const tempConver = conversations.find((ele) => ele._id === _id);
+    const tempConver = conversations.find((ele: any) => ele._id === _id);
 
-    if (tempConver && tempConver.type) {
+    if (tempConver?.type) {
       dispatch(fetchChannels({ conversationId: _id }));
     }
 
@@ -73,233 +87,193 @@ function UserCard(props) {
     dispatch(setCurrentConversation(_id));
 
     navigate('/chat');
-
-    handleOnCancel();
-  };
-
-  const handleDeleteFriend = () => {
-    confirm();
+    onCancel?.();
   };
 
   const handleAddFriend = async () => {
-    console.log('add friend', user._id);
-
     try {
       await friendApi.sendRequestFriend(user._id);
       dispatch(fetchListMyRequestFriend());
       dispatch(fetchPhoneBook());
-      handleOnCancel();
-      message.success('Gửi lời mời kết bạn thành công');
-    } catch (error) {
-      message.error('Gửi lời mời kết bạn thất bại');
+      toast('Gửi lời mời kết bạn thành công');
+      onCancel?.();
+    } catch {
+      toast('Gửi lời mời kết bạn thất bại');
     }
   };
 
-  const handleOnAcceptFriend = async () => {
+  const handleAcceptFriend = async () => {
     await friendApi.acceptRequestFriend(user._id);
     dispatch(fetchListRequestFriend());
     dispatch(fetchFriends({ name: '' }));
     dispatch(fetchListFriends({ name: '' }));
     dispatch(setAmountNotify(amountNotify - 1));
-    handleOnCancel();
-    message.success('Thêm bạn thành công');
+    toast('Thêm bạn thành công');
+    onCancel?.();
   };
 
   const handleCancelRequest = async () => {
     await friendApi.deleteSentRequestFriend(user._id);
     dispatch(fetchListMyRequestFriend());
     dispatch(fetchPhoneBook());
-    handleOnCancel();
+    onCancel?.();
   };
 
-  function confirm() {
-    Modal.confirm({
-      title: 'Xác nhận',
-      icon: <ExclamationCircleOutlined />,
-      content: (
-        <span>
-          Bạn có thực sự muốn xóa <strong>{user.name}</strong> khỏi danh sách
-          bạn bè{' '}
-        </span>
-      ),
-      okText: 'Xóa',
-      cancelText: 'Hủy',
-      onOk: handleOkModal,
-    });
-  }
-
-  const handleOkModal = async () => {
+  const handleDeleteFriend = async () => {
     try {
       await friendApi.deleteFriend(user._id);
       dispatch(fetchFriends({ name: '' }));
-      message.success('Xóa thành công');
-      handleOnCancel();
       dispatch(fetchPhoneBook());
-    } catch (error) {
-      message.error('Xóa thất bại');
+      toast('Xóa thành công');
+      setOpenConfirmDelete(false);
+      onCancel?.();
+    } catch {
+      toast('Xóa thất bại');
     }
   };
 
   return (
-    <Modal
-      title={title}
-      visible={isVisible}
-      onCancel={handleOnCancel}
-      footer={null}
-      width={360}
-      style={UserCardStyle.styleModal}
-    >
-      <div id="user-card">
-        <div className="user-card_wrapper">
-          <div className="user-card_cover-image">
-            <Image
-              src={coverImage}
-              preview={false}
-              style={UserCardStyle.CoverImageStyle}
+    <>
+      <Dialog open={isVisible} onOpenChange={onCancel}>
+        <DialogContent className="max-w-sm p-0">
+          <div className="w-full">
+            {/* Cover Image */}
+            <div
+              className="w-full h-44 bg-cover bg-center"
+              style={{ backgroundImage: `url(${coverImage})` }}
             />
 
-            <div className="user-card_avatar">
+            {/* Avatar */}
+            <div className="flex justify-center -mt-12">
               {user.avatar ? (
-                <Image src={user.avatar} style={UserCardStyle.avatarStyle} />
+                <Avatar className="w-24 h-24 border-4 border-white">
+                  <AvatarImage src={user.avatar} />
+                </Avatar>
               ) : (
-                <Avatar size={96} style={{ backgroundColor: user.avatarColor }}>
-                  <span style={{ fontSize: '3rem' }}>
+                <Avatar
+                  className="w-24 h-24 text-3xl flex justify-center items-center border-4 border-white"
+                  style={{ backgroundColor: user.avatarColor }}
+                >
+                  <AvatarFallback className="text-3xl">
                     {getSummaryName(user.name)}
-                  </span>
+                  </AvatarFallback>
                 </Avatar>
               )}
             </div>
-          </div>
 
-          <div className="user-card-name">{user.name}</div>
+            {/* Name */}
+            <div className="mt-4 text-center text-xl font-semibold">
+              {user.name}
+            </div>
 
-          <div className="user-card-button">
-            {status === 'NOT_FRIEND' && (
-              <div className="user-card-button--addFriend">
-                <Button
-                  onClick={handleAddFriend}
-                  type="primary"
-                  style={{ width: '124px' }}
-                >
+            {/* Buttons */}
+            <div className="mt-4 flex flex-col gap-3 px-4">
+              {user.status === 'NOT_FRIEND' && (
+                <Button className="w-full" onClick={handleAddFriend}>
                   Kết bạn
                 </Button>
-              </div>
-            )}
+              )}
 
-            {status === 'FOLLOWER' && (
-              <>
-                <div className="user-card-button--message confirm--friend">
-                  <Button
-                    type="primary"
-                    style={{ maxWidth: '110px' }}
-                    onClick={handleOnAcceptFriend}
-                  >
+              {user.status === 'FOLLOWER' && (
+                <div className="flex gap-2">
+                  <Button className="flex-1" onClick={handleAcceptFriend}>
                     Đồng ý
                   </Button>
-                </div>
-
-                <div className="user-card-button--message  confirm-deny--friend">
                   <Button
-                    type="danger"
-                    style={{ maxWidth: '110px' }}
-                    onClick={handleOnAcceptFriend}
+                    className="flex-1"
+                    variant="destructive"
+                    onClick={handleAcceptFriend}
                   >
                     Từ chối
                   </Button>
                 </div>
-              </>
-            )}
+              )}
 
-            {status === 'YOU_FOLLOW' && (
-              <>
-                <div className="user-card-button--message ">
-                  <Button
-                    type="danger"
-                    style={{ width: '124px' }}
-                    onClick={handleCancelRequest}
-                  >
-                    Hủy yêu cầu
-                  </Button>
-                </div>
-              </>
-            )}
+              {user.status === 'YOU_FOLLOW' && (
+                <Button
+                  variant="destructive"
+                  className="w-full"
+                  onClick={handleCancelRequest}
+                >
+                  Hủy yêu cầu
+                </Button>
+              )}
 
-            <div
-              className={`user-card-button--message ${
-                status === 'FRIEND' ? 'user-card-button--no-margin' : ''
-              }`}
-            >
               <Button
+                variant="secondary"
+                className="w-full"
                 onClick={handleClickMessage}
-                type="default"
-                style={
-                  status === 'FOLLOWER'
-                    ? UserCardStyle.buttonStyle_2
-                    : UserCardStyle.buttonStyle_1
-                }
               >
                 Nhắn tin
               </Button>
             </div>
+
+            {/* Info Section */}
+            <div className="mt-6 px-5 space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="font-medium">Giới tính</span>
+                <span>{user.gender ? 'Nam' : 'Nữ'}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="font-medium">Ngày sinh</span>
+                <span>
+                  {dateUtils.transferDateString(
+                    user.dateOfBirth?.day,
+                    user.dateOfBirth?.month,
+                    user.dateOfBirth?.year,
+                  )}
+                </span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="font-medium">Nhóm chung</span>
+                <span>{`${user.numberCommonGroup} nhóm`}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="font-medium">Bạn chung</span>
+                <span>{user.numberCommonFriend}</span>
+              </div>
+            </div>
+
+            {/* Delete Friend */}
+            {user.status === 'FRIEND' && (
+              <div className="p-4">
+                <Button
+                  variant="destructive"
+                  className="w-full flex items-center gap-2"
+                  onClick={() => setOpenConfirmDelete(true)}
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Hủy kết bạn
+                </Button>
+              </div>
+            )}
           </div>
+        </DialogContent>
+      </Dialog>
 
-          <div className="user-card-infomation">
-            <div className="user-card-infomation__gender user-card-infomation--flex">
-              <div className="user-card-infomation__label">Giới tính</div>
+      {/* Confirm Delete Friend */}
+      <AlertDialog open={openConfirmDelete} onOpenChange={setOpenConfirmDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Bạn có chắc muốn xóa {user.name} khỏi danh sách bạn bè?
+            </AlertDialogTitle>
+          </AlertDialogHeader>
 
-              <div className="user-card-infomation__text">
-                {user.gender ? 'Nam' : 'Nữ'}
-              </div>
-            </div>
-
-            <div className="user-card-infomation__birthday user-card-infomation--flex">
-              <div className="user-card-infomation__label">Ngày sinh</div>
-
-              <div className="user-card-infomation__text">
-                {dateUtils.transferDateString(
-                  user.dateOfBirth?.day,
-                  user.dateOfBirth?.month,
-                  user.dateOfBirth?.year,
-                )}
-              </div>
-            </div>
-
-            <div className="user-card-infomation__group user-card-infomation--flex">
-              <div className="user-card-infomation__label">Nhóm chung</div>
-
-              <div className="user-card-infomation__text">
-                {`${numberCommonGroup} nhóm`}
-              </div>
-            </div>
-
-            <div className="user-card-infomation__birthday user-card-infomation--flex">
-              <div className="user-card-infomation__label">Bạn chung</div>
-
-              <div className="user-card-infomation__text">
-                {user.numberCommonFriend}
-              </div>
-            </div>
-          </div>
-
-          <div
-            className={`user-card-button-optional ${
-              !(status === 'FRIEND') ? 'user-card-button-optional--hidden' : ''
-            }`}
-          >
-            <Button
-              danger
-              icon={<UserDeleteOutlined />}
-              style={UserCardStyle.buttonFullSize}
-              size="large"
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 text-white hover:bg-red-700"
               onClick={handleDeleteFriend}
             >
-              Hủy kết bạn
-            </Button>
-          </div>
-        </div>
-      </div>
-    </Modal>
+              Xóa
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
-
-export default UserCard;

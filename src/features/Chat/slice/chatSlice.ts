@@ -14,7 +14,7 @@ const KEY = 'chat';
 export const fetchListColor = createAsyncThunk(
   `${KEY}/fetchListColor`,
   async () => {
-    const colors = await classifyApi.fetchColors();
+    const colors = await classifyApi.getColors();
     return colors;
   },
 );
@@ -22,7 +22,7 @@ export const fetchListColor = createAsyncThunk(
 export const fetchListClassify = createAsyncThunk(
   `${KEY}/fetchListClassify`,
   async () => {
-    const classifies = await classifyApi.fetchClassifies();
+    const classifies = await classifyApi.getClassifies();
     return classifies;
   },
 );
@@ -31,7 +31,7 @@ export const fetchListConversations = createAsyncThunk(
   `${KEY}/fetchListConversations`,
   async (params, thunkApi) => {
     const { name, type } = params;
-    const conversations = await conversationApi.fetchListConversations(
+    const conversations = await conversationApi.getListConversations(
       name,
       type,
     );
@@ -45,7 +45,7 @@ export const fetchListMessages = createAsyncThunk(
   async (params, thunkApi) => {
     const { conversationId, page, size } = params;
 
-    const messages = await messageApi.fetchListMessages(
+    const messages = await messageApi.getListMessages(
       conversationId,
       page,
       size,
@@ -63,7 +63,7 @@ export const fetchNextPageMessage = createAsyncThunk(
   async (params, thunkApi) => {
     const { conversationId, page, size } = params;
 
-    const messages = await messageApi.fetchListMessages(
+    const messages = await messageApi.getListMessages(
       conversationId,
       page,
       size,
@@ -80,7 +80,7 @@ export const fetchNextPageMessageOfChannel = createAsyncThunk(
   async (params, thunkApi) => {
     const { page, size, channelId } = params;
 
-    const messages = await channelApi.fetchMessageInChannel(
+    const messages = await channelApi.getMessageInChannel(
       channelId,
       page,
       size,
@@ -89,25 +89,20 @@ export const fetchNextPageMessageOfChannel = createAsyncThunk(
   },
 );
 
-// FRIEND API
-
 export const fetchListFriends = createAsyncThunk(
   `${KEY}/fetchListFriends`,
   async (params, thunkApi) => {
     const { name } = params;
-    const friends = await friendApi.fetchFriends(name);
+    const friends = await friendApi.getFriends(name);
     return friends;
   },
 );
 
-// CONVERSATION API
-
-// Create a group chat
 export const createGroup = createAsyncThunk(
   `${KEY}/createGroup`,
   async (params, thunkApi) => {
     const { name, userIds } = params;
-    const idNewGroup = await conversationApi.createGroup(name, userIds);
+    const idNewGroup = await conversationApi.createGroup({ name, userIds });
     return idNewGroup;
   },
 );
@@ -144,8 +139,6 @@ export const getMembersConversation = createAsyncThunk(
   },
 );
 
-// ============ PIN MESSAGE ==============
-
 export const fetchPinMessages = createAsyncThunk(
   `${KEY}/fetchPinMessages`,
   async (params, _) => {
@@ -155,9 +148,6 @@ export const fetchPinMessages = createAsyncThunk(
   },
 );
 
-// ============
-
-// ============
 export const getLastViewOfMembers = createAsyncThunk(
   `${KEY}/getLastViewOfMembers`,
   async (params, _) => {
@@ -170,13 +160,11 @@ export const getLastViewOfMembers = createAsyncThunk(
   },
 );
 
-// =============== Channel ===============
-
 export const fetchChannels = createAsyncThunk(
   `${KEY}/fetchChannels`,
   async (params, _) => {
     const { conversationId } = params;
-    const data = await channelApi.fetchChannel(conversationId);
+    const data = await channelApi.getChannel(conversationId);
     return data;
   },
 );
@@ -207,7 +195,7 @@ export const getLastViewChannel = createAsyncThunk(
 export const fetchAllSticker = createAsyncThunk(
   `${KEY}/fetchAllSticker`,
   async () => {
-    const data = await stickerApi.fetchAllSticker();
+    const data = await stickerApi.getAllSticker();
     return data;
   },
 );
@@ -788,9 +776,7 @@ export const {
   deleteMessageClient,
   setToTalUnread,
   setReactionMessage,
-  updateConversationWhenAddMember,
   leaveGroup,
-  updateMemberLeaveGroup,
   isDeletedFromGroup,
   setCurrentConversation,
   updateClassifyToConver,

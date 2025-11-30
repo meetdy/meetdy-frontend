@@ -4,7 +4,7 @@ import { IUser } from "@/models/auth.model";
 const PATH = "/admin";
 
 const ServiceAdmin = {
-    fetchUsersByUsername: async (
+    getUsersByUsername: async (
         username: string,
         page: number,
         size: number
@@ -27,7 +27,7 @@ const ServiceAdmin = {
         return response.data;
     },
 
-    fetchAllGroupSticker: async () => {
+    getAllGroupSticker: async () => {
         const url = "/stickers";
         const response = await get(url);
         return response.data;

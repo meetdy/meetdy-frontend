@@ -12,7 +12,7 @@ import {
 const PATH = "/me";
 
 const ServiceMe = {
-    fetchProfile: async (): Promise<IUserProfile> => {
+    getProfile: async (): Promise<IUserProfile> => {
         const url = `${PATH}/profile`;
         const response = await get<IUserProfile>(url);
         return response.data;

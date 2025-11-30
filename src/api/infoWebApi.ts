@@ -11,7 +11,7 @@ export interface IWebInfo {
 const PATH = "/common/web-info";
 
 const ServiceInfoWeb = {
-    fetchInfoWeb: async (): Promise<IWebInfo[]> => {
+    getInfoWeb: async (): Promise<IWebInfo[]> => {
         const url = PATH;
         const response = await get<IWebInfo[]>(url);
         return response.data;

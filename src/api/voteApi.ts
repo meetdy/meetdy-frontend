@@ -34,7 +34,7 @@ const ServiceVote = {
         return response.data;
     },
 
-    fetchVotes: async (conversationId: string, page: number, size: number): Promise<IVote> => {
+    getVotes: async (conversationId: string, page: number, size: number): Promise<IVote> => {
         const url = `${PATH}/${conversationId}`;
         const response = await get<IVote>(url, { params: { page, size } });
         return response.data;

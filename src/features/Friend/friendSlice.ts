@@ -7,7 +7,7 @@ const KEY = 'friend';
 export const fetchListRequestFriend = createAsyncThunk(
   `${KEY}/fetchListRequestFriend`,
   async () => {
-    const data = await friendApi.fetchListRequestFriend();
+    const data = await friendApi.getListRequestFriend();
     return data;
   },
 );
@@ -15,7 +15,7 @@ export const fetchListRequestFriend = createAsyncThunk(
 export const fetchListMyRequestFriend = createAsyncThunk(
   `${KEY}/fetchListMyRequestFriend`,
   async () => {
-    const data = await friendApi.fetchMyRequestFriend();
+    const data = await friendApi.getMyRequestFriend();
     return data;
   },
 );
@@ -24,7 +24,7 @@ export const fetchFriends = createAsyncThunk(
   `${KEY}/fetchFriends`,
   async (params) => {
     const { name } = params;
-    const data = await friendApi.fetchFriends(name);
+    const data = await friendApi.getFriends(name);
     return data;
   },
 );
@@ -32,7 +32,7 @@ export const fetchListGroup = createAsyncThunk(
   `${KEY}/fetchListGroup`,
   async (param) => {
     const { name, type } = param;
-    const data = await conversationApi.fetchListConversations(name, type);
+    const data = await conversationApi.getListConversations(name, type);
     return data;
   },
 );
@@ -40,7 +40,7 @@ export const fetchListGroup = createAsyncThunk(
 export const fetchPhoneBook = createAsyncThunk(
   `${KEY}/fetchPhoneBook`,
   async () => {
-    const data = await phoneBookApi.fetchPhoneBook();
+    const data = await phoneBookApi.getContacts();
     return data;
   },
 );
@@ -48,7 +48,7 @@ export const fetchPhoneBook = createAsyncThunk(
 export const fetchSuggestFriend = createAsyncThunk(
   `${KEY}/fetchSuggestFriend`,
   async () => {
-    const data = await friendApi.fetchSuggestFriend();
+    const data = await friendApi.getSuggestFriend();
     return data;
   },
 );

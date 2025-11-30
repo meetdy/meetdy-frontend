@@ -20,7 +20,7 @@ export interface IMedia {
 const PATH = "/messages";
 
 const ServiceMedia = {
-    fetchAllMedia: async ({
+    getAllMedia: async ({
         conversationId,
         type = "ALL",
         senderId,

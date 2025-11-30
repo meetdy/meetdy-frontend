@@ -11,7 +11,7 @@ export interface IPinMessage {
 }
 
 const ServicePinMessage = {
-    fetchPinMessages: async (conversationId: string): Promise<IPinMessage[]> => {
+    getPinMessages: async (conversationId: string): Promise<IPinMessage[]> => {
         const url = `${PATH}/${conversationId}`;
         const response = await get<IPinMessage[]>(url);
         return response.data;

@@ -1,23 +1,21 @@
-import { createRef, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import io from 'socket.io-client';
-import h from '@/utils/callVideoHelpers';
+import { useEffect, useRef, useState } from 'react';
 import { useResolvedPath } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import ActionNavbar from './components/ActionNavbar';
-import MyVideo from './components/MyVideo';
-import { Col, Row } from 'antd';
+import io from 'socket.io-client';
+
 import Peer from 'peerjs';
 
-CallVideo.propTypes = {};
+import ActionNavbar from './components/ActionNavbar';
+import h from '@/utils/callVideoHelpers';
 
 let socket = io(import.meta.env.VITE_SOCKET_URL, {
   transports: ['websocket'],
 });
 
-function CallVideo(props) {
-  const match = useResolvedPath();
+function CallVideo() {
+  const match = useResolvedPath('call-video/:conversationId');
   const { conversationId } = match.params;
+
   const { user } = useSelector((state) => state.global);
   const { _id } = user;
   const myStreamRef = useRef({ srcObject: '' });

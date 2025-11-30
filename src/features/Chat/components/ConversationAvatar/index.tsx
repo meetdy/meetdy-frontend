@@ -3,7 +3,7 @@ import AvatarCustom from "@/components/AvatarCustom"
 
 type Props = {
   avatar: any
-  demension?: number
+  dimension?: number
   isGroupCard?: boolean
   totalMembers: number
   type?: string
@@ -16,7 +16,7 @@ type Props = {
 
 export default function ConversationAvatar({
   avatar,
-  demension = 28,
+  dimension = 28,
   totalMembers,
   type,
   name,
@@ -43,11 +43,11 @@ export default function ConversationAvatar({
           style={{ width: frameSize, height: frameSize }}
         >
           <div className="absolute left-0 top-1/2 -translate-y-1/2">
-            <AvatarBubble avatar={avatar[0]} size={demension} />
+            <AvatarBubble avatar={avatar[0]} size={dimension} />
           </div>
 
           <div className="absolute right-0 top-1/2 -translate-y-1/2 border border-white rounded-full">
-            <AvatarBubble avatar={avatar[1]} size={demension} />
+            <AvatarBubble avatar={avatar[1]} size={dimension} />
           </div>
         </div>
       )
@@ -60,18 +60,18 @@ export default function ConversationAvatar({
           style={{ width: frameSize, height: frameSize }}
         >
           <div className="absolute left-0 top-0">
-            <AvatarBubble avatar={avatar[0]} size={demension} />
+            <AvatarBubble avatar={avatar[0]} size={dimension} />
           </div>
 
           <div className="absolute right-0 top-0">
-            <AvatarBubble avatar={avatar[1]} size={demension} />
+            <AvatarBubble avatar={avatar[1]} size={dimension} />
           </div>
 
           <div
             className="absolute left-1/2 top-1/2 -translate-x-1/2"
-            style={{ marginTop: -(demension / 6) }}
+            style={{ marginTop: -(dimension / 6) }}
           >
-            <AvatarBubble avatar={avatar[2]} size={demension} />
+            <AvatarBubble avatar={avatar[2]} size={dimension} />
           </div>
         </div>
       )
@@ -84,15 +84,15 @@ export default function ConversationAvatar({
           style={{ width: frameSize, height: frameSize }}
         >
           <div className="absolute left-0 top-0">
-            <AvatarBubble avatar={avatar[0]} size={demension} />
+            <AvatarBubble avatar={avatar[0]} size={dimension} />
           </div>
 
           <div className="absolute right-0 top-0">
-            <AvatarBubble avatar={avatar[1]} size={demension} />
+            <AvatarBubble avatar={avatar[1]} size={dimension} />
           </div>
 
           <div className="absolute left-0 bottom-0">
-            <AvatarBubble avatar={avatar[2]} size={demension} />
+            <AvatarBubble avatar={avatar[2]} size={dimension} />
           </div>
 
           <div className="absolute right-0 bottom-0 bg-indigo-600 text-white text-xs w-7 h-7 flex items-center justify-center rounded-full border-2 border-white">
@@ -107,7 +107,7 @@ export default function ConversationAvatar({
 
   return (
     <div className="flex items-center justify-center">
-      {typeof avatar === "string" ? renderSingleAvatar() : renderArrayAvatar()}
+      {totalMembers > 2 ? renderArrayAvatar() : renderSingleAvatar()}
     </div>
   )
 }

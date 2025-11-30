@@ -9,7 +9,7 @@ export type ICaptcha = {
 const PATH = "/common/google-captcha";
 
 const ServiceCaptcha = {
-    fetchCaptcha: async (): Promise<ICaptcha> => {
+    getCaptcha: async (): Promise<ICaptcha> => {
         const url = PATH;
         const response = await get<ICaptcha>(url);
         return response.data;
