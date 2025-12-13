@@ -1,83 +1,70 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { JSX, useEffect, useState } from 'react';
+import { Camera } from 'lucide-react';
 
-import { CameraOutlined } from '@ant-design/icons';
-import { useEffect } from 'react';
-
-UploadAvatar.propTypes = {
-  avatar: PropTypes.string,
-  getFile: PropTypes.func,
-  isClear: PropTypes.bool,
+type Props = {
+  avatar?: string;
+  getFile?: (file: File) => void;
+  isClear?: boolean;
 };
 
-UploadAvatar.defaultProps = {
-  getFile: null,
-  avatar: '',
-  isClear: false,
-};
-
-function UploadAvatar({ avatar, getFile, isClear }) {
-  const [imagePreview, setImagePreview] = useState('');
+export default function UploadAvatar({
+  avatar = '',
+  getFile,
+  isClear = false,
+}: Props): JSX.Element {
+  const [imagePreview, setImagePreview] = useState<string>('');
 
   useEffect(() => {
     if (isClear) {
-      console.log('clear');
       setImagePreview('');
     }
   }, [isClear]);
 
-  console.log('image preview', imagePreview);
-
-  const handleOnChange = async (e) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-
-    console.log('file', files);
-
+    if (!files || files.length === 0) return;
     const fileImage = files[0];
-    const reader = new FileReader();
     if (fileImage && fileImage.type.match('image.*')) {
-      reader.readAsDataURL(fileImage);
-      reader.onloadend = function (e) {
-        setImagePreview(reader.result);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(String(reader.result || ''));
       };
-
-      if (getFile) {
-        getFile(fileImage);
-      }
+      reader.readAsDataURL(fileImage);
+      if (getFile) getFile(fileImage);
     }
   };
 
   return (
     <div className="upload-avatar">
-      <div className="upload-avatar_default-avatar">
-        <div className="upload-avatar_image">
+      <div className="relative inline-flex items-center">
+        <div className="w-24 h-24 rounded-full overflow-hidden bg-neutral-100 flex items-center justify-center">
           {avatar || imagePreview ? (
-            <img src={imagePreview ? imagePreview : avatar} alt="" />
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={imagePreview || avatar}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
           ) : (
-            <label
-              className="upload-avatar_text-select"
-              htmlFor="upload-photo_custom"
-            >
-              Chọn hình ảnh
-            </label>
+            <span className="text-sm text-neutral-500">Chọn hình ảnh</span>
           )}
         </div>
 
-        <div className="upload-avatar_icon">
-          <label htmlFor="upload-photo_custom">
-            <CameraOutlined style={{ fontSize: '13px' }} />
-          </label>
-          <input
-            id="upload-photo_custom"
-            type="file"
-            hidden
-            onChange={handleOnChange}
-            accept="image/*"
-          />
-        </div>
+        <label
+          htmlFor="upload-photo_custom"
+          className="absolute -bottom-1 -right-1 bg-white p-2 rounded-full shadow-sm border cursor-pointer"
+        >
+          <Camera className="w-4 h-4 text-gray-700" />
+        </label>
+
+        <input
+          id="upload-photo_custom"
+          type="file"
+          accept="image/*"
+          className="sr-only"
+          onChange={handleOnChange}
+        />
       </div>
     </div>
   );
 }
-
-export default UploadAvatar;

@@ -1,30 +1,45 @@
-import { Col, Divider, message, Modal, Row } from 'antd';
+import React from 'react';
 import conversationApi from '@/api/conversationApi';
 import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
 import PersonalIcon from '@/features/Chat/components/PersonalIcon';
-import PropTypes from 'prop-types';
-import React from 'react';
-import MODAL_JOIN_FROM_LINK_STYLE from './ModalJoinGroupFromLinkStyle';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
-ModalJoinGroupFromLink.propTypes = {
-  isVisible: PropTypes.bool.isRequired,
-  info: PropTypes.object,
+type User = {
+  avatar?: string;
+  avatarColor?: string;
+  name?: string;
 };
 
-ModalJoinGroupFromLink.defaultProps = {
-  info: {},
+type Info = {
+  _id?: string;
+  name?: string;
+  users?: User[];
 };
 
-function ModalJoinGroupFromLink({ isVisible, info, onCancel }) {
-  console.log('info', info);
+type Props = {
+  isVisible: boolean;
+  info?: Info;
+  onCancel?: () => void;
+};
 
-  const { _id, name, users } = info;
+export default function ModalJoinGroupFromLink({
+  isVisible,
+  info = {},
+  onCancel,
+}: Props): JSX.Element {
+  const { _id, name = '', users = [] } = info;
 
   const handleCancel = () => {
-    if (onCancel) {
-      onCancel();
-    }
+    if (onCancel) onCancel();
   };
+
   const tempAvatar = users.map((ele) => ({
     avatar: ele.avatar,
     avatarColor: ele.avatarColor,
@@ -32,66 +47,71 @@ function ModalJoinGroupFromLink({ isVisible, info, onCancel }) {
 
   const handleOk = async () => {
     try {
+      if (!_id) return;
       await conversationApi.joinGroupFromLink(_id);
       handleCancel();
-      message.success('Tham gia nhóm thành công');
+      window.alert('Tham gia nhóm thành công');
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      window.alert('Đã có lỗi xảy ra khi tham gia nhóm');
     }
   };
 
   return (
-    <Modal
-      title="Thông tin nhóm"
-      visible={isVisible}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      okText="Tham gia"
-      cancelText="Hủy"
-      style={MODAL_JOIN_FROM_LINK_STYLE.BODY_MODAL}
-      width={MODAL_JOIN_FROM_LINK_STYLE.WIDTH}
-      style={MODAL_JOIN_FROM_LINK_STYLE.STYLE}
+    <Dialog
+      open={isVisible}
+      onOpenChange={(open) => {
+        if (!open) handleCancel();
+      }}
     >
-      <div className="modal-join-link">
-        <div className="modal-join-link_info">
-          <div className="modal-join-link_avatar">
-            <ConversationAvatar
-              totalMembers={users.length}
-              avatar={tempAvatar}
-              type={true}
-              isGroupCard={true}
-            />
+      <DialogContent className="w-full max-w-md">
+        <DialogHeader>
+          <DialogTitle>Thông tin nhóm</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="flex flex-col items-center text-center gap-3 py-4">
+            <div className="w-[96px] h-[96px]">
+              <ConversationAvatar
+                totalMembers={users.length}
+                avatar={tempAvatar}
+                type={true}
+                isGroupCard={true}
+              />
+            </div>
+            <div className="text-lg font-semibold">{name}</div>
+            <div className="text-sm text-muted-foreground">{`${users.length} thành viên`}</div>
           </div>
 
-          <div className="modal-join-link_name">{name}</div>
+          <hr className="border-t border-neutral-200" />
 
-          <div className="modal-join-link_members">
-            {`${users.length} thành viên`}
-          </div>
-        </div>
-        <Divider />
-
-        <div className="modal-join-link_list-member">
-          <Row gutter={[8, 8]}>
-            {users.map((ele, index) => (
-              <Col span={8} key={index}>
-                <div className="member-item">
-                  <div className="member-item_avatar">
+          <div>
+            <div className="grid grid-cols-3 gap-3">
+              {users.map((ele, index) => (
+                <div key={index} className="flex flex-col items-center gap-2">
+                  <div className="w-10 h-10">
                     <PersonalIcon
                       avatar={ele.avatar}
                       name={ele.name}
                       color={ele.avatarColor}
                     />
                   </div>
-                  <div className="member-item_name">{`${ele.name}`}</div>
+                  <div className="text-sm text-center truncate w-full">
+                    {ele.name}
+                  </div>
                 </div>
-              </Col>
-            ))}
-          </Row>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-    </Modal>
+
+        <DialogFooter className="flex items-center justify-end space-x-2 mt-4">
+          <Button variant="ghost" onClick={handleCancel}>
+            Hủy
+          </Button>
+          <Button onClick={handleOk}>Tham gia</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
-
-export default ModalJoinGroupFromLink;

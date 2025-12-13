@@ -1,96 +1,132 @@
-import { MessageTwoTone } from '@ant-design/icons';
-import { Alert, Modal, Radio, message as messageNotify } from 'antd';
+import React, { useState } from 'react';
+import { MessageSquare } from 'lucide-react';
 import pinMessageApi from '@/api/pinMessageApi';
 import TypeMessagePin from '@/features/Chat/components/TypeMessagePin';
 import { fetchPinMessages } from '@/features/Chat/slice/chatSlice';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
-ModalChangePinMessage.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  message: PropTypes.array,
-  idMessage: PropTypes.string,
-  onCloseModal: PropTypes.func,
-};
+interface PinMessageItem {
+  _id: string;
+  user: { name: string };
+  content: string;
+  type?: string;
+}
 
-ModalChangePinMessage.defaultProps = {
-  message: [],
-  idMessage: '',
-  onCloseModal: null,
-};
+interface ModalChangePinMessageProps {
+  visible: boolean;
+  message?: PinMessageItem[];
+  idMessage?: string;
+  onCloseModal?: () => void;
+}
 
-function ModalChangePinMessage({ visible, message, onCloseModal, idMessage }) {
-  const [value, setValue] = useState('');
+export default function ModalChangePinMessage({
+  visible,
+  message = [],
+  onCloseModal,
+  idMessage = '',
+}: ModalChangePinMessageProps): JSX.Element {
+  const [value, setValue] = useState<string>('');
   const dispatch = useDispatch();
-  const { currentConversation } = useSelector((state) => state.chat);
+  const { currentConversation } = useSelector((state: any) => state.chat || {});
 
-  const handleOnClickItem = (ele) => {
+  const handleOnClickItem = (ele: PinMessageItem) => {
     setValue(ele._id);
   };
 
   const handleOnOk = async () => {
+    if (!value) return;
     await pinMessageApi.removePinMessage(value);
     await pinMessageApi.pinMessage(idMessage);
-    messageNotify.success('Ghim tin nhắn thành công');
+    window.alert('Ghim tin nhắn thành công');
     dispatch(fetchPinMessages({ conversationId: currentConversation }));
     handleOnCancel();
   };
 
   const handleOnCancel = () => {
-    if (onCloseModal) {
-      onCloseModal();
-    }
+    if (onCloseModal) onCloseModal();
   };
-  return (
-    <div>
-      <Modal
-        title="Cập nhật danh sách ghim"
-        visible={visible}
-        okText="Xác nhận"
-        cancelText="Hủy"
-        okButtonProps={{ disabled: !value ? true : false }}
-        onOk={handleOnOk}
-        onCancel={handleOnCancel}
-      >
-        <Alert
-          description="Đã đạt giới hạn 3 ghim. Ghim cũ dưới đây sẻ được bỏ để cập nhật nội dung mới"
-          type="warning"
-          // showIcon
-        />
-        <div className="modal-change-pin_wapper">
-          {message.map((ele, index) => (
-            <div
-              className="modal-change-pin"
-              key={index}
-              onClick={() => handleOnClickItem(ele)}
-            >
-              <div className="modal-change-pin_left">
-                <div className="modal-change-pin_icon">
-                  <MessageTwoTone />
-                </div>
 
-                <div className="modal-change-pin_messsage">
-                  <div className="modal-change-pin_title">Tin nhắn</div>
-                  <div className="modal-change-pin_detail">
-                    <TypeMessagePin
-                      name={ele.user.name}
-                      content={ele.content}
-                      type={ele.type}
-                    />
+  return (
+    <Dialog
+      open={visible}
+      onOpenChange={(open) => {
+        if (!open) handleOnCancel();
+      }}
+    >
+      <DialogContent className="w-full max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Cập nhật danh sách ghim</DialogTitle>
+        </DialogHeader>
+
+        <div className="mt-2">
+          <div className="rounded-md bg-yellow-50 p-3 mb-4">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0">
+                <MessageSquare className="w-5 h-5 text-yellow-700" />
+              </div>
+              <p className="text-sm text-yellow-900">
+                Đã đạt giới hạn 3 ghim. Ghim cũ dưới đây sẻ được bỏ để cập nhật
+                nội dung mới
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            {message.map((ele, index) => (
+              <button
+                key={ele._id ?? index}
+                type="button"
+                onClick={() => handleOnClickItem(ele)}
+                className="w-full text-left flex items-center justify-between gap-4 p-3 rounded-md hover:bg-gray-50"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-md bg-gray-100">
+                    <MessageSquare className="w-5 h-5 text-gray-600" />
+                  </div>
+
+                  <div>
+                    <div className="text-sm font-medium">Tin nhắn</div>
+                    <div className="text-sm text-muted-foreground">
+                      <TypeMessagePin
+                        name={ele.user?.name}
+                        content={ele.content}
+                        type={ele.type}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="modal-change-pin_right">
-                <Radio checked={value === ele._id ? true : false}></Radio>
-              </div>
-            </div>
-          ))}
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    name="pin-message-select"
+                    checked={value === ele._id}
+                    onChange={() => setValue(ele._id)}
+                    className="h-4 w-4 text-primary-600 accent-primary-600"
+                  />
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
-      </Modal>
-    </div>
+
+        <DialogFooter className="flex items-center justify-end space-x-2 mt-4">
+          <Button variant="ghost" onClick={handleOnCancel}>
+            Hủy
+          </Button>
+          <Button onClick={handleOnOk} disabled={!value}>
+            Xác nhận
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
-
-export default ModalChangePinMessage;

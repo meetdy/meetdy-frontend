@@ -1,66 +1,76 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { JSX, useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
-import { Input, Modal } from 'antd';
-ModalAddFriend.propTypes = {
-  isVisible: PropTypes.bool.isRequired,
-  onCancel: PropTypes.func,
-  onSearch: PropTypes.func,
+type ModalAddFriendProps = {
+  isVisible: boolean;
+  onCancel?: () => void;
+  onSearch?: (value: string) => void;
+  onEnter?: (value: string) => void;
 };
 
-ModalAddFriend.defaultProps = {
-  onCancel: null,
-  onSearch: null,
-};
-
-function ModalAddFriend({ isVisible, onCancel, onSearch, onEnter }) {
+export default function ModalAddFriend({
+  isVisible,
+  onCancel,
+  onSearch,
+  onEnter,
+}: ModalAddFriendProps): JSX.Element {
   const [value, setValue] = useState('');
 
-  const handleOnPressEnter = () => {
-    if (onEnter) {
+  const handleOk = () => {
+    if (onSearch) onSearch(value);
+  };
+
+  const handleCancel = () => {
+    if (onCancel) onCancel();
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && onEnter) {
       onEnter(value);
     }
   };
 
-  const handleOk = () => {
-    if (onSearch) {
-      onSearch(value);
-    }
-  };
-
-  const handleCancel = () => {
-    if (onCancel) {
-      onCancel();
-    }
-  };
-
-  const handleInputChange = ({ target: { value } }) => {
-    setValue(value);
-  };
-
   return (
-    <Modal
-      title="Thêm bạn"
-      visible={isVisible}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      // centered
-      width={360}
-      okText="Tìm kiếm"
-      cancelText="Hủy"
-      okButtonProps={{ disabled: !(value.trim().length > 0) }}
+    <Dialog
+      open={isVisible}
+      onOpenChange={(open) => {
+        if (!open) handleCancel();
+      }}
     >
-      <div className="input-add-friend_wrapper">
-        <Input
-          placeholder="Nhập số điện thoại hoặc email"
-          allowClear
-          value={value}
-          onChange={handleInputChange}
-          onPressEnter={handleOnPressEnter}
-        />
-      </div>
-    </Modal>
+      <DialogContent className="w-full max-w-[360px]">
+        <DialogHeader>
+          <DialogTitle>Thêm bạn</DialogTitle>
+        </DialogHeader>
+        <div className="py-2">
+          <Input
+            placeholder="Nhập số điện thoại hoặc email"
+            value={value}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            className="w-full"
+          />
+        </div>
+        <DialogFooter className="flex items-center justify-end space-x-2">
+          <Button variant="ghost" onClick={handleCancel}>
+            Hủy
+          </Button>
+          <Button onClick={handleOk} disabled={!(value.trim().length > 0)}>
+            Tìm kiếm
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
-
-export default ModalAddFriend;

@@ -1,11 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-JoinFromLink.propTypes = {};
-
-function JoinFromLink(props) {
+function JoinFromLink() {
   const { conversationId } = useParams();
   const navigate = useNavigate();
 

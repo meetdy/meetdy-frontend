@@ -1,23 +1,18 @@
-import { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { JSX, useEffect, useState } from 'react';
+import { Edit3 } from 'lucide-react';
 
-import { useState } from 'react';
-import { EditOutlined } from '@ant-design/icons';
-
-UploadCoverImage.propTypes = {
-  coverImg: PropTypes.string,
-  getFile: PropTypes.func,
-  isClear: PropTypes.bool,
+type Props = {
+  coverImg?: string;
+  getFile?: (file: File) => void;
+  isClear?: boolean;
 };
 
-UploadCoverImage.defaultProps = {
-  coverImg: '',
-  getFile: null,
-  isClear: false,
-};
-
-function UploadCoverImage({ coverImg, getFile, isClear }) {
-  const [imagePreview, setImagePreview] = useState('');
+export default function UploadCoverImage({
+  coverImg = '',
+  getFile,
+  isClear = false,
+}: Props): JSX.Element {
+  const [imagePreview, setImagePreview] = useState<string>('');
 
   useEffect(() => {
     if (isClear) {
@@ -25,52 +20,51 @@ function UploadCoverImage({ coverImg, getFile, isClear }) {
     }
   }, [isClear]);
 
-  const handleOnChange = (e) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-
+    if (!files || files.length === 0) return;
     const fileImage = files[0];
+    if (!fileImage.type.match('image.*')) return;
     const reader = new FileReader();
-    if (fileImage && fileImage.type.match('image.*')) {
-      reader.readAsDataURL(fileImage);
-      reader.onloadend = function (e) {
-        setImagePreview(reader.result);
-      };
-
-      if (getFile) {
-        getFile(fileImage);
-      }
-    }
+    reader.onloadend = () => {
+      setImagePreview(String(reader.result || ''));
+    };
+    reader.readAsDataURL(fileImage);
+    if (getFile) getFile(fileImage);
   };
 
   return (
-    <div className="upload-cover_wrapper">
-      <div className="upload-cover_img">
+    <div className="w-full">
+      <div className="relative rounded-md overflow-hidden bg-neutral-100 h-56 flex items-center justify-center">
         {coverImg || imagePreview ? (
-          <img src={imagePreview ? imagePreview : coverImg} alt="" />
+          // eslint-disable-next-line jsx-a11y/img-redundant-alt
+          <img
+            src={imagePreview || coverImg}
+            alt="cover image"
+            className="w-full h-full object-cover"
+          />
         ) : (
-          <label
-            className="upload-cover_text-select"
-            htmlFor="upload-cover_custom"
-          >
-            Chọn hình ảnh
-          </label>
+          <span className="text-sm text-neutral-500">Chọn hình ảnh</span>
         )}
+
+        <div className="absolute right-3 bottom-3">
+          <label
+            htmlFor="upload-cover_custom"
+            className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-neutral-200 rounded-md shadow-sm cursor-pointer"
+          >
+            <Edit3 className="w-4 h-4 text-gray-700" />
+            <span className="text-sm text-gray-700">Chọn</span>
+          </label>
+        </div>
       </div>
 
-      <div className="upload-cover_icon">
-        <label htmlFor="upload-cover_custom">
-          <EditOutlined style={{ fontSize: '13px' }} />
-        </label>
-        <input
-          id="upload-cover_custom"
-          type="file"
-          hidden
-          onChange={handleOnChange}
-          accept="image/*"
-        />
-      </div>
+      <input
+        id="upload-cover_custom"
+        type="file"
+        accept="image/*"
+        className="sr-only"
+        onChange={handleOnChange}
+      />
     </div>
   );
 }
-
-export default UploadCoverImage;

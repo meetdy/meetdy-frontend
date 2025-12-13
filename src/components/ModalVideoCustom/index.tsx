@@ -1,20 +1,16 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import React, { JSX } from 'react';
 import ModalVideo from 'react-modal-video';
+interface ModalVideoCustomProps {
+  isVisible?: boolean;
+  url?: string;
+  onClose?: (() => void) | null;
+}
 
-ModalVideoCustom.propTypes = {
-  isVisible: PropTypes.bool,
-  url: PropTypes.string,
-  onClose: PropTypes.func,
-};
-
-ModalVideoCustom.defaultProps = {
-  isVisible: false,
-  url: '',
-  onClose: null,
-};
-
-function ModalVideoCustom({ isVisible, onClose, url }) {
+function ModalVideoCustom({
+  isVisible = false,
+  url = '',
+  onClose = null,
+}: ModalVideoCustomProps): JSX.Element {
   const handleOnClose = () => {
     if (onClose) {
       onClose();

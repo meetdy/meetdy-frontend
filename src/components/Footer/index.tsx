@@ -1,20 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Divider, Typography } from 'antd';
+import { Separator } from '@/components/ui/separator';
 
-const { Text } = Typography;
-
-Footer.propTypes = {};
-
-function Footer(props) {
+export default function Footer() {
   return (
-    <div style={{ textAlign: 'center' }}>
-      <Divider></Divider>
-      <Text strong style={{ fontSize: '20px' }}>
-        Footer
-      </Text>
-    </div>
+    <footer className="text-center">
+      <Separator className="my-4" />
+      <p className="text-xl font-semibold">Footer</p>
+    </footer>
   );
 }
-
-export default Footer;

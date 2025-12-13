@@ -1,25 +1,37 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Menu } from 'antd';
-import { MailOutlined, MessageOutlined } from '@ant-design/icons';
+import React, { JSX } from 'react';
 import { Link } from 'react-router-dom';
+import { Mail, MessageSquare } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-const { SubMenu } = Menu;
-Header.propTypes = {};
-
-function Header(props) {
+export default function Header(): JSX.Element {
   return (
-    <div>
-      <Menu mode="horizontal">
-        <Menu.Item key="home" icon={<MailOutlined />}>
-          <Link to="/"> Trang chủ</Link>
-        </Menu.Item>
-        <Menu.Item key="chat" icon={<MessageOutlined />}>
-          <Link to="/chat"> Chat</Link>
-        </Menu.Item>
-      </Menu>
-    </div>
+    <header>
+      <nav className="bg-white">
+        <ul className="flex items-center space-x-2 px-4 py-2">
+          <li>
+            <Button asChild variant="ghost" size="sm">
+              <Link
+                to="/"
+                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                <Mail className="w-4 h-4" />
+                <span>Trang chủ</span>
+              </Link>
+            </Button>
+          </li>
+          <li>
+            <Button asChild variant="ghost" size="sm">
+              <Link
+                to="/chat"
+                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>Chat</span>
+              </Link>
+            </Button>
+          </li>
+        </ul>
+      </nav>
+    </header>
   );
 }
-
-export default Header;

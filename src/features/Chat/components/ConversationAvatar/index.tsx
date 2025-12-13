@@ -1,18 +1,18 @@
-import { UserOutlined } from "@ant-design/icons"
-import AvatarCustom from "@/components/AvatarCustom"
+import { UserOutlined } from '@ant-design/icons';
+import AvatarCustom from '@/components/AvatarCustom';
 
 type Props = {
-  avatar: any
-  dimension?: number
-  isGroupCard?: boolean
-  totalMembers: number
-  type?: string
-  name?: string
-  isActived?: boolean
-  sizeAvatar?: number
-  frameSize?: number
-  avatarColor?: string
-}
+  avatar: any;
+  dimension?: number;
+  isGroupCard?: boolean;
+  totalMembers: number;
+  type?: string;
+  name?: string;
+  isActived?: boolean;
+  sizeAvatar?: number;
+  frameSize?: number;
+  avatarColor?: string;
+};
 
 export default function ConversationAvatar({
   avatar,
@@ -23,17 +23,23 @@ export default function ConversationAvatar({
   isActived = false,
   sizeAvatar = 48,
   frameSize = 48,
-  avatarColor = "",
+  avatarColor = '',
 }: Props) {
+  console.log('🚀 ~ ConversationAvatar ~ type:', type);
   const renderSingleAvatar = () => (
     <div className="relative inline-block">
       {isActived && (
         <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
       )}
 
-      <AvatarCustom size={sizeAvatar} src={avatar} color={avatarColor} name={name} />
+      <AvatarCustom
+        size={sizeAvatar}
+        src={avatar}
+        color={avatarColor}
+        name={name}
+      />
     </div>
-  )
+  );
 
   const renderArrayAvatar = () => {
     if (totalMembers === 2) {
@@ -50,7 +56,7 @@ export default function ConversationAvatar({
             <AvatarBubble avatar={avatar[1]} size={dimension} />
           </div>
         </div>
-      )
+      );
     }
 
     if (totalMembers === 3) {
@@ -74,7 +80,7 @@ export default function ConversationAvatar({
             <AvatarBubble avatar={avatar[2]} size={dimension} />
           </div>
         </div>
-      )
+      );
     }
 
     if (totalMembers > 3) {
@@ -99,22 +105,24 @@ export default function ConversationAvatar({
             +{totalMembers - 3}
           </div>
         </div>
-      )
+      );
     }
 
-    return null
-  }
+    return null;
+  };
+
+  const isGroup = totalMembers > 3;
 
   return (
     <div className="flex items-center justify-center">
-      {totalMembers > 2 ? renderArrayAvatar() : renderSingleAvatar()}
+      {isGroup ? renderArrayAvatar() : renderSingleAvatar()}
     </div>
-  )
+  );
 }
 
 function AvatarBubble({ avatar, size }: any) {
-  const bg = avatar?.avatarColor || "#ccc"
-  const img = avatar?.avatar
+  const bg = avatar?.avatarColor || '#ccc';
+  const img = avatar?.avatar;
 
   return img ? (
     <img
@@ -129,5 +137,5 @@ function AvatarBubble({ avatar, size }: any) {
     >
       <UserOutlined className="text-xs" />
     </div>
-  )
+  );
 }
