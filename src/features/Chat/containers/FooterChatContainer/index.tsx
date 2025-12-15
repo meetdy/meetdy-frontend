@@ -1,7 +1,7 @@
-import { Mentions } from 'antd';
-import { SendOutlined } from '@ant-design/icons';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Send } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import type { RootState } from '@/store';
 
 import messageApi from '@/api/messageApi';
 
@@ -9,35 +9,26 @@ import NavigationChatBox from '@/features/Chat/components/NavigationChatBox';
 import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 import ReplyBlock from '@/features/Chat/components/ReplyBlock';
 import TextEditor from '@/features/Chat/components/TextEditor';
+import { Button } from '@/components/ui/button';
 
-const styles = {
-  mentionItem: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  nameItem: {
-    marginLeft: '1rem',
-    fontSize: '12px',
-    fontWeight: 400,
-    flex: 1,
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  editorText: {
-    flexDirection: 'column',
-  },
-  additionView: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    width: '100%',
-  },
+type MentionUser = {
+  _id: string;
+  name: string;
+  avatar?: string;
 };
 
-const { Option } = Mentions;
+type Props = {
+  onScrollWhenSentText?: (id: string) => void;
+  onOpenInfoBlock?: () => void;
+  socket: any;
+  replyMessage?: any;
+  onCloseReply?: () => void;
+  userMention?: any;
+  onRemoveMention?: () => void;
+  onViewVotes?: () => void;
+};
 
-function FooterChatContainer({
+export default function FooterChatContainer({
   onScrollWhenSentText,
   onOpenInfoBlock,
   socket,
@@ -46,62 +37,46 @@ function FooterChatContainer({
   userMention,
   onRemoveMention,
   onViewVotes,
-}) {
-  const preMention = useRef(null);
+}: Props) {
+  const preMention = useRef<MentionUser | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const {
-    currentConversation,
-    conversations,
-    currentChannel,
-    memberInConversation,
-  } = useSelector((state) => state.chat);
-  const { user } = useSelector((state) => state.global);
+  const { currentConversation, conversations, currentChannel, memberInConversation } =
+    useSelector((state: RootState) => state.chat);
+  const { user } = useSelector((state: RootState) => state.global);
 
   const [showTextFormat, setShowTextFormat] = useState(false);
   const [isShowLike, setShowLike] = useState(true);
   const [valueText, setValueText] = useState('');
   const [isHightLight, setHightLight] = useState(false);
-  const [detailConversation, setDetailConversation] = useState({});
-  const [mentionList, setMentionsList] = useState([]);
-  const [mentionSelect, setMentionSelect] = useState([]);
+  const [detailConversation, setDetailConversation] = useState<any>({});
+  const [mentionList, setMentionsList] = useState<MentionUser[]>([]);
+  const [mentionSelect, setMentionSelect] = useState<MentionUser[]>([]);
+  const [mentionQuery, setMentionQuery] = useState('');
+  const [showMentionDropdown, setShowMentionDropdown] = useState(false);
+  const [filteredMentions, setFilteredMentions] = useState<MentionUser[]>([]);
 
-  const getTypeConversation = conversations.find(
-    (ele) => ele._id === currentConversation,
-  ).type;
-
-  const checkGroup = conversations.find(
-    (ele) => ele._id === currentConversation,
-  );
-
-  const checkIsExistInSelect = (userMen) => {
-    if (mentionSelect.length > 0) {
-      const index = mentionSelect.findIndex((ele) => ele._id === userMen._id);
-      return index >= 0;
-    } else {
-      return false;
-    }
-  };
+  const currentConver = conversations.find((ele) => ele._id === currentConversation);
+  const getTypeConversation = currentConver?.type ?? false;
+  const checkGroup = !!currentConver;
 
   useEffect(() => {
-    if (userMention && Object.keys(userMention).length > 0) {
+    if (userMention && Object.keys(userMention || {}).length > 0) {
       let tempMentionSelect = [...mentionSelect];
       let tempMentionList = [...mentionList];
       let tempValueText = valueText;
 
       if (preMention.current) {
-        if (checkIsExistInSelect(preMention.current)) {
-          const regex = new RegExp(`^@${preMention.current.name}`);
-          const newText = valueText.replace(regex, '');
-          tempValueText = newText;
-
-          tempMentionSelect = mentionSelect.filter(
-            (ele) => ele._id !== preMention.current._id,
-          );
-          tempMentionList = [...mentionList, preMention.current];
+        const exists = tempMentionSelect.some((m) => m._id === preMention.current?._id);
+        if (exists) {
+          const regex = new RegExp(`^@${preMention.current?.name}`);
+          tempValueText = tempValueText.replace(regex, '');
+          tempMentionSelect = tempMentionSelect.filter((ele) => ele._id !== preMention.current?._id);
+          tempMentionList = [...tempMentionList, preMention.current as MentionUser];
         }
       }
 
-      const checkExist = checkIsExistInSelect(userMention);
+      const checkExist = tempMentionSelect.some((m) => m._id === userMention._id);
 
       if (!checkExist) {
         if (getTypeConversation) {
@@ -109,9 +84,7 @@ function FooterChatContainer({
         }
         setValueText(tempValueText);
         setMentionSelect([...tempMentionSelect, userMention]);
-        tempMentionList = tempMentionList.filter(
-          (ele) => ele._id !== userMention._id,
-        );
+        tempMentionList = tempMentionList.filter((ele) => ele._id !== userMention._id);
         setMentionsList(tempMentionList);
       }
       preMention.current = userMention;
@@ -119,8 +92,10 @@ function FooterChatContainer({
   }, [userMention]);
 
   useEffect(() => {
-    if (memberInConversation.length > 0) {
+    if (memberInConversation && memberInConversation.length > 0) {
       setMentionsList(memberInConversation);
+    } else {
+      setMentionsList([]);
     }
   }, [memberInConversation]);
 
@@ -131,30 +106,28 @@ function FooterChatContainer({
 
   useEffect(() => {
     if (currentConversation) {
-      const tempConver = conversations.find(
-        (conver) => conver._id === currentConversation,
-      );
+      const tempConver = conversations.find((conver) => conver._id === currentConversation);
       if (tempConver) {
         setDetailConversation(tempConver);
       }
     }
-  }, [currentConversation]);
+  }, [currentConversation, conversations]);
 
   const handleClickTextFormat = () => {
-    setShowTextFormat(!showTextFormat);
+    setShowTextFormat((s) => !s);
     setValueText('');
   };
 
-  async function sendMessage(value, type) {
+  async function sendMessage(value: string, type: 'TEXT' | 'HTML') {
     const listId = mentionSelect.map((ele) => ele._id);
 
-    const newMessage = {
+    const newMessage: any = {
       content: value,
-      type: type,
+      type,
       conversationId: currentConversation,
       tags: listId,
     };
-    if (replyMessage && Object.keys(replyMessage).length > 0) {
+    if (replyMessage && Object.keys(replyMessage || {}).length > 0) {
       newMessage.replyMessageId = replyMessage._id;
     }
 
@@ -162,14 +135,14 @@ function FooterChatContainer({
       newMessage.channelId = currentChannel;
     }
 
-    await messageApi
-      .sendTextMessage(newMessage)
-      .then((res) => {
-        handleOnScroll(res?._id);
-        console.log('Send Message Success');
-      })
-      .catch((err) => console.log('Send Message Fail'));
-    setMentionsList(memberInConversation);
+    try {
+      const res = await messageApi.sendTextMessage(newMessage);
+      if (res && res._id) {
+        handleOnScroll(res._id);
+      }
+    } catch (err) {}
+
+    setMentionsList(memberInConversation || []);
     setMentionSelect([]);
 
     if (onCloseReply) {
@@ -180,7 +153,7 @@ function FooterChatContainer({
     }
   }
 
-  const handleOnScroll = (id) => {
+  const handleOnScroll = (id: string) => {
     if (onScrollWhenSentText) {
       onScrollWhenSentText(id);
     }
@@ -198,30 +171,43 @@ function FooterChatContainer({
     }
   };
 
-  const handleOnChageInput = (value) => {
-    if (mentionSelect.length > 0) {
-      mentionSelect.forEach((ele, index) => {
-        const regex = new RegExp(`@${ele.name}`);
-        if (regex.exec(value) === null) {
-          const tempMentionList = [...mentionList];
-          const checkExist = mentionList.every((temp) => ele._id !== temp._id);
-          if (checkExist) {
-            tempMentionList.push(ele);
-          }
-          setMentionsList(tempMentionList);
-          setMentionSelect(
-            mentionSelect.filter((select) => select._id !== ele._id),
-          );
-          if (onRemoveMention) {
-            onRemoveMention();
-          }
-          return false;
+  const syncMentionsFromText = (text: string) => {
+    const remaining = mentionSelect.filter((m) => text.includes(`@${m.name}`));
+    if (remaining.length !== mentionSelect.length) {
+      setMentionSelect(remaining);
+      const removed = mentionSelect.filter((m) => !remaining.some((r) => r._id === m._id));
+      if (removed.length > 0 && onRemoveMention) {
+        onRemoveMention();
+      }
+      const newMentionList = [...mentionList];
+      removed.forEach((r) => {
+        if (!newMentionList.some((m) => m._id === r._id)) {
+          newMentionList.push(r);
         }
       });
+      setMentionsList(newMentionList);
     }
+  };
 
+  const handleOnChangeInput = (value: string) => {
+    syncMentionsFromText(value);
     value.length > 0 ? setShowLike(false) : setShowLike(true);
     setValueText(value);
+
+    const match = /@([\p{L}\w]*)$/u.exec(value);
+    if (match) {
+      const q = match[1];
+      setMentionQuery(q);
+      const filtered = (mentionList || [])
+        .filter((m) => m.name.toLowerCase().includes(q.toLowerCase()))
+        .filter((m) => !mentionSelect.some((s) => s._id === m._id) && m._id !== user?._id);
+      setFilteredMentions(filtered);
+      setShowMentionDropdown(true);
+    } else {
+      setShowMentionDropdown(false);
+      setFilteredMentions([]);
+      setMentionQuery('');
+    }
 
     if (value.length > 0 && !currentChannel) {
       socket.emit('typing', currentConversation, user);
@@ -230,75 +216,90 @@ function FooterChatContainer({
     }
   };
 
-  const handleShowLike = (value) => {
+  const handleShowLike = (value: boolean) => {
     setShowLike(value);
   };
 
-  const handleKeyPress = (event) => {
-    if (event.nativeEvent.keyCode === 13) {
-      if (!event.shiftKey) {
-        const valueInput = event.target.value;
-
-        if (valueInput.trim().length > 0) {
-          sendMessage(valueInput, 'TEXT');
-          setValueText('');
-          socket.emit('not-typing', currentConversation, user);
-        }
-
-        event.preventDefault();
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      const valueInput = (event.target as HTMLTextAreaElement).value;
+      if (valueInput.trim().length > 0) {
+        sendMessage(valueInput, 'TEXT');
+        setValueText('');
+        socket.emit('not-typing', currentConversation, user);
       }
+      event.preventDefault();
     }
   };
 
-  const handleOnFocus = (e) => {
+  const handleOnFocus = () => {
     if (currentChannel) {
-      socket.emit(
-        'conversation-last-view',
-        currentConversation,
-        currentChannel,
-      );
+      socket.emit('conversation-last-view', currentConversation, currentChannel);
     } else {
       socket.emit('conversation-last-view', currentConversation);
     }
-
     setHightLight(true);
   };
 
-  const handleOnBlur = (e) => {
+  const handleOnBlur = () => {
     setHightLight(false);
     socket.emit('not-typing', currentConversation, user);
   };
 
-  const handleSetValueEditor = (content) => {
+  const handleSetValueEditor = (content: string) => {
     setValueText(content);
   };
 
-  const handleSelectMention = ({ object }, _) => {
-    setMentionSelect([...mentionSelect, object]);
-    setMentionsList(mentionList.filter((ele) => ele._id !== object._id));
+  const handleSelectMention = (member: MentionUser) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const value = valueText;
+    const lastAtIndex = value.lastIndexOf('@' + mentionQuery);
+    const before = value.slice(0, lastAtIndex >= 0 ? lastAtIndex : value.length);
+    const after = value.slice((lastAtIndex >= 0 ? lastAtIndex : value.length) + (`@${mentionQuery}`).length);
+    const inserted = `${before}@${member.name} ${after}`;
+    setValueText(inserted);
+    setMentionSelect((prev) => [...prev, member]);
+    setMentionsList((prev) => prev.filter((m) => m._id !== member._id));
+    setShowMentionDropdown(false);
+    setFilteredMentions([]);
+    setMentionQuery('');
+    preMention.current = member;
+    textarea.focus();
+    const caretPos = (before + `@${member.name} `).length;
+    requestAnimationFrame(() => {
+      textarea.setSelectionRange(caretPos, caretPos);
+    });
   };
 
+  useEffect(() => {
+    if (mentionSelect.length > 0) {
+      const newMentions = mentionList.filter((m) => !mentionSelect.some((s) => s._id === m._id));
+      setMentionsList(newMentions);
+    }
+  }, []);
+
   return (
-    <div id="main-footer-chat">
-      <div className="navigation">
+    <div id="main-footer-chat" className="w-full">
+      <div className="navigation mb-2">
         <NavigationChatBox
           isFocus={isHightLight}
           onClickTextFormat={handleClickTextFormat}
-          onScroll={handleOnScroll}
+          onScroll={(e?: any) => {
+            if (onScrollWhenSentText) onScrollWhenSentText(e);
+          }}
           onViewVotes={onViewVotes}
           onOpenInfoBlock={onOpenInfoBlock}
         />
       </div>
 
-      {replyMessage && Object.keys(replyMessage).length > 0 && (
+      {replyMessage && Object.keys(replyMessage || {}).length > 0 && (
         <ReplyBlock replyMessage={replyMessage} onCloseReply={onCloseReply} />
       )}
 
-      <div
-        className="chat-editor"
-        style={showTextFormat ? styles.editorText : {}}
-      >
-        <div className="main-editor">
+      <div className={`chat-editor flex items-end gap-2 ${showTextFormat ? 'flex-col' : ''}`}>
+        <div className="main-editor flex-1 w-full relative">
           {showTextFormat ? (
             <TextEditor
               showFormat={showTextFormat}
@@ -309,64 +310,55 @@ function FooterChatContainer({
               onSetValue={handleSetValueEditor}
             />
           ) : (
-            <Mentions
-              autoSize={{ minRows: 1, maxRows: 5 }}
-              placeholder={`Nhập @, tin nhắt tới ${detailConversation.name}`}
-              size="large"
-              bordered={false}
-              onChange={handleOnChageInput}
-              onKeyPress={handleKeyPress}
-              value={valueText}
-              style={{
-                whiteSpace: 'pre-wrap',
-                border: 'none',
-                outline: 'none',
-              }}
-              spellCheck={false}
-              onFocus={handleOnFocus}
-              onBlur={handleOnBlur}
-              onSelect={handleSelectMention}
-              split=" "
-            >
-              {checkGroup &&
-                mentionList.map((ele, index) => {
-                  if (ele._id !== user._id) {
-                    return (
-                      <Option value={ele.name} key={index} object={ele}>
-                        <div
-                          className="mention-option_wrapper"
-                          style={styles.mentionItem}
-                        >
-                          <div className="icon-user-item">
-                            <PersonalIcon
-                              dimension={24}
-                              avatar={ele.avatar}
-                              name={ele.name}
-                            />
-                          </div>
-
-                          <div
-                            style={styles.mentionItem}
-                            className="name-user-item"
-                          >
-                            {ele.name}
-                          </div>
+            <>
+              <textarea
+                ref={textareaRef}
+                value={valueText}
+                onChange={(e) => handleOnChangeInput(e.target.value)}
+                onKeyDown={handleKeyPress}
+                onFocus={handleOnFocus}
+                onBlur={handleOnBlur}
+                placeholder={`Nhập @, tin nhắn tới ${detailConversation?.name ?? ''}`}
+                rows={1}
+                className="w-full resize-none overflow-auto rounded-md border-none bg-transparent px-3 py-2 text-sm focus:outline-none"
+                spellCheck={false}
+              />
+              {showMentionDropdown && filteredMentions.length > 0 && (
+                <div className="absolute left-2 bottom-full mb-2 max-h-48 w-80 overflow-auto rounded-md border bg-white shadow-lg">
+                  <ul>
+                    {filteredMentions.map((m) => (
+                      <li
+                        key={m._id}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleSelectMention(m);
+                        }}
+                        className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 cursor-pointer"
+                      >
+                        <div className="w-6 h-6 flex-shrink-0">
+                          <PersonalIcon dimension={24} avatar={m.avatar} name={m.name} />
                         </div>
-                      </Option>
-                    );
-                  }
-                })}
-            </Mentions>
+                        <div className="text-sm">{m.name}</div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </>
           )}
         </div>
 
-        <div
-          className="addtion-interaction"
-          style={showTextFormat ? styles.additionView : undefined}
-        >
-          <div className="like-emoji">
-            <div className="send-text-thumb" onClick={handleSentMessage}>
-              <SendOutlined />
+        <div className={`addtion-interaction flex items-center ${showTextFormat ? 'self-end' : ''}`}>
+          <div className="like-emoji mr-2">
+            <div className="send-text-thumb">
+              <Button
+                onClick={handleSentMessage}
+                variant="ghost"
+                className="p-2 rounded-full"
+                aria-label="Send message"
+              >
+                <Send className="w-5 h-5" />
+              </Button>
             </div>
           </div>
         </div>
@@ -374,5 +366,3 @@ function FooterChatContainer({
     </div>
   );
 }
-
-export default FooterChatContainer;

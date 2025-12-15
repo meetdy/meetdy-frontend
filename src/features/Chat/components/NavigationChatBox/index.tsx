@@ -1,171 +1,162 @@
-import {
-  DashOutlined,
-  FileImageOutlined,
-  FontColorsOutlined,
-  LinkOutlined,
-  SmileOutlined,
-} from '@ant-design/icons';
-import { Button, Dropdown, Menu, Popover } from 'antd';
-import UploadFile from '@/customfield/upLoadFile';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { BsNewspaper } from 'react-icons/bs';
-import { FcBarChart } from 'react-icons/fc';
-import { IoText } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
+import {
+  Smile,
+  Image,
+  Link as LinkIcon,
+  Type,
+  BarChart2,
+  Newspaper,
+} from 'lucide-react';
+import type { RootState } from '@/store';
+import UploadFile from '@/customfield/upLoadFile';
 import ModalCreateVote from '../ModalCreateVote';
 import Sticker from '../Sticker';
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui/popover';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 
-NavigationChatBox.propTypes = {
-  onClickTextFormat: PropTypes.func,
-  isFocus: PropTypes.bool,
-  onScroll: PropTypes.func,
-  onViewVotes: PropTypes.func,
-  onOpenInfoBlock: PropTypes.func,
+type Props = {
+  onClickTextFormat?: () => void;
+  isFocus?: boolean;
+  onScroll?: (e?: any) => void;
+  onViewVotes?: () => void;
+  onOpenInfoBlock?: () => void;
 };
 
-NavigationChatBox.defaultProps = {
-  onClickTextFormat: null,
-  isFocus: false,
-  onScroll: null,
-  onViewVotes: null,
-  onOpenInfoBlock: null,
-};
-
-const styleBorder = {
-  borderColor: '#396edd',
-};
-
-const styleButton = {
-  background: 'none',
-  outline: 'none',
-  border: 'red',
-  padding: '0px',
-  borderRadius: '50%',
-  fontSize: '2.2rem',
-};
-
-function NavigationChatBox(props) {
-  const { onClickTextFormat, isFocus, onScroll, onViewVotes, onOpenInfoBlock } =
-    props;
+export default function NavigationChatBox({
+  onClickTextFormat,
+  isFocus = false,
+  onScroll,
+  onViewVotes,
+  onOpenInfoBlock,
+}: Props) {
   const [visiblePop, setVisiblePop] = useState(false);
   const { stickers, currentConversation, conversations } = useSelector(
-    (state) => state.chat,
+    (state: RootState) => state.chat,
   );
   const [isVisibleVote, setIsVisibleVote] = useState(false);
-  const checkIsGroup = conversations.find(
-    (conver) => conver._id === currentConversation,
-  ).type;
+
+  const conver = conversations.find((c) => c._id === currentConversation);
+  const checkIsGroup = Boolean(conver && conver.type);
 
   const handleOnClickTextFormat = () => {
-    if (onClickTextFormat) {
-      onClickTextFormat();
-    }
+    if (onClickTextFormat) onClickTextFormat();
   };
 
-  const handleVisibleChange = (visible) => {
-    setVisiblePop(visible);
-  };
-
-  const handleOnClose = () => {
-    setVisiblePop(false);
-  };
-  const handleOnClick = ({ key }) => {
+  const handleOnClickMenu = (key: string) => {
     if (key === 'VOTE') {
       setIsVisibleVote(true);
-    }
-    if (key === 'VIEW_NEWS') {
-      if (onViewVotes) {
-        onViewVotes();
-      }
-      if (onOpenInfoBlock) {
-        onOpenInfoBlock();
-      }
+    } else if (key === 'VIEW_NEWS') {
+      if (onViewVotes) onViewVotes();
+      if (onOpenInfoBlock) onOpenInfoBlock();
     }
   };
-
-  const handleCloseModalVote = () => {
-    setIsVisibleVote(false);
-  };
-
-  const menu = (
-    <Menu onClick={handleOnClick}>
-      <Menu.Item key="VOTE" icon={<FcBarChart />}>
-        <span className="item-menu-vote">Tạo cuộc bình chọn</span>
-      </Menu.Item>
-      <Menu.Item key="VIEW_NEWS" icon={<BsNewspaper />}>
-        <span className="item-menu-vote"> Xem bảng tin nhóm</span>
-      </Menu.Item>
-    </Menu>
-  );
 
   return (
-    <div style={isFocus ? styleBorder : {}} id="navigation-chat-box">
-      <ul>
-        <Popover
-          content={
-            <Sticker
-              onClose={handleOnClose}
-              data={stickers}
-              onScroll={onScroll}
-            />
-          }
-          trigger="click"
-          visible={visiblePop}
-          onVisibleChange={handleVisibleChange}
-          placement="topLeft"
-        >
-          <li className="item-chat-box">
-            <div title="Gửi sticker">
-              <SmileOutlined />
-            </div>
-          </li>
-        </Popover>
+    <div
+      id="navigation-chat-box"
+      className={`p-1 rounded-md ${isFocus ? 'border border-blue-500' : ''}`}
+    >
+      <ul className="flex items-center gap-2">
+        <li>
+          <Popover open={visiblePop} onOpenChange={setVisiblePop}>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" className="p-2 rounded-full text-lg">
+                <Smile className="w-5 h-5" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="p-2 w-[260px]">
+              <Sticker
+                onClose={() => setVisiblePop(false)}
+                data={stickers}
+                onScroll={onScroll}
+              />
+            </PopoverContent>
+          </Popover>
+        </li>
 
-        <li className="item-chat-box">
+        <li>
           <UploadFile typeOfFile="media">
-            <Button title="Gửi hình ảnh" type="text" style={styleButton}>
-              <FileImageOutlined />
+            <Button
+              variant="ghost"
+              className="p-2 rounded-full text-lg"
+              title="Gửi hình ảnh"
+            >
+              <Image className="w-5 h-5" />
             </Button>
           </UploadFile>
         </li>
 
-        <li className="item-chat-box">
+        <li>
           <UploadFile typeOfFile="File">
-            <Button title="Gửi file" type="text" style={styleButton}>
-              <LinkOutlined />
+            <Button
+              variant="ghost"
+              className="p-2 rounded-full text-lg"
+              title="Gửi file"
+            >
+              <LinkIcon className="w-5 h-5" />
             </Button>
           </UploadFile>
         </li>
 
-        <li className="item-chat-box">
-          <div title="Định dạng tin nhắn" onClick={handleOnClickTextFormat}>
-            <FontColorsOutlined />
-          </div>
+        <li>
+          <button
+            type="button"
+            title="Định dạng tin nhắn"
+            onClick={handleOnClickTextFormat}
+            className="p-2 rounded-full hover:bg-slate-100 transition"
+          >
+            <Type className="w-5 h-5 text-slate-700" />
+          </button>
         </li>
 
         {checkIsGroup && (
-          <li className="item-chat-box">
-            <Dropdown
-              overlay={menu}
-              placement="topLeft"
-              trigger={['click']}
-              arrow
-            >
-              <Button title="Vote" type="text" style={styleButton}>
-                <DashOutlined />
-              </Button>
-            </Dropdown>
+          <li>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="p-2 rounded-full text-lg"
+                  title="Vote"
+                >
+                  <BarChart2 className="w-5 h-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" side="top" className="w-56">
+                <DropdownMenuItem onSelect={() => handleOnClickMenu('VOTE')}>
+                  <div className="flex items-center gap-2">
+                    <BarChart2 className="w-4 h-4" />
+                    <span>Tạo cuộc bình chọn</span>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onSelect={() => handleOnClickMenu('VIEW_NEWS')}
+                >
+                  <div className="flex items-center gap-2">
+                    <Newspaper className="w-4 h-4" />
+                    <span>Xem bảng tin nhóm</span>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </li>
         )}
       </ul>
 
       <ModalCreateVote
         visible={isVisibleVote}
-        onCancel={handleCloseModalVote}
+        onCancel={() => setIsVisibleVote(false)}
       />
     </div>
   );
 }
-
-export default NavigationChatBox;

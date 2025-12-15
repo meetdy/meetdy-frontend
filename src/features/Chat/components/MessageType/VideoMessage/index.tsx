@@ -1,42 +1,40 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import MESSAGE_STYLE from '@/constants/MessageStyle/messageStyle';
-VideoMessage.propTypes = {
-  content: PropTypes.string,
-  dateAt: PropTypes.object,
-  isSeen: PropTypes.bool,
+
+type Props = {
+  content: string;
+  children?: React.ReactNode;
+  dateAt: Date;
+  isSeen?: boolean;
 };
 
-VideoMessage.defaultProps = {
-  content: '',
-  dateAt: null,
-  isSeen: false,
-};
-
-function VideoMessage({ content, children, dateAt, isSeen }) {
+export default function VideoMessage({
+  content,
+  children,
+  dateAt,
+  isSeen = false,
+}: Props) {
   return (
     <>
-      <div className="message-video-wrapper">
-        <div className="message-video-main">
-          <video controls style={MESSAGE_STYLE.videoStyle}>
+      <div className="rounded-md overflow-hidden bg-black/5">
+        <div className="w-full">
+          <video
+            controls
+            style={MESSAGE_STYLE.videoStyle}
+            className="w-full max-h-[40vh] object-contain bg-black"
+          >
             <source src={content} type="video/mp4" />
           </video>
         </div>
         {children}
       </div>
 
-      <div className="time-and-last_view">
-        <div className="time-send">
-          <span>
-            {`0${dateAt.getHours()}`.slice(-2)}:
-            {`0${dateAt.getMinutes()}`.slice(-2)}
-          </span>
-        </div>
-
-        {isSeen && <div className="is-seen-message">Đã xem</div>}
+      <div className="mt-2 flex items-center text-xs text-slate-500 gap-2">
+        <div>{`${String(dateAt.getHours()).padStart(2, '0')}:${String(
+          dateAt.getMinutes(),
+        ).padStart(2, '0')}`}</div>
+        {isSeen && <div className="text-green-600">Đã xem</div>}
       </div>
     </>
   );
 }
-
-export default VideoMessage;

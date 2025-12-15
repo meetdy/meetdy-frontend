@@ -25,7 +25,6 @@ export default function ConversationAvatar({
   frameSize = 48,
   avatarColor = '',
 }: Props) {
-  console.log('🚀 ~ ConversationAvatar ~ type:', type);
   const renderSingleAvatar = () => (
     <div className="relative inline-block">
       {isActived && (
@@ -111,7 +110,7 @@ export default function ConversationAvatar({
     return null;
   };
 
-  const isGroup = totalMembers > 3;
+  const isGroup = type || totalMembers > 3;
 
   return (
     <div className="flex items-center justify-center">

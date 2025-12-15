@@ -1,440 +1,282 @@
-import {
-  EditTwoTone,
-  PushpinTwoTone,
-  NumberOutlined,
-  KeyOutlined,
-} from '@ant-design/icons';
-import { Avatar, Tooltip } from 'antd';
-import AvatarCustom from '@/components/AvatarCustom';
-import parse from 'html-react-parser';
-import PropTypes from 'prop-types';
 import React from 'react';
+import parse from 'html-react-parser';
+import { Edit, Pin, Hash, Key } from 'lucide-react';
+import AvatarCustom from '@/components/AvatarCustom';
 import { useSelector } from 'react-redux';
 
-NotifyMessage.propTypes = {
-  message: PropTypes.object,
+type ManipulatedUser = {
+  _id: string;
+  name: string;
+  avatar?: string;
+  avatarColor?: string;
 };
 
-NotifyMessage.propTypes = {
-  message: {},
-};
-
-function NotifyMessage({ message }) {
-  const global = useSelector((state) => state.global);
-  const { content, manipulatedUsers, user } = message;
-  const { name, avatar, avatarColor } = user;
-
-  const isMyActive = user._id === global.user._id ? 'Bạn' : user.name;
-
-  const transferTextToValue = (text) => {
-    if (text === 'Đã thêm vào nhóm') {
-      return 1;
-    }
-
-    if (text === 'Đã xóa ra khỏi nhóm') {
-      return 2;
-    }
-
-    if (text === 'Đã tạo nhóm') {
-      return 3;
-    }
-    if (text === 'Đã tham gia nhóm') {
-      return 4;
-    }
-
-    if (text === 'Đã rời khỏi nhóm') {
-      return 5;
-    }
-    if (text === 'Đã là bạn bè') {
-      return 6;
-    }
-    if (text === 'PIN_MESSAGE') {
-      return 7;
-    }
-    if (text === 'NOT_PIN_MESSAGE') {
-      return 8;
-    }
-    if (text.startsWith('Đã đổi tên nhóm thành')) {
-      return 9;
-    }
-    if (text === 'Tham gia từ link') {
-      return 10;
-    }
-
-    if (text === 'UPDATE_CHANNEL') {
-      return 11;
-    }
-
-    if (text === 'DELETE_CHANNEL') {
-      return 12;
-    }
-
-    if (text === 'CREATE_CHANNEL') {
-      return 13;
-    }
-
-    if (text === 'Ảnh đại diện nhóm đã thay đổi') {
-      return 14;
-    }
-    if (text === 'ADD_MANAGERS') {
-      return 15;
-    }
-
-    if (text === 'DELETE_MANAGERS') {
-      return 16;
-    }
+type Message = {
+  content: string;
+  manipulatedUsers?: ManipulatedUser[];
+  user?: {
+    _id?: string;
+    name?: string;
+    avatar?: string;
+    avatarColor?: string;
   };
+};
 
-  const renderGroupAvatars = (
-    <>
-      {manipulatedUsers &&
-        manipulatedUsers.length > 0 &&
-        manipulatedUsers.map((ele, index) => {
-          if (index < 3) {
-            return (
-              <div key={index} className="notify-message-content_per-avatar">
-                <AvatarCustom
-                  size="small"
-                  src={ele.avatar}
-                  name={ele.name}
-                  color={ele.avatarColor}
-                />
-              </div>
-            );
-          }
-          if (index > 3) {
-            return (
-              <Tooltip placement="top" key={index}>
-                <Avatar
-                  style={{
-                    backgroundColor: '#7562d8',
-                    color: '#fff',
-                  }}
-                  size="small"
-                >
-                  {`+${manipulatedUsers.length - 3}`}
-                </Avatar>
-              </Tooltip>
-            );
-          }
-        })}
-    </>
-  );
+type Props = {
+  message: Message;
+};
 
-  const renderUser = (
-    <>
-      {manipulatedUsers &&
-        manipulatedUsers.length > 0 &&
-        manipulatedUsers.map((ele, index) => {
-          if (index < 3) {
-            if (index === 0) {
-              return (
-                <span className="user-name-strong">
-                  {` ${ele._id === global.user._id ? 'bạn' : ele.name}`}
-                </span>
-              );
-            } else {
-              return (
-                <span className="user-name-strong">
-                  {`, ${ele._id === global.user._id ? 'bạn' : ele.name}`}
-                </span>
-              );
-            }
-          } else {
-            return (
-              <span className="user-name-strong">
-                {` và`}{' '}
-                <span className="blue">{`${
-                  manipulatedUsers.length - 3
-                } người khác`}</span>
-              </span>
-            );
-          }
-        })}
-    </>
-  );
+function transferTextToValue(text: string) {
+  if (text === 'Đã thêm vào nhóm') return 1;
+  if (text === 'Đã xóa ra khỏi nhóm') return 2;
+  if (text === 'Đã tạo nhóm') return 3;
+  if (text === 'Đã tham gia nhóm') return 4;
+  if (text === 'Đã rời khỏi nhóm') return 5;
+  if (text === 'Đã là bạn bè') return 6;
+  if (text === 'PIN_MESSAGE') return 7;
+  if (text === 'NOT_PIN_MESSAGE') return 8;
+  if (text.startsWith('Đã đổi tên nhóm thành')) return 9;
+  if (text === 'Tham gia từ link') return 10;
+  if (text === 'UPDATE_CHANNEL') return 11;
+  if (text === 'DELETE_CHANNEL') return 12;
+  if (text === 'CREATE_CHANNEL') return 13;
+  if (text === 'Ảnh đại diện nhóm đã thay đổi') return 14;
+  if (text === 'ADD_MANAGERS') return 15;
+  if (text === 'DELETE_MANAGERS') return 16;
+  return 0;
+}
+
+export default function NotifyMessage({ message }: Props) {
+  const global = useSelector((state: any) => state.global);
+  const { content, manipulatedUsers = [], user } = message;
+  const name = user?.name ?? '';
+  const avatar = user?.avatar;
+  const avatarColor = user?.avatarColor;
+  const isMyActive = user?._id === global.user?._id ? 'Bạn' : name;
+
+  const renderGroupAvatars = manipulatedUsers.slice(0, 3).map((ele, index) => (
+    <div key={index} className="mr-1">
+      <AvatarCustom
+        size="small"
+        src={ele.avatar}
+        name={ele.name}
+        color={ele.avatarColor}
+      />
+    </div>
+  ));
+
+  const renderUser = () =>
+    manipulatedUsers.slice(0, 3).map((ele, index) => {
+      const displayName = ele._id === global.user?._id ? 'bạn' : ele.name;
+      return (
+        <span key={ele._id} className="font-medium">
+          {index === 0 ? ` ${displayName}` : `, ${displayName}`}
+        </span>
+      );
+    });
+
+  const typeVal = transferTextToValue(content);
 
   return (
-    <div className="notify-message-wrapper">
-      <div className="notify-message-content">
-        {transferTextToValue(content) === 3 && (
-          <div className="notify-message-content_group-avatar">
-            <div className="notify-message-content_per-avatar">
-              <AvatarCustom
-                size="small"
-                src={avatar}
-                name={name}
-                color={avatarColor}
-              />
-            </div>
-
-            <div className="notify-message-content-title">
-              <span className="user-name-strong">{isMyActive}</span>
-              <span>&nbsp;đã tạo nhóm</span>
+    <div className="p-3 rounded-md bg-transparent">
+      <div className="text-sm text-slate-800">
+        {typeVal === 3 && (
+          <div className="flex items-center gap-3">
+            <AvatarCustom
+              size="small"
+              src={avatar}
+              name={name}
+              color={avatarColor}
+            />
+            <div>
+              <div className="font-medium">{isMyActive}</div>
+              <div className="text-sm text-slate-500">đã tạo nhóm</div>
             </div>
           </div>
         )}
 
-        {transferTextToValue(content) === 1 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              {renderGroupAvatars}
-            </div>
-
-            <div className="notify-message-content-title">
-              <span className="user-name-strong">{isMyActive}</span>
-              &nbsp;
+        {typeVal === 1 && (
+          <div>
+            <div className="flex items-center mb-2">{renderGroupAvatars}</div>
+            <div>
+              <span className="font-medium">{isMyActive}</span>&nbsp;
               <span>đã thêm</span>
-              {renderUser}
-            </div>
-          </>
-        )}
-
-        {(transferTextToValue(content) === 4 ||
-          transferTextToValue(content) === 10) && (
-          <div className="notify-message-content_group-avatar">
-            <div className="notify-message-content_per-avatar">
-              <AvatarCustom
-                size="small"
-                src={avatar}
-                name={name}
-                color={avatarColor}
-              />
-            </div>
-
-            <div className="notify-message-content-title">
-              <span className="user-name-strong">{isMyActive}</span>&nbsp; đã
-              tham gia nhóm
+              {renderUser()}
             </div>
           </div>
         )}
 
-        {transferTextToValue(content) === 2 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content_per-avatar">
-                <AvatarCustom
-                  size="small"
-                  src={avatar}
-                  name={name}
-                  color={avatarColor}
-                />
-              </div>
-
-              <div className="notify-message-content-title">
-                <span className="user-name-strong">{isMyActive}</span>
-                <span>&nbsp;đã xóa</span>
-                {renderUser}
-                <span>&nbsp;ra khỏi nhóm</span>
-              </div>
+        {(typeVal === 4 || typeVal === 10) && (
+          <div className="flex items-center gap-3">
+            <AvatarCustom
+              size="small"
+              src={avatar}
+              name={name}
+              color={avatarColor}
+            />
+            <div>
+              <div className="font-medium">{isMyActive}</div>
+              <div className="text-sm text-slate-500">đã tham gia nhóm</div>
             </div>
-          </>
+          </div>
         )}
 
-        {transferTextToValue(content) === 5 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content_per-avatar">
-                <AvatarCustom
-                  size="small"
-                  src={avatar}
-                  name={name}
-                  color={avatarColor}
-                />
-              </div>
-
-              <div className="notify-message-content-title">
-                <span className="user-name-strong">{name}</span>
-                <span>&nbsp;đã rời khỏi nhóm</span>
-              </div>
+        {typeVal === 2 && (
+          <div>
+            <div className="flex items-center mb-2">{renderGroupAvatars}</div>
+            <div>
+              <span className="font-medium">{isMyActive}</span>&nbsp;đã xóa
+              {renderUser()}&nbsp;ra khỏi nhóm
             </div>
-          </>
+          </div>
         )}
 
-        {transferTextToValue(content) === 6 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content-title">
-                <span className="user-name-strong">
-                  Đã trở thành bạn bè của nhau
-                </span>
-              </div>
+        {typeVal === 5 && (
+          <div className="flex items-center gap-3">
+            <AvatarCustom
+              size="small"
+              src={avatar}
+              name={name}
+              color={avatarColor}
+            />
+            <div>
+              <div className="font-medium">{name}</div>
+              <div className="text-sm text-slate-500">đã rời khỏi nhóm</div>
             </div>
-          </>
+          </div>
         )}
 
-        {transferTextToValue(content) === 7 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content-title">
-                <PushpinTwoTone />
-                &nbsp;
-                <span className="user-name-strong">{`${isMyActive} `}</span>
-                {`đã ghim một tin nhắn`}.
-              </div>
-            </div>
-          </>
+        {typeVal === 6 && (
+          <div className="font-medium">Đã trở thành bạn bè của nhau</div>
         )}
 
-        {transferTextToValue(content) === 8 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content-title">
-                <PushpinTwoTone twoToneColor="#de433e" />
-                &nbsp;
-                <span className="user-name-strong">{`${isMyActive} `}</span>
-                {`đã xóa ghim một tin nhắn`}.
-              </div>
-            </div>
-          </>
+        {typeVal === 7 && (
+          <div className="flex items-center gap-2">
+            <Pin className="w-4 h-4 text-slate-600" />
+            <span className="font-medium">{`${isMyActive}`}</span>&nbsp;đã ghim
+            một tin nhắn
+          </div>
         )}
 
-        {transferTextToValue(content) === 9 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content_per-avatar">
-                <AvatarCustom
-                  size="small"
-                  src={user.avatar}
-                  color={user.avatarColor}
-                  name={user.name}
-                />
-              </div>
-              <div className="notify-message-content-title">
-                <EditTwoTone />
-                &nbsp;
-                <span className="user-name-strong">{`${isMyActive} `}</span>
-                {parse(content)}
-              </div>
-            </div>
-          </>
+        {typeVal === 8 && (
+          <div className="flex items-center gap-2 text-red-600">
+            <Pin className="w-4 h-4" />
+            <span className="font-medium">{`${isMyActive}`}</span>&nbsp;đã xóa
+            ghim một tin nhắn
+          </div>
         )}
 
-        {transferTextToValue(content) === 11 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content_per-avatar">
-                <AvatarCustom
-                  size="small"
-                  src={user.avatar}
-                  name={user.name}
-                  color={user.avatarColor}
-                />
+        {typeVal === 9 && (
+          <div className="flex items-center gap-3">
+            <AvatarCustom
+              size="small"
+              src={user?.avatar}
+              name={user?.name}
+              color={user?.avatarColor}
+            />
+            <div>
+              <div className="flex items-center gap-2">
+                <Edit className="w-4 h-4 text-slate-600" />
+                <span className="font-medium">{isMyActive}</span>
               </div>
-              <div className="notify-message-content-title">
-                <span className="user-name-strong">{`${isMyActive} `}</span>
-                đã đổi tên channel &nbsp;
-                <NumberOutlined />
-              </div>
+              <div className="text-sm text-slate-500">{parse(content)}</div>
             </div>
-          </>
+          </div>
         )}
 
-        {transferTextToValue(content) === 12 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content_per-avatar">
-                <AvatarCustom
-                  size="small"
-                  src={user.avatar}
-                  name={user.name}
-                  color={user.avatarColor}
-                />
-              </div>
-              <div className="notify-message-content-title">
-                <span className="user-name-strong">{`${isMyActive} `}</span>
-                đã xóa Channel &nbsp;
-                <NumberOutlined />
-              </div>
+        {typeVal === 11 && (
+          <div className="flex items-center gap-3">
+            <AvatarCustom
+              size="small"
+              src={user?.avatar}
+              name={user?.name}
+              color={user?.avatarColor}
+            />
+            <div>
+              <div className="font-medium">{isMyActive}</div>
+              <div className="text-sm text-slate-500">đã đổi tên channel</div>
             </div>
-          </>
+          </div>
         )}
 
-        {transferTextToValue(content) === 13 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content_per-avatar">
-                <AvatarCustom
-                  size="small"
-                  src={user.avatar}
-                  name={user.name}
-                  color={user.avatarColor}
-                />
-              </div>
-              <div className="notify-message-content-title">
-                <span className="user-name-strong">{`${isMyActive} `}</span>
-                đã tạo Channel &nbsp;
-                <NumberOutlined />
-              </div>
+        {typeVal === 12 && (
+          <div className="flex items-center gap-3">
+            <AvatarCustom
+              size="small"
+              src={user?.avatar}
+              name={user?.name}
+              color={user?.avatarColor}
+            />
+            <div>
+              <div className="font-medium">{isMyActive}</div>
+              <div className="text-sm text-slate-500">đã xóa Channel</div>
             </div>
-          </>
+          </div>
         )}
 
-        {transferTextToValue(content) === 14 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content_per-avatar">
-                <AvatarCustom
-                  size="small"
-                  src={user.avatar}
-                  name={user.name}
-                  color={user.avatarColor}
-                />
-              </div>
-              <div className="notify-message-content-title">
-                <EditTwoTone />
-                &nbsp;
-                <span className="user-name-strong">{`${isMyActive} `}</span>
-                đã thay đổi ảnh đại diện nhóm
-              </div>
+        {typeVal === 13 && (
+          <div className="flex items-center gap-3">
+            <AvatarCustom
+              size="small"
+              src={user?.avatar}
+              name={user?.name}
+              color={user?.avatarColor}
+            />
+            <div>
+              <div className="font-medium">{isMyActive}</div>
+              <div className="text-sm text-slate-500">đã tạo Channel</div>
             </div>
-          </>
+          </div>
         )}
 
-        {transferTextToValue(content) === 15 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content_per-avatar">
-                <AvatarCustom
-                  size="small"
-                  src={user.avatar}
-                  name={user.name}
-                  color={user.avatarColor}
-                />
-              </div>
-              <div className="notify-message-content-title">
-                <KeyOutlined />
-                &nbsp;
-                <span className="user-name-strong">{`${isMyActive} `}</span>
-                đã thêm {renderUser} làm phó nhóm
-              </div>
+        {typeVal === 14 && (
+          <div className="flex items-center gap-3">
+            <AvatarCustom
+              size="small"
+              src={user?.avatar}
+              name={user?.name}
+              color={user?.avatarColor}
+            />
+            <div>
+              <Edit className="w-4 h-4 text-slate-600" />
+              <span className="font-medium">{isMyActive}</span>&nbsp;đã thay đổi
+              ảnh đại diện nhóm
             </div>
-          </>
+          </div>
         )}
 
-        {transferTextToValue(content) === 16 && (
-          <>
-            <div className="notify-message-content_group-avatar">
-              <div className="notify-message-content_per-avatar">
-                <AvatarCustom
-                  size="small"
-                  src={user.avatar}
-                  name={user.name}
-                  color={user.avatarColor}
-                />
-              </div>
-              <div className="notify-message-content-title">
-                <KeyOutlined />
-                &nbsp;
-                <span className="user-name-strong">{`${isMyActive} `}</span>
-                đã xóa phó nhóm của {renderUser}
-              </div>
+        {typeVal === 15 && (
+          <div className="flex items-center gap-3">
+            <AvatarCustom
+              size="small"
+              src={user?.avatar}
+              name={user?.name}
+              color={user?.avatarColor}
+            />
+            <div>
+              <Key className="w-4 h-4 text-slate-600" />
+              <span className="font-medium">{isMyActive}</span>&nbsp;đã thêm{' '}
+              {renderUser()} làm phó nhóm
             </div>
-          </>
+          </div>
+        )}
+
+        {typeVal === 16 && (
+          <div className="flex items-center gap-3">
+            <AvatarCustom
+              size="small"
+              src={user?.avatar}
+              name={user?.name}
+              color={user?.avatarColor}
+            />
+            <div>
+              <Key className="w-4 h-4 text-slate-600" />
+              <span className="font-medium">{isMyActive}</span>&nbsp;đã xóa phó
+              nhóm của {renderUser()}
+            </div>
+          </div>
         )}
       </div>
     </div>
   );
 }
-
-export default NotifyMessage;

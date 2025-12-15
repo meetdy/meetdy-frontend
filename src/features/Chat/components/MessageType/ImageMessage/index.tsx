@@ -1,41 +1,40 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Image } from 'antd';
 import MESSAGE_STYLE from '@/constants/MessageStyle/messageStyle';
-import OverlayImage from '@/components/OverlayImage';
 
-function ImageMessage({
+type Props = {
+  content: string;
+  children?: React.ReactNode;
+  dateAt: Date;
+  isSeen?: boolean;
+};
+
+export default function ImageMessage({
   content = '',
   children,
-  dateAt = null,
+  dateAt,
   isSeen = false,
-}) {
+}: Props) {
   return (
     <>
       <div className="messsage-image-wrapper">
-        <div className="message-image--main">
-          <Image
+        <div className="message-image--main rounded-md overflow-hidden">
+          <img
             src={content}
+            alt="image"
             style={MESSAGE_STYLE.imageStyle}
-            preview={{ mask: <OverlayImage /> }}
+            className="w-full h-auto object-contain"
           />
         </div>
 
         {children}
       </div>
 
-      <div className="time-and-last_view">
-        <div className="time-send">
-          <span>
-            {`0${dateAt.getHours()}`.slice(-2)}:
-            {`0${dateAt.getMinutes()}`.slice(-2)}
-          </span>
-        </div>
-
-        {isSeen && <div className="is-seen-message">Đã xem</div>}
+      <div className="mt-2 flex items-center text-xs text-slate-500 gap-2">
+        <div>{`${String(dateAt.getHours()).padStart(2, '0')}:${String(
+          dateAt.getMinutes(),
+        ).padStart(2, '0')}`}</div>
+        {isSeen && <div className="text-green-600">Đã xem</div>}
       </div>
     </>
   );
 }
-
-export default ImageMessage;

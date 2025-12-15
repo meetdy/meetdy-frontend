@@ -1,81 +1,102 @@
+import React, { useEffect, useRef, useState } from 'react';
 import { EditOutlined } from '@ant-design/icons';
 import { Modal, Input, message } from 'antd';
-import PropTypes from 'prop-types';
-import { useState, useEffect, useRef } from 'react';
-import ConversationAvatar from '../ConversationAvatar';
 import { useDispatch, useSelector } from 'react-redux';
 
+import ConversationAvatar from '../ConversationAvatar';
+import UploadAvatar from '@/components/UploadAvatar';
 import conversationApi from '@/api/conversationApi';
 import { updateNameOfConver } from '@/features/Chat/slice/chatSlice';
-import UploadAvatar from '@/components/UploadAvatar';
 
-InfoNameAndThumbnail.propTypes = {
-  conversation: PropTypes.object,
+import type { RootState, AppDispatch } from '@/store';
+
+type Props = {
+  conversation?: {
+    _id?: string;
+    name?: string;
+    avatar?: string | File;
+    type?: string;
+    totalMembers?: number;
+    avatarColor?: string;
+  };
 };
 
-InfoNameAndThumbnail.defaultProps = {
-  conversation: {},
-};
+export default function InfoNameAndThumbnail({ conversation = {} }: Props) {
+  const dispatch = useDispatch<AppDispatch>();
+  const { currentConversation } = useSelector((state: RootState) => state.chat);
 
-function InfoNameAndThumbnail({ conversation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [value, setValue] = useState('');
-  const { currentConversation } = useSelector((state) => state.chat);
-
-  const dispatch = useDispatch();
-  const refInitValue = useRef();
-  const [file, setFile] = useState(null);
+  const [value, setValue] = useState<string>('');
+  const refInitValue = useRef<string>('');
+  const [file, setFile] = useState<File | null>(null);
   const [isClear, setIsClear] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   useEffect(() => {
-    if (conversation.type) {
-      setValue(conversation.name);
-      refInitValue.current = conversation.name;
+    if (conversation?.type) {
+      setValue(conversation?.name ?? '');
+      refInitValue.current = conversation?.name ?? '';
+    } else {
+      setValue(conversation?.name ?? '');
+      refInitValue.current = conversation?.name ?? '';
     }
 
     if (isModalVisible) {
       setIsClear(false);
     }
-  }, [currentConversation, isModalVisible]);
+    // reset file when conversation changes
+    setFile(null);
+  }, [conversation, isModalVisible]);
 
-  function handleOnClick() {
+  const handleOnClick = () => {
     setIsModalVisible(true);
-  }
-  function handleCancel() {
+  };
+
+  const handleCancel = () => {
     setIsModalVisible(false);
     setFile(null);
     setIsClear(true);
-  }
+  };
 
-  async function handleOk() {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleGetfile = (f: File | null) => {
+    setFile(f);
+  };
+
+  const handleOk = async () => {
     setConfirmLoading(true);
     try {
-      if (refInitValue.current !== value) {
+      // change name if changed
+      if (refInitValue.current !== value && value.trim().length > 0) {
         await conversationApi.changeNameConversation(
           currentConversation,
           value,
         );
+        dispatch(
+          updateNameOfConver({
+            conversationId: currentConversation,
+            conversationName: value,
+          }),
+        );
       }
 
+      // change avatar if present
       if (file) {
         const frmData = new FormData();
         frmData.append('file', file);
-        await conversationApi.changAvatarGroup(currentConversation, frmData);
+        await conversationApi.changeAvatarGroup(currentConversation, frmData);
       }
 
       message.success('Cập nhật thông tin thành công');
-    } catch (error) {}
-    setConfirmLoading(false);
-    setIsModalVisible(false);
-  }
-
-  const handleInputChange = (e) => {
-    setValue(e.target.value);
-  };
-
-  const handleGetfile = (file) => {
-    setFile(file);
+    } catch (error) {
+      // silent fail as before
+    } finally {
+      setConfirmLoading(false);
+      setIsModalVisible(false);
+    }
   };
 
   return (
@@ -91,7 +112,7 @@ function InfoNameAndThumbnail({ conversation }) {
         confirmLoading={confirmLoading}
         okButtonProps={{
           disabled:
-            (refInitValue.current === value && !file) ||
+            (refInitValue?.current === value && !file) ||
             value.trim().length === 0,
         }}
       >
@@ -99,8 +120,8 @@ function InfoNameAndThumbnail({ conversation }) {
           <div className="update-profile_upload">
             <UploadAvatar
               avatar={
-                typeof conversation.avatar === 'string'
-                  ? conversation.avatar
+                typeof conversation?.avatar === 'string'
+                  ? conversation?.avatar
                   : ''
               }
               getFile={handleGetfile}
@@ -117,23 +138,24 @@ function InfoNameAndThumbnail({ conversation }) {
           </div>
         </div>
       </Modal>
+
       <div className="info-thumbnail">
         <ConversationAvatar
           isGroupCard={true}
-          totalMembers={conversation.totalMembers}
-          type={conversation.type}
-          avatar={conversation.avatar}
-          name={conversation.name}
+          totalMembers={conversation?.totalMembers}
+          type={conversation?.type}
+          avatar={conversation?.avatar}
+          name={conversation?.name}
           avatarColor={conversation?.avatarColor}
         />
       </div>
 
       <div className="info-name-and-button">
         <div className="info-name">
-          <span>{conversation.name}</span>
+          <span>{conversation?.name}</span>
         </div>
 
-        {conversation.type && (
+        {conversation?.type && (
           <div className="info-button">
             <EditOutlined onClick={handleOnClick} />
           </div>
@@ -142,5 +164,3 @@ function InfoNameAndThumbnail({ conversation }) {
     </div>
   );
 }
-
-export default InfoNameAndThumbnail;

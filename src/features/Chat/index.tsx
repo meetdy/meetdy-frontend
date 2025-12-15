@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useResolvedPath, useLocation } from 'react-router-dom';
 import { ChevronsLeft, ChevronDown } from 'lucide-react';
@@ -63,6 +63,7 @@ function ensureToastContainer() {
 
 function showToast(message: string, variant: 'info' | 'warning' = 'info') {
   if ('Notification' in window && Notification.permission === 'granted') {
+    // eslint-disable-next-line no-new
     new Notification(message);
     return;
   }
@@ -182,7 +183,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
           dispatch(getLastViewOfMembers({ conversationId: tempId }));
         }
 
-        navigate({
+        navigate('/chat', {
           state: {
             conversationId: null,
           },
@@ -399,11 +400,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
           userId,
           ({ isOnline, lastLogin }: any) => {
             dispatch(
-              updateTimeForConver({
-                id: currentConver,
-                isOnline,
-                lastLogin,
-              }),
+              updateTimeForConver({ id: currentConver, isOnline, lastLogin }),
             );
           },
         );
@@ -465,6 +462,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
   const handleOnBack = () => {
     setVisibleNews(false);
   };
+
   const handleViewNews = () => {
     setVisibleNews(true);
     setTabActiveNews(0);
@@ -560,12 +558,12 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
               r="10"
               stroke="currentColor"
               strokeWidth="4"
-            ></circle>
+            />
             <path
               className="opacity-75"
               fill="currentColor"
               d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-            ></path>
+            />
           </svg>
         </div>
       )}
@@ -578,31 +576,24 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         />
       )}
 
-      <div className="min-h-screen">
-        <div className="flex w-full">
-          <div
-            className={`${
-              currentConversation ? 'hidden sm:block' : 'block'
-            } sm:flex-shrink-0 bg-transparent`}
-            style={{
-              width: currentConversation ? (width >= 1200 ? 240 : 0) : '100%',
-            }}
-          >
-            <div className="main-conversation">
-              <div
-                className={`main-conversation_search-bar ${
-                  visibleFilter ? 'fillter ' : ''
-                }`}
-              >
-                <SearchContainer
-                  valueText={valueInput}
-                  onSearchChange={handleOnSearchChange}
-                  onSubmitSearch={handleOnSubmitSearch}
-                  onFilterClasify={handleOnFilterClassfiy}
-                  valueClassify={valueClassify}
-                />
-              </div>
+      <div className="min-h-screen h-screen flex">
+        <aside
+          className={`transition-all bg-transparent ${
+            currentConversation ? 'hidden sm:block' : 'block'
+          } sm:w-60 lg:w-64`}
+        >
+          <div className="h-full flex flex-col">
+            <div className={`p-4 ${visibleFilter ? 'pb-2' : 'pb-4'}`}>
+              <SearchContainer
+                valueText={valueInput}
+                onSearchChange={handleOnSearchChange}
+                onSubmitSearch={handleOnSubmitSearch}
+                onFilterClasify={handleOnFilterClassfiy}
+                valueClassify={valueClassify}
+              />
+            </div>
 
+            <div className="flex-1 overflow-auto">
               {visibleFilter ? (
                 <FilterContainer
                   dataSingle={singleConverFilter}
@@ -610,178 +601,165 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
                   valueText={valueInput}
                 />
               ) : (
-                <>
-                  <div className="divider-layout">
-                    <div />
-                  </div>
-
-                  <div>
-                    <ConversationContainer valueClassify={valueClassify} />
-                  </div>
-                </>
+                <div className="px-2">
+                  <div className="border-b my-2" />
+                  <ConversationContainer valueClassify={valueClassify} />
+                </div>
               )}
             </div>
           </div>
+        </aside>
 
-          {path === '/chat' && currentConversation ? (
-            <>
-              <div
-                className={`flex-1 ${
-                  isOpenInfo ? 'xl:max-w-[55%]' : 'xl:max-w-[80%]'
-                } w-full`}
-              >
-                <div className="main_chat">
-                  <div className="main_chat-header">
-                    <HeaderChatContainer
-                      onPopUpInfo={() => setIsOpenInfo(!isOpenInfo)}
-                      onOpenDrawer={() => setOpenDrawerInfo(true)}
-                    />
-                  </div>
+        {path === '/chat' && currentConversation ? (
+          <main className="flex-1 flex flex-col">
+            <header className="border-b bg-white">
+              <HeaderChatContainer
+                onPopUpInfo={() => setIsOpenInfo(!isOpenInfo)}
+                onOpenDrawer={() => setOpenDrawerInfo(true)}
+              />
+            </header>
 
-                  <div className="main_chat-body">
-                    <div id="main_chat-body--view">
-                      <BodyChatContainer
-                        scrollId={scrollId}
-                        onSCrollDown={idNewMessage}
-                        onBackToBottom={handleBackToBottom}
-                        onResetScrollButton={hanldeResetScrollButton}
-                        turnOnScrollButoon={isScroll}
-                        onReply={handleOnReply}
-                        onMention={handleOnMention}
-                      />
-
-                      {pinMessages.length > 1 &&
-                        (currentConverObj as any).type &&
-                        !currentChannel && (
-                          <div className="pin-message">
-                            <DrawerPinMessage
-                              isOpen={isOpenDrawer}
-                              onClose={() => setIsOpenDrawer(false)}
-                              message={pinMessages}
-                            />
-                          </div>
-                        )}
-
-                      {pinMessages.length > 0 &&
-                        (currentConverObj as any).type &&
-                        !currentChannel && (
-                          <div className="nutshell-pin-message">
-                            <NutshellPinMessage
-                              isHover={false}
-                              isItem={pinMessages.length > 1 ? false : true}
-                              message={pinMessages[0]}
-                              quantity={pinMessages.length}
-                              onOpenDrawer={() => setIsOpenDrawer(true)}
-                              onViewNews={handleViewNews}
-                            />
-                          </div>
-                        )}
-
-                      <div
-                        id="back-top-button"
-                        className={`${isShow ? 'show' : 'hide'} ${
-                          hasMessage ? 'new-message' : ''
-                        }`}
-                        onClick={handleOnClickScroll}
-                      >
-                        {hasMessage ? (
-                          <div className="db-arrow-new-message flex items-center gap-2">
-                            <span className="arrow">
-                              <ChevronsLeft className="w-4 h-4" />
-                            </span>
-                            <span>{hasMessage}</span>
-                          </div>
-                        ) : (
-                          <ChevronDown className="w-5 h-5" />
-                        )}
-                      </div>
-
-                      {usersTyping.length > 0 && !refCurrentChannel.current && (
-                        <div className="typing-message">
-                          {usersTyping.map((ele, index) => (
-                            <span key={ele._id || index}>
-                              {index < 3 && (
-                                <>
-                                  {index === usersTyping.length - 1
-                                    ? `${ele.name} `
-                                    : `${ele.name}, `}
-                                </>
-                              )}
-                            </span>
-                          ))}
-
-                          {usersTyping.length > 3
-                            ? `và ${usersTyping.length - 3} người khác`
-                            : ''}
-
-                          <span>&nbsp;đang nhập</span>
-
-                          <div className="dynamic-dot">
-                            <div className="dot" />
-                            <div className="dot" />
-                            <div className="dot" />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="main_chat-body--input">
-                      <FooterChatContainer
-                        onScrollWhenSentText={handleScrollWhenSent}
-                        socket={socket}
-                        replyMessage={replyMessage}
-                        onCloseReply={handleCloseReply}
-                        userMention={userMention}
-                        onRemoveMention={handleOnRemoveMention}
-                        onViewVotes={handleViewVotes}
-                        onOpenInfoBlock={() => setIsOpenInfo(true)}
-                      />
-                    </div>
-                  </div>
-                </div>
+            <section className="flex-1 flex flex-col overflow-hidden relative">
+              <div className="flex-1 overflow-hidden">
+                <BodyChatContainer
+                  scrollId={scrollId}
+                  onSCrollDown={idNewMessage}
+                  onBackToBottom={handleBackToBottom}
+                  onResetScrollButton={hanldeResetScrollButton}
+                  turnOnScrollButton={isScroll}
+                  onReply={handleOnReply}
+                  onMention={handleOnMention}
+                />
               </div>
 
-              <div
-                className={`${
-                  isOpenInfo ? 'block' : 'hidden'
-                } hidden lg:block lg:flex-shrink-0`}
-                style={{ width: isOpenInfo ? 320 : 0 }}
-              >
-                <div className="main-info">
-                  {openDrawerInfo && (
-                    <div
-                      className="fixed top-0 right-0 h-full bg-white shadow-lg z-50 transition-transform"
-                      style={{
-                        width: `${renderWidthDrawer(width)}%`,
-                        transform: openDrawerInfo
-                          ? 'translateX(0)'
-                          : 'translateX(100%)',
-                      }}
-                    >
-                      <div className="h-full overflow-auto">
-                        {visibleNews ? (
-                          <GroupNews
-                            tabActive={tabActiveInNews}
-                            onBack={handleOnBack}
-                            onChange={handleChangeActiveKey}
-                          />
-                        ) : (
-                          <InfoContainer
-                            onViewChannel={handleChangeViewChannel}
-                            socket={socket}
-                            onOpenInfoBlock={() => setIsOpenInfo(true)}
-                          />
-                        )}
-                      </div>
-                      <button
-                        onClick={() => setOpenDrawerInfo(false)}
-                        className="absolute top-3 left-3 p-2 rounded-md hover:bg-slate-100"
-                      >
-                        Close
-                      </button>
-                    </div>
-                  )}
+              {pinMessages.length > 1 &&
+                (currentConverObj as any).type &&
+                !currentChannel && (
+                  <div className="absolute right-4 bottom-24 hidden lg:block">
+                    <DrawerPinMessage
+                      isOpen={isOpenDrawer}
+                      onClose={() => setIsOpenDrawer(false)}
+                      message={pinMessages}
+                    />
+                  </div>
+                )}
 
+              {pinMessages.length > 0 &&
+                (currentConverObj as any).type &&
+                !currentChannel && (
+                  <div className="absolute left-4 bottom-24 hidden lg:block">
+                    <NutshellPinMessage
+                      isHover={false}
+                      isItem={pinMessages.length > 1 ? false : true}
+                      message={pinMessages[0]}
+                      quantity={pinMessages.length}
+                      onOpenDrawer={() => setIsOpenDrawer(true)}
+                      onViewNews={handleViewNews}
+                    />
+                  </div>
+                )}
+
+              <div
+                id="back-top-button"
+                className={`fixed right-6 bottom-24 z-40 flex items-center justify-center rounded-full bg-white shadow-md p-2 transition-opacity ${
+                  isShow ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`}
+                onClick={handleOnClickScroll}
+                role="button"
+                aria-label="Scroll to new message"
+              >
+                {hasMessage ? (
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-slate-600">
+                      <ChevronsLeft className="w-4 h-4" />
+                    </span>
+                    <span className="whitespace-nowrap">{hasMessage}</span>
+                  </div>
+                ) : (
+                  <ChevronDown className="w-5 h-5 text-slate-600" />
+                )}
+              </div>
+
+              {usersTyping.length > 0 && !refCurrentChannel.current && (
+                <div className="absolute left-4 bottom-32 z-30 rounded-md bg-white/80 px-3 py-1 text-sm text-slate-700 shadow-sm flex items-center gap-2">
+                  <div>
+                    {usersTyping.slice(0, 3).map((ele, index) => (
+                      <span
+                        key={ele._id || index}
+                        className={index > 0 ? 'ml-1' : ''}
+                      >
+                        {index === usersTyping.length - 1
+                          ? `${ele.name}`
+                          : `${ele.name},`}
+                      </span>
+                    ))}
+                    {usersTyping.length > 3
+                      ? ` và ${usersTyping.length - 3} người khác`
+                      : ''}
+                    <span>&nbsp;đang nhập</span>
+                  </div>
+                  <div className="flex items-center gap-1 ml-2">
+                    <span className="w-1 h-1 bg-slate-500 rounded-full animate-bounce" />
+                    <span
+                      className="w-1 h-1 bg-slate-500 rounded-full animate-bounce"
+                      style={{ animationDelay: '100ms' }}
+                    />
+                    <span
+                      className="w-1 h-1 bg-slate-500 rounded-full animate-bounce"
+                      style={{ animationDelay: '200ms' }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <footer className="border-t bg-white">
+                <FooterChatContainer
+                  onScrollWhenSentText={handleScrollWhenSent}
+                  socket={socket}
+                  replyMessage={replyMessage}
+                  onCloseReply={handleCloseReply}
+                  userMention={userMention}
+                  onRemoveMention={handleOnRemoveMention}
+                  onViewVotes={handleViewVotes}
+                  onOpenInfoBlock={() => setIsOpenInfo(true)}
+                />
+              </footer>
+            </section>
+          </main>
+        ) : (
+          <main className="flex-1 flex items-center justify-center">
+            <div className="p-8 max-w-2xl text-center">
+              <h2 className="text-2xl font-semibold mb-2">
+                Chào mừng đến với <span className="font-bold">Meetdy.com</span>
+              </h2>
+              <p className="text-sm text-slate-600">
+                Khám phá những tiện ích hỗ trợ làm việc và trò chuyện cùng người
+                thân, bạn bè được tối ưu hoá cho máy tính của bạn.
+              </p>
+              <div className="mt-6">
+                <Slider />
+              </div>
+            </div>
+          </main>
+        )}
+
+        <aside
+          className={`${
+            isOpenInfo ? 'block' : 'hidden'
+          } hidden lg:block lg:w-80 border-l bg-white`}
+        >
+          <div className="h-full overflow-auto relative">
+            {openDrawerInfo && width <= 1199 && (
+              <div
+                className="fixed top-0 right-0 h-full bg-white shadow-lg z-50 transition-transform"
+                style={{
+                  width: `${renderWidthDrawer(width)}%`,
+                  transform: openDrawerInfo
+                    ? 'translateX(0)'
+                    : 'translateX(100%)',
+                }}
+              >
+                <div className="h-full overflow-auto">
                   {visibleNews ? (
                     <GroupNews
                       tabActive={tabActiveInNews}
@@ -796,33 +774,32 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
                     />
                   )}
                 </div>
+                <button
+                  onClick={() => setOpenDrawerInfo(false)}
+                  className="absolute top-3 left-3 p-2 rounded-md hover:bg-slate-100"
+                >
+                  Close
+                </button>
               </div>
-            </>
-          ) : (
-            <div className="flex-1">
-              <div className="landing-app p-8">
-                <div className="title-welcome text-center">
-                  <div className="title-welcome-heading text-2xl font-semibold mb-2">
-                    <span>
-                      Chào mừng đến với <b>Meetdy.com</b>
-                    </span>
-                  </div>
+            )}
 
-                  <div className="title-welcome-detail text-slate-600">
-                    <span>
-                      Khám phá những tiện ích hỗ trợ làm việc và trò chuyện cùng
-                      người thân, bạn bè được tối ưu hoá cho máy tính của bạn.
-                    </span>
-                  </div>
-                </div>
-
-                <div className="carousel-slider mt-6">
-                  <Slider />
-                </div>
-              </div>
+            <div className="p-4">
+              {visibleNews ? (
+                <GroupNews
+                  tabActive={tabActiveInNews}
+                  onBack={handleOnBack}
+                  onChange={handleChangeActiveKey}
+                />
+              ) : (
+                <InfoContainer
+                  onViewChannel={handleChangeViewChannel}
+                  socket={socket}
+                  onOpenInfoBlock={() => setIsOpenInfo(true)}
+                />
+              )}
             </div>
-          )}
-        </div>
+          </div>
+        </aside>
       </div>
     </>
   );

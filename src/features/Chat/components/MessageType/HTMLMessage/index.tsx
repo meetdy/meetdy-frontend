@@ -1,34 +1,30 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
-HTMLMessage.propTypes = {
-  content: PropTypes.string.isRequired,
-  isSeen: PropTypes.bool,
+
+type Props = {
+  content: string;
+  children?: React.ReactNode;
+  isSeen?: boolean;
+  dateAt?: Date;
 };
 
-HTMLMessage.defaultProps = {
-  content: PropTypes.string.isRequired,
-  isSeen: false,
-};
-
-function HTMLMessage({ content, children, isSeen, dateAt }) {
+export default function HTMLMessage({
+  content,
+  children,
+  isSeen = false,
+  dateAt = new Date(),
+}: Props) {
   return (
     <div>
-      {parse(content)}
+      <div className="prose max-w-full">{parse(content)}</div>
 
-      <div className="time-and-last_view">
-        <div className="time-send">
-          <span>
-            {`0${dateAt.getHours()}`.slice(-2)}:
-            {`0${dateAt.getMinutes()}`.slice(-2)}
-          </span>
-        </div>
-
-        {isSeen && <div className="is-seen-message">Đã xem</div>}
+      <div className="mt-2 flex items-center text-xs text-slate-500 gap-2">
+        <div>{`${String(dateAt.getHours()).padStart(2, '0')}:${String(
+          dateAt.getMinutes(),
+        ).padStart(2, '0')}`}</div>
+        {isSeen && <div className="text-green-600">Đã xem</div>}
       </div>
       {children}
     </div>
   );
 }
-
-export default HTMLMessage;

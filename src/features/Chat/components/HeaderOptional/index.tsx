@@ -27,7 +27,7 @@ type Props = {
   avatar?: string | null;
   totalMembers?: number;
   name?: string;
-  typeConver?: boolean;
+  type?: boolean;
   isLogin?: boolean;
   lastLogin?: string | null;
   avatarColor?: string;
@@ -40,7 +40,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
     avatar = null,
     totalMembers = 0,
     name = '',
-    typeConver = false,
+    type = false,
     isLogin = false,
     lastLogin = null,
     avatarColor = '',
@@ -74,7 +74,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
 
   const handleAddMemberToGroup = () => {
     setIsvisible(true);
-    if (typeConver) {
+    if (type) {
       setTypeModal(2);
     } else {
       setTypeModal(1);
@@ -93,7 +93,10 @@ const HeaderOptional: React.FC<Props> = (props) => {
       setConfirmLoading(false);
     } else {
       setConfirmLoading(true);
-      await conversationApi.addMembersToConver(userIds, currentConversation);
+      await conversationApi.addMembersToConversation(
+        userIds,
+        currentConversation,
+      );
       setConfirmLoading(false);
     }
 
@@ -150,7 +153,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
             <ConversationAvatar
               avatar={avatar}
               totalMembers={totalMembers}
-              type={typeConver}
+              type={type}
               name={name}
               isActived={isLogin}
               avatarColor={avatarColor}
@@ -169,7 +172,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
               </div>
             ) : (
               <div className="text-sm text-gray-500 mt-1">
-                {typeConver ? (
+                {type ? (
                   <div className="flex items-center gap-2">
                     <UserIcon className="w-4 h-4 text-gray-400" />
                     <span>

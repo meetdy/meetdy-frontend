@@ -1,62 +1,63 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { DownloadOutlined } from '@ant-design/icons';
+import { Download } from 'lucide-react';
 import fileHelpers from '@/utils/fileHelpers';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 
-FileMessage.propTypes = {
-  content: PropTypes.string.isRequired,
-  dateAt: PropTypes.object.isRequired,
-  isSeen: PropTypes.bool,
+type Props = {
+  content: string;
+  children?: React.ReactNode;
+  dateAt: Date;
+  isSeen?: boolean;
 };
 
-FileMessage.defaultProps = {
-  isSeen: false,
-};
-
-function FileMessage({ content, children, dateAt, isSeen }) {
+export default function FileMessage({
+  content,
+  children,
+  dateAt,
+  isSeen = false,
+}: Props) {
   const handleOnClickDownLoad = () => {
     window.open(content, '_blank');
   };
-
-  const handleOnClickShare = () => {};
 
   const fileName = fileHelpers.getFileName(content);
   const fileExtension = fileHelpers.getFileExtension(fileName);
 
   return (
     <>
-      <div className="file_info-wrapper message">
-        <div className="file_info">
-          <div className="file_info-icon">
+      <div className="file_info-wrapper flex items-center justify-between gap-3 p-3 rounded-md bg-slate-50">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 flex items-center justify-center bg-white rounded-md shadow-sm">
             <FileIcon
               extension={fileExtension}
-              {...defaultStyles[fileExtension]}
+              {...(defaultStyles as any)[fileExtension]}
             />
           </div>
 
-          <div className="file_info-name">{fileName}</div>
+          <div className="min-w-0">
+            <div className="text-sm font-medium truncate">{fileName}</div>
+            <div className="text-xs text-slate-500">
+              {fileExtension.toUpperCase()}
+            </div>
+          </div>
         </div>
 
-        <div className="icon-download" onClick={handleOnClickDownLoad}>
-          <DownloadOutlined />
-        </div>
+        <button
+          onClick={handleOnClickDownLoad}
+          className="p-2 rounded-md hover:bg-slate-100"
+        >
+          <Download className="w-5 h-5 text-slate-700" />
+        </button>
       </div>
 
-      <div className="time-and-last_view">
-        <div className="time-send">
-          <span>
-            {`0${dateAt.getHours()}`.slice(-2)}:
-            {`0${dateAt.getMinutes()}`.slice(-2)}
-          </span>
-        </div>
-
-        {isSeen && <div className="is-seen-message">Đã xem</div>}
+      <div className="mt-2 flex items-center text-xs text-slate-500 gap-2">
+        <div>{`${String(dateAt.getHours()).padStart(2, '0')}:${String(
+          dateAt.getMinutes(),
+        ).padStart(2, '0')}`}</div>
+        {isSeen && <div className="text-green-600">Đã xem</div>}
       </div>
 
       {children}
     </>
   );
 }
-
-export default FileMessage;

@@ -1,20 +1,34 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import HeaderOptional from '@/features/Chat/components/HeaderOptional';
+import type { RootState } from '@/store';
 
-function HeaderChatContainer({ onPopUpInfo, onOpenDrawer }) {
-  const [detailConver, setDetailConver] = useState({});
-  const { currentConversation, conversations, memberInConversation } =
-    useSelector((state) => state.chat);
+type Props = {
+  onPopUpInfo?: () => void;
+  onOpenDrawer?: () => void;
+};
+
+export default function HeaderChatContainer({
+  onPopUpInfo,
+  onOpenDrawer,
+}: Props) {
+  const [detailConver, setDetailConver] = useState<any>({});
+  const {
+    currentConversation,
+    conversations,
+    memberInConversation = [],
+  } = useSelector((state: RootState) => state.chat);
 
   useEffect(() => {
     if (currentConversation) {
       const tempConver = conversations.find(
-        (conver) => conver._id === currentConversation,
+        (conver: any) => conver._id === currentConversation,
       );
       if (tempConver) {
         setDetailConver(tempConver);
       }
+    } else {
+      setDetailConver({});
     }
   }, [currentConversation, conversations]);
 
@@ -22,7 +36,7 @@ function HeaderChatContainer({ onPopUpInfo, onOpenDrawer }) {
     <div id="header-main">
       <HeaderOptional
         avatar={detailConver.avatar}
-        totalMembers={memberInConversation.length}
+        totalMembers={memberInConversation?.length ?? 0}
         name={detailConver.name}
         typeConver={detailConver.type}
         isLogin={detailConver?.isOnline}
@@ -34,5 +48,3 @@ function HeaderChatContainer({ onPopUpInfo, onOpenDrawer }) {
     </div>
   );
 }
-
-export default HeaderChatContainer;
