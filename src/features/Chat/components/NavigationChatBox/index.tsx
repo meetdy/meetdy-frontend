@@ -3,10 +3,11 @@ import { useSelector } from 'react-redux';
 import {
   Smile,
   Image,
-  Link as LinkIcon,
+  Paperclip,
   Type,
   BarChart2,
   Newspaper,
+  AtSign,
 } from 'lucide-react';
 import type { RootState } from '@/store';
 import UploadFile from '@/customfield/upLoadFile';
@@ -24,6 +25,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 
 type Props = {
   onClickTextFormat?: () => void;
@@ -45,11 +52,13 @@ export default function NavigationChatBox({
     (state: RootState) => state.chat,
   );
   const [isVisibleVote, setIsVisibleVote] = useState(false);
+  const [isTextFormatActive, setIsTextFormatActive] = useState(false);
 
   const conver = conversations.find((c) => c._id === currentConversation);
   const checkIsGroup = Boolean(conver && conver.type);
 
   const handleOnClickTextFormat = () => {
+    setIsTextFormatActive(!isTextFormatActive);
     if (onClickTextFormat) onClickTextFormat();
   };
 
@@ -63,95 +72,135 @@ export default function NavigationChatBox({
   };
 
   return (
-    <div
-      id="navigation-chat-box"
-      className={`p-1 rounded-md ${isFocus ? 'border border-blue-500' : ''}`}
-    >
-      <ul className="flex items-center gap-2">
-        <li>
-          <Popover open={visiblePop} onOpenChange={setVisiblePop}>
-            <PopoverTrigger asChild>
-              <Button variant="ghost" className="p-2 rounded-full text-lg">
-                <Smile className="w-5 h-5" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="start" className="p-2 w-[260px]">
-              <Sticker
-                onClose={() => setVisiblePop(false)}
-                data={stickers}
-                onScroll={onScroll}
-              />
-            </PopoverContent>
-          </Popover>
-        </li>
+    <div id="navigation-chat-box">
+      <div className="flex items-center gap-0.5">
+        <Popover open={visiblePop} onOpenChange={setVisiblePop}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <PopoverTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="h-8 w-8 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+                >
+                  <Smile className="w-5 h-5" />
+                </Button>
+              </PopoverTrigger>
+            </TooltipTrigger>
+            <TooltipContent side="top">Sticker & Emoji</TooltipContent>
+          </Tooltip>
+          <PopoverContent align="start" className="p-2 w-[280px] rounded-xl">
+            <Sticker
+              onClose={() => setVisiblePop(false)}
+              data={stickers}
+              onScroll={onScroll}
+            />
+          </PopoverContent>
+        </Popover>
 
-        <li>
-          <UploadFile typeOfFile="media">
-            <Button
-              variant="ghost"
-              className="p-2 rounded-full text-lg"
-              title="Gửi hình ảnh"
-            >
-              <Image className="w-5 h-5" />
-            </Button>
-          </UploadFile>
-        </li>
-
-        <li>
-          <UploadFile typeOfFile="File">
-            <Button
-              variant="ghost"
-              className="p-2 rounded-full text-lg"
-              title="Gửi file"
-            >
-              <LinkIcon className="w-5 h-5" />
-            </Button>
-          </UploadFile>
-        </li>
-
-        <li>
-          <button
-            type="button"
-            title="Định dạng tin nhắn"
-            onClick={handleOnClickTextFormat}
-            className="p-2 rounded-full hover:bg-slate-100 transition"
-          >
-            <Type className="w-5 h-5 text-slate-700" />
-          </button>
-        </li>
-
-        {checkIsGroup && (
-          <li>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span>
+              <UploadFile typeOfFile="media">
                 <Button
                   variant="ghost"
-                  className="p-2 rounded-full text-lg"
-                  title="Vote"
+                  size="icon"
+                  className="h-8 w-8 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100"
                 >
-                  <BarChart2 className="w-5 h-5" />
+                  <Image className="w-5 h-5" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" side="top" className="w-56">
-                <DropdownMenuItem onSelect={() => handleOnClickMenu('VOTE')}>
-                  <div className="flex items-center gap-2">
-                    <BarChart2 className="w-4 h-4" />
-                    <span>Tạo cuộc bình chọn</span>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={() => handleOnClickMenu('VIEW_NEWS')}
+              </UploadFile>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top">Gửi hình ảnh</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span>
+              <UploadFile typeOfFile="File">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100"
                 >
-                  <div className="flex items-center gap-2">
-                    <Newspaper className="w-4 h-4" />
-                    <span>Xem bảng tin nhóm</span>
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </li>
+                  <Paperclip className="w-5 h-5" />
+                </Button>
+              </UploadFile>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top">Đính kèm file</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleOnClickTextFormat}
+              className={cn(
+                "h-8 w-8 rounded-lg",
+                isTextFormatActive 
+                  ? "bg-primary/10 text-primary" 
+                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+              )}
+            >
+              <Type className="w-5 h-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="top">Định dạng văn bản</TooltipContent>
+        </Tooltip>
+
+        {checkIsGroup && (
+          <DropdownMenu>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+                  >
+                    <BarChart2 className="w-5 h-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="top">Bình chọn</TooltipContent>
+            </Tooltip>
+            <DropdownMenuContent align="start" side="top" className="w-52 rounded-xl">
+              <DropdownMenuItem 
+                onSelect={() => handleOnClickMenu('VOTE')}
+                className="rounded-lg"
+              >
+                <BarChart2 className="w-4 h-4 mr-2 text-primary" />
+                <span>Tạo cuộc bình chọn</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={() => handleOnClickMenu('VIEW_NEWS')}
+                className="rounded-lg"
+              >
+                <Newspaper className="w-4 h-4 mr-2 text-slate-500" />
+                <span>Xem bảng tin nhóm</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
-      </ul>
+
+        {checkIsGroup && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+              >
+                <AtSign className="w-5 h-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top">Đề cập thành viên (@)</TooltipContent>
+          </Tooltip>
+        )}
+      </div>
 
       <ModalCreateVote
         visible={isVisibleVote}

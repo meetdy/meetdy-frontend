@@ -576,14 +576,15 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         />
       )}
 
-      <div className="min-h-screen h-screen flex">
+      <div className="min-h-screen h-screen flex bg-slate-50/50">
         <aside
-          className={`transition-all bg-transparent ${
-            currentConversation ? 'hidden sm:block' : 'block'
-          } sm:w-60 lg:w-64`}
+          className={`transition-all duration-200 bg-white border-r border-slate-200/80 ${
+            currentConversation ? 'hidden sm:block' : 'block w-full'
+          } sm:w-72 lg:w-80`}
         >
           <div className="h-full flex flex-col">
-            <div className={`p-4 ${visibleFilter ? 'pb-2' : 'pb-4'}`}>
+            <div className="px-4 pt-4 pb-3">
+              <h2 className="text-lg font-semibold text-slate-900 mb-3">Tin nhắn</h2>
               <SearchContainer
                 valueText={valueInput}
                 onSearchChange={handleOnSearchChange}
@@ -602,7 +603,6 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
                 />
               ) : (
                 <div className="px-2">
-                  <div className="border-b my-2" />
                   <ConversationContainer valueClassify={valueClassify} />
                 </div>
               )}
@@ -611,16 +611,16 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         </aside>
 
         {path === '/chat' && currentConversation ? (
-          <main className="flex-1 flex flex-col">
-            <header className="border-b bg-white">
+          <main className="flex-1 flex flex-col bg-white">
+            <header className="border-b border-slate-200/80 bg-white shadow-sm">
               <HeaderChatContainer
                 onPopUpInfo={() => setIsOpenInfo(!isOpenInfo)}
                 onOpenDrawer={() => setOpenDrawerInfo(true)}
               />
             </header>
 
-            <section className="flex-1 flex flex-col overflow-hidden relative">
-              <div className="flex-1 overflow-hidden">
+            <section className="flex-1 flex flex-col overflow-hidden relative bg-gradient-to-b from-slate-50/50 to-white">
+              <div className="flex-1 overflow-hidden px-4 py-2">
                 <BodyChatContainer
                   scrollId={scrollId}
                   onSCrollDown={idNewMessage}
@@ -659,60 +659,56 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
                   </div>
                 )}
 
-              <div
+              <button
                 id="back-top-button"
-                className={`fixed right-6 bottom-24 z-40 flex items-center justify-center rounded-full bg-white shadow-md p-2 transition-opacity ${
-                  isShow ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                className={`absolute right-6 bottom-6 z-40 flex items-center justify-center rounded-full bg-white border border-slate-200 shadow-lg p-3 transition-all duration-200 hover:shadow-xl hover:scale-105 ${
+                  isShow ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
                 }`}
                 onClick={handleOnClickScroll}
-                role="button"
                 aria-label="Scroll to new message"
               >
                 {hasMessage ? (
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="text-slate-600">
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    <span className="text-primary">
                       <ChevronsLeft className="w-4 h-4" />
                     </span>
-                    <span className="whitespace-nowrap">{hasMessage}</span>
+                    <span className="whitespace-nowrap text-slate-700">{hasMessage}</span>
                   </div>
                 ) : (
                   <ChevronDown className="w-5 h-5 text-slate-600" />
                 )}
-              </div>
+              </button>
 
               {usersTyping.length > 0 && !refCurrentChannel.current && (
-                <div className="absolute left-4 bottom-32 z-30 rounded-md bg-white/80 px-3 py-1 text-sm text-slate-700 shadow-sm flex items-center gap-2">
-                  <div>
-                    {usersTyping.slice(0, 3).map((ele, index) => (
-                      <span
-                        key={ele._id || index}
-                        className={index > 0 ? 'ml-1' : ''}
-                      >
-                        {index === usersTyping.length - 1
-                          ? `${ele.name}`
-                          : `${ele.name},`}
-                      </span>
-                    ))}
-                    {usersTyping.length > 3
-                      ? ` và ${usersTyping.length - 3} người khác`
-                      : ''}
-                    <span>&nbsp;đang nhập</span>
-                  </div>
-                  <div className="flex items-center gap-1 ml-2">
-                    <span className="w-1 h-1 bg-slate-500 rounded-full animate-bounce" />
+                <div className="absolute left-6 bottom-4 z-30 rounded-full bg-white/95 backdrop-blur-sm border border-slate-200 px-4 py-2 text-sm text-slate-600 shadow-md flex items-center gap-3">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
                     <span
-                      className="w-1 h-1 bg-slate-500 rounded-full animate-bounce"
+                      className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce"
                       style={{ animationDelay: '100ms' }}
                     />
                     <span
-                      className="w-1 h-1 bg-slate-500 rounded-full animate-bounce"
+                      className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce"
                       style={{ animationDelay: '200ms' }}
                     />
+                  </div>
+                  <div className="font-medium">
+                    {usersTyping.slice(0, 2).map((ele, index) => (
+                      <span key={ele._id || index}>
+                        {index === usersTyping.length - 1
+                          ? `${ele.name}`
+                          : `${ele.name}, `}
+                      </span>
+                    ))}
+                    {usersTyping.length > 2
+                      ? ` +${usersTyping.length - 2}`
+                      : ''}
+                    <span className="text-slate-500 font-normal"> đang nhập...</span>
                   </div>
                 </div>
               )}
 
-              <footer className="border-t bg-white">
+              <footer className="border-t border-slate-200/80 bg-white px-4 py-3">
                 <FooterChatContainer
                   onScrollWhenSentText={handleScrollWhenSent}
                   socket={socket}
@@ -727,16 +723,21 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
             </section>
           </main>
         ) : (
-          <main className="flex-1 flex items-center justify-center">
-            <div className="p-8 max-w-2xl text-center">
-              <h2 className="text-2xl font-semibold mb-2">
-                Chào mừng đến với <span className="font-bold">Meetdy.com</span>
+          <main className="flex-1 flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+            <div className="p-8 max-w-lg text-center">
+              <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10">
+                <svg className="w-10 h-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-semibold text-slate-900 mb-3">
+                Chào mừng đến với <span className="text-primary font-bold">Meetdy</span>
               </h2>
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-slate-500 leading-relaxed">
                 Khám phá những tiện ích hỗ trợ làm việc và trò chuyện cùng người
                 thân, bạn bè được tối ưu hoá cho máy tính của bạn.
               </p>
-              <div className="mt-6">
+              <div className="mt-8">
                 <Slider />
               </div>
             </div>
@@ -746,7 +747,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         <aside
           className={`${
             isOpenInfo ? 'block' : 'hidden'
-          } hidden lg:block lg:w-80 border-l bg-white`}
+          } hidden lg:block lg:w-80 border-l border-slate-200/80 bg-white`}
         >
           <div className="h-full overflow-auto relative">
             {openDrawerInfo && width <= 1199 && (

@@ -1,12 +1,6 @@
-import {
-  AlignLeftOutlined,
-  AppstoreAddOutlined,
-  SearchOutlined,
-  UserAddOutlined,
-  UsergroupAddOutlined,
-} from "@ant-design/icons"
 import { useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { Search, UserPlus, Users, SlidersHorizontal, Plus, Filter } from "lucide-react"
 
 import userApi from "@/api/userApi"
 import ModalClassify from "../../components/ModalClassify"
@@ -16,8 +10,20 @@ import ModalCreateGroup from "@/features/Chat/components/ModalCreateGroup"
 import { createGroup } from "@/features/Chat/slice/chatSlice"
 
 import { Input } from "@/components/ui/input"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import { cn } from "@/lib/utils"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 type Props = {
   valueText: string
@@ -88,74 +94,98 @@ export default function SearchContainer({
   const handleOpenModalClassify = () => setIsModalClassify(true)
   const handleCancelModalClassify = () => setIsModalClassify(false)
 
+  const activeClassify = classifies?.find((ele: any) => ele._id === valueClassify)
+
   return (
-    <div className="w-full">
-      <div className="p-3 border-b bg-white">
-        <div className="flex items-center gap-3">
-          <div className="flex-1 relative">
-            <SearchOutlined className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <Input
-              placeholder="Tìm kiếm"
-              className="pl-9"
-              value={valueText}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <button
-            className="p-2 hover:bg-gray-100 rounded-lg"
-            onClick={handleOpenModalAddFriend}
-          >
-            <UserAddOutlined />
-          </button>
-
-          <button
-            className="p-2 hover:bg-gray-100 rounded-lg"
-            onClick={handleCreateGroup}
-          >
-            <UsergroupAddOutlined />
-          </button>
+    <div className="w-full space-y-3">
+      <div className="flex items-center gap-2">
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Input
+            placeholder="Tìm kiếm cuộc trò chuyện..."
+            className="pl-9 h-10 rounded-xl border-slate-200 bg-slate-50/50 focus:bg-white transition-colors"
+            value={valueText}
+            onChange={handleInputChange}
+          />
         </div>
 
-        {!isFriendPage && valueText.trim().length === 0 && (
-          <div className="mt-4">
-            <div className="flex justify-between items-center mb-2">
-              <div className="flex items-center gap-2 text-gray-700">
-                <AlignLeftOutlined />
-                <span>Phân loại</span>
-              </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleOpenModalAddFriend}
+              className="h-10 w-10 rounded-xl hover:bg-slate-100"
+            >
+              <UserPlus className="w-5 h-5 text-slate-600" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Thêm bạn</TooltipContent>
+        </Tooltip>
 
-              <button className="p-2 hover:bg-gray-100 rounded-md" onClick={handleOpenModalClassify}>
-                <AppstoreAddOutlined />
-              </button>
-            </div>
-
-            <div className="overflow-x-auto scrollbar-thin">
-              <RadioGroup
-                value={valueClassify}
-                onValueChange={handleOnChangeClassify}
-                className="flex items-center gap-4 py-1"
-              >
-                <div className="flex items-center gap-2">
-                  <RadioGroupItem value="0" id="all" />
-                  <label htmlFor="all" className="text-sm">
-                    Tất cả
-                  </label>
-                </div>
-
-                {classifies?.map((ele: any, idx: number) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <RadioGroupItem value={ele._id} id={ele._id} />
-                    <label htmlFor={ele._id} className="text-sm break-keep">
-                      {ele.name}
-                    </label>
-                  </div>
-                ))}
-              </RadioGroup>
-            </div>
-          </div>
-        )}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleCreateGroup}
+              className="h-10 w-10 rounded-xl hover:bg-slate-100"
+            >
+              <Users className="w-5 h-5 text-slate-600" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Tạo nhóm</TooltipContent>
+        </Tooltip>
       </div>
+
+      {!isFriendPage && valueText.trim().length === 0 && (
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+          <button
+            onClick={() => handleOnChangeClassify("0")}
+            className={cn(
+              "flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors",
+              valueClassify === "0" || !valueClassify
+                ? "bg-primary text-white"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+            )}
+          >
+            Tất cả
+          </button>
+
+          {classifies?.map((ele: any) => (
+            <button
+              key={ele._id}
+              onClick={() => handleOnChangeClassify(ele._id)}
+              className={cn(
+                "flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors flex items-center gap-1.5",
+                valueClassify === ele._id
+                  ? "bg-primary text-white"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              )}
+            >
+              {ele.color?.code && (
+                <span 
+                  className="w-2 h-2 rounded-full" 
+                  style={{ backgroundColor: ele.color.code }}
+                />
+              )}
+              {ele.name}
+            </button>
+          ))}
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleOpenModalClassify}
+                className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors"
+              >
+                <Plus className="w-4 h-4 text-slate-500" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Quản lý phân loại</TooltipContent>
+          </Tooltip>
+        </div>
+      )}
 
       <ModalCreateGroup
         isVisible={isModalCreateGroup}

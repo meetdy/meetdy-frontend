@@ -4,9 +4,13 @@ import {
   ArrowLeft,
   Hash,
   RotateCcw,
-  Grid,
   UserPlus,
-  User as UserIcon,
+  Users,
+  Phone,
+  Video,
+  MoreHorizontal,
+  PanelRightOpen,
+  PanelRightClose,
 } from 'lucide-react';
 
 import conversationApi from '@/api/conversationApi';
@@ -22,6 +26,13 @@ import dateUtils from '@/utils/dateUtils';
 import ConversationAvatar from '../ConversationAvatar';
 import ModalAddMemberToConver from '../ModalAddMemberToConver';
 import type { RootState, AppDispatch } from '@/store';
+import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 
 type Props = {
   avatar?: string | null;
@@ -58,15 +69,17 @@ const HeaderOptional: React.FC<Props> = (props) => {
   const [isVisible, setIsvisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [typeModal, setTypeModal] = useState<number>(1);
+  const [isPanelOpen, setIsPanelOpen] = useState(true);
 
   const handleCutText = (text: string) => {
     if (width < 577) {
-      return text?.slice(0, 14) + '...';
+      return text?.length > 14 ? text?.slice(0, 14) + '...' : text;
     }
     return text;
   };
 
   const handlePopUpInfo = () => {
+    setIsPanelOpen(!isPanelOpen);
     if (onPopUpInfo) {
       onPopUpInfo();
     }
@@ -138,96 +151,167 @@ const HeaderOptional: React.FC<Props> = (props) => {
     channels.find((ele) => ele._id === currentChannel)?.name ?? '';
 
   return (
-    <div id="header-optional" className="w-full border-b bg-white">
+    <div id="header-optional" className="w-full bg-white">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
-          <button
-            onClick={handleBackToListConver}
-            aria-label="Back to conversations"
-            className="p-2 rounded-md hover:bg-gray-100 transition"
-          >
-            <ArrowLeft className="w-5 h-5 text-gray-700" />
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleBackToListConver}
+                className="sm:hidden h-9 w-9 rounded-lg hover:bg-slate-100"
+              >
+                <ArrowLeft className="w-5 h-5 text-slate-600" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Quay lại</TooltipContent>
+          </Tooltip>
 
-          <div className="flex items-center">
-            <ConversationAvatar
-              avatar={avatar}
-              totalMembers={totalMembers}
-              type={type}
-              name={name}
-              isActived={isLogin}
-              avatarColor={avatarColor}
-            />
-          </div>
-
-          <div className="flex flex-col min-w-0">
-            <div className="truncate font-medium text-sm text-slate-900">
-              <span>{handleCutText(name)}</span>
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <ConversationAvatar
+                avatar={avatar}
+                totalMembers={totalMembers}
+                type={type}
+                name={name}
+                isActived={isLogin}
+                avatarColor={avatarColor}
+              />
             </div>
 
-            {currentChannel ? (
-              <div className="flex items-center text-sm text-gray-500 mt-1">
-                <Hash className="w-4 h-4 mr-2 text-gray-400" />
-                <div className="truncate">{currentChannelName}</div>
-              </div>
-            ) : (
-              <div className="text-sm text-gray-500 mt-1">
-                {type ? (
-                  <div className="flex items-center gap-2">
-                    <UserIcon className="w-4 h-4 text-gray-400" />
-                    <span>
-                      {totalMembers}{' '}
-                      <span className="text-gray-400">Thành viên</span>
-                    </span>
-                  </div>
-                ) : isLogin ? (
-                  <span className="text-green-500">Đang hoạt động</span>
-                ) : (
-                  lastLogin && (
-                    <span>
-                      {`Truy cập ${dateUtils.toTime(lastLogin).toLowerCase()}`}{' '}
-                      {checkTime() ? 'trước' : ''}
-                    </span>
-                  )
+            <div className="flex flex-col min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-slate-900 truncate">
+                  {handleCutText(name)}
+                </span>
+                {!type && isLogin && (
+                  <span className="w-2 h-2 bg-green-500 rounded-full" />
                 )}
               </div>
-            )}
+
+              {currentChannel ? (
+                <div className="flex items-center text-xs text-slate-500 mt-0.5">
+                  <Hash className="w-3.5 h-3.5 mr-1 text-slate-400" />
+                  <span className="truncate">{currentChannelName}</span>
+                </div>
+              ) : (
+                <div className="text-xs text-slate-500 mt-0.5">
+                  {type ? (
+                    <div className="flex items-center gap-1">
+                      <Users className="w-3.5 h-3.5 text-slate-400" />
+                      <span>{totalMembers} thành viên</span>
+                    </div>
+                  ) : isLogin ? (
+                    <span className="text-green-600 font-medium">Đang hoạt động</span>
+                  ) : (
+                    lastLogin && (
+                      <span className="text-slate-400">
+                        Hoạt động {dateUtils.toTime(lastLogin).toLowerCase()}{' '}
+                        {checkTime() ? 'trước' : ''}
+                      </span>
+                    )
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           {currentChannel ? (
-            <button
-              title="Trở lại kênh chính"
-              onClick={handleViewGeneralChannel}
-              className="p-2 rounded-md hover:bg-gray-100 transition"
-            >
-              <RotateCcw className="w-5 h-5 text-gray-700" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleViewGeneralChannel}
+                  className="h-9 w-9 rounded-lg hover:bg-slate-100"
+                >
+                  <RotateCcw className="w-4 h-4 text-slate-600" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Trở lại kênh chính</TooltipContent>
+            </Tooltip>
           ) : (
-            <button
-              onClick={handleAddMemberToGroup}
-              className="p-2 rounded-md hover:bg-gray-100 transition"
-            >
-              <UserPlus className="w-5 h-5 text-gray-700" />
-            </button>
+            <>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9 rounded-lg hover:bg-slate-100 hidden sm:flex"
+                  >
+                    <Phone className="w-4 h-4 text-slate-600" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Gọi thoại</TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9 rounded-lg hover:bg-slate-100 hidden sm:flex"
+                  >
+                    <Video className="w-4 h-4 text-slate-600" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Gọi video</TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleAddMemberToGroup}
+                    className="h-9 w-9 rounded-lg hover:bg-slate-100"
+                  >
+                    <UserPlus className="w-4 h-4 text-slate-600" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  {type ? 'Thêm thành viên' : 'Tạo nhóm'}
+                </TooltipContent>
+              </Tooltip>
+            </>
           )}
 
-          <button
-            onClick={handlePopUpInfo}
-            className="hidden sm:inline-flex p-2 rounded-md hover:bg-gray-100 transition"
-            aria-label="Open info"
-          >
-            <Grid className="w-5 h-5 text-gray-700" />
-          </button>
+          <div className="w-px h-6 bg-slate-200 mx-1 hidden sm:block" />
 
-          <button
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handlePopUpInfo}
+                className={cn(
+                  "h-9 w-9 rounded-lg hidden sm:flex",
+                  isPanelOpen ? "bg-slate-100" : "hover:bg-slate-100"
+                )}
+              >
+                {isPanelOpen ? (
+                  <PanelRightClose className="w-4 h-4 text-slate-600" />
+                ) : (
+                  <PanelRightOpen className="w-4 h-4 text-slate-600" />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              {isPanelOpen ? 'Đóng thông tin' : 'Mở thông tin'}
+            </TooltipContent>
+          </Tooltip>
+
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={handleOpenDraweer}
-            className="sm:hidden p-2 rounded-md hover:bg-gray-100 transition"
-            aria-label="Open drawer"
+            className="sm:hidden h-9 w-9 rounded-lg hover:bg-slate-100"
           >
-            <Grid className="w-5 h-5 text-gray-700" />
-          </button>
+            <MoreHorizontal className="w-4 h-4 text-slate-600" />
+          </Button>
         </div>
       </div>
 
