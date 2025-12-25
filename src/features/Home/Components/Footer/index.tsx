@@ -1,41 +1,49 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
-Footer.propTypes = {
-  data: PropTypes.object,
-};
+interface FooterProps {
+  data?: {
+    aboutUs?: string;
+    copyright?: string;
+  };
+}
 
-Footer.defaultProps = {
-  data: {},
-};
-
-function Footer({ data }) {
-  const about = data.aboutUs;
+function Footer({ data = {} }: FooterProps) {
   return (
-    <div className="footer">
-      <div className="box-container">
-        <div className="box">
-          <h4>Về chúng tôi</h4>
-          <p>{data.aboutUs}</p>
+    <div className="py-12 px-4 bg-muted/50">
+      <div className="container mx-auto grid md:grid-cols-2 gap-8">
+        <div className="space-y-4">
+          <h4 className="text-lg font-semibold">Về chúng tôi</h4>
+          <p className="text-muted-foreground">{data.aboutUs}</p>
         </div>
 
-        <div className="box">
-          <h4>Link nhanh</h4>
-          <a href="#home">Trang chủ</a>
-          <a href="#features">Tính năng</a>
-          <a href="#about">Ứng dụng</a>
-          <a href="#developer">Team phát triển</a>
-          <Link to="/account/registry">Đăng ký</Link>
-          <Link to="/account/login">Đăng nhập</Link>
+        <div className="space-y-4">
+          <h4 className="text-lg font-semibold">Link nhanh</h4>
+          <div className="flex flex-col gap-2">
+            <a href="#home" className="text-muted-foreground hover:text-primary transition-colors">
+              Trang chủ
+            </a>
+            <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">
+              Tính năng
+            </a>
+            <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">
+              Ứng dụng
+            </a>
+            <a href="#developer" className="text-muted-foreground hover:text-primary transition-colors">
+              Team phát triển
+            </a>
+            <Link to="/account/registry" className="text-muted-foreground hover:text-primary transition-colors">
+              Đăng ký
+            </Link>
+            <Link to="/account/login" className="text-muted-foreground hover:text-primary transition-colors">
+              Đăng nhập
+            </Link>
+          </div>
         </div>
       </div>
 
-      <h2 className="copyright">
-        {!data.copyright
-          ? data.copyright
-          : `Bản quyền thuộc về © Meetdy.com ${new Date().getFullYear()}`}
-      </h2>
+      <div className="container mx-auto mt-8 pt-8 border-t text-center text-muted-foreground">
+        {data.copyright || `Bản quyền thuộc về © Meetdy.com ${new Date().getFullYear()}`}
+      </div>
     </div>
   );
 }

@@ -12,7 +12,13 @@ export const fetchInfoWebs = createAsyncThunk(
   },
 );
 
-const initialState = {
+const initialState: {
+  developers: any[];
+  infoApp: Record<string, any>;
+  isLoading: boolean;
+  features: any[];
+  infoWebApps: Record<string, any>;
+} = {
   developers: [],
   infoApp: {},
   isLoading: false,
@@ -36,13 +42,15 @@ const homeSlice = createSlice({
       .addCase(fetchInfoWebs.fulfilled, (state, action) => {
         const data = action.payload;
 
-        const findValue = (name) =>
-          data.find((ele) => ele.name === name)?.value ?? null;
+        const findValue = (name: string) => {
+          if (!Array.isArray(data)) return null;
+          return data.find((ele: any) => ele.name === name)?.value ?? null;
+        };
 
-        state.infoWebApps = findValue('infoweb');
-        state.developers = findValue('developers');
-        state.infoApp = findValue('infoapp');
-        state.features = findValue('features');
+        state.infoWebApps = findValue('infoweb') || {};
+        state.developers = findValue('developers') || [];
+        state.infoApp = findValue('infoapp') || {};
+        state.features = findValue('features') || [];
         state.isLoading = false;
       })
       .addCase(fetchInfoWebs.rejected, (state) => {
