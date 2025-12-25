@@ -1,21 +1,18 @@
-import _httpsAxios from '@/api/instance/_httpsAxios';
 import authApi from '@/api/authApi';
-
 import { fetchUserProfile, setLogin } from '@/app/globalSlice';
 import InputField from '@/customfield/InputField';
 import { setLoading } from '@/features/Account/accountSlice';
 import { loginValues } from '@/features/Account/initValues';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { FastField, Form, Formik } from 'formik';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { MessageCircle, ArrowLeft, Sparkles } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Alert } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
-import Image from '@/components/ui/image';
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -24,7 +21,7 @@ function LoginPage() {
 
   const isVerify = true;
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values: { username: string; password: string }) => {
     const { username, password } = values;
     try {
       if (isVerify) {
@@ -37,32 +34,61 @@ function LoginPage() {
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
         dispatch(setLogin(true));
-        const { isAdmin } = unwrapResult(await dispatch(fetchUserProfile()));
+        const { isAdmin } = unwrapResult(await dispatch(fetchUserProfile() as any) as any);
         navigate(isAdmin ? '/admin' : '/chat');
       } else {
         alert('Hãy xác thực captcha');
       }
     } catch (error) {
-      console.log('🚀 ~ handleSubmit ~ error:', error);
+      console.log('Login error:', error);
       setError(true);
     }
     dispatch(setLoading(false));
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Left image */}
-      <div className="hidden md:flex md:w-1/2">
-        <Image
-          alt="meetdy.com/account"
-          className="object-cover w-full h-full"
-        />
+    <div className="flex min-h-screen">
+      {/* Left side - Branding */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary via-primary/90 to-blue-600 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent)]" />
+        <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />
+        
+        <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-white">
+          <div className="p-4 bg-white/20 rounded-2xl mb-8 backdrop-blur-sm">
+            <MessageCircle className="h-16 w-16" />
+          </div>
+          <h1 className="text-4xl font-bold mb-4 text-center">Meetdy Chat</h1>
+          <p className="text-xl text-white/80 text-center max-w-md mb-8">
+            Nền tảng nhắn tin hiện đại, an toàn và dễ sử dụng
+          </p>
+          <div className="flex items-center gap-3 text-white/70">
+            <Sparkles className="h-5 w-5" />
+            <span>Kết nối mọi người, mọi nơi</span>
+          </div>
+        </div>
       </div>
 
-      {/* Right form */}
-      <div className="flex flex-1 flex-col justify-center p-8 md:w-1/2">
+      {/* Right side - Form */}
+      <div className="flex flex-1 flex-col justify-center p-8 bg-background">
         <div className="max-w-md w-full mx-auto">
-          <h2 className="text-center mb-4 text-blue-600">Đăng Nhập</h2>
+          {/* Mobile logo */}
+          <div className="lg:hidden flex justify-center mb-8">
+            <div className="p-3 bg-primary rounded-xl">
+              <MessageCircle className="h-8 w-8 text-primary-foreground" />
+            </div>
+          </div>
+
+          <Link 
+            to="/" 
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Trang chủ
+          </Link>
+
+          <h2 className="text-3xl font-bold mb-2">Đăng Nhập</h2>
+          <p className="text-muted-foreground mb-8">Chào mừng bạn quay trở lại với Meetdy Chat</p>
 
           <Formik
             initialValues={{ ...loginValues.initial }}
@@ -71,13 +97,14 @@ function LoginPage() {
             enableReinitialize
           >
             {() => (
-              <Form className="space-y-4">
+              <Form className="space-y-5">
                 <FastField
                   name="username"
                   component={InputField}
                   type="text"
                   title="Tài khoản"
                   placeholder="Nhập tài khoản"
+                  autoComplete="username"
                 />
 
                 <FastField
@@ -86,42 +113,44 @@ function LoginPage() {
                   type="password"
                   title="Mật khẩu"
                   placeholder="Nhập mật khẩu"
+                  autoComplete="current-password"
                 />
 
-                {/* ReCAPTCHA (optional) */}
-                {/* {keyGoogleCaptcha && (
-                  <ReCAPTCHA sitekey={keyGoogleCaptcha} onChange={onChange} />
-                )} */}
-
                 {isError && (
-                  <Alert variant="destructive">Tài khoản không hợp lệ</Alert>
+                  <Alert variant="destructive">
+                    Tài khoản hoặc mật khẩu không chính xác
+                  </Alert>
                 )}
 
-                <Button type="submit" variant="default" className="w-full mt-2">
+                <Button 
+                  type="submit" 
+                  className="w-full h-12 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30"
+                >
                   Đăng nhập
                 </Button>
               </Form>
             )}
           </Formik>
 
-          <Separator className="my-6" />
-
-          <div className="flex flex-col space-y-2 text-sm text-center">
-            <Link to="/" className="text-blue-600 hover:underline">
-              Trang chủ
-            </Link>
+          <div className="mt-8 text-center space-y-4">
             <Link
               to="/account/forgot"
-              className="text-blue-600 hover:underline"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              Quên mật khẩu
+              Quên mật khẩu?
             </Link>
-            <Link
-              to="/account/registry"
-              className="text-blue-600 hover:underline"
-            >
-              Bạn chưa có tài khoản ?
-            </Link>
+            
+            <div className="pt-4 border-t">
+              <p className="text-muted-foreground">
+                Bạn chưa có tài khoản?{' '}
+                <Link
+                  to="/account/registry"
+                  className="text-primary font-semibold hover:underline"
+                >
+                  Đăng ký ngay
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>

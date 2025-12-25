@@ -2,6 +2,7 @@ import { FastField, Form, Formik } from 'formik';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
+import { MessageCircle, ArrowLeft, UserPlus, Sparkles } from 'lucide-react';
 
 import authApi from '@/api/authApi';
 import InputField from '@/customfield/InputField';
@@ -9,9 +10,7 @@ import { setLoading } from '@/features/Account/accountSlice';
 import { registryValues } from '@/features/Account/initValues';
 
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import TagCustom from '@/components/TagCustom';
-import Image from '@/components/ui/image';
+import { Alert } from '@/components/ui/alert';
 
 const RESEND_OTP_TIME_LIMIT = 60;
 
@@ -25,7 +24,7 @@ function RegistryPage() {
   const [isSubmit, setIsSubmit] = useState(false);
 
   const openNotification = (mes?: string) => {
-    alert(mes ?? 'Xác thực OTP để hoàn tất việc đăng ký'); // simple notification
+    alert(mes ?? 'Xác thực OTP để hoàn tất việc đăng ký');
   };
 
   const success = () => {
@@ -100,17 +99,53 @@ function RegistryPage() {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Left image */}
-      <div className="hidden md:flex md:w-1/2">
-        <Image alt="meetdy.com/forgot" className="object-cover w-full h-full" />
+    <div className="flex min-h-screen">
+      {/* Left side - Branding */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent)]" />
+        <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl" />
+        
+        <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-white">
+          <div className="p-4 bg-white/20 rounded-2xl mb-8 backdrop-blur-sm">
+            <UserPlus className="h-16 w-16" />
+          </div>
+          <h1 className="text-4xl font-bold mb-4 text-center">Tham gia Meetdy</h1>
+          <p className="text-xl text-white/80 text-center max-w-md mb-8">
+            Đăng ký miễn phí và bắt đầu kết nối với bạn bè ngay hôm nay
+          </p>
+          <div className="flex items-center gap-3 text-white/70">
+            <Sparkles className="h-5 w-5" />
+            <span>Hoàn toàn miễn phí</span>
+          </div>
+        </div>
       </div>
 
-      {/* Right form */}
-      <div className="flex flex-1 flex-col justify-center p-8 md:w-1/2">
+      {/* Right side - Form */}
+      <div className="flex flex-1 flex-col justify-center p-8 bg-background overflow-y-auto">
         <div className="max-w-md w-full mx-auto">
-          <h1 className="text-center mb-4 text-blue-600">Đăng Ký</h1>
-          <Separator className="mb-6" />
+          {/* Mobile logo */}
+          <div className="lg:hidden flex justify-center mb-8">
+            <div className="p-3 bg-green-600 rounded-xl">
+              <MessageCircle className="h-8 w-8 text-white" />
+            </div>
+          </div>
+
+          <Link 
+            to="/" 
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Trang chủ
+          </Link>
+
+          <h2 className="text-3xl font-bold mb-2">Đăng Ký</h2>
+          <p className="text-muted-foreground mb-8">
+            {isSubmit 
+              ? 'Nhập mã OTP đã được gửi đến tài khoản của bạn'
+              : 'Tạo tài khoản mới để bắt đầu sử dụng Meetdy Chat'
+            }
+          </p>
 
           <Formik
             initialValues={{ ...registryValues.initial }}
@@ -123,7 +158,7 @@ function RegistryPage() {
             enableReinitialize
           >
             {(formikProps) => (
-              <Form className="space-y-4">
+              <Form className="space-y-5">
                 {isSubmit ? (
                   <>
                     <FastField
@@ -134,6 +169,8 @@ function RegistryPage() {
                       placeholder="Mã OTP có 6 kí tự"
                     />
                     <Button
+                      type="button"
+                      variant="outline"
                       onClick={() =>
                         handleResendOTP(formikProps.values.username)
                       }
@@ -149,15 +186,17 @@ function RegistryPage() {
                       name="name"
                       component={InputField}
                       type="text"
-                      title="Tên"
+                      title="Tên hiển thị"
                       placeholder="Ví dụ: Nguyễn Ngọc Minh"
+                      autoComplete="name"
                     />
                     <FastField
                       name="username"
                       component={InputField}
                       type="text"
-                      title="Tài khoản"
+                      title="Email hoặc số điện thoại"
                       placeholder="Nhập email/SĐT đăng ký"
+                      autoComplete="email"
                     />
                     <FastField
                       name="password"
@@ -165,6 +204,7 @@ function RegistryPage() {
                       type="password"
                       title="Mật khẩu"
                       placeholder="Mật khẩu ít nhất 8 kí tự"
+                      autoComplete="new-password"
                     />
                     <FastField
                       name="passwordconfirm"
@@ -172,34 +212,37 @@ function RegistryPage() {
                       type="password"
                       title="Xác nhận mật khẩu"
                       placeholder="Gõ lại mật khẩu vừa nhập"
+                      autoComplete="new-password"
                     />
                   </>
                 )}
 
-                {isError && <TagCustom title={isError} color="error" />}
+                {isError && (
+                  <Alert variant="destructive">{isError}</Alert>
+                )}
 
-                <Button type="submit" className="w-full">
-                  Xác nhận
+                <Button 
+                  type="submit" 
+                  className="w-full h-12 text-base font-semibold bg-green-600 hover:bg-green-700 shadow-lg shadow-green-600/25"
+                >
+                  {isSubmit ? 'Xác nhận OTP' : 'Đăng ký'}
                 </Button>
               </Form>
             )}
           </Formik>
 
-          <Separator className="my-6" />
-
-          <div className="flex flex-col space-y-2 text-sm text-center">
-            <Link to="/" className="text-blue-600 hover:underline">
-              Trang chủ
-            </Link>
-            <Link to="/account/login" className="text-blue-600 hover:underline">
-              Đăng nhập
-            </Link>
-            <Link
-              to="/account/forgot"
-              className="text-blue-600 hover:underline"
-            >
-              Quên mật khẩu ?
-            </Link>
+          <div className="mt-8 text-center">
+            <div className="pt-4 border-t">
+              <p className="text-muted-foreground">
+                Đã có tài khoản?{' '}
+                <Link
+                  to="/account/login"
+                  className="text-green-600 font-semibold hover:underline"
+                >
+                  Đăng nhập
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { Loading } from '@/components/ui/loading';
 import AboutWebApp from './Components/AboutWebApp';
@@ -16,6 +15,9 @@ function Home() {
     <Loading size="lg" spinning={isLoading}>
       <div className="min-h-screen bg-background">
         <Header data={infoApp} />
+        <Feature data={features} />
+        <AboutWebApp data={infoWebApps} />
+        <Developer data={developers} />
         <Footer data={infoWebApps} />
       </div>
     </Loading>
