@@ -200,21 +200,31 @@ function ChatLayout() {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className="grid grid-cols-[64px_1fr] sm:grid-cols-[80px_1fr] md:grid-cols-[200px_1fr] min-h-screen">
-        {/* Sidebar */}
+    <div className="h-screen w-full overflow-hidden">
+      <div className="flex h-full">
         <aside>
           <NavbarContainer onSaveCodeRevoke={handleSetCodeRevoke} />
         </aside>
 
         {/* Content */}
-        <main className="overflow-hidden h-full">
+        <main className="flex-1 h-full overflow-hidden">
           <Routes>
             <Route
               index
-              element={<Chat socket={socket} idNewMessage={idNewMessage} />}
+              element={
+                <div className="h-full overflow-auto">
+                  <Chat socket={socket} idNewMessage={idNewMessage} />
+                </div>
+              }
             />
-            <Route path="friends" element={<Friend />} />
+            <Route
+              path="friends"
+              element={
+                <div className="h-full overflow-auto">
+                  <Friend />
+                </div>
+              }
+            />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

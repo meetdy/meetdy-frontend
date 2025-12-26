@@ -39,11 +39,7 @@ import ModalChangePassword from '@/components/ModalChangePassword';
 import ModalUpdateProfile from '@/features/Chat/components/ModalUpdateProfile';
 import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 
-interface NavbarContainerProps {
-  onSaveCodeRevoke?: any;
-}
-
-export default function NavbarContainer({ onSaveCodeRevoke }: NavbarContainerProps) {
+export default function NavbarContainer({ onSaveCodeRevoke }: any) {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,15 +50,18 @@ export default function NavbarContainer({ onSaveCodeRevoke }: NavbarContainerPro
   );
   const { amountNotify } = useSelector((state: any) => state.friend);
 
-  const [visibleModalChangePassword, setVisibleModalChangePassword] = useState(false);
-  const [isModalUpdateProfileVisible, setIsModalUpdateProfileVisible] = useState(false);
+  const [visibleModalChangePassword, setVisibleModalChangePassword] =
+    useState(false);
+  const [isModalUpdateProfileVisible, setIsModalUpdateProfileVisible] =
+    useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false);
   const [isSettingsPopoverOpen, setIsSettingsPopoverOpen] = useState(false);
 
   const checkCurrentPage = (iconName: string) => {
     if (iconName === 'MESSAGE' && location.pathname === '/chat') return true;
-    if (iconName === 'FRIEND' && location.pathname === '/chat/friends') return true;
+    if (iconName === 'FRIEND' && location.pathname === '/chat/friends')
+      return true;
     return false;
   };
 
@@ -108,12 +107,14 @@ export default function NavbarContainer({ onSaveCodeRevoke }: NavbarContainerPro
         />
         <div className="flex-1 min-w-0">
           <p className="font-semibold truncate">{user?.name}</p>
-          <p className="text-sm text-muted-foreground truncate">{user?.username}</p>
+          <p className="text-sm text-muted-foreground truncate">
+            {user?.username}
+          </p>
         </div>
       </div>
-      
+
       <Separator />
-      
+
       {/* Menu Items */}
       <div className="p-2">
         <button
@@ -125,7 +126,9 @@ export default function NavbarContainer({ onSaveCodeRevoke }: NavbarContainerPro
           </div>
           <div className="flex-1">
             <p className="text-sm font-medium">Thông tin tài khoản</p>
-            <p className="text-xs text-muted-foreground">Xem và chỉnh sửa hồ sơ</p>
+            <p className="text-xs text-muted-foreground">
+              Xem và chỉnh sửa hồ sơ
+            </p>
           </div>
           <ChevronRight className="h-4 w-4 text-muted-foreground" />
         </button>
@@ -153,14 +156,16 @@ export default function NavbarContainer({ onSaveCodeRevoke }: NavbarContainerPro
           </div>
           <div className="flex-1">
             <p className="text-sm font-medium">Quyền riêng tư</p>
-            <p className="text-xs text-muted-foreground">Bảo mật & quyền riêng tư</p>
+            <p className="text-xs text-muted-foreground">
+              Bảo mật & quyền riêng tư
+            </p>
           </div>
           <ChevronRight className="h-4 w-4 text-muted-foreground" />
         </button>
       </div>
 
       <Separator />
-      
+
       {/* Logout */}
       <div className="p-2">
         <button
@@ -170,7 +175,9 @@ export default function NavbarContainer({ onSaveCodeRevoke }: NavbarContainerPro
           <div className="p-1.5 bg-destructive/10 rounded-lg">
             <LogOut className="h-4 w-4 text-destructive" />
           </div>
-          <span className="text-sm font-medium text-destructive">Đăng xuất</span>
+          <span className="text-sm font-medium text-destructive">
+            Đăng xuất
+          </span>
         </button>
       </div>
     </div>
@@ -181,7 +188,7 @@ export default function NavbarContainer({ onSaveCodeRevoke }: NavbarContainerPro
       <div className="p-3 border-b">
         <p className="font-semibold text-sm">Cài đặt</p>
       </div>
-      
+
       <div className="p-2">
         {/* Dark Mode Toggle */}
         <div className="flex items-center justify-between px-3 py-2.5 hover:bg-muted rounded-lg transition-colors">
@@ -245,7 +252,10 @@ export default function NavbarContainer({ onSaveCodeRevoke }: NavbarContainerPro
 
         {/* User Avatar */}
         <div className="p-3 flex justify-center">
-          <Popover open={isProfilePopoverOpen} onOpenChange={setIsProfilePopoverOpen}>
+          <Popover
+            open={isProfilePopoverOpen}
+            onOpenChange={setIsProfilePopoverOpen}
+          >
             <Tooltip>
               <TooltipTrigger asChild>
                 <PopoverTrigger asChild>
@@ -283,9 +293,10 @@ export default function NavbarContainer({ onSaveCodeRevoke }: NavbarContainerPro
                 <Button
                   variant="ghost"
                   className={`w-full h-12 flex items-center justify-center rounded-xl transition-all
-                    ${checkCurrentPage('MESSAGE')
-                      ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/25'
-                      : 'hover:bg-muted'
+                    ${
+                      checkCurrentPage('MESSAGE')
+                        ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/25'
+                        : 'hover:bg-muted'
                     }`}
                   onClick={() => handleSetTabActive(1)}
                 >
@@ -311,9 +322,10 @@ export default function NavbarContainer({ onSaveCodeRevoke }: NavbarContainerPro
                 <Button
                   variant="ghost"
                   className={`w-full h-12 flex items-center justify-center rounded-xl transition-all
-                    ${checkCurrentPage('FRIEND')
-                      ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/25'
-                      : 'hover:bg-muted'
+                    ${
+                      checkCurrentPage('FRIEND')
+                        ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/25'
+                        : 'hover:bg-muted'
                     }`}
                   onClick={() => handleSetTabActive(2)}
                 >
@@ -338,7 +350,10 @@ export default function NavbarContainer({ onSaveCodeRevoke }: NavbarContainerPro
 
         {/* Bottom Actions */}
         <div className="p-3 flex flex-col gap-2">
-          <Popover open={isSettingsPopoverOpen} onOpenChange={setIsSettingsPopoverOpen}>
+          <Popover
+            open={isSettingsPopoverOpen}
+            onOpenChange={setIsSettingsPopoverOpen}
+          >
             <Tooltip>
               <TooltipTrigger asChild>
                 <PopoverTrigger asChild>
