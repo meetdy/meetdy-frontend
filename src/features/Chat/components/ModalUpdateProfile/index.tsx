@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import meApi from '@/api/meApi';
 import { setAvatarProfile } from '@/app/globalSlice';
 import UploadAvatar from '@/components/UploadAvatar';
+
 import UploadCoverImage from '@/components/UploadConverImage';
 import DateOfBirthField from '@/customfield/DateOfBirthField';
 import GenderRadioField from '@/customfield/GenderRadioField';
@@ -23,25 +24,26 @@ import { Button } from '@/components/ui/button';
 interface ModalUpdateProfileProps {
   isVisible?: boolean;
   onCancel?: (value?: boolean) => void;
-  onOk?: () => void;
+  onSuccess?: () => void;
   loading?: boolean;
 }
 
 function ModalUpdateProfile({
   isVisible = false,
   onCancel,
-  onOk,
-  loading = false,
+  onSuccess,
 }: ModalUpdateProfileProps) {
   const dispatch = useDispatch();
-  const { user } = useSelector((state: any) => state.global);
-  const formRef = useRef<any>();
 
-  const [avatar, setAvatar] = useState<any>(null);
-  const [coverImg, setCoverImg] = useState<any>(null);
+  const formRef = useRef(null);
+  const refInitValue = useRef(null);
+
+  const { user } = useSelector((state: any) => state.global);
+
+  const [avatar, setAvatar] = useState(null);
+  const [coverImg, setCoverImg] = useState(null);
   const [isClear, setIsClear] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const refInitValue = useRef<any>();
 
   const handleGetCoverImg = (img: any) => {
     setCoverImg(img);
@@ -82,7 +84,11 @@ function ModalUpdateProfile({
     try {
       if (!checkChangeValue(values, refInitValue.current)) {
         const { name, dateOfBirth, gender } = values;
-        await meApi.updateProfile(name, dateOfBirth, gender);
+        await meApi.updateProfile({
+          name,
+          dateOfBirth,
+          gender,
+        });
       }
 
       if (coverImg) {

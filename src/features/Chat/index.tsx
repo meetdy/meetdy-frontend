@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useResolvedPath, useLocation } from 'react-router-dom';
 import { ChevronsLeft, ChevronDown } from 'lucide-react';
@@ -160,7 +160,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
   useEffect(() => {
     const openModalJoinFromLink = async () => {
       if ((location as any).state && (location as any).state.conversationId) {
-        const data = await conversationApi.fetchListConversations();
+        const data = await conversationApi.getListConversations({});
         const tempId = (location as any).state.conversationId;
 
         if (data.findIndex((ele: any) => ele._id === tempId) < 0) {
@@ -522,15 +522,9 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
 
   const handleOnSubmitSearch = async () => {
     try {
-      const single = await conversationApi.fetchListConversations(
-        valueInput,
-        1,
-      );
+      const single = await conversationApi.getListConversations(valueInput, 1);
       setSingleConverFilter(single);
-      const mutiple = await conversationApi.fetchListConversations(
-        valueInput,
-        2,
-      );
+      const mutiple = await conversationApi.getListConversations(valueInput, 2);
       setMultiConverFilter(mutiple);
     } catch (error) {}
   };
@@ -584,7 +578,9 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         >
           <div className="h-full flex flex-col">
             <div className="px-4 pt-4 pb-3">
-              <h2 className="text-lg font-semibold text-slate-900 mb-3">Tin nhắn</h2>
+              <h2 className="text-lg font-semibold text-slate-900 mb-3">
+                Tin nhắn
+              </h2>
               <SearchContainer
                 valueText={valueInput}
                 onSearchChange={handleOnSearchChange}
@@ -662,7 +658,9 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
               <button
                 id="back-top-button"
                 className={`absolute right-6 bottom-6 z-40 flex items-center justify-center rounded-full bg-white border border-slate-200 shadow-lg p-3 transition-all duration-200 hover:shadow-xl hover:scale-105 ${
-                  isShow ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+                  isShow
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-4 pointer-events-none'
                 }`}
                 onClick={handleOnClickScroll}
                 aria-label="Scroll to new message"
@@ -672,7 +670,9 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
                     <span className="text-primary">
                       <ChevronsLeft className="w-4 h-4" />
                     </span>
-                    <span className="whitespace-nowrap text-slate-700">{hasMessage}</span>
+                    <span className="whitespace-nowrap text-slate-700">
+                      {hasMessage}
+                    </span>
                   </div>
                 ) : (
                   <ChevronDown className="w-5 h-5 text-slate-600" />
@@ -703,7 +703,10 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
                     {usersTyping.length > 2
                       ? ` +${usersTyping.length - 2}`
                       : ''}
-                    <span className="text-slate-500 font-normal"> đang nhập...</span>
+                    <span className="text-slate-500 font-normal">
+                      {' '}
+                      đang nhập...
+                    </span>
                   </div>
                 </div>
               )}
@@ -726,12 +729,23 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
           <main className="flex-1 flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
             <div className="p-8 max-w-lg text-center">
               <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10">
-                <svg className="w-10 h-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                <svg
+                  className="w-10 h-10 text-primary"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
                 </svg>
               </div>
               <h2 className="text-2xl font-semibold text-slate-900 mb-3">
-                Chào mừng đến với <span className="text-primary font-bold">Meetdy</span>
+                Chào mừng đến với{' '}
+                <span className="text-primary font-bold">Meetdy</span>
               </h2>
               <p className="text-sm text-slate-500 leading-relaxed">
                 Khám phá những tiện ích hỗ trợ làm việc và trò chuyện cùng người

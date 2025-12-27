@@ -3,14 +3,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import getSummaryName from '@/utils/nameHelper';
 
 type Props = {
-  avatar?: string,
-  isActive?: boolean,
-  dimension?: number,
-  common?: boolean,
-  isHost?: boolean,
-  name?: string,
-  color?: string,
-  noneUser?: boolean,
+  avatar?: string;
+  isActive?: boolean;
+  dimension?: number;
+  common?: boolean;
+  isHost?: boolean;
+  name?: string;
+  color?: string;
+  noneUser?: boolean;
 };
 
 export default function PersonalIcon({
@@ -36,7 +36,7 @@ export default function PersonalIcon({
     <div className={wrapClass}>
       <div className="relative inline-block">
         {isActive && (
-          <span className="absolute w-2 h-2 bg-green-500 rounded-full bottom-0 right-0"></span>
+          <span className="absolute w-2 h-2 bg-green-500 rounded-full bottom-0 right-1 z-1"></span>
         )}
 
         {isHost && (

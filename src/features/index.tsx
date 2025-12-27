@@ -50,8 +50,6 @@ function ChatLayout() {
   const { isJoinChatLayout, user } = useSelector((state) => state.global);
   const { amountNotify } = useSelector((state) => state.friend);
   const [idNewMessage, setIdNewMessage] = useState('');
-  const [codeRevoke, setCodeRevoke] = useState('');
-
   useEffect(() => {
     return () => {
       socket.close();
@@ -194,16 +192,11 @@ function ChatLayout() {
     // dispatch(setJoinFriendLayout(true))
   }, []);
 
-  const handleSetCodeRevoke = (code: string) => {
-    setCodeRevoke(code);
-    codeRevokeRef.current = code;
-  };
-
   return (
     <div className="h-screen w-full overflow-hidden">
       <div className="flex h-full">
         <aside>
-          <NavbarContainer onSaveCodeRevoke={handleSetCodeRevoke} />
+          <NavbarContainer />
         </aside>
 
         {/* Content */}
