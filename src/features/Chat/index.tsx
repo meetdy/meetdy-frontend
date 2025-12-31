@@ -49,6 +49,7 @@ import {
 } from './slice/chatSlice';
 
 import renderWidthDrawer from '@/utils/DrawerResponsive';
+import { is } from 'date-fns/locale';
 
 function ensureToastContainer() {
   let container = document.getElementById('global-toast-container');
@@ -118,10 +119,10 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
   const [replyMessage, setReplyMessage] = useState<any>({});
   const [userMention, setUserMention] = useState<any>({});
 
-  const [visibleFilter, setVisbleFilter] = useState(false);
+  const [visibleFilter, setVisibleFilter] = useState(false);
   const [valueInput, setValueInput] = useState('');
   const [singleConverFilter, setSingleConverFilter] = useState<any[]>([]);
-  const [mutipleConverFilter, setMultiConverFilter] = useState<any[]>([]);
+  const [multipleConverFilter, setMultiConverFilter] = useState<any[]>([]);
   const [valueClassify, setValueClassify] = useState('0');
   const [isOpenInfo, setIsOpenInfo] = useState(true);
   const [openDrawerInfo, setOpenDrawerInfo] = useState(false);
@@ -509,9 +510,9 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
 
   const handleOnVisibleFilter = (value: string) => {
     if (value.trim().length > 0) {
-      setVisbleFilter(true);
+      setVisibleFilter(true);
     } else {
-      setVisbleFilter(false);
+      setVisibleFilter(false);
     }
   };
 
@@ -536,32 +537,34 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
   const currentConverObj =
     conversations.find((ele: any) => ele._id === currentConversation) || {};
 
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/60">
+        <svg
+          className="w-10 h-10 animate-spin text-slate-700"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+          />
+        </svg>
+      </div>
+    );
+  }
+
   return (
     <>
-      {isLoading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/60">
-          <svg
-            className="w-10 h-10 animate-spin text-slate-700"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-            />
-          </svg>
-        </div>
-      )}
-
       {Object.keys(summaryGroup || {}).length > 0 && (
         <ModalJoinGroupFromLink
           isVisible={isVisibleModalJoinGroup}
@@ -591,7 +594,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
               {visibleFilter ? (
                 <FilterContainer
                   dataSingle={singleConverFilter}
-                  dataMulti={mutipleConverFilter}
+                  dataMulti={multipleConverFilter}
                   valueText={valueInput}
                 />
               ) : (

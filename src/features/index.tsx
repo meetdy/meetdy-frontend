@@ -46,10 +46,12 @@ function ChatLayout() {
 
   const codeRevokeRef = useRef(null);
 
-  const { conversations } = useSelector((state) => state.chat);
-  const { isJoinChatLayout, user } = useSelector((state) => state.global);
-  const { amountNotify } = useSelector((state) => state.friend);
+  const { isJoinChatLayout, user } = useSelector((state: any) => state.global);
+  const { conversations } = useSelector((state: any) => state.chat);
+  const { amountNotify } = useSelector((state: any) => state.friend);
+
   const [idNewMessage, setIdNewMessage] = useState('');
+
   useEffect(() => {
     return () => {
       socket.close();
@@ -188,14 +190,13 @@ function ChatLayout() {
         window.location.reload();
       }
     });
-
-    // dispatch(setJoinFriendLayout(true))
   }, []);
 
   return (
-    <div className="h-screen w-full overflow-hidden">
+    <div className="h-screen w-full">
       <div className="flex h-full">
-        <aside>
+        {/* Sidebar */}
+        <aside className="w-16 shrink-0">
           <NavbarContainer />
         </aside>
 
