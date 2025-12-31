@@ -1,38 +1,39 @@
-import { useRef, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { Search, UserPlus, Users, SlidersHorizontal, Plus, Filter } from "lucide-react"
+import { useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  Search,
+  UserPlus,
+  Users,
+  SlidersHorizontal,
+  Plus,
+  Filter,
+} from 'lucide-react';
 
-import userApi from "@/api/userApi"
-import ModalClassify from "../../components/ModalClassify"
-import ModalAddFriend from "@/components/ModalAddFriend"
-import UserCard from "@/components/UserCard"
-import ModalCreateGroup from "@/features/Chat/components/ModalCreateGroup"
-import { createGroup } from "@/features/Chat/slice/chatSlice"
+import userApi from '@/api/userApi';
+import ModalClassify from '../../components/ModalClassify';
+import ModalAddFriend from '@/components/ModalAddFriend';
+import UserCard from '@/components/UserCard';
+import ModalCreateGroup from '@/features/Chat/components/ModalCreateGroup';
+import { createGroup } from '@/features/Chat/slice/chatSlice';
 
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { toast } from "sonner"
-import { cn } from "@/lib/utils"
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 type Props = {
-  valueText: string
-  onSearchChange: (text: string) => void
-  onSubmitSearch: () => void
-  isFriendPage?: boolean
-  onFilterClasify?: (value: string) => void
-  valueClassify?: string
-}
+  valueText: string;
+  onSearchChange: (text: string) => void;
+  onSubmitSearch: () => void;
+  isFriendPage?: boolean;
+  onFilterClasify?: (value: string) => void;
+  valueClassify?: string;
+};
 
 export default function SearchContainer({
   valueText,
@@ -42,59 +43,61 @@ export default function SearchContainer({
   onFilterClasify,
   valueClassify,
 }: Props) {
-  const refDebounce = useRef<any>(null)
-  const dispatch = useDispatch()
-  const { classifies } = useSelector((state: any) => state.chat)
+  const refDebounce = useRef<any>(null);
+  const dispatch = useDispatch();
+  const { classifies } = useSelector((state: any) => state.chat);
 
-  const [isModalCreateGroup, setIsModalCreateGroup] = useState(false)
-  const [confirmLoading, setConfirmLoading] = useState(false)
-  const [isShowModalAddFriend, setShowModalAddFriend] = useState(false)
-  const [userIsFind, setUserIsFind] = useState<any>({})
-  const [visibleUserCard, setVisbleUserCard] = useState(false)
-  const [isModalClassify, setIsModalClassify] = useState(false)
+  const [isModalCreateGroup, setIsModalCreateGroup] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [isShowModalAddFriend, setShowModalAddFriend] = useState(false);
+  const [userIsFind, setUserIsFind] = useState<any>({});
+  const [visibleUserCard, setVisibleUserCard] = useState(false);
+  const [isModalClassify, setIsModalClassify] = useState(false);
 
   const handleOnChangeClassify = (value: string) => {
-    onFilterClasify?.(value)
-  }
+    onFilterClasify?.(value);
+  };
 
-  const handleCreateGroup = () => setIsModalCreateGroup(true)
-  const handleCancelCreateGroup = () => setIsModalCreateGroup(false)
+  const handleCreateGroup = () => setIsModalCreateGroup(true);
+  const handleCancelCreateGroup = () => setIsModalCreateGroup(false);
   const handleOkCreateGroup = (value: any) => {
-    setConfirmLoading(true)
-    dispatch(createGroup(value))
-    setConfirmLoading(false)
-    setIsModalCreateGroup(false)
-  }
+    setConfirmLoading(true);
+    dispatch(createGroup(value));
+    setConfirmLoading(false);
+    setIsModalCreateGroup(false);
+  };
 
-  const handleOpenModalAddFriend = () => setShowModalAddFriend(true)
-  const handleCancelAddFriend = () => setShowModalAddFriend(false)
+  const handleOpenModalAddFriend = () => setShowModalAddFriend(true);
+  const handleCancelAddFriend = () => setShowModalAddFriend(false);
 
   const handFindUser = async (value: string) => {
     try {
-      const user = await userApi.fetchUser(value)
-      setUserIsFind(user)
-      setVisbleUserCard(true)
-      setShowModalAddFriend(false)
+      const user = await userApi.getUser(value);
+      setUserIsFind(user);
+      setVisibleUserCard(true);
+      setShowModalAddFriend(false);
     } catch (error) {
-      toast.error("Không tìm thấy người dùng")
+      toast.error('Không tìm thấy người dùng');
     }
-  }
+  };
 
   const handleInputChange = (e: any) => {
-    const value = e.target.value
-    onSearchChange?.(value)
+    const value = e.target.value;
+    onSearchChange?.(value);
 
-    if (refDebounce.current) clearTimeout(refDebounce.current)
+    if (refDebounce.current) clearTimeout(refDebounce.current);
 
     refDebounce.current = setTimeout(() => {
-      onSubmitSearch?.()
-    }, 400)
-  }
+      onSubmitSearch?.();
+    }, 400);
+  };
 
-  const handleOpenModalClassify = () => setIsModalClassify(true)
-  const handleCancelModalClassify = () => setIsModalClassify(false)
+  const handleOpenModalClassify = () => setIsModalClassify(true);
+  const handleCancelModalClassify = () => setIsModalClassify(false);
 
-  const activeClassify = classifies?.find((ele: any) => ele._id === valueClassify)
+  const activeClassify = classifies?.find(
+    (ele: any) => ele._id === valueClassify,
+  );
 
   return (
     <div className="w-full space-y-3">
@@ -109,78 +112,78 @@ export default function SearchContainer({
           />
         </div>
 
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleOpenModalAddFriend}
-              className="h-10 w-10 rounded-xl hover:bg-slate-100"
-            >
-              <UserPlus className="w-5 h-5 text-slate-600" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">Thêm bạn</TooltipContent>
-        </Tooltip>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleOpenModalAddFriend}
+          className="h-10 w-10 rounded-xl hover:bg-slate-100"
+        >
+          <UserPlus className="w-5 h-5 text-slate-600" />
+        </Button>
 
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleCreateGroup}
-              className="h-10 w-10 rounded-xl hover:bg-slate-100"
-            >
-              <Users className="w-5 h-5 text-slate-600" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">Tạo nhóm</TooltipContent>
-        </Tooltip>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleCreateGroup}
+          className="h-10 w-10 rounded-xl hover:bg-slate-100"
+        >
+          <Users className="w-5 h-5 text-slate-600" />
+        </Button>
       </div>
 
       {!isFriendPage && valueText.trim().length === 0 && (
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
-          <button
-            onClick={() => handleOnChangeClassify("0")}
+          {/* All */}
+          <Button
+            onClick={() => handleOnChangeClassify('0')}
+            variant={
+              valueClassify === '0' || !valueClassify ? 'default' : 'secondary'
+            }
+            size="sm"
             className={cn(
-              "flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors",
-              valueClassify === "0" || !valueClassify
-                ? "bg-primary text-white"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              'flex-shrink-0 rounded-full px-3',
+              valueClassify === '0' || !valueClassify
+                ? ''
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200',
             )}
           >
             Tất cả
-          </button>
+          </Button>
 
           {classifies?.map((ele: any) => (
-            <button
+            <Button
               key={ele._id}
               onClick={() => handleOnChangeClassify(ele._id)}
+              variant={valueClassify === ele._id ? 'default' : 'secondary'}
+              size="sm"
               className={cn(
-                "flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors flex items-center gap-1.5",
+                'flex-shrink-0 rounded-full px-3 flex items-center gap-1.5',
                 valueClassify === ele._id
-                  ? "bg-primary text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  ? ''
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200',
               )}
             >
               {ele.color?.code && (
-                <span 
-                  className="w-2 h-2 rounded-full" 
+                <span
+                  className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: ele.color.code }}
                 />
               )}
               {ele.name}
-            </button>
+            </Button>
           ))}
 
+          {/* Add */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <button
+              <Button
                 onClick={handleOpenModalClassify}
-                className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors"
+                variant="secondary"
+                size="icon"
+                className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200"
               >
                 <Plus className="w-4 h-4 text-slate-500" />
-              </button>
+              </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">Quản lý phân loại</TooltipContent>
           </Tooltip>
@@ -210,8 +213,8 @@ export default function SearchContainer({
       <UserCard
         user={userIsFind}
         isVisible={visibleUserCard}
-        onCancel={() => setVisbleUserCard(false)}
+        onCancel={() => setVisibleUserCard(false)}
       />
     </div>
-  )
+  );
 }

@@ -505,7 +505,7 @@ const chatSlice = createSlice({
       const index = state.channels.findIndex((ele) => ele._id === channelId);
       state.channels[index] = { ...state.channels[index], name };
     },
-    updateAvavarConver: (state, action) => {
+    updateAvatarConver: (state, action) => {
       const { conversationId, conversationAvatar } = action.payload;
       const index = state.conversations.findIndex(
         (ele) => ele._id === conversationId,
@@ -789,7 +789,7 @@ export const {
   setCurrentChannel,
   addMessageInChannel,
   updateNameChannel,
-  updateAvavarConver,
+  updateAvatarConver,
   removeChannel,
   setTotalChannelNotify,
   updateVoteMessage,

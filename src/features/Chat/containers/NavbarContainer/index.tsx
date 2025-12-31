@@ -186,6 +186,7 @@ export default function NavbarContainer() {
           <Popover open={profileOpen} onOpenChange={setProfileOpen}>
             <PopoverTrigger asChild>
               <Button
+                type="button"
                 variant="ghost"
                 className="p-0 rounded-full ring-2 ring-transparent hover:ring-primary/30 transition"
               >
@@ -232,6 +233,7 @@ export default function NavbarContainer() {
           <Popover open={settingsOpen} onOpenChange={setSettingsOpen}>
             <PopoverTrigger asChild>
               <Button
+                type="button"
                 variant="ghost"
                 className="w-full h-12 rounded-xl hover:bg-muted"
               >

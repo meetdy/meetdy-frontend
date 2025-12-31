@@ -38,7 +38,7 @@ import {
   setRedoMessage,
   setTotalChannelNotify,
   setTypeOfConversation,
-  updateAvavarConver,
+  updateAvatarConver,
   updateChannel,
   updateLastViewOfMembers,
   updateMemberInconver,
@@ -49,40 +49,8 @@ import {
 } from './slice/chatSlice';
 
 import renderWidthDrawer from '@/utils/DrawerResponsive';
-import { is } from 'date-fns/locale';
 
-function ensureToastContainer() {
-  let container = document.getElementById('global-toast-container');
-  if (!container) {
-    container = document.createElement('div');
-    container.id = 'global-toast-container';
-    container.className = 'fixed top-4 right-4 z-[9999] flex flex-col gap-2';
-    document.body.appendChild(container);
-  }
-  return container;
-}
-
-function showToast(message: string, variant: 'info' | 'warning' = 'info') {
-  if ('Notification' in window && Notification.permission === 'granted') {
-    // eslint-disable-next-line no-new
-    new Notification(message);
-    return;
-  }
-  const container = ensureToastContainer();
-  const el = document.createElement('div');
-  el.className =
-    'max-w-sm px-4 py-2 rounded-md shadow-md text-sm animate-slide-in ' +
-    (variant === 'warning'
-      ? 'bg-yellow-50 text-yellow-800'
-      : 'bg-white text-slate-900');
-  el.style.boxShadow = '0 4px 14px rgba(0,0,0,0.08)';
-  el.textContent = message;
-  container.appendChild(el);
-  setTimeout(() => {
-    el.classList.add('opacity-0', 'transition', 'duration-300');
-    setTimeout(() => el.remove(), 300);
-  }, 4000);
-}
+import { toast } from 'sonner';
 
 function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
   const dispatch = useDispatch();
@@ -172,9 +140,8 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
             setSummary(dataSummary);
             setIsVisibleJoinGroup(true);
           } catch (error) {
-            showToast(
+            toast.error(
               'Trưởng nhóm đã tắt tính năng tham gia nhóm bằng liên kết',
-              'warning',
             );
           }
         } else {
@@ -218,7 +185,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
           (ele) => ele._id === conversationId,
         );
         if (conver?.leaderId !== user?._id) {
-          showToast(`Nhóm ${conver?.name} đã giải tán`, 'info');
+          toast.info(`Nhóm ${conver?.name} đã giải tán`);
         }
         dispatch(removeConversation(conversationId));
       });
@@ -270,7 +237,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         const conversation = refConversations.current.find(
           (ele) => ele._id === conversationId,
         );
-        showToast(`Bạn đã bị xóa khỏi nhóm ${conversation?.name}`, 'info');
+        toast.info(`Bạn đã bị xóa khỏi nhóm ${conversation?.name}`);
         if (conversationId === refCurrentConversation.current) {
           dispatch(setCurrentConversation(''));
         }
@@ -363,7 +330,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         (conversationId: string, conversationAvatar: string, message: any) => {
           if (refCurrentConversation.current === conversationId) {
             dispatch(
-              updateAvavarConver({ conversationId, conversationAvatar }),
+              updateAvatarConver({ conversationId, conversationAvatar }),
             );
           }
         },
@@ -536,6 +503,68 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
 
   const currentConverObj =
     conversations.find((ele: any) => ele._id === currentConversation) || {};
+
+  const renderAsideInfoConversation = () => {
+    return (
+      <aside
+        className={`${
+          isOpenInfo ? 'block' : 'hidden'
+        } hidden lg:block lg:w-80 border-l border-slate-200/80 bg-white`}
+      >
+        <div className="h-full overflow-auto relative">
+          {openDrawerInfo && width <= 1199 && (
+            <div
+              className="fixed top-0 right-0 h-full bg-white shadow-lg z-50 transition-transform"
+              style={{
+                width: `${renderWidthDrawer(width)}%`,
+                transform: openDrawerInfo
+                  ? 'translateX(0)'
+                  : 'translateX(100%)',
+              }}
+            >
+              <div className="h-full overflow-auto">
+                {visibleNews ? (
+                  <GroupNews
+                    tabActive={tabActiveInNews}
+                    onBack={handleOnBack}
+                    onChange={handleChangeActiveKey}
+                  />
+                ) : (
+                  <InfoContainer
+                    onViewChannel={handleChangeViewChannel}
+                    socket={socket}
+                    onOpenInfoBlock={() => setIsOpenInfo(true)}
+                  />
+                )}
+              </div>
+              <button
+                onClick={() => setOpenDrawerInfo(false)}
+                className="absolute top-3 left-3 p-2 rounded-md hover:bg-slate-100"
+              >
+                Close
+              </button>
+            </div>
+          )}
+
+          <div className="p-4">
+            {visibleNews ? (
+              <GroupNews
+                tabActive={tabActiveInNews}
+                onBack={handleOnBack}
+                onChange={handleChangeActiveKey}
+              />
+            ) : (
+              <InfoContainer
+                onViewChannel={handleChangeViewChannel}
+                socket={socket}
+                onOpenInfoBlock={() => setIsOpenInfo(true)}
+              />
+            )}
+          </div>
+        </div>
+      </aside>
+    );
+  };
 
   if (isLoading) {
     return (
@@ -757,64 +786,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
             </div>
           </main>
         )}
-
-        <aside
-          className={`${
-            isOpenInfo ? 'block' : 'hidden'
-          } hidden lg:block lg:w-80 border-l border-slate-200/80 bg-white`}
-        >
-          <div className="h-full overflow-auto relative">
-            {openDrawerInfo && width <= 1199 && (
-              <div
-                className="fixed top-0 right-0 h-full bg-white shadow-lg z-50 transition-transform"
-                style={{
-                  width: `${renderWidthDrawer(width)}%`,
-                  transform: openDrawerInfo
-                    ? 'translateX(0)'
-                    : 'translateX(100%)',
-                }}
-              >
-                <div className="h-full overflow-auto">
-                  {visibleNews ? (
-                    <GroupNews
-                      tabActive={tabActiveInNews}
-                      onBack={handleOnBack}
-                      onChange={handleChangeActiveKey}
-                    />
-                  ) : (
-                    <InfoContainer
-                      onViewChannel={handleChangeViewChannel}
-                      socket={socket}
-                      onOpenInfoBlock={() => setIsOpenInfo(true)}
-                    />
-                  )}
-                </div>
-                <button
-                  onClick={() => setOpenDrawerInfo(false)}
-                  className="absolute top-3 left-3 p-2 rounded-md hover:bg-slate-100"
-                >
-                  Close
-                </button>
-              </div>
-            )}
-
-            <div className="p-4">
-              {visibleNews ? (
-                <GroupNews
-                  tabActive={tabActiveInNews}
-                  onBack={handleOnBack}
-                  onChange={handleChangeActiveKey}
-                />
-              ) : (
-                <InfoContainer
-                  onViewChannel={handleChangeViewChannel}
-                  socket={socket}
-                  onOpenInfoBlock={() => setIsOpenInfo(true)}
-                />
-              )}
-            </div>
-          </div>
-        </aside>
+        {renderAsideInfoConversation()}
       </div>
     </>
   );

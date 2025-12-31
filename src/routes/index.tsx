@@ -47,24 +47,22 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/jf-link/:conversationId" element={<JoinFromLink />} />
-          <Route path="/account/*" element={<Account />} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/jf-link/:conversationId" element={<JoinFromLink />} />
+        <Route path="/account/*" element={<Account />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route path="/chat/*" element={<ChatLayout />} />
-            <Route path="/call-video/:conversationId" element={<CallVideo />} />
-          </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/chat/*" element={<ChatLayout />} />
+          <Route path="/call-video/:conversationId" element={<CallVideo />} />
+        </Route>
 
-          <Route element={<AdminProtectedRoute isAdmin={isAdmin} />}>
-            <Route path="/admin/*" element={<Admin />} />
-          </Route>
+        <Route element={<AdminProtectedRoute isAdmin={isAdmin} />}>
+          <Route path="/admin/*" element={<Admin />} />
+        </Route>
 
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </div>
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </BrowserRouter>
   );
 }

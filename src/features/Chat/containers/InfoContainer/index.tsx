@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -21,16 +21,12 @@ import type { RootState, AppDispatch } from '@/store';
 type Props = {
   socket?: any;
   onViewChannel?: (id?: string) => void;
-  onOpenInfoBlock?: () => void;
 };
 
-export default function InfoContainer({
-  socket = {},
-  onViewChannel = undefined,
-}: Props) {
+export default function InfoContainer({ socket = {}, onViewChannel }: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
-  const [navState, setNavState] = useState({ tabpane: 0, view: 0 }); // view: 0 => info, 1 => members, 2 => media
+  const [navState, setNavState] = useState({ view: 0, tabpane: 0 });
   const [isUserCardVisible, setUserCardVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
@@ -41,35 +37,31 @@ export default function InfoContainer({
     conversations,
     channels,
   } = useSelector((state: RootState) => state.chat);
+
   const { media } = useSelector((state: RootState) => state.media);
 
   const currentConver = useMemo(
-    () => conversations.find((ele) => ele._id === currentConversation) ?? null,
+    () => conversations.find((c) => c._id === currentConversation) ?? null,
     [conversations, currentConversation],
   );
 
-  const handleChoseUser = useCallback(async (value: { username: string }) => {
-    try {
-      const user = await userApi.getUser(value.username);
-      setSelectedUser(user);
-      setUserCardVisible(true);
-    } catch (err) {
-      setSelectedUser(null);
-      setUserCardVisible(false);
-    }
-  }, []);
+  const handleChoseUser = useCallback(
+    async ({ username }: { username: string }) => {
+      try {
+        const user = await userApi.getUser(username);
+        setSelectedUser(user);
+        setUserCardVisible(true);
+      } catch {
+        setSelectedUser(null);
+        setUserCardVisible(false);
+      }
+    },
+    [],
+  );
 
-  const handleViewMemberClick = useCallback((view: number) => {
-    setNavState({ view, tabpane: 0 });
-  }, []);
-
-  const handleViewMediaClick = useCallback((view: number, tabpane = 0) => {
-    setNavState({ view, tabpane });
-  }, []);
-
-  const handleOnBack = useCallback((view = 0) => {
-    setNavState({ view, tabpane: 0 });
-  }, []);
+  const goInfo = () => setNavState({ view: 0, tabpane: 0 });
+  const goMembers = (view: number) => setNavState({ view, tabpane: 0 });
+  const goMedia = (view: number, tabpane = 0) => setNavState({ view, tabpane });
 
   useEffect(() => {
     if (currentConversation) {
@@ -78,69 +70,69 @@ export default function InfoContainer({
   }, [currentConversation, dispatch]);
 
   return (
-    <div id="main-info">
+    <div className="flex h-full w-full flex-col bg-white">
+      {/* ===== INFO VIEW ===== */}
       {navState.view === 0 && (
         <>
-          <div className="info_title-wrapper">
+          {/* Header */}
+          <div className="border-b border-zinc-200 px-5 py-3">
             <InfoTitle
-              onBack={() => handleOnBack(0)}
+              onBack={goInfo}
               text={
                 currentConver?.type ? 'Thông tin nhóm' : 'Thông tin hội thoại'
               }
             />
           </div>
 
+          {/* Body */}
           <Scrollbars
             autoHide
             autoHideTimeout={1000}
             autoHideDuration={200}
-            style={{ width: '100%', height: 'calc(100vh - 68px)' }}
+            style={{ height: 'calc(100vh - 56px)' }}
           >
-            <div className="body-info">
-              <div className="info_name-and-thumbnail-wrapper">
+            <div className="space-y-6 px-5 py-4">
+              {/* Name + Avatar */}
+              <div>
                 <InfoNameAndThumbnail conversation={currentConver} />
               </div>
 
+              {/* Members & Channels */}
               {type && (
                 <>
-                  <div className="info_member-wrapper">
+                  <div className="border-t border-zinc-200 pt-4">
                     <InfoMember
-                      viewMemberClick={handleViewMemberClick}
+                      viewMemberClick={goMembers}
                       quantity={memberInConversation?.length ?? 0}
                     />
                   </div>
 
-                  <div className="info_member-wrapper">
+                  <div className="border-t border-zinc-200 pt-4">
                     <Channel onViewChannel={onViewChannel} data={channels} />
                   </div>
                 </>
               )}
 
-              <div className="info_archive-media-wrapper">
+              {/* Media */}
+              <div className="border-t border-zinc-200 pt-4 space-y-4">
                 <ArchiveMedia
-                  viewMediaClick={handleViewMediaClick}
                   name="Ảnh"
                   items={media.images}
+                  viewMediaClick={goMedia}
                 />
-              </div>
 
-              <div className="info_archive-media-wrapper">
                 <ArchiveMedia
-                  viewMediaClick={handleViewMediaClick}
                   name="Video"
                   items={media.videos}
+                  viewMediaClick={goMedia}
                 />
+
+                <ArchiveFile items={media.files} viewMediaClick={goMedia} />
               </div>
 
-              <div className="info_archive-file-wrapper">
-                <ArchiveFile
-                  viewMediaClick={handleViewMediaClick}
-                  items={media.files}
-                />
-              </div>
-
+              {/* Settings */}
               {currentConver?.type && (
-                <div className="info_another-setting-wrapper">
+                <div className="border-t border-zinc-200 pt-4">
                   <AnotherSetting socket={socket} />
                 </div>
               )}
@@ -149,26 +141,26 @@ export default function InfoContainer({
         </>
       )}
 
+      {/* ===== MEDIA SEARCH ===== */}
       {navState.view === 2 && (
-        <InfoMediaSearch
-          onBack={() => handleOnBack(0)}
-          tabpane={navState.tabpane}
-        />
+        <InfoMediaSearch onBack={goInfo} tabpane={navState.tabpane} />
       )}
 
+      {/* ===== MEMBER SEARCH ===== */}
       {navState.view === 1 && (
         <InfoFriendSearch
-          onBack={() => handleOnBack(0)}
+          onBack={goInfo}
           members={memberInConversation}
           onChoseUser={handleChoseUser}
         />
       )}
 
+      {/* ===== USER CARD ===== */}
       {selectedUser && (
         <UserCard
           isVisible={isUserCardVisible}
-          onCancel={() => setUserCardVisible(false)}
           user={selectedUser}
+          onCancel={() => setUserCardVisible(false)}
         />
       )}
     </div>
