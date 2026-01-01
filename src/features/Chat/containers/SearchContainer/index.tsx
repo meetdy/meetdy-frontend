@@ -1,13 +1,6 @@
 import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Search,
-  UserPlus,
-  Users,
-  SlidersHorizontal,
-  Plus,
-  Filter,
-} from 'lucide-react';
+import { Search, UserPlus, Users, Plus } from 'lucide-react';
 
 import userApi from '@/api/userApi';
 import ModalClassify from '../../components/ModalClassify';
@@ -94,10 +87,6 @@ export default function SearchContainer({
 
   const handleOpenModalClassify = () => setIsModalClassify(true);
   const handleCancelModalClassify = () => setIsModalClassify(false);
-
-  const activeClassify = classifies?.find(
-    (ele: any) => ele._id === valueClassify,
-  );
 
   return (
     <div className="w-full space-y-3">
