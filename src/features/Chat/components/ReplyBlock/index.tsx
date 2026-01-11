@@ -1,20 +1,23 @@
-import { XCircle, MessageSquareReply } from 'lucide-react';
-import PropTypes from 'prop-types';
+import { X, MessageSquareReply, Video } from 'lucide-react';
 import React from 'react';
 import { defaultStyles, FileIcon } from 'react-file-icon';
 import fileHelpers from '@/utils/fileHelpers';
+import { cn } from '@/lib/utils';
 
-ReplyBlock.propTypes = {
-  replyMessage: PropTypes.object,
-  onCloseReply: PropTypes.func,
+type ReplyMessage = {
+  type: 'IMAGE' | 'VIDEO' | 'FILE' | 'STICKER' | 'HTML' | 'TEXT' | string;
+  content: string;
+  user: { name: string };
 };
 
-ReplyBlock.defaultProps = {
-  replyMessage: null,
-  onCloseReply: null,
+type ReplyBlockProps = {
+  replyMessage: ReplyMessage | null;
+  onCloseReply?: () => void;
 };
 
-function ReplyBlock({ replyMessage, onCloseReply }) {
+function ReplyBlock({ replyMessage, onCloseReply }: ReplyBlockProps) {
+  if (!replyMessage) return null;
+
   const handleOnCloseReply = () => {
     if (onCloseReply) {
       onCloseReply();
@@ -22,72 +25,101 @@ function ReplyBlock({ replyMessage, onCloseReply }) {
   };
 
   const fileName =
-    replyMessage.type === 'FILE' &&
-    fileHelpers.getFileName(replyMessage.content);
+    replyMessage.type === 'FILE'
+      ? fileHelpers.getFileName(replyMessage.content)
+      : '';
   const fileExtension =
-    replyMessage.type === 'FILE' && fileHelpers.getFileExtension(fileName);
+    replyMessage.type === 'FILE' ? fileHelpers.getFileExtension(fileName) : '';
 
-  return (
-    <div className="reply-block">
-      <div className="vertical-bar" />
-
-      {replyMessage.type === 'IMAGE' ? (
-        <div className="reply-block_logo">
-          <img src={replyMessage.content} />
-        </div>
-      ) : replyMessage.type === 'VIDEO' ? (
-        <div className="reply-block_logo">
-          <img src="https://www.pngitem.com/pimgs/m/501-5010215_vidia-logos-download-video-logo-png-transparent-png.png" />
-        </div>
-      ) : replyMessage.type === 'FILE' ? (
-        <div className="reply-block_logo">
-          <div className="file_info-icon">
-            <FileIcon
-              extension={fileExtension}
-              {...defaultStyles[fileExtension]}
+  const renderPreview = () => {
+    switch (replyMessage.type) {
+      case 'IMAGE':
+        return (
+          <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
+            <img
+              src={replyMessage.content}
+              alt="Preview"
+              className="w-full h-full object-cover"
             />
           </div>
-        </div>
-      ) : replyMessage.type === 'STICKER' ? (
-        <div className="reply-block_logo">
-          <img src={replyMessage.content} />
-        </div>
-      ) : (
-        <div></div>
-      )}
+        );
+      case 'VIDEO':
+        return (
+          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+            <Video className="w-5 h-5 text-slate-500" />
+          </div>
+        );
+      case 'FILE':
+        return (
+          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0 p-1.5">
+            <FileIcon
+              extension={fileExtension}
+              {...(defaultStyles as Record<string, object>)[fileExtension]}
+            />
+          </div>
+        );
+      case 'STICKER':
+        return (
+          <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-50 flex-shrink-0">
+            <img
+              src={replyMessage.content}
+              alt="Sticker"
+              className="w-full h-full object-contain"
+            />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
-      <div className="reply-block_info">
-        <div className="info-blog_info--top">
-          <MessageSquareReply className="w-4 h-4" />
-          &nbsp;
+  const getContentPreview = () => {
+    switch (replyMessage.type) {
+      case 'IMAGE':
+        return '[Hình ảnh]';
+      case 'VIDEO':
+        return '[Video]';
+      case 'FILE':
+        return `[File] ${fileName}`;
+      case 'STICKER':
+        return '[Sticker]';
+      case 'HTML':
+        return '[Văn bản]';
+      default:
+        return replyMessage.content?.substring(0, 50) || '';
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-3 px-4 py-2.5 bg-slate-50 border-l-3 border-primary rounded-r-lg">
+      {renderPreview()}
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5 text-xs text-slate-600">
+          <MessageSquareReply className="w-3.5 h-3.5 text-primary" />
           <span>
             Trả lời{' '}
-            <strong className="reply-block_info--user">
+            <strong className="font-semibold text-primary">
               {replyMessage.user.name}
             </strong>
           </span>
         </div>
-
-        <div className="info-blog_info--bottom">
-          {replyMessage.type === 'IMAGE' ? (
-            <span>[Hình ảnh]</span>
-          ) : replyMessage.type === 'VIDEO' ? (
-            <span>[Video]</span>
-          ) : replyMessage.type === 'FILE' ? (
-            <span>[File] {fileName}</span>
-          ) : replyMessage.type === 'STICKER' ? (
-            <span>[Stikcer]</span>
-          ) : replyMessage.type == 'HTML' ? (
-            <span>[Văn bản]</span>
-          ) : (
-            replyMessage.content
-          )}
-        </div>
+        <p className="text-sm text-slate-500 truncate mt-0.5">
+          {getContentPreview()}
+        </p>
       </div>
 
-      <div className="reply-block_close-btn" onClick={handleOnCloseReply}>
-        <XCircle className="w-5 h-5" />
-      </div>
+      <button
+        type="button"
+        onClick={handleOnCloseReply}
+        className={cn(
+          'flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center',
+          'text-slate-400 hover:text-slate-600 hover:bg-slate-200',
+          'transition-colors duration-150'
+        )}
+      >
+        <X className="w-4 h-4" />
+      </button>
     </div>
   );
 }

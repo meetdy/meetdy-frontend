@@ -121,10 +121,17 @@ export default function BodyChatContainer({
 
   const renderMessages = (messagesList: any[]) => {
     const result: React.ReactNode[] = [];
+    const seenIds = new Set<string>();
 
     for (let i = 0; i < messagesList.length; i++) {
       const preMessage = messagesList[i - 1];
       const currentMessage = messagesList[i];
+      
+      const messageId = currentMessage._id;
+      const uniqueKey = seenIds.has(messageId) 
+        ? `${messageId}-${i}` 
+        : messageId;
+      seenIds.add(messageId);
 
       const senderId = currentMessage.user._id;
       const isMyMessage = senderId === user._id;
@@ -132,7 +139,7 @@ export default function BodyChatContainer({
       if (i === 0) {
         result.push(
           <UserMessage
-            key={currentMessage._id ?? `m-${i}`}
+            key={uniqueKey}
             message={currentMessage}
             isMyMessage={isMyMessage}
             onOpenModalShare={handleOpenModalShare}
@@ -173,10 +180,9 @@ export default function BodyChatContainer({
 
       if (timeIsEqual) {
         result.push(
-          <div key={currentMessage._id ?? `m-${i}`}>
+          <div key={`divider-${uniqueKey}`}>
             <DividerCustom dateString={dateTempt2} />
             <UserMessage
-              key={`um-${i}`}
               message={currentMessage}
               isMyMessage={isMyMessage}
               viewUsers={viewUsers}
@@ -189,7 +195,7 @@ export default function BodyChatContainer({
       } else {
         result.push(
           <UserMessage
-            key={currentMessage._id ?? `um-${i}`}
+            key={uniqueKey}
             message={currentMessage}
             isMyMessage={isMyMessage}
             isSameUser={isSameUser}
