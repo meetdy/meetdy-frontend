@@ -53,6 +53,14 @@ A React-based chat application built with Vite, TypeScript, and Tailwind CSS v4.
 - GroupCard (BsThreeDotsVertical → MoreVertical from Lucide, improved card styling)
 - UserMessage toast notifications fixed to use sonner pattern
 
+## UI Improvements (January 2026)
+- **Avatar component**: Now uses forwardRef to fix console warnings with Radix UI
+- **ListReaction**: Modernized with Radix Popover, TypeScript types, ClickUp/Lark-style emoji picker
+- **ListReactionOfUser**: Uses Radix Tooltip, proper TypeScript types, modern pill-style badges
+- **ReplyBlock**: Full TypeScript rewrite with modern Tailwind styling
+- **Primary color**: Updated to blue (oklch 0.55 0.18 250) for Lark-like appearance
+- **Duplicate key fixes**: BodyChatContainer now handles duplicate message IDs properly
+
 ## Design System (January 2026)
 - **Message bubbles**: 
   - Sent: gradient primary background (from-primary to-primary/90), rounded-[18px], max-width 75%
