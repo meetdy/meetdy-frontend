@@ -49,6 +49,9 @@ A React-based chat application built with Vite, TypeScript, and Tailwind CSS v4.
 - FileItem, ReplyBlock, InfoTitle, PinItem, ConversationAvatar
 - ListReaction, ModalCreateGroup, ModalAddMemberToConver
 - CallVideo ActionNavbar (now uses shadcn Button instead of antd Menu)
+- ShortMessage (FcBarChart → BarChart3 from Lucide)
+- GroupCard (BsThreeDotsVertical → MoreVertical from Lucide, improved card styling)
+- UserMessage toast notifications fixed to use sonner pattern
 
 ## Development
 - Run: `npm run dev` (starts Vite dev server on port 5000)
