@@ -1,8 +1,7 @@
-import { CloseCircleFilled } from '@ant-design/icons';
+import { XCircle, MessageSquareReply } from 'lucide-react';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { defaultStyles, FileIcon } from 'react-file-icon';
-import { MdQuestionAnswer } from 'react-icons/md';
 import fileHelpers from '@/utils/fileHelpers';
 
 ReplyBlock.propTypes = {
@@ -59,7 +58,7 @@ function ReplyBlock({ replyMessage, onCloseReply }) {
 
       <div className="reply-block_info">
         <div className="info-blog_info--top">
-          <MdQuestionAnswer />
+          <MessageSquareReply className="w-4 h-4" />
           &nbsp;
           <span>
             Trả lời{' '}
@@ -87,7 +86,7 @@ function ReplyBlock({ replyMessage, onCloseReply }) {
       </div>
 
       <div className="reply-block_close-btn" onClick={handleOnCloseReply}>
-        <CloseCircleFilled />
+        <XCircle className="w-5 h-5" />
       </div>
     </div>
   );

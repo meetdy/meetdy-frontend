@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import fileHelpers from '@/utils/fileHelpers';
-import { CloudDownloadOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { Download, Share2 } from 'lucide-react';
 
 FileItem.propTypes = {
   file: PropTypes.object.isRequired,
@@ -27,7 +27,6 @@ function FileItem({ file, inArchive }) {
   return (
     <div
       className="item-file"
-      // onClick={handleOnClickDownLoad}
     >
       <div className="item-file--icon">
         <FileIcon extension={fileExtension} {...defaultStyles[fileExtension]} />
@@ -40,11 +39,11 @@ function FileItem({ file, inArchive }) {
           className="item-file_button item-file_button--mg-right"
           onClick={handleOnClickShare}
         >
-          <ShareAltOutlined />
+          <Share2 className="w-4 h-4" />
         </div>
 
         <div className="item-file_button" onClick={handleOnClickDownLoad}>
-          <CloudDownloadOutlined />
+          <Download className="w-4 h-4" />
         </div>
       </div>
     </div>

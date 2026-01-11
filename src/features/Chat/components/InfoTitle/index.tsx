@@ -1,4 +1,4 @@
-import { LeftOutlined } from '@ant-design/icons';
+import { ChevronLeft } from 'lucide-react';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -36,7 +36,7 @@ function InfoTitle(props) {
     <div className="info_title">
       {isBack && (
         <div className="back-icon" onClick={handleOnClick}>
-          <LeftOutlined />
+          <ChevronLeft className="w-5 h-5" />
         </div>
       )}
 

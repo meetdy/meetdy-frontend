@@ -1,12 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu } from 'antd';
-import {
-  AudioOutlined,
-  CloseOutlined,
-  ShareAltOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
+import { Video, Mic, Monitor } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 ActionNavbar.propTypes = {};
 
@@ -24,36 +19,36 @@ function ActionNavbar({ onToggleVideo, onToggleAudio, onShareScreen }) {
   };
 
   return (
-    <div className="action-navbar" style={{ width: '40%', margin: '0 auto' }}>
-      <Menu mode="horizontal">
-        <Menu.Item
-          key="toggle-video"
-          icon={<VideoCameraOutlined />}
-          onClick={handleToggleVideo}
-        >
-          Tắt video
-        </Menu.Item>
+    <div className="action-navbar flex items-center justify-center gap-3 py-3" style={{ width: '40%', margin: '0 auto' }}>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleToggleVideo}
+        className="flex items-center gap-2 rounded-xl"
+      >
+        <Video className="w-4 h-4" />
+        <span>Tắt video</span>
+      </Button>
 
-        <Menu.Item
-          key="toggle-audio"
-          icon={<AudioOutlined />}
-          onClick={handleToggleAudio}
-        >
-          Tắt audio
-        </Menu.Item>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleToggleAudio}
+        className="flex items-center gap-2 rounded-xl"
+      >
+        <Mic className="w-4 h-4" />
+        <span>Tắt audio</span>
+      </Button>
 
-        <Menu.Item
-          key="toggle-share-screen"
-          icon={<ShareAltOutlined />}
-          onClick={handleShareScreen}
-        >
-          Share màn hình
-        </Menu.Item>
-
-        {/* <Menu.Item key='close-call-video' icon={<CloseOutlined />}>
-                    Kết thúc
-                </Menu.Item> */}
-      </Menu>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleShareScreen}
+        className="flex items-center gap-2 rounded-xl"
+      >
+        <Monitor className="w-4 h-4" />
+        <span>Share màn hình</span>
+      </Button>
     </div>
   );
 }

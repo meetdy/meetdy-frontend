@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { LikeOutlined } from '@ant-design/icons';
+import { ThumbsUp } from 'lucide-react';
 
 ListReaction.propTypes = {
   type: PropTypes.string,
@@ -46,7 +46,7 @@ function ListReaction({
           {
             <div className="reaction-thumbnail">
               <div onClick={handleClickLike}>
-                <LikeOutlined />
+                <ThumbsUp className="w-4 h-4" />
               </div>
 
               <div className="list_icon-reaction">

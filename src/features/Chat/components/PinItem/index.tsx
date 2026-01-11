@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import PersonalIcon from '../PersonalIcon';
-import { MessageTwoTone } from '@ant-design/icons';
+import { Pin } from 'lucide-react';
 import dateUtils from '@/utils/dateUtils';
-import { date } from 'yup';
 
 PinItem.propTypes = {
   message: PropTypes.object,
@@ -30,7 +29,7 @@ function PinItem({ children, message }) {
           <div className="pin-item_name">{message.user.name}</div>
 
           <div className="pin-item_icon">
-            <MessageTwoTone />
+            <Pin className="w-4 h-4 text-primary" />
             &nbsp;Tin ghim
           </div>
         </div>

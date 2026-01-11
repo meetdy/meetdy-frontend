@@ -1,4 +1,4 @@
-import { UserOutlined } from '@ant-design/icons';
+import { User } from 'lucide-react';
 import AvatarCustom from '@/components/AvatarCustom';
 
 type Props = {
@@ -134,7 +134,7 @@ function AvatarBubble({ avatar, size }: any) {
       className="flex items-center justify-center rounded-full text-white border border-white"
       style={{ width: size, height: size, backgroundColor: bg }}
     >
-      <UserOutlined className="text-xs" />
+      <User className="w-3 h-3" />
     </div>
   );
 }

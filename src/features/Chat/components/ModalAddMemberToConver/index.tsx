@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { EditOutlined, InfoCircleFilled, SearchOutlined } from "@ant-design/icons";
+import { Pencil, AlertCircle, Search } from "lucide-react";
 import PersonalIcon from "../PersonalIcon";
 import ItemsSelected from "../ItemsSelected";
 
@@ -101,7 +101,7 @@ export default function ModalAddMemberToConver({
 
   return (
     <Dialog open={isVisible} onOpenChange={(v) => onCancel(v)}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg rounded-2xl">
         <DialogHeader>
           <DialogTitle>
             {typeModal === 2 ? "Thêm thành viên" : "Tạo nhóm"}
@@ -113,7 +113,7 @@ export default function ModalAddMemberToConver({
             <>
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                  <EditOutlined />
+                  <Pencil className="w-4 h-4 text-gray-500" />
                 </div>
 
                 <div className="flex-1">
@@ -124,10 +124,11 @@ export default function ModalAddMemberToConver({
                     onBlur={() =>
                       setIsShowError(!(nameGroup.trim().length > 0))
                     }
+                    className="rounded-xl"
                   />
                   {isShowError && (
                     <div className="text-sm text-red-500 flex items-center gap-1 mt-1">
-                      <InfoCircleFilled /> Tên nhóm không được để trống
+                      <AlertCircle className="w-4 h-4" /> Tên nhóm không được để trống
                     </div>
                   )}
                 </div>
@@ -138,12 +139,12 @@ export default function ModalAddMemberToConver({
           )}
 
           <div className="relative">
-            <SearchOutlined className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
               placeholder="Nhập tên bạn muốn tìm kiếm"
               value={frInput}
               onChange={handleSearch}
-              className="pl-10"
+              className="pl-10 rounded-xl"
             />
           </div>
 
@@ -158,10 +159,10 @@ export default function ModalAddMemberToConver({
                   {initalFriend.map((ele) => (
                     <label
                       key={ele._id}
-                      className={`flex items-center gap-3 ${
+                      className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${
                         checkInitialValue(ele._id)
                           ? "opacity-50 cursor-not-allowed"
-                          : "cursor-pointer"
+                          : "cursor-pointer hover:bg-slate-50"
                       }`}
                     >
                       <Checkbox
@@ -204,7 +205,7 @@ export default function ModalAddMemberToConver({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onCancel(false)}>
+          <Button variant="outline" onClick={() => onCancel(false)} className="rounded-xl">
             Hủy
           </Button>
           <Button
@@ -213,6 +214,7 @@ export default function ModalAddMemberToConver({
               checkList.length < 1
             }
             onClick={handleOk}
+            className="rounded-xl"
           >
             Xác nhận
           </Button>
