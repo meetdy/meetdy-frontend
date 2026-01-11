@@ -202,9 +202,9 @@ function UserMessage({
     try {
       await pinMessageApi.pinMessage(_id);
       dispatch(fetchPinMessages({ conversationId: currentConversation }));
-      toast({ title: 'Ghim tin nhắn thành công' });
+      toast.success('Ghim tin nhắn thành công');
     } catch {
-      toast({ title: 'Ghim tin nhắn thất bại', variant: 'destructive' });
+      toast.error('Ghim tin nhắn thất bại');
     }
   };
 

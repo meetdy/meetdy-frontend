@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import { MoreVertical } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -57,13 +57,13 @@ export default function GroupCard({ data, onRemove }: GroupCardProps) {
   };
 
   const menu = (
-    <DropdownMenuContent className="w-48">
+    <DropdownMenuContent className="w-48 rounded-xl">
       <DropdownMenuSub>
         <DropdownMenuSubTrigger>
           <span className="font-medium text-gray-800">Phân loại</span>
         </DropdownMenuSubTrigger>
 
-        <DropdownMenuSubContent>
+        <DropdownMenuSubContent className="rounded-xl">
           <SubMenuClassify data={classifies} idConver={data._id} />
         </DropdownMenuSubContent>
       </DropdownMenuSub>
@@ -83,7 +83,7 @@ export default function GroupCard({ data, onRemove }: GroupCardProps) {
     <div onClick={handleOnClick} className="relative">
       {classify && (
         <Badge
-          className="absolute top-2 left-2 px-2 py-1 text-xs"
+          className="absolute top-2 left-2 px-2 py-1 text-xs rounded-lg"
           style={{ backgroundColor: classify.color.code }}
         >
           {classify.name}
@@ -93,8 +93,8 @@ export default function GroupCard({ data, onRemove }: GroupCardProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="relative cursor-pointer">
-            <div className="group-card flex flex-col items-center p-4 rounded-lg bg-white hover:bg-gray-50 shadow-sm">
-              <div className="mb-2">
+            <div className="group-card flex flex-col items-center p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200/60 shadow-sm transition-all hover:shadow-md">
+              <div className="mb-3">
                 <ConversationAvatar
                   avatar={data.avatar}
                   dimension={52}
@@ -106,11 +106,11 @@ export default function GroupCard({ data, onRemove }: GroupCardProps) {
                 />
               </div>
 
-              <div className="text-base font-semibold text-gray-800">
+              <div className="text-base font-semibold text-slate-800">
                 {data.name}
               </div>
 
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-slate-500">
                 {data?.totalMembers} thành viên
               </div>
 
@@ -120,8 +120,8 @@ export default function GroupCard({ data, onRemove }: GroupCardProps) {
               >
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="p-1 rounded hover:bg-gray-100">
-                      <BsThreeDotsVertical size={18} />
+                    <button className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
+                      <MoreVertical className="w-4 h-4 text-slate-500" />
                     </button>
                   </DropdownMenuTrigger>
                   {menu}

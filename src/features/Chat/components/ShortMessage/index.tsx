@@ -10,8 +10,8 @@ import {
   Hash,
   Key,
   Smile,
+  BarChart3,
 } from 'lucide-react';
-import { FcBarChart } from 'react-icons/fc';
 import { useSelector } from 'react-redux';
 
 type ShortMessageProps = {
@@ -191,7 +191,7 @@ export default function ShortMessage({ message, type }: ShortMessageProps) {
           {message.type === 'VOTE' && (
             <span>
               {renderName()}
-              <FcBarChart className="inline-block" />
+              <BarChart3 className="inline-block w-4 h-4 text-primary" />
               &nbsp;bình chọn
             </span>
           )}
