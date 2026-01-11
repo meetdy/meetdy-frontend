@@ -1,0 +1,48 @@
+name: Deploy Production
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply configuration
+        run: |
+          git clone https://oauth2:${{ secrets.CONFIG_REPOSITORY_TOKEN }}@github.com/meetdy/infrastructure-config.git
+          [ -e .env ] && rm .env
+          [ -e Dockerfile ] && rm Dockerfile
+          [ -e nginx.conf ] && rm nginx.conf
+          [ -e .dockerignore ] && rm .dockerignore
+          cp -a infrastructure-config/meetdy-frontend/. ./
+      
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Set version variable
+        id: vars
+        run: echo "VERSION=1.${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Build the Docker image with both tags
+        run: |
+          docker build . --file Dockerfile --tag nghiaphamln/meetdy-frontend:1.${{ env.VERSION }} --tag nghiaphamln/meetdy-frontend:latest
+
+      - name: Push the Docker image to Docker Hub
+        run: |
+          docker push nghiaphamln/meetdy-frontend:1.${{ env.VERSION }}
+          docker push nghiaphamln/meetdy-frontend:latest
+
+      - name: Pull and restart service on VPS
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no -t $VPS_USER@$VPS_HOST << EOF
+            cd ./meetdy || exit
+            docker compose -f docker-compose.production.yaml pull meetdy-frontend
+            docker compose -f docker-compose.production.yaml up -d meetdy-frontend
+            docker image prune -f
+          EOF

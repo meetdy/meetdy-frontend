@@ -1,0 +1,50 @@
+name: Meetdy Frontend Dev Environment
+
+on:
+  push:
+    branches:
+      - dev
+
+env:
+  APP_NAME: meetdy-frontend-dev
+  BASE_DOMAIN: meetdy.com
+  ENVIRONMENT: Dev
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - uses: actions/checkout@v4
+
+    # 🧩 Login to GHCR
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    # 🧱 Set version variable
+    - name: Set version variable
+      id: vars
+      run: echo "VERSION=1-${{ github.run_number }}" >> $GITHUB_ENV
+
+    # 🏗️ Build Docker image
+    - name: Build Docker image
+      run: |
+        IMAGE_NAME=ghcr.io/${{ github.repository }}
+        docker build . --file Dockerfile \
+          --tag $IMAGE_NAME:dev-1.${{ env.VERSION }} \
+          --tag $IMAGE_NAME:dev-latest
+
+    # 🚀 Push to GHCR
+    - name: Push Docker image to GHCR
+      run: |
+        IMAGE_NAME=ghcr.io/${{ github.repository }}
+        docker push $IMAGE_NAME:dev-1.${{ env.VERSION }}
+        docker push $IMAGE_NAME:dev-latest

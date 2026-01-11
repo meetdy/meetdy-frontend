@@ -1,22 +1,25 @@
-FROM node:16 as build-step
+# Stage 1: Build app
+FROM node:20-alpine AS build
 
-RUN mkdir /app
 WORKDIR /app
-
 COPY package*.json ./
 RUN npm install --force
-
-ARG REACT_APP_API_URL
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
-
-ARG REACT_APP_SOCKET_URL
-ENV REACT_APP_SOCKET_URL=$REACT_APP_SOCKET_URL
-
-ARG REACT_APP_URL
-ENV REACT_APP_URL=$REACT_APP_URL
 
 COPY . .
 RUN npm run build
 
-FROM nginx:latest
-COPY --from=build-step /app/build /usr/share/nginx/html
+# Stage 2: Serve with Nginx
+FROM nginx:stable-alpine
+
+# Copy build output
+WORKDIR /usr/share/nginx/html
+COPY --from=build /app/dist ./
+
+# Copy template để runtime env inject
+RUN cp index.html index.html.template
+
+# Install envsubst (thuộc gói gettext)
+RUN apk add --no-cache gettext
+
+# Inject env vars at runtime
+ENTRYPOINT ["/bin/sh", "-c", "envsubst < index.html.template > index.html && exec nginx -g 'daemon off;'"]
