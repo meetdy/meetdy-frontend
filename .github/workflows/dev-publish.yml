@@ -7,7 +7,6 @@ on:
 
 env:
   APP_NAME: meetdy-frontend-dev
-  BASE_DOMAIN: meetdy.com
   ENVIRONMENT: Dev
 
 jobs:
@@ -19,32 +18,55 @@ jobs:
       packages: write
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout frontend
+        uses: actions/checkout@v4
 
-    # 🧩 Login to GHCR
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      # 🔐 Login to GHCR
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    # 🧱 Set version variable
-    - name: Set version variable
-      id: vars
-      run: echo "VERSION=1-${{ github.run_number }}" >> $GITHUB_ENV
+      # 🧱 Versioning
+      - name: Set version
+        run: echo "VERSION=dev-1-${{ github.run_number }}" >> $GITHUB_ENV
 
-    # 🏗️ Build Docker image
-    - name: Build Docker image
-      run: |
-        IMAGE_NAME=ghcr.io/${{ github.repository }}
-        docker build . --file Dockerfile \
-          --tag $IMAGE_NAME:dev-1.${{ env.VERSION }} \
-          --tag $IMAGE_NAME:dev-latest
+      # 🏗️ Build image
+      - name: Build image
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}
+          docker build -t $IMAGE:${{ env.VERSION }} .
 
-    # 🚀 Push to GHCR
-    - name: Push Docker image to GHCR
-      run: |
-        IMAGE_NAME=ghcr.io/${{ github.repository }}
-        docker push $IMAGE_NAME:dev-1.${{ env.VERSION }}
-        docker push $IMAGE_NAME:dev-latest
+      # 🚀 Push image
+      - name: Push image
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}
+          docker push $IMAGE:${{ env.VERSION }}
+
+      # 📥 Checkout infra repo
+      - name: Checkout infrastructure repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.INFRA_REPO }}
+          ref: ${{ secrets.INFRA_BRANCH }}
+          token: ${{ secrets.INFRA_REPO_PAT }}
+          path: infra
+
+      # ✏️ Update deployment.yaml
+      - name: Update image tag
+        run: |
+          sed -i \
+            's|image: ghcr.io/meetdy/meetdy-frontend:.*|image: ghcr.io/meetdy/meetdy-frontend:${{ env.VERSION }}|' \
+            infra/manifests/frontend/deployment.yaml
+
+      # 📤 Commit & push
+      - name: Commit and push
+        run: |
+          cd infra
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add manifests/frontend/deployment.yaml
+          git commit -m "chore(frontend): deploy ${{ env.VERSION }}"
+          git push
