@@ -7,7 +7,7 @@ export function useFetchListRequestFriend() {
     const { data, isFetched, isFetching } = useQuery<IRequestFriend[]>({
         queryKey: createQueryKey("fetchListRequestFriend", {}),
         queryFn: async () => {
-            return await FriendService.fetchListRequestFriend();
+            return await FriendService.getListRequestFriend();
         },
     });
 

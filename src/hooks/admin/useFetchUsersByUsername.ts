@@ -25,7 +25,7 @@ export function useFetchUsersByUsername({
         total: number;
     }>({
         queryKey: fetchUsersByUsernameKey({ username, page, size }),
-        queryFn: () => ServiceAdmin.fetchUsersByUsername(username, page, size),
+        queryFn: () => ServiceAdmin.getUsersByUsername(username, page, size),
         enabled,
     });
 }

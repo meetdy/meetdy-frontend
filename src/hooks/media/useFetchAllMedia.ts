@@ -1,15 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
-import { createQueryKey } from "@/queries/core";
-import ServiceMedia, { IMedia, TFetchMediaParams } from "@/api/mediaApi";
+import { useQuery } from '@tanstack/react-query';
+import { createQueryKey } from '@/queries/core';
+import ServiceMedia, { IMedia, TFetchMediaParams } from '@/api/mediaApi';
 
 interface UseFetchAllMediaProps {
-    params: TFetchMediaParams;
-    enabled?: boolean;
+  params: TFetchMediaParams;
+  enabled?: boolean;
 }
-export function useFetchAllMedia({ params, enabled = true }: UseFetchAllMediaProps) {
-    return useQuery<IMedia[]>({
-        queryKey: createQueryKey("fetchAllMedia", params, {}),
-        queryFn: () => ServiceMedia.fetchAllMedia(params),
-        enabled,
-    });
+export function useFetchAllMedia({
+  params,
+  enabled = true,
+}: UseFetchAllMediaProps) {
+  return useQuery<IMedia[]>({
+    queryKey: createQueryKey('fetchAllMedia', params, {}),
+    queryFn: () => ServiceMedia.getAllMedia(params),
+    enabled,
+  });
 }

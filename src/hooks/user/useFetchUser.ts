@@ -1,20 +1,23 @@
-import ServiceUser from "@/api/userApi";
-import { ISuggestFriend } from "@/models/friend.model";
-import { createQueryKey } from "@/queries/core";
-import { useQuery } from "@tanstack/react-query";
+import ServiceUser from '@/api/userApi';
+import { ISuggestFriend } from '@/models/friend.model';
+import { createQueryKey } from '@/queries/core';
+import { useQuery } from '@tanstack/react-query';
 
 type TFetchUser = {
-    username: string;
+  username: string;
 };
 
 interface UseFetchUserProps {
-    params: TFetchUser;
-    enabled?: boolean;
+  params: TFetchUser;
+  enabled?: boolean;
 }
-export function useFetchUser({ params: { username }, enabled = true }: UseFetchUserProps) {
-    return useQuery<ISuggestFriend>({
-        queryKey: createQueryKey("fetchUser", { username }, {}),
-        queryFn: () => ServiceUser.fetchUser(username),
-        enabled,
-    });
+export function useFetchUser({
+  params: { username },
+  enabled = true,
+}: UseFetchUserProps) {
+  return useQuery<ISuggestFriend>({
+    queryKey: createQueryKey('fetchUser', { username }, {}),
+    queryFn: () => ServiceUser.getUser(username),
+    enabled,
+  });
 }

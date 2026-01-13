@@ -74,7 +74,7 @@ function RegistryPage() {
       handleConfirmAccount(username, otpValue);
     } else {
       try {
-        await authApi.fetchUser(username);
+        await authApi.getUser(username);
         setError('Email hoặc số điện thoại đã được đăng ký');
       } catch {
         try {

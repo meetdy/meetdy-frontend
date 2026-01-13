@@ -79,7 +79,7 @@ function ForgotPage() {
       try {
         setCounter(RESEND_OTP_TIME_LIMIT);
         startResendOTPTimer();
-        const acc = await authApi.fetchUser(username);
+        const acc = await authApi.getUser(username);
         setAccount(acc);
         await authApi.forgot(username);
         openNotification(username);

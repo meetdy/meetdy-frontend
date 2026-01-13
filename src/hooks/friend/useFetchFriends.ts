@@ -12,7 +12,7 @@ interface UseFetchFriendsProps {
 export function useFetchFriends({ params, enabled = true }: UseFetchFriendsProps) {
     const { data, isFetched, isFetching } = useQuery<IFriend[]>({
         queryKey: fetchFriendsQueryKey(params),
-        queryFn: () => FriendService.fetchFriends(params),
+        queryFn: () => FriendService.getFriends(params),
         enabled,
     });
 

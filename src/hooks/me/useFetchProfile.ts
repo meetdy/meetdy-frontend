@@ -1,14 +1,16 @@
-import ServiceMe from "@/api/meApi";
-import { IUserProfile } from "@/models/auth.model";
-import { createQueryKey } from "@/queries/core";
-import { useQuery } from "@tanstack/react-query";
+import ServiceMe from '@/api/meApi';
+import { IUserProfile } from '@/models/auth.model';
+import { createQueryKey } from '@/queries/core';
+import { useQuery } from '@tanstack/react-query';
 
-export function useFetchProfile({ enabled = true }: { enabled?: boolean } = {}) {
-    const { data, isFetched } = useQuery<IUserProfile>({
-        queryKey: createQueryKey("profile", {}),
-        queryFn: () => ServiceMe.fetchProfile(),
-        enabled,
-    });
+export function useFetchProfile({
+  enabled = true,
+}: { enabled?: boolean } = {}) {
+  const { data, isFetched } = useQuery<IUserProfile>({
+    queryKey: createQueryKey('profile', {}),
+    queryFn: () => ServiceMe.getProfile(),
+    enabled,
+  });
 
-    return { profile: data as IUserProfile, isFetched };
+  return { profile: data as IUserProfile, isFetched };
 }
