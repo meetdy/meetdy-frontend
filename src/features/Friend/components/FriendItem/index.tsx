@@ -81,13 +81,9 @@ export default function FriendItem({ data, onClickMenu }: FriendItemProps) {
           </div>
 
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full hover:bg-muted"
-            >
+            <button className="h-8 w-8 rounded-full hover:bg-muted">
               <Icon icon={Menu} />
-            </Button>
+            </button>
           </DropdownMenuTrigger>
         </div>
       </DropdownMenuTrigger>

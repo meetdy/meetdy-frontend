@@ -78,8 +78,8 @@ export default function NavigationChatBox({
           <Tooltip>
             <TooltipTrigger asChild>
               <PopoverTrigger asChild>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="icon"
                   className="h-8 w-8 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100"
                 >
@@ -139,10 +139,10 @@ export default function NavigationChatBox({
               size="icon"
               onClick={handleOnClickTextFormat}
               className={cn(
-                "h-8 w-8 rounded-lg",
-                isTextFormatActive 
-                  ? "bg-primary/10 text-primary" 
-                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+                'h-8 w-8 rounded-lg',
+                isTextFormatActive
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100',
               )}
             >
               <Type className="w-5 h-5" />
@@ -156,19 +156,19 @@ export default function NavigationChatBox({
             <Tooltip>
               <TooltipTrigger asChild>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100"
-                  >
+                  <button className="h-8 w-8 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100">
                     <BarChart2 className="w-5 h-5" />
-                  </Button>
+                  </button>
                 </DropdownMenuTrigger>
               </TooltipTrigger>
               <TooltipContent side="top">Bình chọn</TooltipContent>
             </Tooltip>
-            <DropdownMenuContent align="start" side="top" className="w-52 rounded-xl">
-              <DropdownMenuItem 
+            <DropdownMenuContent
+              align="start"
+              side="top"
+              className="w-52 rounded-xl"
+            >
+              <DropdownMenuItem
                 onSelect={() => handleOnClickMenu('VOTE')}
                 className="rounded-lg"
               >

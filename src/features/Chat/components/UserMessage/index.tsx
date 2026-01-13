@@ -469,14 +469,12 @@ function UserMessage({
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button
+                      <button
                         type="button"
-                        variant="ghost"
-                        size="icon"
                         className="h-7 w-7 rounded-lg hover:bg-slate-100"
                       >
                         <MoreHorizontal className="h-3.5 w-3.5 text-slate-500" />
-                      </Button>
+                      </button>
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent

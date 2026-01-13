@@ -123,12 +123,12 @@ function GroupFilters(props: GroupFiltersProps) {
     <div className="flex justify-between items-center gap-2 px-4 py-3 border-b bg-white">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="gap-2">
+          <button className="gap-2">
             <Icon icon="mdi:menu-down" className="text-base" />
             <span className="truncate">
               {getValueFromKey('LEFT', groupFilterType)} ({groupCount})
             </span>
-          </Button>
+          </button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="start">
@@ -143,12 +143,12 @@ function GroupFilters(props: GroupFiltersProps) {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="gap-2">
+          <button className="gap-2">
             <Icon icon="mdi:filter" className="text-base" />
             <span className="truncate">
               {getValueFromKey('RIGHT', sortFilterType)}
             </span>
-          </Button>
+          </button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end">

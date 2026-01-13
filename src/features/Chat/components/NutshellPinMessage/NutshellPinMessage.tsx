@@ -51,7 +51,9 @@ function NutshellPinMessage({
     try {
       await pinMessageApi.removePinMessage(message._id);
       toast.success('Xóa thành công');
-      dispatch(fetchPinMessages({ conversationId: currentConversation }) as any);
+      dispatch(
+        fetchPinMessages({ conversationId: currentConversation }) as any,
+      );
     } catch (error) {
       toast.error('Xóa thất bại');
     }
@@ -100,9 +102,9 @@ function NutshellPinMessage({
           {isItem ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <button className="h-8 w-8">
                   <MoreHorizontal className="h-4 w-4" />
-                </Button>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
@@ -143,7 +145,10 @@ function NutshellPinMessage({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Không</AlertDialogCancel>
-            <AlertDialogAction onClick={handleUnpin} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={handleUnpin}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               Bỏ ghim
             </AlertDialogAction>
           </AlertDialogFooter>
