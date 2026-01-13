@@ -1,50 +1,48 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import fileHelpers from '@/utils/fileHelpers';
 import { Download, Share2 } from 'lucide-react';
-
-FileItem.propTypes = {
-  file: PropTypes.object.isRequired,
-  inArchive: PropTypes.bool,
-};
-
-FileItem.defaultProps = {
-  inArchive: false,
-};
 
 function FileItem({ file, inArchive }) {
   const handleOnClickDownLoad = () => {
     window.open(file.content, '_blank');
   };
 
-  const handleOnClickShare = () => {};
-
   const fileName = fileHelpers.getFileName(file.content);
   const fileExtension = fileHelpers.getFileExtension(fileName);
 
   return (
-    <div
-      className="item-file"
-    >
-      <div className="item-file--icon">
-        <FileIcon extension={fileExtension} {...defaultStyles[fileExtension]} />
+    <div className="flex items-center justify-between gap-3 rounded-lg border bg-card px-3 py-2 shadow-sm hover:shadow transition w-full max-w-md">
+      <div className="flex items-center gap-3 flex-1 min-w-0">
+        <div className="shrink-0 rounded-md border bg-muted/60 p-2 w-10 h-10 flex items-center justify-center">
+          <FileIcon
+            extension={fileExtension}
+            {...defaultStyles[fileExtension]}
+          />
+        </div>
+
+        <div
+          className="truncate text-sm font-medium text-foreground max-w-[180px]"
+          title={fileName}
+        >
+          {fileName}
+        </div>
       </div>
 
-      <div className="item-file--name">{fileName}</div>
-
-      <div className="item-file--interact">
-        <div
-          className="item-file_button item-file_button--mg-right"
-          onClick={handleOnClickShare}
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full border bg-white hover:bg-muted transition"
         >
           <Share2 className="w-4 h-4" />
-        </div>
+        </button>
 
-        <div className="item-file_button" onClick={handleOnClickDownLoad}>
+        <button
+          type="button"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full border bg-white hover:bg-muted transition"
+          onClick={handleOnClickDownLoad}
+        >
           <Download className="w-4 h-4" />
-        </div>
+        </button>
       </div>
     </div>
   );
