@@ -49,8 +49,8 @@ jobs:
       - name: Checkout infrastructure repo
         uses: actions/checkout@v4
         with:
-          repository: ${{ secrets.INFRA_REPO }}
-          ref: ${{ secrets.INFRA_BRANCH }}
+          repository: meetdy/infrastructure
+          ref: main
           token: ${{ secrets.INFRA_REPO_PAT }}
           path: infra
 
