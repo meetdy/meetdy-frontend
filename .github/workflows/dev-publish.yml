@@ -62,11 +62,17 @@ jobs:
             infra/manifests/frontend/deployment.yaml
 
       # 📤 Commit & push
-      - name: Commit and push
+      - name: Commit and push (if changed)
         run: |
           cd infra
           git config user.name "github-actions"
           git config user.email "actions@github.com"
+
+          if git diff --quiet manifests/frontend/deployment.yaml; then
+            echo "No changes detected, skipping commit."
+            exit 0
+          fi
+
           git add manifests/frontend/deployment.yaml
-          git commit -m "chore(frontend): deploy ${{ env.VERSION }}"
+          git commit -m "chore(frontend): deploy $VERSION"
           git push
