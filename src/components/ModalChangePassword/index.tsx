@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import meApi from '@/api/meApi';
+import ServiceMe from '@/api/meApi';
 import generateCode from '@/utils/generateCode';
 
 type Props = {
@@ -48,7 +48,7 @@ export default function ModalChangePassword({
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
     try {
-      await meApi.changePassword({
+      await ServiceMe.changePassword({
         oldPassword: data.oldpassword,
         newPassword: data.password,
       });
@@ -68,7 +68,7 @@ export default function ModalChangePassword({
     try {
       const code = generateCode(20);
       if (onSaveCodeRevoke) onSaveCodeRevoke(code);
-      const response = await meApi.revokeToken({ password, key: code });
+      const response = await ServiceMe.revokeToken({ password, key: code });
       const { token, refreshToken } = response;
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import meApi from '@/api/meApi';
+import ServiceMe from '@/api/meApi';
 
 const KEY = 'global';
 
@@ -7,7 +7,7 @@ const KEY = 'global';
 export const fetchUserProfile = createAsyncThunk(
   `${KEY}/fetchUser`,
   async (_, thunkApi) => {
-    const user = await meApi.getProfile();
+    const user = await ServiceMe.getProfile();
     return user;
   },
 );

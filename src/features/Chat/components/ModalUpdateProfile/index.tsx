@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FastField, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
-import meApi from '@/api/meApi';
+import ServiceMe from '@/api/meApi';
 import { setAvatarProfile } from '@/app/globalSlice';
 import UploadAvatar from '@/components/UploadAvatar';
 
@@ -84,7 +84,7 @@ function ModalUpdateProfile({
     try {
       if (!checkChangeValue(values, refInitValue.current)) {
         const { name, dateOfBirth, gender } = values;
-        await meApi.updateProfile({
+        await ServiceMe.updateProfile({
           name,
           dateOfBirth,
           gender,
@@ -94,13 +94,13 @@ function ModalUpdateProfile({
       if (coverImg) {
         const frmData = new FormData();
         frmData.append('file', coverImg);
-        await meApi.updateCoverImage(frmData);
+        await ServiceMe.updateCoverImage(frmData);
       }
 
       if (avatar) {
         const frmData = new FormData();
         frmData.append('file', avatar);
-        const response = await meApi.updateAvatar(frmData);
+        const response = await ServiceMe.updateAvatar(frmData);
         dispatch(setAvatarProfile(response.avatar));
       }
       setIsClear(true);
