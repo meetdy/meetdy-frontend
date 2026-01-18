@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { MessageCircle, ArrowLeft, KeyRound, Sparkles } from 'lucide-react';
 
 import authApi from '@/api/authApi';
-import InputField from '@/customfield/InputField';
+import InputField from '@/components/Field/InputField';
 import { setLoading } from '@/features/Account/accountSlice';
 import { forgotValues } from '@/features/Account/initValues';
 

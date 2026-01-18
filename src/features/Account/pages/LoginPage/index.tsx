@@ -1,6 +1,6 @@
 import authApi from '@/api/authApi';
 import { fetchUserProfile, setLogin } from '@/app/globalSlice';
-import InputField from '@/customfield/InputField';
+import InputField from '@/components/Field/InputField';
 import { setLoading } from '@/features/Account/accountSlice';
 import { loginValues } from '@/features/Account/initValues';
 

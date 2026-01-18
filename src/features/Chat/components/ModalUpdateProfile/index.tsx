@@ -8,9 +8,9 @@ import { setAvatarProfile } from '@/app/globalSlice';
 import UploadAvatar from '@/components/UploadAvatar';
 
 import UploadCoverImage from '@/components/UploadConverImage';
-import DateOfBirthField from '@/customfield/DateOfBirthField';
-import GenderRadioField from '@/customfield/GenderRadioField';
-import InputFieldNotTitle from '@/customfield/InputFieldNotTitle';
+import DateOfBirthField from '@/components/Field/DateOfBirthField';
+import GenderRadioField from '@/components/Field/GenderRadioField';
+import InputFieldNotTitle from '@/components/Field/InputFieldNotTitle';
 
 import {
   Dialog,
