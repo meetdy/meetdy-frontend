@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { Icon } from '@/components/ui/icon';
 import {
@@ -13,7 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { CardHeader, CardTitle } from '@/components/ui/card';
 
 import conversationApi from '@/api/conversationApi';
-import FilterContainer from '@/components/FilterContainer';
+import FilterContainer from '@/components/filter-container';
 import SearchContainer from '@/features/Chat/containers/SearchContainer';
 
 import HeaderFriend from './components/HeaderFiend';
@@ -249,7 +249,6 @@ export default function Friend() {
                 <FilterContainer
                   dataSingle={singleSearchResult}
                   dataMulti={groupSearchResult}
-                  valueText={searchValue}
                 />
               </div>
             ) : (

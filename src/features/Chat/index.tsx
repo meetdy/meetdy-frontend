@@ -5,9 +5,9 @@ import { ChevronsLeft, ChevronDown, X } from 'lucide-react';
 
 import { setJoinChatLayout } from '@/app/globalSlice';
 import conversationApi from '@/api/conversationApi';
-import FilterContainer from '@/components/FilterContainer';
-import ModalJoinGroupFromLink from '@/components/ModalJoinGroupFromLink';
-import Slider from '@/components/Slider';
+import FilterContainer from '@/components/filter-container';
+import ModalJoinGroupFromLink from '@/components/modal-join-group-from-link';
+import Slider from '@/components/carousel-feature';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 
 import DrawerPinMessage from './components/DrawerPinMessage';

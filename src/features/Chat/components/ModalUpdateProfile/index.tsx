@@ -5,12 +5,12 @@ import * as Yup from 'yup';
 
 import ServiceMe from '@/api/meApi';
 import { setAvatarProfile } from '@/app/globalSlice';
-import UploadAvatar from '@/components/UploadAvatar';
+import UploadAvatar from '@/components/upload-avatar';
 
-import UploadCoverImage from '@/components/UploadConverImage';
-import DateOfBirthField from '@/components/Field/DateOfBirthField';
-import GenderRadioField from '@/components/Field/GenderRadioField';
-import InputFieldNotTitle from '@/components/Field/InputFieldNotTitle';
+import UploadCoverImage from '@/components/upload-conver-image';
+import DateOfBirthField from '@/components/field/DateOfBirthField';
+import GenderRadioField from '@/components/field/GenderRadioField';
+import InputFieldNotTitle from '@/components/field/InputFieldNotTitle';
 
 import {
   Dialog,

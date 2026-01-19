@@ -1,6 +1,6 @@
 import parse from 'html-react-parser';
 import { Edit, Pin, Key } from 'lucide-react';
-import AvatarCustom from '@/components/AvatarCustom';
+import AvatarCustom from '@/components/avatar-custom';
 import { useSelector } from 'react-redux';
 
 export enum NotifyType {

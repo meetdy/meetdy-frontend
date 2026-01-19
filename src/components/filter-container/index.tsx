@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import ConverMultiSearch from '@/components/ConverMultiSearch';
-import ConverPersonalSearch from '@/components/ConverPersonalSearch';
+import ConverMultiSearch from './ConverMultiSearch';
+import ConverPersonalSearch from './ConverPersonalSearch';
 
 interface FilterContainerProps {
   dataMulti?: any[];

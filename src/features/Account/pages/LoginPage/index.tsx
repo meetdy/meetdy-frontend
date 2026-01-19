@@ -1,6 +1,6 @@
 import authApi from '@/api/authApi';
 import { fetchUserProfile, setLogin } from '@/app/globalSlice';
-import InputField from '@/components/Field/InputField';
+import InputField from '@/components/field/InputField';
 import { setLoading } from '@/features/Account/accountSlice';
 import { loginValues } from '@/features/Account/initValues';
 
@@ -53,7 +53,7 @@ function LoginPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent)]" />
         <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />
-        
+
         <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-white">
           <div className="p-4 bg-white/20 rounded-2xl mb-8 backdrop-blur-sm">
             <MessageCircle className="h-16 w-16" />
@@ -79,8 +79,8 @@ function LoginPage() {
             </div>
           </div>
 
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -122,8 +122,8 @@ function LoginPage() {
                   </Alert>
                 )}
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full h-12 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30"
                 >
                   Đăng nhập
@@ -139,7 +139,7 @@ function LoginPage() {
             >
               Quên mật khẩu?
             </Link>
-            
+
             <div className="pt-4 border-t">
               <p className="text-muted-foreground">
                 Bạn chưa có tài khoản?{' '}

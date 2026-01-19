@@ -10,7 +10,7 @@ import {
   AtSign,
 } from 'lucide-react';
 import type { RootState } from '@/store';
-import UploadFile from '@/components/Field/upLoadFile';
+import UploadFile from '@/components/field/upLoadFile';
 import ModalCreateVote from '../ModalCreateVote';
 import Sticker from '../Sticker';
 import { Button } from '@/components/ui/button';

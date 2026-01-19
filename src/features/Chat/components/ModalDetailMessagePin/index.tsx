@@ -2,7 +2,7 @@ import { Download } from 'lucide-react';
 import parse from 'html-react-parser';
 import { defaultStyles, FileIcon } from 'react-file-icon';
 
-import ModalVideoCustom from '@/components/ModalVideoCustom';
+import ModalVideoCustom from '@/components/modal-video-custom';
 import fileHelpers from '@/utils/fileHelpers';
 import PinItem from '../PinItem';
 import {

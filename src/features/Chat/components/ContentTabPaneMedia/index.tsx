@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ImageItem from '../ImageItem';
-import ModalVideoCustom from '@/components/ModalVideoCustom';
-import ThumbnailCustom from '@/components/ThumbnailCustom';
+import ModalVideoCustom from '@/components/modal-video-custom';
+import ThumbnailCustom from '@/components/thumbnail-custom';
 import { Image } from '@/components/ui/image';
 
 interface ContentTabPaneMediaProps {

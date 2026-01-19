@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import fileHelpers from '@/utils/fileHelpers';
 import PersonalIcon from '../PersonalIcon';
-import RangeCalendarCustom from '@/components/RangeCalendarCustom';
+import RangeCalendarCustom from '@/components/range-calendar';
 import {
   Select,
   SelectContent,

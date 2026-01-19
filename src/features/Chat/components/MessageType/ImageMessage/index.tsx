@@ -1,6 +1,5 @@
 import React from 'react';
 import { CheckCheck } from 'lucide-react';
-import MESSAGE_STYLE from '@/constants/MessageStyle/messageStyle';
 
 type Props = {
   content: string;
@@ -22,7 +21,6 @@ export default function ImageMessage({
           <img
             src={content}
             alt="image"
-            style={MESSAGE_STYLE.imageStyle}
             className="w-full h-auto object-contain max-w-[320px] max-h-[400px] cursor-pointer transition-transform hover:scale-[1.02]"
           />
         </div>

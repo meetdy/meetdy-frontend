@@ -14,8 +14,6 @@ import FriendCard from '../FriendCard';
 import { useQueryClient } from '@tanstack/react-query';
 import { createKeyGetFriends } from '@/hooks/friend/useGetFriends';
 
-// ...
-
 import { AppDispatch } from '@/redux/store';
 
 function ListRequestFriend({ data = [] }) {

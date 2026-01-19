@@ -1,8 +1,10 @@
 import { useDispatch } from 'react-redux';
 
 import friendApi from '@/api/friendApi';
-import { fetchListMyRequestFriend } from '@/features/Friend/friendSlice';
 import FriendCard from '../FriendCard';
+
+import { fetchListMyRequestFriend } from '@/features/Friend/friendSlice';
+
 
 function ListMyFriendRequest({ data = [] }) {
   const dispatch = useDispatch<any>();

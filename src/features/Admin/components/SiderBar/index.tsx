@@ -1,11 +1,8 @@
-import React from 'react';
 import {
   AliwangwangOutlined,
-  FacebookOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
 import { Menu, Layout } from 'antd';
-import SubMenu from 'antd/lib/menu/SubMenu';
 import { Link } from 'react-router-dom';
 
 const { Sider } = Layout;

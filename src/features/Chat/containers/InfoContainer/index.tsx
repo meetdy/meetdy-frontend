@@ -15,7 +15,7 @@ import InfoMember from '@/features/Chat/components/InfoMember';
 import InfoNameAndThumbnail from '@/features/Chat/components/InfoNameAndThumbnail';
 import { useGetAllMedia } from '@/hooks/media/useGetAllMedia';
 import { useGetChannel } from '@/hooks/channel/useGetChannel';
-import UserCard from '@/components/UserCard';
+import UserCard from '@/components/user-card';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,

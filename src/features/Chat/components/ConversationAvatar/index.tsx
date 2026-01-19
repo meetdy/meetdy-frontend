@@ -1,5 +1,5 @@
 import { User } from 'lucide-react';
-import AvatarCustom from '@/components/AvatarCustom';
+import AvatarCustom from '@/components/avatar-custom';
 
 type Props = {
   avatar: any;

@@ -5,7 +5,7 @@ import { Loading } from '@/components/ui/loading';
 import ForgotPage from './pages/ForgotPage';
 import LoginPage from './pages/LoginPage';
 import RegistryPage from './pages/RegistryPage';
-import NotFoundPage from '@/components/NotFoundPage';
+import NotFoundPage from '@/components/not-found-page';
 
 function Account() {
   const navigate = useNavigate();

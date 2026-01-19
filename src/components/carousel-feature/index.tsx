@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import SliderItem from '../SliderItem';
+import CarouselFeatureItem from './CarouselFeatureItem';
 
 import {
   Carousel,
@@ -7,8 +7,8 @@ import {
   CarouselItem,
 } from '@/components/ui/carousel';
 
-export default function Slider() {
-  const { features } = useSelector((state: any) => state.home);
+export default function CarouselFeature() {
+  const { features } = useSelector((state) => state.home);
 
   return (
     <Carousel
@@ -21,7 +21,7 @@ export default function Slider() {
       <CarouselContent>
         {features.map((ele: any, index: number) => (
           <CarouselItem key={index} className="basis-full">
-            <SliderItem
+            <CarouselFeatureItem
               src={ele.image}
               title={ele.title}
               detail={ele.descrpition}

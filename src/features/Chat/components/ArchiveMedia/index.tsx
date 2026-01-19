@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ChevronDown, Image as ImageIcon, Video } from 'lucide-react';
 import ImageItem from '../ImageItem';
-import ModalVideoCustom from '@/components/ModalVideoCustom';
-import ThumbnailCustom from '@/components/ThumbnailCustom';
+import ModalVideoCustom from '@/components/modal-video-custom';
+import ThumbnailCustom from '@/components/thumbnail-custom';
 
 interface ArchiveMediaProps {
   viewMediaClick?: (type: number, subtype: number) => void;
@@ -69,8 +69,8 @@ function ArchiveMedia({ viewMediaClick, name = '', items = [] }: ArchiveMediaPro
               {name === 'Video' ? (
                 <>
                   {displayItems.map((ele, index) => (
-                    <div 
-                      key={index} 
+                    <div
+                      key={index}
                       className="aspect-square rounded-lg overflow-hidden bg-slate-100 hover:opacity-90 transition-opacity cursor-pointer"
                     >
                       <ThumbnailCustom
@@ -83,7 +83,7 @@ function ArchiveMedia({ viewMediaClick, name = '', items = [] }: ArchiveMediaPro
               ) : (
                 <>
                   {displayItems.map((itemEle, index) => (
-                    <div 
+                    <div
                       key={index}
                       className="aspect-square rounded-lg overflow-hidden bg-slate-100 hover:opacity-90 transition-opacity cursor-pointer"
                     >

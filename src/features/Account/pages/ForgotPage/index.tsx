@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { MessageCircle, ArrowLeft, KeyRound, Sparkles } from 'lucide-react';
 
 import authApi from '@/api/authApi';
-import InputField from '@/components/Field/InputField';
+import InputField from '@/components/field/InputField';
 import { setLoading } from '@/features/Account/accountSlice';
 import { forgotValues } from '@/features/Account/initValues';
 
@@ -55,7 +55,7 @@ function ForgotPage() {
     try {
       await authApi.forgot(username);
       openNotification(username);
-    } catch {}
+    } catch { }
     dispatch(setLoading(false));
   };
 
@@ -104,7 +104,7 @@ function ForgotPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent)]" />
         <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-yellow-500/20 rounded-full blur-3xl" />
-        
+
         <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-white">
           <div className="p-4 bg-white/20 rounded-2xl mb-8 backdrop-blur-sm">
             <KeyRound className="h-16 w-16" />
@@ -130,8 +130,8 @@ function ForgotPage() {
             </div>
           </div>
 
-          <Link 
-            to="/account/login" 
+          <Link
+            to="/account/login"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -140,7 +140,7 @@ function ForgotPage() {
 
           <h2 className="text-3xl font-bold mb-2">Quên Mật Khẩu</h2>
           <p className="text-muted-foreground mb-8">
-            {isSubmit 
+            {isSubmit
               ? 'Nhập mật khẩu mới và mã OTP để khôi phục tài khoản'
               : 'Nhập email hoặc số điện thoại để nhận mã xác thực'
             }
@@ -210,8 +210,8 @@ function ForgotPage() {
                   <Alert variant="destructive">{isError}</Alert>
                 )}
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full h-12 text-base font-semibold bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-500/25"
                 >
                   {isSubmit ? 'Đặt lại mật khẩu' : 'Gửi mã xác thực'}

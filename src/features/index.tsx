@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import { setTabActive } from '@/app/globalSlice';
 import conversationApi from '@/api/conversationApi';
-import NotFoundPage from '@/components/NotFoundPage';
+import NotFoundPage from '@/components/not-found-page';
 
 import Chat from '@/features/Chat';
 import Friend from '@/features/Friend';

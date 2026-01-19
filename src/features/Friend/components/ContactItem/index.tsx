@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import userApi from '@/api/userApi';
 import PersonalIcon from '@/features/Chat/components/PersonalIcon';
-import UserCard from '@/components/UserCard';
+import UserCard from '@/components/user-card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 

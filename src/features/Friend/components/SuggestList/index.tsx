@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import SuggestCard from '../SuggestCard';
-import UserCard from '@/components/UserCard';
+import UserCard from '@/components/user-card';
 
 type SuggestUser = {
   id?: string;

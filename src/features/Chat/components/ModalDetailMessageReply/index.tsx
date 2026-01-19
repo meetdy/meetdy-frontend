@@ -3,7 +3,7 @@ import { Download } from 'lucide-react';
 import { defaultStyles, FileIcon } from 'react-file-icon';
 import parse from 'html-react-parser';
 
-import ModalVideoCustom from '@/components/ModalVideoCustom';
+import ModalVideoCustom from '@/components/modal-video-custom';
 import fileHelpers from '@/utils/fileHelpers';
 import PersonalIcon from '../PersonalIcon';
 import {

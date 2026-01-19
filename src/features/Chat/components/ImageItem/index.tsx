@@ -1,7 +1,4 @@
-import { useState } from 'react';
-import OverlayImage from '@/components/OverlayImage';
 import { fallback } from '@/constants/images';
-import { Image } from '@/components/ui/image';
 
 interface ImageItemProps {
   url?: string;
@@ -38,9 +35,7 @@ function ImageItem({
           (e.target as HTMLImageElement).src = fallback;
         }}
       />
-      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-        <OverlayImage />
-      </div>
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center" />
     </button>
   );
 }

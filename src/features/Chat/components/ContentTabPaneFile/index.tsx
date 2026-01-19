@@ -1,4 +1,4 @@
-import FileItem from '@/components/FileItem';
+import FileItem from '@/components/file-item';
 import PropTypes from 'prop-types';
 import React from 'react';
 

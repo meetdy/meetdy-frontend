@@ -1,6 +1,6 @@
 import { ErrorMessage } from 'formik';
 import { Input } from '@/components/ui/input';
-import TagCustom from '@/components/TagCustom';
+import TagCustom from '@/components/tag-custom';
 
 interface InputFieldNotTitleProps {
   field: any;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { CheckCheck } from 'lucide-react';
-import MESSAGE_STYLE from '@/constants/MessageStyle/messageStyle';
 
 type Props = {
   content: string;
@@ -20,7 +19,6 @@ export default function VideoMessage({
       <div className="rounded-2xl overflow-hidden bg-black/5 shadow-sm max-w-[360px]">
         <video
           controls
-          style={MESSAGE_STYLE.videoStyle}
           className="w-full max-h-[40vh] object-contain bg-black"
         >
           <source src={content} type="video/mp4" />

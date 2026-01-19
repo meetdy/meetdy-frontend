@@ -1,5 +1,5 @@
 import { ChevronDown, FileText } from 'lucide-react';
-import FileItem from '@/components/FileItem';
+import FileItem from '@/components/file-item';
 import { useState } from 'react';
 
 interface ArchiveFileProps {

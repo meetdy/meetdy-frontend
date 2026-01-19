@@ -22,7 +22,7 @@ import {
 } from '@/features/Chat/slice/chatSlice';
 import classifyUtils from '@/utils/classifyUtils';
 
-import SubMenuClassify from '@/components/SubMenuClassify';
+import SubMenuClassify from '@/components/sub-menu-classify';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 interface GroupCardProps {

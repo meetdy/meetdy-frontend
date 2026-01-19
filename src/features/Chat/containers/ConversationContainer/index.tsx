@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Virtuoso } from 'react-virtuoso';
 
 import conversationApi from '@/api/conversationApi';
-import SubMenuClassify from '@/components/SubMenuClassify';
+import SubMenuClassify from '@/components/sub-menu-classify';
 import ConversationSingle from '@/features/Chat/components/ConversationSingle';
 import { useGetListClassify } from '@/hooks/classify/useGetListClassify';
 import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';

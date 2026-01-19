@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ModalDetailVote from '../../ModalDetailVote';
-import ModalViewOption from '@/components/ModalViewOption';
+import ModalViewOption from '@/components/modal-view-options';
 
 type Option = {
   name: string;

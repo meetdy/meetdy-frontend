@@ -1,4 +1,4 @@
-import AvatarCustom from '@/components/AvatarCustom';
+import AvatarCustom from '@/components/avatar-custom';
 
 interface LastViewProps {
   lastView?: any[];

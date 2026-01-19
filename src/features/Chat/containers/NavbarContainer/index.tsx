@@ -28,7 +28,7 @@ import { Switch } from '@/components/ui/switch';
 import { setTabActive } from '@/app/globalSlice';
 
 
-import ModalChangePassword from '@/components/ModalChangePassword';
+import ModalChangePassword from '@/components/modal-change-password';
 import ModalUpdateProfile from '@/features/Chat/components/ModalUpdateProfile';
 import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 

@@ -1,18 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Dropdown, Popconfirm, Table, Menu, Tag, Typography } from 'antd';
 import commonFuc from '@/utils/commonFuc';
 
 const { Text } = Typography;
-
-UserTable.propTypes = {
-  usersPage: PropTypes.object,
-  onDeleteUStatusUpdate: PropTypes.func,
-};
-
-UserTable.defaultProps = {
-  usersPage: {},
-};
 
 function UserTable({ usersPage, onDeleteUStatusUpdate }) {
   const columns = [

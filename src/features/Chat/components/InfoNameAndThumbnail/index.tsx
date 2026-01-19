@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 
 import ConversationAvatar from '../ConversationAvatar';
-import UploadAvatar from '@/components/UploadAvatar';
+import UploadAvatar from '@/components/upload-avatar';
 import conversationApi from '@/api/conversationApi';
 import { updateNameOfConver } from '@/features/Chat/slice/chatSlice';
 
@@ -140,8 +140,8 @@ export default function InfoNameAndThumbnail({ conversation = {} }: Props) {
             <Button variant="outline" onClick={handleCancel} className="rounded-xl">
               Hủy
             </Button>
-            <Button 
-              onClick={handleOk} 
+            <Button
+              onClick={handleOk}
               disabled={isButtonDisabled || confirmLoading}
               className="rounded-xl"
             >

@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { MessageCircle, ArrowLeft, UserPlus, Sparkles } from 'lucide-react';
 
 import authApi from '@/api/authApi';
-import InputField from '@/components/Field/InputField';
+import InputField from '@/components/field/InputField';
 import { setLoading } from '@/features/Account/accountSlice';
 import { registryValues } from '@/features/Account/initValues';
 
@@ -53,7 +53,7 @@ function RegistryPage() {
     try {
       await authApi.forgot(username);
       openNotification(`Đã gửi lại mã OTP đến ${username}`);
-    } catch (error) {}
+    } catch (error) { }
     dispatch(setLoading(false));
   };
 
@@ -105,7 +105,7 @@ function RegistryPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent)]" />
         <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl" />
-        
+
         <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-white">
           <div className="p-4 bg-white/20 rounded-2xl mb-8 backdrop-blur-sm">
             <UserPlus className="h-16 w-16" />
@@ -131,8 +131,8 @@ function RegistryPage() {
             </div>
           </div>
 
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -141,7 +141,7 @@ function RegistryPage() {
 
           <h2 className="text-3xl font-bold mb-2">Đăng Ký</h2>
           <p className="text-muted-foreground mb-8">
-            {isSubmit 
+            {isSubmit
               ? 'Nhập mã OTP đã được gửi đến tài khoản của bạn'
               : 'Tạo tài khoản mới để bắt đầu sử dụng Meetdy Chat'
             }
@@ -221,8 +221,8 @@ function RegistryPage() {
                   <Alert variant="destructive">{isError}</Alert>
                 )}
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full h-12 text-base font-semibold bg-green-600 hover:bg-green-700 shadow-lg shadow-green-600/25"
                 >
                   {isSubmit ? 'Xác nhận OTP' : 'Đăng ký'}

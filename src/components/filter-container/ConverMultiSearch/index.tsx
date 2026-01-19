@@ -1,12 +1,13 @@
-import { Empty } from '../ui/empty';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
 
 import {
   setCurrentConversation,
 } from '@/features/Chat/slice/chatSlice';
-import { useNavigate } from 'react-router-dom';
+
+import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
+import { Empty } from '@/components/ui/empty';
 
 function ConverMultiSearch({ data }) {
   const dispatch = useDispatch();

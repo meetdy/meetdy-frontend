@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import AdminProtectedRoute from '@/routes/AdminProtected';
-import JoinFromLink from '@/components/JoinFromLink';
-import NotFoundPage from '@/components/NotFoundPage';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import ProtectedRoute from '@/routes/ProtectedRoute';
+
+import JoinFromLink from '@/components/join-from-link';
+import NotFoundPage from '@/components/not-found-page';
 
 import Account from '@/features/Account';
 import Admin from '@/features/Admin';
-import Home from '@/features/Home';
 
 import ChatLayout from '@/features';
 
 import { fetchUserProfile } from '@/app/globalSlice';
-import { fetchInfoWebs } from '@/features/Home/homeSlice';
 
 function App() {
   const dispatch = useDispatch();
@@ -38,19 +37,23 @@ function App() {
     fetchProfile();
   }, []);
 
-  useEffect(() => {
-    dispatch(fetchInfoWebs());
-  }, []);
-
   if (!isFetch) return '';
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/jf-link/:conversationId" element={<JoinFromLink />} />
         <Route path="/account/*" element={<Account />} />
-
+        <Route
+          path="/"
+          element={
+            isAuth
+              ? user.role === 'admin'
+                ? <Navigate to="/admin" replace />
+                : <Navigate to="/chat" replace />
+              : <Navigate to="/account/login" replace />
+          }
+        />
         <Route element={<ProtectedRoute />}>
           <Route path="/chat/*" element={<ChatLayout />} />
         </Route>

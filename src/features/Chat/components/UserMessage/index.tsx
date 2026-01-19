@@ -16,7 +16,7 @@ import {
 
 import messageApi from '@/api/messageApi';
 import pinMessageApi from '@/api/pinMessageApi';
-import ModalChangePinMessage from '@/components/ModalChangePinMessage';
+import ModalChangePinMessage from '@/components/modal-change-pin-message';
 import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 import { checkLeader } from '@/utils/groupUtils';
 
