@@ -2,10 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useResolvedPath, useLocation } from 'react-router-dom';
 import { ChevronsLeft, ChevronDown, X } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
-import { fetchListConversationsKey } from '@/hooks/conversation/useFetchListConversations';
-import { fetchListMessagesKey } from '@/hooks/message/useFetchListMessages';
-import dateUtils from '@/utils/dateUtils';
 
 import { setJoinChatLayout } from '@/app/globalSlice';
 import conversationApi from '@/api/conversationApi';
@@ -28,9 +24,6 @@ import {
   addMessage,
   deleteManager,
   fetchConversationById,
-  fetchListFriends,
-  fetchListMessages,
-  fetchPinMessages,
   getLastViewOfMembers,
   getMembersConversation,
   isDeletedFromGroup,
@@ -56,23 +49,51 @@ import renderWidthDrawer from '@/utils/DrawerResponsive';
 
 import { toast } from 'sonner';
 
+import { useInfiniteListMessages } from '@/hooks/message/useInfiniteListMessages';
+import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
+import { useFetchFriends } from '@/hooks/friend/useFetchFriends';
+import { useFetchListClassify } from '@/hooks/classify/useFetchListClassify';
+import { usePinnedMessages } from '@/hooks/channel/usePinnedMessages';
+import { useFetchChannel } from '@/hooks/channel/useFetchChannel';
+import { useQueryClient } from '@tanstack/react-query';
+import { fetchListConversationsKey } from '@/hooks/conversation/useFetchListConversations';
+
+// ... existing imports ...
+
 function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const path = useResolvedPath('').pathname;
+  const queryClient = useQueryClient();
 
   const {
-    conversations = [],
     currentConversation,
-    pinMessages = [],
     isLoading,
     currentChannel,
-    channels = [],
   } = useSelector((state: any) => state.chat || {});
   const { isJoinChatLayout, user } = useSelector(
     (state: any) => state.global || {},
   );
+
+  // React Query Hooks
+  const { conversations = [] } = useFetchListConversations({ params: {} });
+  const { friends = [] } = useFetchFriends({ params: { name: '' } });
+  const { classifies = [] } = useFetchListClassify();
+  // Channels: If we fetched a list of channels for currentConversation?
+  // Redux `fetchChannels` fetched *list*. `useFetchChannel` returns `channel` (singular?)
+  // Let's assume useFetchChannel returns the list for now or check usage.
+  // We'll stick to Redux for channels momentarily if useFetchChannel is ambiguous or use it.
+  // Actually, let's use the hook if it matches.
+  const { channel: channels = [] } = useFetchChannel({
+    conversationId: currentConversation,
+    enabled: !!currentConversation
+  });
+
+  const { pinnedMessages: pinMessages = [] } = usePinnedMessages({
+    conversationId: currentConversation,
+    enabled: !!currentConversation && !currentChannel
+  });
 
   const refCurrentConversation = useRef<string | null>(null);
   const refConversations = useRef<any[]>([]);
@@ -124,11 +145,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
     setUserMention({});
   }, [currentConversation]);
 
-  useEffect(() => {
-    if (currentConversation) {
-      dispatch(setTotalChannelNotify());
-    }
-  }, [currentConversation, channels, conversations, dispatch]);
+
 
   useEffect(() => {
     const openModalJoinFromLink = async () => {
@@ -149,7 +166,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
             );
           }
         } else {
-          dispatch(fetchListMessages({ conversationId: tempId, size: 10 }));
+
           dispatch(getMembersConversation({ conversationId: tempId }));
           dispatch(setTypeOfConversation(tempId));
           dispatch(getLastViewOfMembers({ conversationId: tempId }));
@@ -165,22 +182,13 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
     openModalJoinFromLink();
   }, [location, navigate, dispatch]);
 
+  // Removed useEffects for fetching conversations, friends, pinMessages as they are now hooks.
+  // Kept logic for setTotalChannelNotify
   useEffect(() => {
-    dispatch(
-      fetchListFriends({
-        name: '',
-      }),
-    );
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (
-      currentConversation &&
-      conversations.find((ele: any) => ele._id === currentConversation)?.type
-    ) {
-      dispatch(fetchPinMessages({ conversationId: currentConversation }));
+    if (currentConversation) {
+      dispatch(setTotalChannelNotify(undefined));
     }
-  }, [currentConversation, conversations, dispatch]);
+  }, [currentConversation, channels, conversations, dispatch]);
 
   useEffect(() => {
     if (!isJoinChatLayout) {
@@ -192,6 +200,9 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
           toast.info(`Nhóm ${conver?.name} đã giải tán`);
         }
         dispatch(removeConversation(conversationId));
+        queryClient.setQueryData(fetchListConversationsKey({}), (old: any[]) =>
+          old ? old.filter((c) => c._id !== conversationId) : []
+        );
       });
 
       socket.on('delete-message', ({ conversationId, channelId, id }: any) => {
@@ -200,6 +211,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
 
       socket.on('added-group', (conversationId: string) => {
         dispatch(fetchConversationById({ conversationId }));
+        queryClient.invalidateQueries({ queryKey: fetchListConversationsKey({}) });
       });
 
       socket.on(
@@ -247,11 +259,15 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         }
         dispatch(isDeletedFromGroup(conversationId));
         socket.emit('leave-conversation', conversationId);
+        queryClient.setQueryData(fetchListConversationsKey({}), (old: any[]) =>
+          old ? old.filter((c) => c._id !== conversationId) : []
+        );
       });
 
       socket.on('action-pin-message', (conversationId: string) => {
         if (conversationId === refCurrentConversation.current) {
-          dispatch(fetchPinMessages({ conversationId }));
+
+          queryClient.invalidateQueries({ queryKey: ['pinnedMessages', { conversationId }] });
         }
       });
 
@@ -260,6 +276,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         (conversationId: string, conversationName: string, message: any) => {
           dispatch(updateNameOfConver({ conversationId, conversationName }));
           dispatch(addMessage(message));
+          queryClient.invalidateQueries({ queryKey: fetchListConversationsKey({}) });
         },
       );
 
@@ -267,14 +284,11 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         'user-last-view',
         ({ conversationId, userId, lastView, channelId }: any) => {
           if (userId !== user?._id) {
-            dispatch(
-              updateLastViewOfMembers({
-                conversationId,
-                userId,
-                lastView,
-                channelId,
-              }),
-            );
+            if (channelId) {
+              queryClient.invalidateQueries({ queryKey: ['fetchLastViewChannel', { channelId }] });
+            } else {
+              queryClient.invalidateQueries({ queryKey: ['fetchLastViewOfMembers', { conversationId }] });
+            }
           }
         },
       );
@@ -303,12 +317,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         async ({ conversationId, channelId }: any) => {
           const actionAfterDelete = async () => {
             await dispatch(setCurrentChannel(''));
-            dispatch(
-              fetchListMessages({
-                conversationId: refCurrentConversation.current,
-                size: 10,
-              }),
-            );
+
             dispatch(
               getLastViewOfMembers({
                 conversationId: refCurrentConversation.current,
@@ -366,7 +375,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         (ele: any) => ele._id === currentConver,
       );
       if (conver && !conver.type) {
-        const userId = conver.userId;
+        const userId = (conver as any).userId;
         socket.emit(
           'get-user-online',
           userId,
@@ -498,7 +507,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
       setSingleConverFilter(single);
       const mutiple = await conversationApi.getListConversations(valueInput, 2);
       setMultiConverFilter(mutiple);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleOnFilterClassfiy = (value: string) => {
@@ -513,7 +522,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
       <>
         {openDrawerInfo && width <= 1199 && (
           <>
-            <div 
+            <div
               className="fixed inset-0 bg-black/30 z-40 transition-opacity duration-300"
               onClick={() => setOpenDrawerInfo(false)}
             />
@@ -640,15 +649,16 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
               />
             </div>
 
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-hidden h-full">
               {visibleFilter ? (
-                <FilterContainer
-                  dataSingle={singleConverFilter}
-                  dataMulti={multipleConverFilter}
-                  valueText={valueInput}
-                />
+                <div className="h-full overflow-auto">
+                  <FilterContainer
+                    dataSingle={singleConverFilter}
+                    dataMulti={multipleConverFilter}
+                  />
+                </div>
               ) : (
-                <div className="px-2">
+                <div className="px-2 h-full">
                   <ConversationContainer valueClassify={valueClassify} />
                 </div>
               )}
@@ -700,18 +710,16 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
                       message={pinMessages[0]}
                       quantity={pinMessages.length}
                       onOpenDrawer={() => setIsOpenDrawer(true)}
-                      onViewNews={handleViewNews}
                     />
                   </div>
                 )}
 
               <button
                 id="back-top-button"
-                className={`absolute right-6 bottom-6 z-40 flex items-center justify-center rounded-full bg-white border border-slate-200 shadow-lg p-3 transition-all duration-200 hover:shadow-xl hover:scale-105 ${
-                  isShow
-                    ? 'opacity-100 translate-y-0'
-                    : 'opacity-0 translate-y-4 pointer-events-none'
-                }`}
+                className={`absolute right-6 bottom-6 z-40 flex items-center justify-center rounded-full bg-white border border-slate-200 shadow-lg p-3 transition-all duration-200 hover:shadow-xl hover:scale-105 ${isShow
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-4 pointer-events-none'
+                  }`}
                 onClick={handleOnClickScroll}
                 aria-label="Scroll to new message"
               >

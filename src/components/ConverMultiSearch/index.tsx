@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
 
 import {
-  fetchListMessages,
   setCurrentConversation,
 } from '@/features/Chat/slice/chatSlice';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +13,6 @@ function ConverMultiSearch({ data }) {
   const navigate = useNavigate();
 
   const handleClickItem = (value) => {
-    dispatch(fetchListMessages({ conversationId: value._id, size: 10 }));
     dispatch(setCurrentConversation(value._id));
 
     navigate('/chat');

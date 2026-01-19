@@ -8,20 +8,27 @@ import { createQueryKey } from '@/queries/core';
 import ModalClassify from '@/features/Chat/components/ModalClassify';
 
 import {
-  DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 
+import {
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuLabel,
+} from '@/components/ui/context-menu';
+
 interface SubMenuClassifyProps {
   data: any[];
   chatId: string;
+  menuType?: 'dropdown' | 'context';
 }
 
 export default function SubMenuClassify({
   data,
   chatId,
+  menuType = 'dropdown',
 }: SubMenuClassifyProps) {
   const [visible, setVisible] = useState(false);
   const { mutateAsync: addClassifyForConversation } =
@@ -44,34 +51,35 @@ export default function SubMenuClassify({
     });
   };
 
+  const Item = menuType === 'context' ? ContextMenuItem : DropdownMenuItem;
+  const Separator =
+    menuType === 'context' ? ContextMenuSeparator : DropdownMenuSeparator;
+  const Label = menuType === 'context' ? ContextMenuLabel : DropdownMenuLabel;
+
   return (
     <>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel className="text-sm font-semibold px-3 py-1">
-          Danh sách thẻ
-        </DropdownMenuLabel>
+      <Label className="text-sm font-semibold px-3 py-1">Danh sách thẻ</Label>
 
-        {data.length > 0 &&
-          data.map((ele) => (
-            <DropdownMenuItem
-              key={ele._id}
-              onClick={() => handleClickClassify(ele._id)}
-              className="cursor-pointer flex items-center gap-2"
-            >
-              <Tag className="w-4 h-4" style={{ color: ele.color.code }} />
-              {ele.name}
-            </DropdownMenuItem>
-          ))}
+      {data.length > 0 &&
+        data.map((ele) => (
+          <Item
+            key={ele._id}
+            onClick={() => handleClickClassify(ele._id)}
+            className="cursor-pointer flex items-center gap-2"
+          >
+            <Tag className="w-4 h-4" style={{ color: ele.color.code }} />
+            {ele.name}
+          </Item>
+        ))}
 
-        <DropdownMenuSeparator />
+      <Separator />
 
-        <DropdownMenuItem
-          onClick={() => setVisible(true)}
-          className="cursor-pointer flex items-center gap-2"
-        >
-          <Tag className="w-4 h-4" /> Quản lý thẻ phân loại
-        </DropdownMenuItem>
-      </DropdownMenuContent>
+      <Item
+        onClick={() => setVisible(true)}
+        className="cursor-pointer flex items-center gap-2"
+      >
+        <Tag className="w-4 h-4" /> Quản lý thẻ phân loại
+      </Item>
 
       <ModalClassify
         isVisible={visible}

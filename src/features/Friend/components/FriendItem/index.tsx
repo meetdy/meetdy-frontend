@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 
 import conversationApi from '@/api/conversationApi';
 import {
-  fetchListMessages,
   setConversations,
   setCurrentConversation,
 } from '@/features/Chat/slice/chatSlice';
@@ -19,6 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Icon } from '@/components/ui/icon';
 import { Delete, Info, Menu } from 'lucide-react';
+import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 type FriendItemProps = {
   readonly data: any;
@@ -42,7 +42,7 @@ export default function FriendItem({ data, onClickMenu }: FriendItemProps) {
       dispatch(setConversations(conver));
     }
 
-    dispatch(fetchListMessages({ conversationId: _id, size: 10 }));
+    fetchListMessagesKey({ conversationId: _id, size: 10 });
     dispatch(setCurrentConversation(_id));
 
     navigate('/chat');

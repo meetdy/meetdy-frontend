@@ -6,10 +6,6 @@ import { Trash2 } from 'lucide-react';
 import conversationApi from '@/api/conversationApi';
 import friendApi from '@/api/friendApi';
 import {
-  fetchChannels,
-  fetchListFriends,
-  fetchListMessages,
-  getLastViewOfMembers,
   setConversations,
   setCurrentConversation,
 } from '@/features/Chat/slice/chatSlice';
@@ -39,6 +35,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 interface UserCardProps {
   title?: string;
@@ -47,14 +44,20 @@ interface UserCardProps {
   onCancel?: () => void;
 }
 
+import { useQueryClient } from '@tanstack/react-query';
+import { fetchFriendsQueryKey } from '@/hooks/friend/useFetchFriends';
+
+import { AppDispatch } from '@/redux/store';
+
 export default function UserCard({
   title = 'Thông tin',
   isVisible,
   user,
   onCancel,
 }: UserCardProps) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { amountNotify } = useSelector((state: any) => state.friend);
   const { conversations } = useSelector((state: any) => state.chat);
@@ -76,14 +79,7 @@ export default function UserCard({
       dispatch(setConversations(conver));
     }
 
-    const tempConver = conversations.find((ele: any) => ele._id === _id);
-
-    if (tempConver?.type) {
-      dispatch(fetchChannels({ conversationId: _id }));
-    }
-
-    dispatch(getLastViewOfMembers({ conversationId: _id }));
-    dispatch(fetchListMessages({ conversationId: _id, size: 10 }));
+    fetchListMessagesKey({ conversationId: _id, size: 10 });
     dispatch(setCurrentConversation(_id));
 
     navigate('/chat');
@@ -93,8 +89,8 @@ export default function UserCard({
   const handleAddFriend = async () => {
     try {
       await friendApi.sendRequestFriend(user._id);
-      dispatch(fetchListMyRequestFriend());
-      dispatch(fetchPhoneBook());
+      dispatch(fetchListMyRequestFriend() as any);
+      dispatch(fetchPhoneBook() as any);
       toast('Gửi lời mời kết bạn thành công');
       onCancel?.();
     } catch {
@@ -104,9 +100,11 @@ export default function UserCard({
 
   const handleAcceptFriend = async () => {
     await friendApi.acceptRequestFriend(user._id);
-    dispatch(fetchListRequestFriend());
-    dispatch(fetchFriends({ name: '' }));
-    dispatch(fetchListFriends({ name: '' }));
+    dispatch(fetchListRequestFriend() as any);
+    dispatch(fetchFriends({ name: '' } as any) as any);
+
+    queryClient.invalidateQueries({ queryKey: fetchFriendsQueryKey({ name: '' }) });
+
     dispatch(setAmountNotify(amountNotify - 1));
     toast('Thêm bạn thành công');
     onCancel?.();
@@ -114,16 +112,16 @@ export default function UserCard({
 
   const handleCancelRequest = async () => {
     await friendApi.deleteSentRequestFriend(user._id);
-    dispatch(fetchListMyRequestFriend());
-    dispatch(fetchPhoneBook());
+    dispatch(fetchListMyRequestFriend() as any);
+    dispatch(fetchPhoneBook() as any);
     onCancel?.();
   };
 
   const handleDeleteFriend = async () => {
     try {
       await friendApi.deleteFriend(user._id);
-      dispatch(fetchFriends({ name: '' }));
-      dispatch(fetchPhoneBook());
+      dispatch(fetchFriends({ name: '' } as any) as any);
+      dispatch(fetchPhoneBook() as any);
       toast('Xóa thành công');
       setOpenConfirmDelete(false);
       onCancel?.();
@@ -131,6 +129,8 @@ export default function UserCard({
       toast('Xóa thất bại');
     }
   };
+
+
 
   return (
     <>

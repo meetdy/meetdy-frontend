@@ -9,9 +9,9 @@ import { useFetchListClassify } from '@/hooks/classify/useFetchListClassify';
 import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
 import {
   fetchChannels,
-  fetchListMessages,
   getLastViewOfMembers,
   setCurrentChannel,
+  setCurrentConversation,
 } from '@/features/Chat/slice/chatSlice';
 import {
   getMembersConversation,
@@ -19,73 +19,90 @@ import {
 } from '../../slice/chatSlice';
 import type { RootState, AppDispatch } from '@/redux/store';
 
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+  ContextMenuSub,
+  ContextMenuSubTrigger,
+  ContextMenuSubContent,
+  ContextMenuSeparator,
+} from '@/components/ui/context-menu';
+import { Tag } from 'lucide-react';
+
 // OPTIMIZATION: Extracted to a memoized component to prevent re-rendering the whole list
-// when context menu state changes for a single item
 type ConversationItemProps = {
   conversation: any;
-  isContextMenuOpen: boolean;
-  contextMenuPosition: { x: number; y: number };
-  onContextMenu: (e: React.MouseEvent, id: string) => void;
   onClick: (id: string) => void;
   onOpenConfirm: (id: string) => void;
   user: any;
   classifies: any[];
-}
+};
 
-const ConversationItem = React.memo(({
-  conversation,
-  isContextMenuOpen,
-  contextMenuPosition,
-  onContextMenu,
-  onClick,
-  onOpenConfirm,
-  user,
-  classifies
-}: ConversationItemProps) => {
-  const { numberUnread } = conversation;
-  
-  if (!conversation.lastMessage) return null;
+const ConversationItem = React.memo(
+  ({
+    conversation,
+    onClick,
+    onOpenConfirm,
+    user,
+    classifies,
+  }: ConversationItemProps) => {
+    const { numberUnread } = conversation;
 
-  return (
-    <li
-      onContextMenu={(e) => onContextMenu(e, conversation._id)}
-      className={`conversation-item ${
-        numberUnread === 0 ? '' : 'arrived-message'
-      }`}
-    >
-      <ConversationSingle
-        conversation={conversation}
-        onClick={onClick}
-      />
+    if (!conversation.lastMessage) return null;
 
-      {isContextMenuOpen && (
-        <div
-          className="absolute z-40 min-w-[220px] rounded-md border bg-white shadow-lg"
-          style={{ top: contextMenuPosition.y, left: contextMenuPosition.x }}
-        >
-          <div className="p-2">
-            <SubMenuClassify
-              data={classifies}
-              chatId={conversation._id}
+    return (
+      <ContextMenu>
+        <ContextMenuTrigger asChild>
+          <li
+            className={`${numberUnread === 0 ? '' : 'arrived-message'}`}
+            onContextMenu={(e) => {
+              // Prevent default is handled by ContextMenuTrigger, but we might want to ensure
+              // any custom logic doesn't interfere.
+              // e.preventDefault();
+            }}
+          >
+            <ConversationSingle
+              conversation={conversation}
+              onClick={onClick}
             />
-            {user._id === conversation.leaderId && (
-              <button
+          </li>
+        </ContextMenuTrigger>
+        <ContextMenuContent className="w-64">
+          {/* Classify Submenu */}
+          <ContextMenuSub>
+            <ContextMenuSubTrigger>
+              <Tag className="w-4 h-4 mr-2" />
+              Phân loại
+            </ContextMenuSubTrigger>
+            <ContextMenuSubContent className="w-56">
+              <SubMenuClassify
+                data={classifies}
+                chatId={conversation._id}
+                menuType="context"
+              />
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+
+          {user._id === conversation.leaderId && (
+            <>
+              <ContextMenuSeparator />
+              <ContextMenuItem
                 onClick={() => onOpenConfirm(conversation._id)}
-                className="mt-2 w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50"
+                className="text-red-600 focus:text-red-600 focus:bg-red-50"
               >
                 Xoá hội thoại
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-    </li>
-  );
-});
+              </ContextMenuItem>
+            </>
+          )}
+        </ContextMenuContent>
+      </ContextMenu>
+    );
+  },
+);
 
 ConversationItem.displayName = 'ConversationItem';
-
-const DEFAULT_CONTEXT_MENU = { id: null, x: 0, y: 0 };
 
 type Props = {
   valueClassify: string;
@@ -93,45 +110,46 @@ type Props = {
 
 export default function ConversationContainer({ valueClassify }: Props) {
   const dispatch = useDispatch<AppDispatch>();
-  const { conversations } = useFetchListConversations({});
+  const { conversations } = useFetchListConversations({ params: {} });
   const { classifies } = useFetchListClassify();
-  
+
   // OPTIMIZATION: Select only needed user state, ignore other global state changes
   const user = useSelector((state: RootState) => state.global.user);
 
-  const tempClassify = useMemo(() => 
-    classifies?.find((ele) => ele._id === valueClassify) ?? 0,
-    [classifies, valueClassify]
+  const tempClassify = useMemo(
+    () => classifies?.find((ele) => ele._id === valueClassify) ?? 0,
+    [classifies, valueClassify],
   );
 
-  const checkConverInClassify = useCallback((idMember: string) => {
-    if (tempClassify === 0) return true;
-    const index = tempClassify.conversationIds.findIndex(
-      (ele: string) => ele === idMember,
-    );
-    return index > -1;
-  }, [tempClassify]);
+  const checkConverInClassify = useCallback(
+    (idMember: string) => {
+      if (tempClassify === 0) return true;
+      const index = tempClassify.conversationIds.findIndex(
+        (ele: string) => ele === idMember,
+      );
+      return index > -1;
+    },
+    [tempClassify],
+  );
 
   // OPTIMIZATION: Memoize filter to allow stable reference for list rendering
-  const converFilter = useMemo(() => 
-    conversations.filter((ele) => checkConverInClassify(ele._id)),
-    [conversations, checkConverInClassify]
+  const converFilter = useMemo(
+    () => conversations.filter((ele) => checkConverInClassify(ele._id)),
+    [conversations, checkConverInClassify],
   );
 
-  const handleConversationClick = useCallback(async (conversationId: string) => {
-    dispatch(setCurrentChannel(''));
-    dispatch(getLastViewOfMembers({ conversationId }));
-    dispatch(fetchListMessages({ conversationId, size: 10 }));
-    dispatch(getMembersConversation({ conversationId }));
-    dispatch(setTypeOfConversation(conversationId));
-    dispatch(fetchChannels({ conversationId }));
-  }, [dispatch]);
+  const handleConversationClick = useCallback(
+    async (conversationId: string) => {
+      dispatch(setCurrentConversation(conversationId));
+      dispatch(setCurrentChannel(''));
+      dispatch(getLastViewOfMembers({ conversationId }));
 
-  const [contextMenu, setContextMenu] = useState<{
-    id: string | null;
-    x: number;
-    y: number;
-  }>({ id: null, x: 0, y: 0 });
+      dispatch(getMembersConversation({ conversationId }));
+      dispatch(setTypeOfConversation(conversationId));
+      dispatch(fetchChannels({ conversationId }));
+    },
+    [dispatch],
+  );
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -143,30 +161,6 @@ export default function ConversationContainer({ valueClassify }: Props) {
     msg: '',
     type: '',
   });
-
-  const refContainer = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (!refContainer.current) return;
-      const el = e.target as HTMLElement;
-      if (!refContainer.current.contains(el)) {
-        setContextMenu({ id: null, x: 0, y: 0 });
-      }
-    }
-    window.addEventListener('click', handleClickOutside);
-    window.addEventListener('scroll', () =>
-      setContextMenu({ id: null, x: 0, y: 0 }),
-    );
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
-
-  const handleContextMenu = useCallback((e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    setContextMenu({ id, x: e.clientX, y: e.clientY });
-  }, []);
 
   const deleteConver = async (id: string) => {
     try {
@@ -184,18 +178,16 @@ export default function ConversationContainer({ valueClassify }: Props) {
   const openConfirm = useCallback((id: string) => {
     setDeleteId(id);
     setConfirmOpen(true);
-    setContextMenu({ id: null, x: 0, y: 0 });
   }, []);
 
   return (
-    <div id="conversation-main" ref={refContainer} className="relative">
+    <div className="relative h-full">
       {toast.msg && (
         <div
-          className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-md text-sm shadow-md ${
-            toast.type === 'success'
+          className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-md text-sm shadow-md ${toast.type === 'success'
               ? 'bg-green-50 text-green-800'
               : 'bg-red-50 text-red-800'
-          }`}
+            }`}
         >
           {toast.msg}
         </div>
@@ -209,9 +201,6 @@ export default function ConversationContainer({ valueClassify }: Props) {
             <ConversationItem
               key={conversationEle._id}
               conversation={conversationEle}
-              isContextMenuOpen={contextMenu.id === conversationEle._id}
-              contextMenuPosition={contextMenu.id === conversationEle._id ? contextMenu : DEFAULT_CONTEXT_MENU}
-              onContextMenu={handleContextMenu}
               onClick={handleConversationClick}
               onOpenConfirm={openConfirm}
               user={user}

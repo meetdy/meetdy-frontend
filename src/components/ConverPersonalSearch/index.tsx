@@ -3,9 +3,9 @@ import { useDispatch } from 'react-redux';
 import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 import { Empty } from '@/components/ui/empty';
 import {
-  fetchListMessages,
   setCurrentConversation,
 } from '@/features/Chat/slice/chatSlice';
+import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 interface ConverPersonalSearchProps {
   data?: any[];
@@ -16,7 +16,7 @@ function ConverPersonalSearch({ data = [] }: ConverPersonalSearchProps) {
   const navigate = useNavigate();
 
   const handleClickItem = (value: any) => {
-    dispatch(fetchListMessages({ conversationId: value._id, size: 10 }) as any);
+    fetchListMessagesKey({ conversationId: value._id, size: 10 });
     dispatch(setCurrentConversation(value._id));
     navigate('/chat');
   };

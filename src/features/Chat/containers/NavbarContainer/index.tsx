@@ -26,7 +26,7 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 
 import { setTabActive } from '@/app/globalSlice';
-import { setToTalUnread } from '../../slice/chatSlice';
+
 
 import ModalChangePassword from '@/components/ModalChangePassword';
 import ModalUpdateProfile from '@/features/Chat/components/ModalUpdateProfile';
@@ -34,15 +34,22 @@ import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 
 import NavButton from './NavButton';
 
+import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
+
+// ...
+
 export default function NavbarContainer() {
   const dispatch = useDispatch();
   const location = useLocation();
 
   const { user } = useSelector((state: any) => state.global);
-  const { conversations, toTalUnread } = useSelector(
-    (state: any) => state.chat,
-  );
   const { amountNotify } = useSelector((state: any) => state.friend);
+
+  const { conversations = [] } = useFetchListConversations({ params: {} });
+
+  const toTalUnread = (conversations || []).reduce((acc: number, curr: any) => {
+    return acc + (curr.numberUnread || 0);
+  }, 0);
 
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isVisibleChangePass, setIsVisibleChangePass] = useState(false);
@@ -50,9 +57,7 @@ export default function NavbarContainer() {
 
   const isActive = (path: string) => location.pathname === path;
 
-  useEffect(() => {
-    dispatch(setToTalUnread());
-  }, [conversations]);
+  // Removed useEffect dispatching setToTalUnread as we derive it now
 
   useEffect(() => {
     const isDark = document.documentElement.classList.contains('dark');

@@ -4,5 +4,8 @@
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "tsx"],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }

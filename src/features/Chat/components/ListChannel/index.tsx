@@ -3,11 +3,11 @@ import { Hash } from 'lucide-react';
 
 import ChannelItem from '../ChannelItem';
 import {
-  fetchListMessages,
   getLastViewOfMembers,
   setCurrentChannel,
 } from '@/features/Chat/slice/chatSlice';
 import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
+import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 interface ListChannelProps {
   data?: any[];
@@ -22,7 +22,7 @@ function ListChannel({ data = [] }: ListChannelProps) {
 
   const handleViewGeneralChannel = () => {
     dispatch(setCurrentChannel(''));
-    dispatch(fetchListMessages({ conversationId: currentConversation, size: 10 }));
+    fetchListMessagesKey({ conversationId: currentConversation, size: 10 });
     dispatch(getLastViewOfMembers({ conversationId: currentConversation }));
   };
 

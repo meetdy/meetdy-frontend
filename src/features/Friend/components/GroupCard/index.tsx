@@ -18,12 +18,12 @@ import { Badge } from '@/components/ui/badge';
 import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
 
 import {
-  fetchListMessages,
   setCurrentConversation,
 } from '@/features/Chat/slice/chatSlice';
 import classifyUtils from '@/utils/classifyUtils';
 
 import SubMenuClassify from '@/components/SubMenuClassify';
+import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 interface GroupCardProps {
   data: any;
@@ -51,7 +51,7 @@ export default function GroupCard({ data, onRemove }: GroupCardProps) {
   };
 
   const handleOnClick = async () => {
-    dispatch(fetchListMessages({ conversationId: data._id, size: 10 }));
+    fetchListMessagesKey({ conversationId: data._id, size: 10 });
     dispatch(setCurrentConversation(data._id));
     navigate('/chat');
   };

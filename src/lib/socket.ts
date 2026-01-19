@@ -7,6 +7,10 @@ export const createSocketConnection = (): Socket => {
     socket = io(import.meta.env.VITE_SOCKET_URL, {
       transports: ['websocket'],
       withCredentials: true,
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
     });
   }
   return socket;

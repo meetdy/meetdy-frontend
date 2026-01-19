@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import ChannelItem from '../ChannelItem';
 
 import {
-  fetchListMessages,
   getLastViewOfMembers,
   setCurrentChannel,
 } from '@/features/Chat/slice/chatSlice';
@@ -42,7 +41,7 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
     totalChannelNotify,
   } = useSelector((state: any) => state.chat);
   const dispatch = useDispatch();
-  
+
   const { conversations } = useFetchListConversations({ params: {} });
   const mutationAddChannel = useAddChannel();
   const queryClient = useQueryClient();
@@ -64,7 +63,7 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
     try {
       await mutationAddChannel.mutateAsync({ name: valueInput, conversationId: currentConversation });
       queryClient.invalidateQueries({
-         queryKey: createQueryKey('fetchChannel', { conversationId: currentConversation })
+        queryKey: createQueryKey('fetchChannel', { conversationId: currentConversation })
       });
       toast.success('Tạo channel thành công');
       setIsVisible(false);
@@ -86,9 +85,7 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
 
   const handleViewGeneralChannel = () => {
     dispatch(setCurrentChannel(''));
-    dispatch(
-      fetchListMessages({ conversationId: currentConversation, size: 10 }) as any,
-    );
+
     dispatch(getLastViewOfMembers({ conversationId: currentConversation }) as any);
   };
 
@@ -118,9 +115,8 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
       >
         <button
           onClick={handleViewGeneralChannel}
-          className={`w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted/50 transition-colors ${
-            !currentChannel ? 'bg-primary/10 text-primary' : ''
-          }`}
+          className={`w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted/50 transition-colors ${!currentChannel ? 'bg-primary/10 text-primary' : ''
+            }`}
         >
           <Hash className="h-4 w-4" />
           <span>Kênh chung</span>

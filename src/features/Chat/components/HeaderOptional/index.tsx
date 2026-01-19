@@ -16,7 +16,6 @@ import {
 import conversationApi from '@/api/conversationApi';
 import {
   createGroup,
-  fetchListMessages,
   getLastViewOfMembers,
   setCurrentChannel,
   setCurrentConversation,
@@ -33,6 +32,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 type Props = {
   avatar?: string | null;
@@ -131,9 +131,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
 
   const handleViewGeneralChannel = () => {
     dispatch(setCurrentChannel(''));
-    dispatch(
-      fetchListMessages({ conversationId: currentConversation, size: 10 }),
-    );
+    fetchListMessagesKey({ conversationId: currentConversation, size: 10 });
     dispatch(getLastViewOfMembers({ conversationId: currentConversation }));
   };
 

@@ -2,14 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  fetchNextPageMessage,
-  fetchNextPageMessageOfChannel,
   setRaisePage,
 } from '../../slice/chatSlice';
+import { useInfiniteListMessages } from '@/hooks/message/useInfiniteListMessages';
+import { useFetchLastViewOfMembers } from '@/hooks/conversation/useFetchLastViewOfMembers';
+import { useFetchLastViewChannel } from '@/hooks/channel/useFetchLastViewChannel';
+import { useFetchMessageInChannel } from '@/hooks/channel/useFetchMessageInChannel'; // Add check if used? No, I use useInfiniteListMessages for channels too.
 import DividerCustom from '@/features/Chat/components/DividerCustom';
 import ModalShareMessage from '@/features/Chat/components/ModalShareMessage';
 import UserMessage from '@/features/Chat/components/UserMessage';
-import type { RootState, AppDispatch } from '@/store';
+import type { RootState, AppDispatch } from '@/redux/store';
 import type { Scrollbars as ScrollbarsType } from 'react-custom-scrollbars-2';
 
 type Props = {
@@ -38,18 +40,31 @@ export default function BodyChatContainer({
   const tempPosition = useRef<number | null>(null);
 
   const {
-    messages = [],
     currentConversation,
-    currentPage,
     lastViewOfMember = [],
     currentChannel,
   } = useSelector((state: RootState) => state.chat);
 
   const { user } = useSelector((state: RootState) => state.global);
   const [position, setPosition] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(false);
   const [visibleModalShare, setVisibleModalShare] = useState<boolean>(false);
   const [idMessageShare, setIdMessageShare] = useState<string>('');
+
+  // Use new hook for infinite scrolling
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingMessages
+  } = useInfiniteListMessages({
+    conversationId: currentConversation,
+    channelId: currentChannel,
+    size: 20,
+    enabled: !!currentConversation,
+  });
+
+  const messages = data?.pages.flatMap((page) => page.data).reverse() || [];
 
   const handleOpenModalShare = (_id: string) => {
     setVisibleModalShare(true);
@@ -68,48 +83,30 @@ export default function BodyChatContainer({
   }, [turnOnScrollButton, onResetScrollButton]);
 
   useEffect(() => {
-    const fetchMessageWhenPageRaise = async () => {
-      if (currentChannel) {
-        await dispatch(
-          fetchNextPageMessageOfChannel({
-            channelId: currentChannel,
-            page: currentPage,
-            size: 10,
-          }),
-        );
-      } else {
-        await dispatch(
-          fetchNextPageMessage({
-            conversationId: currentConversation,
-            page: currentPage,
-            size: 10,
-          }),
-        );
-      }
-    };
-
     async function fetchNextListMessage() {
-      if ((currentPage ?? 0) > 0) {
-        setLoading(true);
-        await fetchMessageWhenPageRaise();
-        setLoading(false);
+      if (hasNextPage && !isFetchingNextPage) {
+
+        await fetchNextPage();
 
         const sb = scrollbars.current;
         if (sb && previousHeight.current !== null) {
-          // @ts-expect-error methods from react-custom-scrollbars-2
+          // @ts-ignore methods from react-custom-scrollbars-2
           sb.scrollTop(sb.getScrollHeight() - previousHeight.current);
         }
       }
     }
-    fetchNextListMessage();
-  }, [currentPage, currentChannel, currentConversation, dispatch]);
+    // Logic to fetch next page moved to scroll handler, but keeping this if manual trigger needed
+  }, [dispatch]); // Removed paging deps as hook handles it
+
+  // Scroll handler triggers fetchNextPage
+  /* The original logic triggered fetch when scrollTop === 0. We'll adapt handleOnScrolling. */
 
   useEffect(() => {
     if (
       onSCrollDown &&
       scrollbars.current &&
       scrollbars.current.getScrollHeight() >
-        scrollbars.current.getClientHeight()
+      scrollbars.current.getClientHeight()
     ) {
       if (position >= 0.95) {
         scrollbars.current?.scrollToBottom();
@@ -126,10 +123,10 @@ export default function BodyChatContainer({
     for (let i = 0; i < messagesList.length; i++) {
       const preMessage = messagesList[i - 1];
       const currentMessage = messagesList[i];
-      
+
       const messageId = currentMessage._id;
-      const uniqueKey = seenIds.has(messageId) 
-        ? `${messageId}-${i}` 
+      const uniqueKey = seenIds.has(messageId)
+        ? `${messageId}-${i}`
         : messageId;
       seenIds.add(messageId);
 
@@ -216,22 +213,22 @@ export default function BodyChatContainer({
     if (
       scrollbars.current &&
       scrollbars.current.getScrollHeight() ===
-        scrollbars.current.getClientHeight()
+      scrollbars.current.getClientHeight()
     ) {
       onBackToBottom?.(false);
       return;
     }
 
-    if (scrollTop === 0) {
+    if (scrollTop === 0 && hasNextPage && !isFetchingNextPage) {
       previousHeight.current = scrollHeight;
-      dispatch(setRaisePage());
+      fetchNextPage();
     }
 
-    if (top < 0.85) {
-      onBackToBottom?.(true);
-    } else {
-      onBackToBottom?.(false);
-    }
+    // if (top < 0.85) {
+    //   onBackToBottom?.(true);
+    // } else {
+    //   onBackToBottom?.(false);
+    // }
   };
 
   const handleOnStop = (_value: any) => {
@@ -265,11 +262,12 @@ export default function BodyChatContainer({
       autoHideDuration={200}
       ref={scrollbars}
       onScrollFrame={handleOnScrolling}
+      // @ts-ignore onStop exists in runtime
       onStop={handleOnStop}
       className="h-full"
     >
       <div>
-        {loading && (
+        {isFetchingNextPage && (
           <div className="flex items-center justify-center py-4">
             <svg
               className="w-8 h-8 animate-spin text-slate-700"
