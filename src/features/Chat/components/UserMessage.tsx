@@ -46,7 +46,7 @@ import { cn } from '@/lib/utils';
 
 type ReactionType = {
     type: string | number;
-    user: { _id: string };
+    user: { _id: string; name?: string };
 };
 
 type MessageType =
@@ -57,8 +57,7 @@ type MessageType =
     | 'IMAGE'
     | 'VIDEO'
     | 'FILE'
-    | 'STICKER'
-    | string;
+    | 'STICKER';
 
 type ChatUser = {
     _id: string;
@@ -67,17 +66,29 @@ type ChatUser = {
     avatarColor?: string;
 };
 
-type ChatMessage = {
+type VoteOption = {
+    name: string;
+    userIds: string[];
+};
+
+type BaseChatMessage = {
     _id: string;
-    content?: unknown;
+    content: string;
     user: ChatUser;
     createdAt: string;
-    type: MessageType;
+    type: Exclude<MessageType, 'VOTE'>;
     isDeleted?: boolean;
     reacts?: ReactionType[];
     tagUsers?: unknown[];
     replyMessage?: unknown;
 };
+
+type VoteChatMessage = Omit<BaseChatMessage, 'type'> & {
+    type: 'VOTE';
+    options: VoteOption[];
+};
+
+type ChatMessage = VoteChatMessage | BaseChatMessage;
 
 type Conversation = {
     _id: string;
@@ -151,6 +162,11 @@ function UserMessage({
     const [isLeader, setIsLeader] = useState(false);
     const [isVisibleModal, setVisibleModal] = useState(false);
 
+    const isMediaMessage = useMemo(
+        () => type === 'IMAGE' || type === 'VIDEO' || type === 'STICKER',
+        [type],
+    );
+
     const isGroup = useMemo(() => {
         const conversation = conversations.find(
             (c) => c._id === currentConversation,
@@ -181,7 +197,7 @@ function UserMessage({
     };
 
     const sendReaction = async (reactionType: number) => {
-        await messageApi.dropReaction(_id, reactionType);
+        await messageApi.dropReaction(_id, String(reactionType));
     };
 
     const handleClickLike = () => {
@@ -200,7 +216,7 @@ function UserMessage({
     };
 
     const handlePinMessage = async () => {
-        if (pinMessages.length === 3) {
+        if ((pinMessages?.length ?? 0) >= 3) {
             setVisibleModal(true);
             return;
         }
@@ -242,6 +258,21 @@ function UserMessage({
     };
 
     const dateAt = useMemo(() => new Date(createdAt), [createdAt]);
+    const safeContent = useMemo(
+        () => (typeof content === 'string' ? content : ''),
+        [content],
+    );
+
+    const pinMessageModalItems = useMemo(
+        () =>
+            (pinMessages ?? []).map((pm) => ({
+                _id: pm.id,
+                user: { name: '' },
+                content: pm.content,
+                type: 'TEXT',
+            })),
+        [pinMessages],
+    );
 
     if (!isDeleted && type === 'NOTIFY') {
         return (
@@ -256,7 +287,7 @@ function UserMessage({
 
     return (
         <>
-            {type === 'VOTE' ? <VoteMessage data={message} /> : null}
+            {message.type === 'VOTE' ? <VoteMessage data={message} /> : null}
 
             <div
                 className={cn(
@@ -292,22 +323,14 @@ function UserMessage({
                                 <div
                                     className={cn(
                                         'relative min-w-0 max-w-[75%]',
-                                        type === 'IMAGE' || type === 'VIDEO' || type === 'STICKER'
-                                            ? 'rounded-2xl'
-                                            : 'rounded-[18px]',
+                                        isMediaMessage ? 'rounded-lg' : 'rounded-lg',
                                         isMyMessage &&
-                                        type !== 'IMAGE' &&
-                                        type !== 'VIDEO' &&
-                                        type !== 'STICKER' &&
-                                        'bg-gradient-to-br from-primary to-primary/90 text-primary-foreground shadow-sm',
+                                        !isMediaMessage &&
+                                        'bg-primary text-primary-foreground border border-primary/20',
                                         !isMyMessage &&
-                                        type !== 'IMAGE' &&
-                                        type !== 'VIDEO' &&
-                                        type !== 'STICKER' &&
-                                        'bg-slate-100 text-slate-900 shadow-sm',
-                                        type === 'IMAGE' || type === 'VIDEO' || type === 'STICKER'
-                                            ? 'bg-transparent'
-                                            : 'px-4 py-2.5',
+                                        !isMediaMessage &&
+                                        'bg-white text-slate-900 border border-slate-200',
+                                        isMediaMessage ? 'bg-transparent' : 'px-3 py-2',
                                     )}
                                 >
                                     <span className="sr-only">{name}</span>
@@ -321,7 +344,7 @@ function UserMessage({
                                             <>
                                                 {type === 'HTML' ? (
                                                     <HTMLMessage
-                                                        content={content}
+                                                        content={safeContent}
                                                         dateAt={dateAt}
                                                         isSeen={Boolean(viewUsers?.length)}
                                                     >
@@ -337,7 +360,7 @@ function UserMessage({
                                                 ) : type === 'TEXT' ? (
                                                     <TextMessage
                                                         tags={tagUsers}
-                                                        content={content}
+                                                        content={safeContent}
                                                         dateAt={dateAt}
                                                         isSeen={Boolean(viewUsers?.length)}
                                                         replyMessage={replyMessage}
@@ -353,7 +376,7 @@ function UserMessage({
                                                     </TextMessage>
                                                 ) : type === 'IMAGE' ? (
                                                     <ImageMessage
-                                                        content={content}
+                                                        content={safeContent}
                                                         dateAt={dateAt}
                                                         isSeen={Boolean(viewUsers?.length)}
                                                     >
@@ -369,7 +392,7 @@ function UserMessage({
                                                     </ImageMessage>
                                                 ) : type === 'VIDEO' ? (
                                                     <VideoMessage
-                                                        content={content}
+                                                        content={safeContent}
                                                         dateAt={dateAt}
                                                         isSeen={Boolean(viewUsers?.length)}
                                                     >
@@ -385,7 +408,7 @@ function UserMessage({
                                                     </VideoMessage>
                                                 ) : type === 'FILE' ? (
                                                     <FileMessage
-                                                        content={content}
+                                                        content={safeContent}
                                                         dateAt={dateAt}
                                                         isSeen={Boolean(viewUsers?.length)}
                                                     >
@@ -401,7 +424,7 @@ function UserMessage({
                                                     </FileMessage>
                                                 ) : type === 'STICKER' ? (
                                                     <StickerMessage
-                                                        content={content}
+                                                        content={safeContent}
                                                         dateAt={dateAt}
                                                         isSeen={Boolean(viewUsers?.length)}
                                                     />
@@ -429,8 +452,7 @@ function UserMessage({
                                         {myReact && !isDeleted ? (
                                             <div
                                                 className={cn(
-                                                    'pointer-events-auto inline-flex items-center gap-1 rounded-full border bg-background px-2 py-1 shadow-sm',
-                                                    isMyMessage && 'bg-white',
+                                                    'pointer-events-auto inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-1',
                                                 )}
                                             >
                                                 <span className="text-sm leading-none">
@@ -459,7 +481,7 @@ function UserMessage({
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-7 w-7 rounded-lg hover:bg-slate-100"
+                                        className="h-7 w-7 rounded-md hover:bg-slate-100"
                                         onClick={handleReplyMessage}
                                     >
                                         <Reply className="h-3.5 w-3.5 text-slate-500" />
@@ -469,7 +491,7 @@ function UserMessage({
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-7 w-7 rounded-lg hover:bg-slate-100"
+                                        className="h-7 w-7 rounded-md hover:bg-slate-100"
                                         onClick={handleOpenModalShare}
                                     >
                                         <ReplyAll className="h-3.5 w-3.5 text-slate-500" />
@@ -479,7 +501,8 @@ function UserMessage({
                                         <DropdownMenuTrigger asChild>
                                             <button
                                                 type="button"
-                                                className="h-7 w-7 rounded-lg hover:bg-slate-100"
+                                                className="h-7 w-7 rounded-md hover:bg-slate-100"
+                                                aria-label="More actions"
                                             >
                                                 <MoreHorizontal className="h-3.5 w-3.5 text-slate-500" />
                                             </button>
@@ -487,7 +510,7 @@ function UserMessage({
 
                                         <DropdownMenuContent
                                             align={isMyMessage ? 'end' : 'start'}
-                                            className="min-w-44 rounded-xl"
+                                            className="min-w-44 rounded-md"
                                         >
                                             {isGroup && !currentChannel && type !== 'STICKER' ? (
                                                 <DropdownMenuItem
@@ -533,7 +556,7 @@ function UserMessage({
             </div>
 
             <ModalChangePinMessage
-                message={pinMessages}
+                message={pinMessageModalItems}
                 visible={isVisibleModal}
                 idMessage={_id}
                 onCloseModal={handleOnCloseModal}

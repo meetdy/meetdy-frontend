@@ -2,7 +2,7 @@ import { FileIcon, defaultStyles } from 'react-file-icon';
 import fileHelpers from '@/utils/fileHelpers';
 import { Download, Share2 } from 'lucide-react';
 
-function FileItem({ file, inArchived }) {
+function FileItem({ file }: { file: { content: string } }) {
   const handleOnClickDownLoad = () => {
     window.open(file.content, '_blank');
   };

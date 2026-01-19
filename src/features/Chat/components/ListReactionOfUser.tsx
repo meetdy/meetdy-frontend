@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 type ReactType = {
     type: string | number;
-    user: { _id: string; name: string };
+    user: { _id: string; name?: string };
 };
 
 type ListReactionOfUserProps = {
@@ -34,9 +34,9 @@ function ListReactionOfUser({
                 <TooltipTrigger asChild>
                     <div
                         className={cn(
-                            'pointer-events-auto inline-flex items-center gap-0.5 px-2 py-1 rounded-full',
-                            'border shadow-sm cursor-pointer transition-all duration-150',
-                            'hover:shadow-md hover:scale-105',
+                            'pointer-events-auto inline-flex items-center gap-0.5 px-2 py-1 rounded-md',
+                            'border border-slate-200 bg-white cursor-pointer transition-colors',
+                            'hover:bg-slate-50',
                             isMyMessage ? 'bg-white border-slate-200' : 'bg-white border-slate-200'
                         )}
                     >
@@ -61,7 +61,7 @@ function ListReactionOfUser({
                     <div className="flex flex-col gap-0.5 text-xs">
                         {displayedUsers.map((react) => (
                             <span key={`${react.type}-${react.user._id}`} className="text-slate-700">
-                                {react.user.name}
+                                {react.user.name ?? 'Ẩn danh'}
                             </span>
                         ))}
                         {remainingCount > 0 && (

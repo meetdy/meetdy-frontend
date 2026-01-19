@@ -26,9 +26,9 @@ export default function FileMessage({
 
   return (
     <div className="space-y-1.5">
-      <div className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-slate-50/80 border border-slate-100 min-w-[240px] max-w-[320px]">
+      <div className="flex items-center justify-between gap-3 p-3 rounded-lg bg-white border border-slate-200 min-w-60 max-w-[320px]">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-11 h-11 flex items-center justify-center bg-white rounded-xl shadow-sm flex-shrink-0">
+          <div className="w-11 h-11 flex items-center justify-center bg-white rounded-md border border-slate-200 shrink-0">
             <div className="w-8 h-8">
               <FileIcon
                 extension={fileExtension}
@@ -49,7 +49,7 @@ export default function FileMessage({
           onClick={handleOnClickDownLoad}
           variant="ghost"
           size="icon"
-          className="h-9 w-9 rounded-xl hover:bg-slate-200/80 flex-shrink-0"
+          className="h-9 w-9 rounded-md hover:bg-slate-100 shrink-0"
         >
           <Download className="w-4 h-4 text-slate-600" />
         </Button>

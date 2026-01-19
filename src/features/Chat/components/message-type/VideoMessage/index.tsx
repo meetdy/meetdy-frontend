@@ -16,7 +16,7 @@ export default function VideoMessage({
 }: Props) {
   return (
     <div className="space-y-1.5">
-      <div className="rounded-2xl overflow-hidden bg-black/5 shadow-sm max-w-[360px]">
+      <div className="rounded-lg overflow-hidden bg-black/5 border border-slate-200 max-w-[360px]">
         <video
           controls
           className="w-full max-h-[40vh] object-contain bg-black"

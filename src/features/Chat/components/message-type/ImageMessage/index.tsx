@@ -17,11 +17,11 @@ export default function ImageMessage({
   return (
     <div className="space-y-1.5">
       <div className="relative group">
-        <div className="rounded-2xl overflow-hidden shadow-sm">
+        <div className="rounded-lg overflow-hidden border border-slate-200 bg-white">
           <img
             src={content}
             alt="image"
-            className="w-full h-auto object-contain max-w-[320px] max-h-[400px] cursor-pointer transition-transform hover:scale-[1.02]"
+            className="w-full h-auto object-contain max-w-[320px] max-h-[400px] cursor-pointer"
           />
         </div>
         {children}

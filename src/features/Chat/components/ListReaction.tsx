@@ -45,7 +45,7 @@ function ListReaction({
                 <PopoverTrigger asChild>
                     <button
                         type="button"
-                        className="flex items-center justify-center w-5 h-5 rounded-full hover:bg-slate-100 transition-colors"
+                        className="flex items-center justify-center w-5 h-5 rounded-md hover:bg-slate-100 transition-colors"
                     >
                         <Smile className="w-3 h-3 text-slate-500" />
                     </button>
@@ -53,7 +53,7 @@ function ListReaction({
                 <PopoverContent
                     side={isMyMessage ? 'left' : 'right'}
                     align="center"
-                    className="w-auto p-1.5 rounded-full shadow-lg border bg-white"
+                    className="w-auto p-1.5 rounded-md border border-slate-200 bg-white"
                 >
                     <div className="flex items-center gap-0.5">
                         {listReaction.map((emoji) => (
@@ -61,7 +61,7 @@ function ListReaction({
                                 key={emoji}
                                 type="button"
                                 onClick={() => handleClickReaction(emoji)}
-                                className="w-8 h-8 flex items-center justify-center text-lg rounded-full hover:bg-slate-100 hover:scale-125 transition-all duration-150"
+                                className="w-8 h-8 flex items-center justify-center text-lg rounded-md hover:bg-slate-100 transition-colors"
                             >
                                 {emoji}
                             </button>
@@ -87,9 +87,9 @@ function ListReaction({
                         onClick={handleClickLike}
                         onMouseEnter={() => setIsOpen(true)}
                         className={cn(
-                            'flex items-center justify-center w-7 h-7 rounded-full',
-                            'bg-white border border-slate-200 shadow-sm',
-                            'hover:bg-slate-50 hover:shadow-md transition-all duration-150'
+                            'flex items-center justify-center w-7 h-7 rounded-md',
+                            'bg-white border border-slate-200',
+                            'hover:bg-slate-50 transition-colors'
                         )}
                     >
                         <ThumbsUp className="w-3.5 h-3.5 text-slate-500" />
@@ -99,7 +99,7 @@ function ListReaction({
                     side={isMyMessage ? 'left' : 'right'}
                     align="center"
                     sideOffset={4}
-                    className="w-auto p-1.5 rounded-full shadow-lg border bg-white"
+                    className="w-auto p-1.5 rounded-md border border-slate-200 bg-white"
                     onMouseLeave={() => setIsOpen(false)}
                 >
                     <div className="flex items-center gap-0.5">
@@ -108,7 +108,7 @@ function ListReaction({
                                 key={emoji}
                                 type="button"
                                 onClick={() => handleClickReaction(emoji)}
-                                className="w-8 h-8 flex items-center justify-center text-lg rounded-full hover:bg-slate-100 hover:scale-125 transition-all duration-150"
+                                className="w-8 h-8 flex items-center justify-center text-lg rounded-md hover:bg-slate-100 transition-colors"
                             >
                                 {emoji}
                             </button>
