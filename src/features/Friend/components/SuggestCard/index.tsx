@@ -1,4 +1,4 @@
-import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import { Card, CardContent } from '@/components/ui/card';
 
 type SuggestUser = {
@@ -36,7 +36,7 @@ function SuggestCard({ data, onClick }: SuggestCardProps) {
       className="cursor-pointer select-none transition hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <CardContent className="p-4 flex items-center gap-4">
-        <PersonalIcon
+        <PersonalAvatar
           avatar={data.avatar}
           name={data.name}
           dimension={56}

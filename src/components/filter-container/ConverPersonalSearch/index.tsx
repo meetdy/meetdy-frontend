@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import { Empty } from '@/components/ui/empty';
 import {
   setCurrentConversation,
@@ -30,7 +30,7 @@ function ConverPersonalSearch({ data = [] }: ConverPersonalSearchProps) {
           className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors text-left"
           onClick={() => handleClickItem(ele)}
         >
-          <PersonalIcon
+          <PersonalAvatar
             avatar={ele.avatar}
             color={ele.avatarColor}
             name={ele.name}

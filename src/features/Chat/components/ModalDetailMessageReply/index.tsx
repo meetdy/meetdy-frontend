@@ -5,7 +5,7 @@ import parse from 'html-react-parser';
 
 import ModalVideoCustom from '@/components/modal-video-custom';
 import fileHelpers from '@/utils/fileHelpers';
-import PersonalIcon from '../PersonalIcon';
+import PersonalAvatar from '../PersonalAvatar';
 import {
   Dialog,
   DialogContent,
@@ -41,7 +41,7 @@ function ModalDetailMessageReply({ visible, onCancel, data }: ModalDetailMessage
       <DialogContent className="max-w-md">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <PersonalIcon avatar={user?.avatar} name={user?.name} dimension={48} />
+            <PersonalAvatar avatar={user?.avatar} name={user?.name} dimension={48} />
             <div>
               <div className="font-medium">
                 Tên: <span>{user?.name}</span>

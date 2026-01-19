@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import userApi from '@/api/userApi';
-import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import UserCard from '@/components/user-card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -40,7 +40,7 @@ function ContactItem({ data }: ContactItemProps) {
         className="flex items-center gap-3 flex-1 text-left"
         onClick={handleViewDetail}
       >
-        <PersonalIcon avatar={data.avatar} dimension={48} name={data.name} />
+        <PersonalAvatar avatar={data.avatar} dimension={48} name={data.name} />
         <div className="flex flex-col">
           <span className="font-medium text-sm">{data.name}</span>
           <span className="mt-1 text-xs text-muted-foreground inline-flex items-center gap-1">

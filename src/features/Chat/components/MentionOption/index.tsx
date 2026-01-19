@@ -1,5 +1,5 @@
 import './style.css';
-import PersonalIcon from '../PersonalIcon';
+import PersonalAvatar from '../PersonalAvatar';
 
 interface MentionOptionProps {
   value: string;
@@ -14,7 +14,7 @@ function MentionOption({ value, user = {}, onClick }: MentionOptionProps) {
       onClick={onClick}
       data-value={value}
     >
-      <PersonalIcon dimension={24} avatar={user.avatar} name={user.name} />
+      <PersonalAvatar dimension={24} avatar={user.avatar} name={user.name} />
       <span className="text-sm">{user.name}</span>
     </button>
   );

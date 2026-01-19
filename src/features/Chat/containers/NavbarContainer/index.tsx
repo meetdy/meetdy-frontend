@@ -30,7 +30,7 @@ import { setTabActive } from '@/app/globalSlice';
 
 import ModalChangePassword from '@/components/modal-change-password';
 import ModalUpdateProfile from '@/features/Chat/components/ModalUpdateProfile';
-import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 
 import NavButton from './NavButton';
 
@@ -90,7 +90,7 @@ export default function NavbarContainer() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-                <PersonalIcon
+                <PersonalAvatar
                   isActive
                   common={false}
                   avatar={user?.avatar}
@@ -108,7 +108,7 @@ export default function NavbarContainer() {
             >
               <DropdownMenuLabel className="p-0">
                 <div className="p-4 flex items-center gap-3">
-                  <PersonalIcon
+                  <PersonalAvatar
                     isActive
                     common={false}
                     avatar={user?.avatar}

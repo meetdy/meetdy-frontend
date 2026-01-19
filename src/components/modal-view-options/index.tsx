@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { ChevronRight, MinusCircle, Plus } from 'lucide-react';
 
 import voteApi from '@/api/voteApi';
-import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import { equalsArray } from '@/utils/arrayHelper';
 
 type OptionItem = {
@@ -221,21 +221,18 @@ export default function ModalViewOption({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center ${
-        isModalVisible ? '' : 'pointer-events-none'
-      }`}
+      className={`fixed inset-0 z-50 flex items-center justify-center ${isModalVisible ? '' : 'pointer-events-none'
+        }`}
       aria-hidden={!isModalVisible}
     >
       <div
-        className={`fixed inset-0 bg-black/40 transition-opacity ${
-          isModalVisible ? 'opacity-100' : 'opacity-0'
-        }`}
+        className={`fixed inset-0 bg-black/40 transition-opacity ${isModalVisible ? 'opacity-100' : 'opacity-0'
+          }`}
         onClick={handleCancel}
       />
       <div
-        className={`relative w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden transform transition-all ${
-          isModalVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-        }`}
+        className={`relative w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden transform transition-all ${isModalVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+          }`}
         style={{ padding: '2rem 1rem', background: '#f4f5f7' }}
       >
         <div className="modal-view-option">
@@ -251,9 +248,8 @@ export default function ModalViewOption({
               className="overview-text text-sm text-primary-600 cursor-pointer flex items-center gap-2"
               onClick={handleShowDetail}
             >
-              <span>{`${
-                getNumberJoinVote().length
-              } người tham gia ${getNumberVotes()} lượt bình chọn`}</span>
+              <span>{`${getNumberJoinVote().length
+                } người tham gia ${getNumberVotes()} lượt bình chọn`}</span>
               <ChevronRight className="w-4 h-4" />
             </p>
           )}
@@ -266,33 +262,33 @@ export default function ModalViewOption({
               >
                 <div className="flex items-start gap-3">
                   <div className="flex items-center justify-center w-10 h-10 rounded-md bg-gray-100">
-                    <PersonalIcon
+                    <PersonalAvatar
                       name={
                         memberInConversation &&
-                        ele.userIds &&
-                        ele.userIds.length > 0
+                          ele.userIds &&
+                          ele.userIds.length > 0
                           ? (memberInConversation.find(
-                              (m: any) => m._id === ele.userIds[0],
-                            )?.name as string)
+                            (m: any) => m._id === ele.userIds[0],
+                          )?.name as string)
                           : undefined
                       }
                       avatar={
                         memberInConversation &&
-                        ele.userIds &&
-                        ele.userIds.length > 0
+                          ele.userIds &&
+                          ele.userIds.length > 0
                           ? (memberInConversation.find(
-                              (m: any) => m._id === ele.userIds[0],
-                            )?.avatar as string)
+                            (m: any) => m._id === ele.userIds[0],
+                          )?.avatar as string)
                           : undefined
                       }
                       dimension={32}
                       color={
                         memberInConversation &&
-                        ele.userIds &&
-                        ele.userIds.length > 0
+                          ele.userIds &&
+                          ele.userIds.length > 0
                           ? (memberInConversation.find(
-                              (m: any) => m._id === ele.userIds[0],
-                            )?.avatarColor as string)
+                            (m: any) => m._id === ele.userIds[0],
+                          )?.avatarColor as string)
                           : undefined
                       }
                     />
@@ -318,35 +314,35 @@ export default function ModalViewOption({
                   <div className="flex -space-x-2">
                     {ele.userIds.length > 0 && memberInConversation.length > 0
                       ? ele.userIds.map((uid, i) => {
-                          const u = memberInConversation.find(
-                            (m: any) => m._id === uid,
-                          );
-                          if (u) {
-                            return (
-                              <div
-                                key={i}
-                                className="z-10"
-                                style={{ marginLeft: i === 0 ? 0 : -8 }}
-                              >
-                                <PersonalIcon
-                                  name={u.name}
-                                  avatar={u.avatar}
-                                  dimension={32}
-                                  color={u.avatarColor}
-                                />
-                              </div>
-                            );
-                          }
+                        const u = memberInConversation.find(
+                          (m: any) => m._id === uid,
+                        );
+                        if (u) {
                           return (
                             <div
                               key={i}
                               className="z-10"
                               style={{ marginLeft: i === 0 ? 0 : -8 }}
                             >
-                              <PersonalIcon noneUser={true} dimension={32} />
+                              <PersonalAvatar
+                                name={u.name}
+                                avatar={u.avatar}
+                                dimension={32}
+                                color={u.avatarColor}
+                              />
                             </div>
                           );
-                        })
+                        }
+                        return (
+                          <div
+                            key={i}
+                            className="z-10"
+                            style={{ marginLeft: i === 0 ? 0 : -8 }}
+                          >
+                            <PersonalAvatar noneUser={true} dimension={32} />
+                          </div>
+                        );
+                      })
                       : null}
                     {ele.userIds.length > 1 && (
                       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-100 text-xs text-neutral-700">
@@ -390,9 +386,8 @@ export default function ModalViewOption({
                     onChange={(e) =>
                       updateNewOption(idx, { name: e.target.value })
                     }
-                    placeholder={`Lựa chọn ${
-                      ((infoVote && infoVote.options?.length) || 0) + idx + 1
-                    }`}
+                    placeholder={`Lựa chọn ${((infoVote && infoVote.options?.length) || 0) + idx + 1
+                      }`}
                     className="flex-1 px-3 py-2 border border-neutral-200 rounded-md bg-white"
                     spellCheck={false}
                   />

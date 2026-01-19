@@ -6,7 +6,7 @@ import {
   HoverCardContent,
 } from '@/components/ui/hover-card';
 
-import PersonalIcon from '../PersonalIcon';
+import PersonalAvatar from '../PersonalAvatar';
 
 type Props = {
   items: any[],
@@ -30,7 +30,7 @@ export default function ItemsSelected({ items = [], onRemove }: Props) {
             <div className="flex items-center gap-2">
               <div className="w-5 h-5">
                 {!item.type && (
-                  <PersonalIcon
+                  <PersonalAvatar
                     dimension={20}
                     avatar={item.avatar}
                     name={item.name}
@@ -39,7 +39,7 @@ export default function ItemsSelected({ items = [], onRemove }: Props) {
                 )}
 
                 {item.type && typeof item.avatar === 'string' && (
-                  <PersonalIcon
+                  <PersonalAvatar
                     dimension={20}
                     avatar={item.avatar}
                     name={item.name}

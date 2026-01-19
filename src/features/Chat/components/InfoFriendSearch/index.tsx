@@ -6,7 +6,7 @@ import Scrollbars from 'react-custom-scrollbars-2';
 
 import conversationApi from '@/api/conversationApi';
 import InfoTitle from '../InfoTitle';
-import PersonalIcon from '../PersonalIcon';
+import PersonalAvatar from '../PersonalAvatar';
 
 import {
   ContextMenu,
@@ -111,7 +111,7 @@ function InfoFriendSearch({ onBack, members = [], onChoseUser }: InfoFriendSearc
                     className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <PersonalIcon
+                      <PersonalAvatar
                         avatar={ele.avatar}
                         dimension={40}
                         name={ele.name}

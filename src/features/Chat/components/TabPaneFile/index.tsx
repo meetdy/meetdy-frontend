@@ -1,5 +1,5 @@
 import { FileSpreadsheet, FileText, FileType, Presentation } from 'lucide-react';
-import PersonalIcon from '../PersonalIcon';
+import PersonalAvatar from '../PersonalAvatar';
 import {
   Select,
   SelectContent,
@@ -71,7 +71,7 @@ function TabPaneFile() {
           <SelectContent>
             <SelectItem value="1">
               <div className="flex items-center gap-2">
-                <PersonalIcon dimension={24} />
+                <PersonalAvatar dimension={24} />
                 <span>Hoàng Hạ Xuyên</span>
               </div>
             </SelectItem>

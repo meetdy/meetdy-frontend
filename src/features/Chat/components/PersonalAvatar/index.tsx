@@ -13,7 +13,7 @@ type Props = {
   noneUser?: boolean;
 };
 
-export default function PersonalIcon({
+export default function PersonalAvatar({
   avatar = '',
   isActive = false,
   dimension = 48,

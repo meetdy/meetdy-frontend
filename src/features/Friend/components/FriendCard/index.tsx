@@ -1,4 +1,4 @@
-import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import { Button } from '@/components/ui/button';
 
 type FriendData = {
@@ -31,7 +31,7 @@ function FriendCard({
   return (
     <div className="flex items-center justify-between p-4 bg-card rounded-xl border hover:shadow-sm transition">
       <div className="flex items-center gap-3">
-        <PersonalIcon
+        <PersonalAvatar
           avatar={data.avatar}
           dimension={48}
           name={data.name}

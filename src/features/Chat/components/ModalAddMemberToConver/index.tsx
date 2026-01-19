@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Pencil, AlertCircle, Search } from "lucide-react";
-import PersonalIcon from "../PersonalIcon";
+import PersonalAvatar from "../PersonalAvatar";
 import ItemsSelected from "../ItemsSelected";
 
 export default function ModalAddMemberToConver({
@@ -159,11 +159,10 @@ export default function ModalAddMemberToConver({
                   {initalFriend.map((ele) => (
                     <label
                       key={ele._id}
-                      className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${
-                        checkInitialValue(ele._id)
-                          ? "opacity-50 cursor-not-allowed"
-                          : "cursor-pointer hover:bg-slate-50"
-                      }`}
+                      className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${checkInitialValue(ele._id)
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer hover:bg-slate-50"
+                        }`}
                     >
                       <Checkbox
                         disabled={checkInitialValue(ele._id)}
@@ -173,7 +172,7 @@ export default function ModalAddMemberToConver({
                         }
                       />
 
-                      <PersonalIcon
+                      <PersonalAvatar
                         dimension={36}
                         avatar={ele.avatar}
                         name={ele.name}

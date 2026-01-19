@@ -6,7 +6,7 @@ import conversationApi from '@/api/conversationApi';
 import messageApi from '@/api/messageApi';
 import ConversationAvatar from '../ConversationAvatar';
 import ItemsSelected from '../ItemsSelected';
-import PersonalIcon from '../PersonalIcon';
+import PersonalAvatar from '../PersonalAvatar';
 
 import {
   Dialog,
@@ -160,7 +160,7 @@ function ModalShareMessage({ visible = false, onCancel, idMessage }: ModalShareM
                         avatarColor={element.avatarColor}
                       />
                     ) : (
-                      <PersonalIcon
+                      <PersonalAvatar
                         dimension={36}
                         avatar={element.avatar}
                         name={element.name}

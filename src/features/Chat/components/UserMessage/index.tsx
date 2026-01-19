@@ -17,7 +17,7 @@ import {
 import messageApi from '@/api/messageApi';
 import pinMessageApi from '@/api/pinMessageApi';
 import ModalChangePinMessage from '@/components/modal-change-pin-message';
-import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import { checkLeader } from '@/utils/groupUtils';
 
 import { deleteMessageClient } from '../../slice/chatSlice';
@@ -272,7 +272,7 @@ function UserMessage({
           )}
         >
           <div className={cn(isSameUser && 'invisible')}>
-            <PersonalIcon
+            <PersonalAvatar
               isHost={isLeader}
               dimension={40}
               avatar={avatar}

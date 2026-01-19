@@ -6,7 +6,7 @@ import type { RootState } from '@/store';
 import messageApi from '@/api/messageApi';
 
 import NavigationChatBox from '@/features/Chat/components/NavigationChatBox';
-import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import ReplyBlock from '@/features/Chat/components/ReplyBlock';
 import TextEditor from '@/features/Chat/components/TextEditor';
 import { Button } from '@/components/ui/button';
@@ -318,7 +318,7 @@ export default function FooterChatContainer({
     );
     const after = value.slice(
       (lastAtIndex >= 0 ? lastAtIndex : value.length) +
-        `@${mentionQuery}`.length,
+      `@${mentionQuery}`.length,
     );
     const inserted = `${before}@${member.name} ${after}`;
     setValueText(inserted);
@@ -393,9 +393,8 @@ export default function FooterChatContainer({
                   onKeyDown={handleKeyPress}
                   onFocus={handleOnFocus}
                   onBlur={handleOnBlur}
-                  placeholder={`Nhắn tin tới ${
-                    detailConversation?.name ?? ''
-                  }...`}
+                  placeholder={`Nhắn tin tới ${detailConversation?.name ?? ''
+                    }...`}
                   rows={1}
                   className="w-full resize-none overflow-auto rounded-lg border-none bg-transparent px-1 py-2 text-sm placeholder:text-slate-400 focus:outline-none"
                   spellCheck={false}
@@ -414,7 +413,7 @@ export default function FooterChatContainer({
                           className="flex w-full items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-left"
                         >
                           <div className="w-8 h-8 shrink-0">
-                            <PersonalIcon
+                            <PersonalAvatar
                               dimension={32}
                               avatar={m.avatar}
                               name={m.name}

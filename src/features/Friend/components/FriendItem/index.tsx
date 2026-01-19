@@ -8,7 +8,7 @@ import {
 } from '@/features/Chat/slice/chatSlice';
 import dateUtils from '@/utils/dateUtils';
 
-import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 
 import {
   DropdownMenu,
@@ -56,7 +56,7 @@ export default function FriendItem({ data, onClickMenu }: FriendItemProps) {
           className="flex items-center gap-3 flex-1 text-left"
           onClick={handleOpenConversation}
         >
-          <PersonalIcon
+          <PersonalAvatar
             isActive={data.isOnline}
             avatar={data.avatar}
             name={data.name}

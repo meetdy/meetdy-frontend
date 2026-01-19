@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import fileHelpers from '@/utils/fileHelpers';
-import PersonalIcon from '../PersonalIcon';
+import PersonalAvatar from '../PersonalAvatar';
 import RangeCalendarCustom from '@/components/range-calendar';
 import {
   Select,
@@ -61,7 +61,7 @@ function TabPaneMedia({ members = [], onQueryChange }: TabPaneMediaProps) {
           {members.map((memberEle, index) => (
             <SelectItem key={index} value={memberEle._id}>
               <div className="flex items-center gap-2">
-                <PersonalIcon
+                <PersonalAvatar
                   dimension={24}
                   avatar={memberEle.avatar}
                   name={memberEle.name}

@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { Pencil, AlertCircle, Search } from 'lucide-react';
-import PersonalIcon from '../PersonalIcon';
+import PersonalAvatar from '../PersonalAvatar';
 import ItemsSelected from '../ItemsSelected';
 
 type Props = {
@@ -142,9 +142,8 @@ export default function ModalCreateGroup({
 
         <div className="flex gap-4">
           <div
-            className={`flex-1 transition-all ${
-              itemSelected.length === 0 ? 'w-full' : ''
-            }`}
+            className={`flex-1 transition-all ${itemSelected.length === 0 ? 'w-full' : ''
+              }`}
           >
             <div className="font-medium mb-2">Danh sách bạn bè</div>
 
@@ -159,7 +158,7 @@ export default function ModalCreateGroup({
                       checked={checkList.includes(ele._id)}
                       onCheckedChange={() => handleChangeCheckBox(ele._id)}
                     />
-                    <PersonalIcon
+                    <PersonalAvatar
                       dimension={36}
                       avatar={ele.avatar}
                       name={ele.name}

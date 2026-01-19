@@ -1,7 +1,6 @@
-import React from 'react';
 import conversationApi from '@/api/conversationApi';
 import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
-import PersonalIcon from '@/features/Chat/components/PersonalIcon';
+import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import {
   Dialog,
   DialogContent,
@@ -33,7 +32,7 @@ export default function ModalJoinGroupFromLink({
   isVisible,
   info = {},
   onCancel,
-}: Props): JSX.Element {
+}: Props) {
   const { _id, name = '', users = [] } = info;
 
   const handleCancel = () => {
@@ -75,7 +74,6 @@ export default function ModalJoinGroupFromLink({
               <ConversationAvatar
                 totalMembers={users.length}
                 avatar={tempAvatar}
-                type={true}
                 isGroupCard={true}
               />
             </div>
@@ -90,7 +88,7 @@ export default function ModalJoinGroupFromLink({
               {users.map((ele, index) => (
                 <div key={index} className="flex flex-col items-center gap-2">
                   <div className="w-10 h-10">
-                    <PersonalIcon
+                    <PersonalAvatar
                       avatar={ele.avatar}
                       name={ele.name}
                       color={ele.avatarColor}

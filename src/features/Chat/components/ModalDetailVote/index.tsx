@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import PersonalIcon from '../PersonalIcon';
+import PersonalAvatar from '../PersonalAvatar';
 import {
   Dialog,
   DialogContent,
@@ -43,7 +43,7 @@ function ModalDetailVote({ visible, onCancel, data = [] }: ModalDetailVoteProps)
                       if (user) {
                         return (
                           <div key={idx} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50">
-                            <PersonalIcon
+                            <PersonalAvatar
                               name={user?.name}
                               avatar={user?.avatar}
                               dimension={32}
@@ -54,7 +54,7 @@ function ModalDetailVote({ visible, onCancel, data = [] }: ModalDetailVoteProps)
                       } else {
                         return (
                           <div key={idx} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50">
-                            <PersonalIcon noneUser={true} dimension={32} />
+                            <PersonalAvatar noneUser={true} dimension={32} />
                             <span className="text-sm text-muted-foreground">
                               Đã rời nhóm
                             </span>
