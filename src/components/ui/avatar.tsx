@@ -26,7 +26,7 @@ const AvatarImage = React.forwardRef<
   <AvatarPrimitive.Image
     ref={ref}
     data-slot="avatar-image"
-    className={cn("aspect-square size-full", className)}
+    className={cn("aspect-square size-full object-cover", className)}
     {...props}
   />
 ))

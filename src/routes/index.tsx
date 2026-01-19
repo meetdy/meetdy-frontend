@@ -9,7 +9,6 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 
 import Account from '@/features/Account';
 import Admin from '@/features/Admin';
-import CallVideo from '@/features/CallVideo';
 import Home from '@/features/Home';
 
 import ChatLayout from '@/features';
@@ -54,7 +53,6 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/chat/*" element={<ChatLayout />} />
-          <Route path="/call-video/:conversationId" element={<CallVideo />} />
         </Route>
 
         <Route element={<AdminProtectedRoute isAdmin={isAdmin} />}>

@@ -33,6 +33,9 @@ import { useGetSuggestFriend } from '@/hooks/friend/useGetSuggestFriend';
 
 import { getValueFromKey } from '@/constants/filterFriend';
 import { sortGroup } from '@/utils/groupUtils';
+import { Filter, Menu, PhoneOutgoing, UserCheck, Users } from 'lucide-react';
+
+import { type LucideIcon } from 'lucide-react';
 
 function Spinner() {
   return (
@@ -42,12 +45,10 @@ function Spinner() {
   );
 }
 
-type RootState = any;
-
 type TabKey = 0 | 1 | 2;
 
 type SidebarItemProps = {
-  icon: string;
+  icon: LucideIcon;
   label: string;
   active?: boolean;
   onClick?: () => void;
@@ -122,7 +123,7 @@ function GroupFilters(props: GroupFiltersProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="gap-2">
-            <Icon icon="mdi:menu-down" className="text-base" />
+            <Icon icon={Menu} />
             <span className="truncate">
               {getValueFromKey('LEFT', groupFilterType)} ({groupCount})
             </span>
@@ -142,7 +143,7 @@ function GroupFilters(props: GroupFiltersProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="gap-2">
-            <Icon icon="mdi:filter" className="text-base" />
+            <Icon icon={Filter} className="text-base" />
             <span className="truncate">
               {getValueFromKey('RIGHT', sortFilterType)}
             </span>
@@ -166,8 +167,6 @@ export default function Friend() {
   const dispatch = useDispatch();
   const refOriginalGroups = useRef<any[]>([]);
 
-  // Hook migrations
-  // Hook migrations
   const { requestFriends = [], isFetching: isFetchingRequest } = useGetListRequestFriend();
   const { myRequestFriends: myRequestFriend = [], isFetching: isFetchingMyRequest } = useGetMyRequestFriend({});
   const { friends = [], isFetching: isFetchingFriends } = useGetFriends({ params: { name: '' } });
@@ -197,11 +196,6 @@ export default function Friend() {
       setFilteredGroups(sorted);
     }
   }, [groups]);
-
-  // Refetch phonebook on tab change if needed, relying on staleTime/cache for now
-  // Or force refetch? The hook handles fetching on mount/update so standard behavior applies.
-  // The original code confused refetching with dispatching thunks.
-  // We can just rely on the query being active.
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
@@ -262,21 +256,21 @@ export default function Friend() {
               <div className="px-2 pb-4 space-y-3">
                 <SidebarItem
                   active={activeTab === 0}
-                  icon="mdi:user"
+                  icon={UserCheck}
                   label="Danh sách kết bạn"
                   onClick={() => setActiveTab(0)}
                   count={counts.request + counts.sent + counts.suggest}
                 />
                 <SidebarItem
                   active={activeTab === 1}
-                  icon="mdi:account-group"
+                  icon={Users}
                   label="Danh sách nhóm"
                   onClick={() => setActiveTab(1)}
                   count={filteredGroups.length}
                 />
                 <SidebarItem
                   active={activeTab === 2}
-                  icon="mdi:contacts"
+                  icon={PhoneOutgoing}
                   label="Danh bạ"
                   onClick={() => setActiveTab(2)}
                 />

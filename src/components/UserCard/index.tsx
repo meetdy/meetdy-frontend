@@ -13,7 +13,6 @@ import {
   fetchFriends,
   fetchListMyRequestFriend,
   fetchListRequestFriend,
-  fetchPhoneBook,
   setAmountNotify,
 } from '@/features/Friend/friendSlice';
 
@@ -48,6 +47,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { createKeyGetFriends } from '@/hooks/friend/useGetFriends';
 
 import { AppDispatch } from '@/redux/store';
+import { useGetContacts } from '@/hooks/contacts/useGetContacts';
 
 export default function UserCard({
   title = 'Thông tin',
@@ -60,7 +60,6 @@ export default function UserCard({
   const queryClient = useQueryClient();
 
   const { amountNotify } = useSelector((state: any) => state.friend);
-  const { conversations } = useSelector((state: any) => state.chat);
 
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
 
@@ -90,7 +89,7 @@ export default function UserCard({
     try {
       await friendApi.sendRequestFriend(user._id);
       dispatch(fetchListMyRequestFriend() as any);
-      dispatch(fetchPhoneBook() as any);
+      queryClient.invalidateQueries({ queryKey: ['contacts'] });
       toast('Gửi lời mời kết bạn thành công');
       onCancel?.();
     } catch {
@@ -113,7 +112,7 @@ export default function UserCard({
   const handleCancelRequest = async () => {
     await friendApi.deleteSentRequestFriend(user._id);
     dispatch(fetchListMyRequestFriend() as any);
-    dispatch(fetchPhoneBook() as any);
+    queryClient.invalidateQueries({ queryKey: ['contacts'] });
     onCancel?.();
   };
 
@@ -121,7 +120,7 @@ export default function UserCard({
     try {
       await friendApi.deleteFriend(user._id);
       dispatch(fetchFriends({ name: '' } as any) as any);
-      dispatch(fetchPhoneBook() as any);
+      queryClient.invalidateQueries({ queryKey: ['contacts'] });
       toast('Xóa thành công');
       setOpenConfirmDelete(false);
       onCancel?.();
