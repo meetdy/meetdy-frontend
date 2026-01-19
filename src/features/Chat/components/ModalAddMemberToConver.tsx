@@ -1,0 +1,224 @@
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+import { Pencil, AlertCircle, Search } from "lucide-react";
+import PersonalAvatar from "./PersonalAvatar";
+import ItemsSelected from "./ItemsSelected";
+
+export default function ModalAddMemberToConver({
+  loading,
+  onOk,
+  onCancel,
+  isVisible,
+  typeModal,
+}) {
+  const [itemSelected, setItemSelected] = useState<any[]>([]);
+  const { friends, memberInConversation } = useSelector(
+    (state: any) => state.chat
+  );
+  const [frInput, setFrInput] = useState("");
+  const initialValue = memberInConversation.map((ele) => ele._id);
+  const [checkList, setCheckList] = useState<string[]>([]);
+  const [nameGroup, setNameGroup] = useState("");
+  const [isShowError, setIsShowError] = useState(false);
+  const [initalFriend, setInitalFriend] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (isVisible) {
+      setInitalFriend(friends);
+    } else {
+      setFrInput("");
+      setCheckList([]);
+      setItemSelected([]);
+      setNameGroup("");
+      setIsShowError(false);
+    }
+  }, [isVisible]);
+
+  const handleOk = () => {
+    const userIds = itemSelected.map((ele) => ele._id);
+
+    if (typeModal === 1) {
+      onOk?.([...checkList], nameGroup);
+    } else {
+      onOk?.(userIds);
+    }
+  };
+
+  const handleSearch = (e: any) => {
+    const value = e.target.value;
+    setFrInput(value);
+
+    if (!value) {
+      setInitalFriend(friends);
+    } else {
+      const result = friends.filter((ele) =>
+        ele.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setInitalFriend(result);
+    }
+  };
+
+  const handleChangeCheckBox = (value: string) => {
+    const exists = checkList.includes(value);
+    let newCheck = [...checkList];
+    let newItems = [...itemSelected];
+
+    if (exists) {
+      newCheck = newCheck.filter((ele) => ele !== value);
+      newItems = newItems.filter((ele) => ele._id !== value);
+    } else {
+      newCheck.push(value);
+      const user = initalFriend.find((ele) => ele._id === value);
+      if (user) newItems.push(user);
+    }
+
+    setCheckList(newCheck);
+    setItemSelected(newItems);
+  };
+
+  const handleRemoveItem = (id: string) => {
+    setCheckList((prev) => prev.filter((ele) => ele !== id));
+    setItemSelected((prev) => prev.filter((ele) => ele._id !== id));
+    setFrInput("");
+    setInitalFriend(friends);
+  };
+
+  const checkInitialValue = (id: string) => {
+    return initialValue.includes(id);
+  };
+
+  return (
+    <Dialog open={isVisible} onOpenChange={(v) => onCancel(v)}>
+      <DialogContent className="max-w-lg rounded-2xl">
+        <DialogHeader>
+          <DialogTitle>
+            {typeModal === 2 ? "Thêm thành viên" : "Tạo nhóm"}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          {typeModal === 1 && (
+            <>
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                  <Pencil className="w-4 h-4 text-gray-500" />
+                </div>
+
+                <div className="flex-1">
+                  <Input
+                    placeholder="Nhập tên nhóm"
+                    value={nameGroup}
+                    onChange={(e) => setNameGroup(e.target.value)}
+                    onBlur={() =>
+                      setIsShowError(!(nameGroup.trim().length > 0))
+                    }
+                    className="rounded-xl"
+                  />
+                  {isShowError && (
+                    <div className="text-sm text-red-500 flex items-center gap-1 mt-1">
+                      <AlertCircle className="w-4 h-4" /> Tên nhóm không được để trống
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="text-sm font-medium">Thêm bạn vào nhóm</div>
+            </>
+          )}
+
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Nhập tên bạn muốn tìm kiếm"
+              value={frInput}
+              onChange={handleSearch}
+              className="pl-10 rounded-xl"
+            />
+          </div>
+
+          <div className="w-full h-px bg-gray-200" />
+
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <div className="font-medium mb-2">Danh sách bạn bè</div>
+
+              <ScrollArea className="h-64 pr-2">
+                <div className="flex flex-col gap-3">
+                  {initalFriend.map((ele) => (
+                    <label
+                      key={ele._id}
+                      className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${checkInitialValue(ele._id)
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer hover:bg-slate-50"
+                        }`}
+                    >
+                      <Checkbox
+                        disabled={checkInitialValue(ele._id)}
+                        checked={checkList.includes(ele._id)}
+                        onCheckedChange={() =>
+                          handleChangeCheckBox(ele._id)
+                        }
+                      />
+
+                      <PersonalAvatar
+                        dimension={36}
+                        avatar={ele.avatar}
+                        name={ele.name}
+                        color={ele.avatarColor}
+                      />
+
+                      <span>{ele.name}</span>
+                    </label>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
+
+            {itemSelected.length > 0 && (
+              <div className="w-1/3">
+                <div className="font-medium mb-2">
+                  Đã chọn: {itemSelected.length}
+                </div>
+
+                <ScrollArea className="h-64 pr-2">
+                  <ItemsSelected
+                    items={itemSelected}
+                    onRemove={handleRemoveItem}
+                  />
+                </ScrollArea>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onCancel(false)} className="rounded-xl">
+            Hủy
+          </Button>
+          <Button
+            disabled={
+              (typeModal === 1 && !nameGroup.trim().length) ||
+              checkList.length < 1
+            }
+            onClick={handleOk}
+            className="rounded-xl"
+          >
+            Xác nhận
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

@@ -12,7 +12,7 @@ import useWindowDimensions from '@/hooks/useWindowDimensions';
 
 import DrawerPinMessage from './components/DrawerPinMessage';
 import GroupNews from './components/GroupNews';
-import NutshellPinMessage from './components/NutshellPinMessage/NutshellPinMessage';
+import NutshellPinMessage from './components/NutshellPinMessage';
 import BodyChatContainer from './containers/BodyChatContainer';
 import ConversationContainer from './containers/ConversationContainer';
 import FooterChatContainer from './containers/FooterChatContainer';
