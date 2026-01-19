@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Virtuoso } from 'react-virtuoso';
 
 import conversationApi from '@/api/conversationApi';
 import SubMenuClassify from '@/components/SubMenuClassify';
@@ -18,6 +19,74 @@ import {
 } from '../../slice/chatSlice';
 import type { RootState, AppDispatch } from '@/redux/store';
 
+// OPTIMIZATION: Extracted to a memoized component to prevent re-rendering the whole list
+// when context menu state changes for a single item
+type ConversationItemProps = {
+  conversation: any;
+  isContextMenuOpen: boolean;
+  contextMenuPosition: { x: number; y: number };
+  onContextMenu: (e: React.MouseEvent, id: string) => void;
+  onClick: (id: string) => void;
+  onOpenConfirm: (id: string) => void;
+  user: any;
+  classifies: any[];
+}
+
+const ConversationItem = React.memo(({
+  conversation,
+  isContextMenuOpen,
+  contextMenuPosition,
+  onContextMenu,
+  onClick,
+  onOpenConfirm,
+  user,
+  classifies
+}: ConversationItemProps) => {
+  const { numberUnread } = conversation;
+  
+  if (!conversation.lastMessage) return null;
+
+  return (
+    <li
+      onContextMenu={(e) => onContextMenu(e, conversation._id)}
+      className={`conversation-item ${
+        numberUnread === 0 ? '' : 'arrived-message'
+      }`}
+    >
+      <ConversationSingle
+        conversation={conversation}
+        onClick={onClick}
+      />
+
+      {isContextMenuOpen && (
+        <div
+          className="absolute z-40 min-w-[220px] rounded-md border bg-white shadow-lg"
+          style={{ top: contextMenuPosition.y, left: contextMenuPosition.x }}
+        >
+          <div className="p-2">
+            <SubMenuClassify
+              data={classifies}
+              chatId={conversation._id}
+            />
+            {user._id === conversation.leaderId && (
+              <button
+                onClick={() => onOpenConfirm(conversation._id)}
+                className="mt-2 w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50"
+              >
+                Xoá hội thoại
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </li>
+  );
+});
+
+ConversationItem.displayName = 'ConversationItem';
+
+const DEFAULT_CONTEXT_MENU = { id: null, x: 0, y: 0 };
+
 type Props = {
   valueClassify: string;
 };
@@ -27,31 +96,36 @@ export default function ConversationContainer({ valueClassify }: Props) {
   const { conversations } = useFetchListConversations({});
   const { classifies } = useFetchListClassify();
   
-  const { user } = useSelector((state: RootState) => state.global);
+  // OPTIMIZATION: Select only needed user state, ignore other global state changes
+  const user = useSelector((state: RootState) => state.global.user);
 
-  const tempClassify =
-    classifies?.find((ele) => ele._id === valueClassify) ?? 0;
+  const tempClassify = useMemo(() => 
+    classifies?.find((ele) => ele._id === valueClassify) ?? 0,
+    [classifies, valueClassify]
+  );
 
-  const checkConverInClassify = (idMember: string) => {
+  const checkConverInClassify = useCallback((idMember: string) => {
     if (tempClassify === 0) return true;
     const index = tempClassify.conversationIds.findIndex(
       (ele: string) => ele === idMember,
     );
     return index > -1;
-  };
+  }, [tempClassify]);
 
-  const converFilter = conversations.filter((ele) =>
-    checkConverInClassify(ele._id),
+  // OPTIMIZATION: Memoize filter to allow stable reference for list rendering
+  const converFilter = useMemo(() => 
+    conversations.filter((ele) => checkConverInClassify(ele._id)),
+    [conversations, checkConverInClassify]
   );
 
-  const handleConversationClick = async (conversationId: string) => {
+  const handleConversationClick = useCallback(async (conversationId: string) => {
     dispatch(setCurrentChannel(''));
     dispatch(getLastViewOfMembers({ conversationId }));
     dispatch(fetchListMessages({ conversationId, size: 10 }));
     dispatch(getMembersConversation({ conversationId }));
     dispatch(setTypeOfConversation(conversationId));
     dispatch(fetchChannels({ conversationId }));
-  };
+  }, [dispatch]);
 
   const [contextMenu, setContextMenu] = useState<{
     id: string | null;
@@ -89,10 +163,10 @@ export default function ConversationContainer({ valueClassify }: Props) {
     };
   }, []);
 
-  const handleContextMenu = (e: React.MouseEvent, id: string) => {
+  const handleContextMenu = useCallback((e: React.MouseEvent, id: string) => {
     e.preventDefault();
     setContextMenu({ id, x: e.clientX, y: e.clientY });
-  };
+  }, []);
 
   const deleteConver = async (id: string) => {
     try {
@@ -107,11 +181,11 @@ export default function ConversationContainer({ valueClassify }: Props) {
     }
   };
 
-  const openConfirm = (id: string) => {
+  const openConfirm = useCallback((id: string) => {
     setDeleteId(id);
     setConfirmOpen(true);
     setContextMenu({ id: null, x: 0, y: 0 });
-  };
+  }, []);
 
   return (
     <div id="conversation-main" ref={refContainer} className="relative">
@@ -127,48 +201,25 @@ export default function ConversationContainer({ valueClassify }: Props) {
         </div>
       )}
 
-      <ul className="list_conversation">
-        {converFilter.map((conversationEle, index) => {
-          const { numberUnread } = conversationEle;
-          if (!conversationEle.lastMessage) return null;
-          return (
-            <li
+      <div style={{ height: '100%', width: '100%' }}>
+        <Virtuoso
+          style={{ height: '100%' }}
+          data={converFilter}
+          itemContent={(index, conversationEle) => (
+            <ConversationItem
               key={conversationEle._id}
-              onContextMenu={(e) => handleContextMenu(e, conversationEle._id)}
-              className={`conversation-item ${
-                numberUnread === 0 ? '' : 'arrived-message'
-              }`}
-            >
-              <ConversationSingle
-                conversation={conversationEle}
-                onClick={handleConversationClick}
-              />
-
-              {contextMenu.id === conversationEle._id && (
-                <div
-                  className="absolute z-40 min-w-[220px] rounded-md border bg-white shadow-lg"
-                  style={{ top: contextMenu.y, left: contextMenu.x }}
-                >
-                  <div className="p-2">
-                    <SubMenuClassify
-                      data={classifies}
-                      chatId={conversationEle._id}
-                    />
-                    {user._id === conversationEle.leaderId && (
-                      <button
-                        onClick={() => openConfirm(conversationEle._id)}
-                        className="mt-2 w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50"
-                      >
-                        Xoá hội thoại
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+              conversation={conversationEle}
+              isContextMenuOpen={contextMenu.id === conversationEle._id}
+              contextMenuPosition={contextMenu.id === conversationEle._id ? contextMenu : DEFAULT_CONTEXT_MENU}
+              onContextMenu={handleContextMenu}
+              onClick={handleConversationClick}
+              onOpenConfirm={openConfirm}
+              user={user}
+              classifies={classifies}
+            />
+          )}
+        />
+      </div>
 
       {confirmOpen && deleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">

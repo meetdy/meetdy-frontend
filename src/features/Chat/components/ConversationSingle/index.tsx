@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useMemo } from "react"
 import { useSelector } from "react-redux"
 import { Tag } from "lucide-react"
 
@@ -12,7 +12,7 @@ type Props = {
   onClick?: (id: string) => void
 }
 
-export default function ConversationSingle({ conversation, onClick }: Props) {
+const ConversationSingle = React.memo(({ conversation, onClick }: Props) => {
   const {
     _id,
     name,
@@ -24,19 +24,20 @@ export default function ConversationSingle({ conversation, onClick }: Props) {
   } = conversation
 
   const { createdAt } = lastMessage || {}
-  const { classifies, conversations, currentConversation } = useSelector(
-    (state: any) => state.chat
-  )
+  
+  // OPTIMIZATION: Select only necessary fields to prevent re-renders on unrelated store changes
+  const classifies = useSelector((state: any) => state.chat.classifies)
+  const currentConversation = useSelector((state: any) => state.chat.currentConversation)
 
-  const [classify, setClassify] = useState<any>(null)
   const isActive = currentConversation === _id
 
-  useEffect(() => {
+  // OPTIMIZATION: Derive classify directly instead of using useEffect/useState
+  const classify = useMemo(() => {
     if (classifies) {
-      const temp = classifyUtils.getClassifyOfObject(_id, classifies)
-      if (temp) setClassify(temp)
+      return classifyUtils.getClassifyOfObject(_id, classifies)
     }
-  }, [conversation, conversations, classifies, _id])
+    return null
+  }, [_id, classifies])
 
   const handleClick = () => {
     if (onClick) onClick(_id)
@@ -109,4 +110,8 @@ export default function ConversationSingle({ conversation, onClick }: Props) {
       )}
     </div>
   )
-}
+})
+
+ConversationSingle.displayName = 'ConversationSingle'
+
+export default ConversationSingle
