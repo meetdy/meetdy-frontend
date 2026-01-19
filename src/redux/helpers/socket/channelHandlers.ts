@@ -1,5 +1,5 @@
-import { checkAndFetchLastViewOfMembers } from "@/hooks/conversation/useFetchLastViewOfMembers";
-import { checkAndFetchListMessages } from "@/hooks/message/useFetchListMessages";
+import { checkAndFetchLastViewOfMembers } from "@/hooks/conversation/useGetLastViewOfMembers";
+import { checkAndFetchListMessages } from "@/hooks/message/useGetListMessages";
 import {
     removeChannel,
     setCurrentChannel,

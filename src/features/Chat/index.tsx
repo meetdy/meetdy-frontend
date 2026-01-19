@@ -50,13 +50,13 @@ import renderWidthDrawer from '@/utils/DrawerResponsive';
 import { toast } from 'sonner';
 
 import { useInfiniteListMessages } from '@/hooks/message/useInfiniteListMessages';
-import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
-import { useFetchFriends } from '@/hooks/friend/useFetchFriends';
-import { useFetchListClassify } from '@/hooks/classify/useFetchListClassify';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
+import { useGetFriends } from '@/hooks/friend/useGetFriends';
+import { useGetListClassify } from '@/hooks/classify/useGetListClassify';
 import { usePinnedMessages } from '@/hooks/channel/usePinnedMessages';
-import { useFetchChannel } from '@/hooks/channel/useFetchChannel';
+import { useGetChannel } from '@/hooks/channel/useGetChannel';
 import { useQueryClient } from '@tanstack/react-query';
-import { fetchListConversationsKey } from '@/hooks/conversation/useFetchListConversations';
+import { fetchListConversationsKey } from '@/hooks/conversation/useGetListConversations';
 
 // ... existing imports ...
 
@@ -77,15 +77,15 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
   );
 
   // React Query Hooks
-  const { conversations = [] } = useFetchListConversations({ params: {} });
-  const { friends = [] } = useFetchFriends({ params: { name: '' } });
-  const { classifies = [] } = useFetchListClassify();
+  const { conversations = [] } = useGetListConversations({ params: {} });
+  const { friends = [] } = useGetFriends({ params: { name: '' } });
+  const { classifies = [] } = useGetListClassify();
   // Channels: If we fetched a list of channels for currentConversation?
-  // Redux `fetchChannels` fetched *list*. `useFetchChannel` returns `channel` (singular?)
-  // Let's assume useFetchChannel returns the list for now or check usage.
-  // We'll stick to Redux for channels momentarily if useFetchChannel is ambiguous or use it.
+  // Redux `fetchChannels` fetched *list*. `useGetChannel` returns `channel` (singular?)
+  // Let's assume useGetChannel returns the list for now or check usage.
+  // We'll stick to Redux for channels momentarily if useGetChannel is ambiguous or use it.
   // Actually, let's use the hook if it matches.
-  const { channel: channels = [] } = useFetchChannel({
+  const { channel: channels = [] } = useGetChannel({
     conversationId: currentConversation,
     enabled: !!currentConversation
   });

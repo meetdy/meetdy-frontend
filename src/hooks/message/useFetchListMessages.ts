@@ -24,7 +24,7 @@ interface UseFetchListMessagesProps {
   params: TFetchListMessages;
   enabled?: boolean;
 }
-export function useFetchListMessages({
+export function useGetListMessages({
   params: { conversationId, page, size },
   enabled = true,
 }: UseFetchListMessagesProps) {

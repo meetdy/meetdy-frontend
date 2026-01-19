@@ -6,8 +6,8 @@ import { toast } from 'sonner';
 import ServiceClassify from '@/api/classifyApi';
 import { useAddClassify } from '@/hooks/classify/useAddClassify';
 import { useDeleteClassify } from '@/hooks/classify/useDeleteClassify';
-import { useFetchListColor } from '@/hooks/classify/useFetchColors';
-import { useFetchListClassify } from '@/hooks/classify/useFetchListClassify';
+import { useGetListColor } from '@/hooks/classify/useGetColors';
+import { useGetListClassify } from '@/hooks/classify/useGetListClassify';
 import { useUpdateClassifyMutation } from '@/hooks/classify/useUpdateClassify';
 import { createQueryKey } from '@/queries/core';
 import { useQueryClient } from '@tanstack/react-query';
@@ -46,8 +46,8 @@ interface ModalClassifyProps {
 function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
   const queryClient = useQueryClient();
   const previousName = useRef<any>(null);
-  const { classifies } = useFetchListClassify();
-  const { colors } = useFetchListColor();
+  const { classifies } = useGetListClassify();
+  const { colors } = useGetListColor();
 
   const { mutateAsync: addClassify } = useAddClassify();
   const { mutateAsync: updateClassify } = useUpdateClassifyMutation();

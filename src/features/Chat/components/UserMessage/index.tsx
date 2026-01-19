@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useQueryClient } from '@tanstack/react-query';
 import { createQueryKey } from '@/queries/core';
-import { useFetchPinMessages } from '@/hooks/pin-message/useFetchPinMessages';
+import { useGetPinMessages } from '@/hooks/pin-message/useGetPinMessages';
 import type { Dispatch } from 'redux';
 
 import {
@@ -138,7 +138,7 @@ function UserMessage({
     currentChannel,
   } = useSelector((state: RootState) => state.chat);
 
-  const { pinMessages } = useFetchPinMessages({ conversationId: currentConversation, enabled: !!currentConversation });
+  const { pinMessages } = useGetPinMessages({ conversationId: currentConversation, enabled: !!currentConversation });
   const queryClient = useQueryClient();
 
   const global = useSelector((state: RootState) => state.global);
@@ -296,15 +296,15 @@ function UserMessage({
                       ? 'rounded-2xl'
                       : 'rounded-[18px]',
                     isMyMessage &&
-                      type !== 'IMAGE' &&
-                      type !== 'VIDEO' &&
-                      type !== 'STICKER' &&
-                      'bg-gradient-to-br from-primary to-primary/90 text-primary-foreground shadow-sm',
+                    type !== 'IMAGE' &&
+                    type !== 'VIDEO' &&
+                    type !== 'STICKER' &&
+                    'bg-gradient-to-br from-primary to-primary/90 text-primary-foreground shadow-sm',
                     !isMyMessage &&
-                      type !== 'IMAGE' &&
-                      type !== 'VIDEO' &&
-                      type !== 'STICKER' &&
-                      'bg-slate-100 text-slate-900 shadow-sm',
+                    type !== 'IMAGE' &&
+                    type !== 'VIDEO' &&
+                    type !== 'STICKER' &&
+                    'bg-slate-100 text-slate-900 shadow-sm',
                     type === 'IMAGE' || type === 'VIDEO' || type === 'STICKER'
                       ? 'bg-transparent'
                       : 'px-4 py-2.5',

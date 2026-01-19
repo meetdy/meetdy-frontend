@@ -12,7 +12,7 @@ import channelApi from '@/api/channelApi';
 import ModalChangeNameChannel from '../ModalChangeNameChannel';
 import { useDeleteChannel } from '@/hooks/channel/useDeleteChannel';
 import { useRenameChannel } from '@/hooks/channel/useRenameChannel';
-import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 import { useQueryClient } from '@tanstack/react-query';
 import { createQueryKey } from '@/queries/core';
 
@@ -44,8 +44,8 @@ function ChannelItem({ isActive = false, data = {} }: ChannelItemProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const { user } = useSelector((state: any) => state.global);
-  
-  const { conversations } = useFetchListConversations({ params: {} });
+
+  const { conversations } = useGetListConversations({ params: {} });
   const mutationRename = useRenameChannel();
   const mutationDelete = useDeleteChannel();
   const queryClient = useQueryClient();
@@ -91,9 +91,8 @@ function ChannelItem({ isActive = false, data = {} }: ChannelItemProps) {
       <ContextMenu>
         <ContextMenuTrigger asChild>
           <button
-            className={`w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted/50 transition-colors ${
-              isActive ? 'bg-primary/10 text-primary' : ''
-            }`}
+            className={`w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted/50 transition-colors ${isActive ? 'bg-primary/10 text-primary' : ''
+              }`}
             onClick={handleViewChannel}
           >
             <Hash className="h-4 w-4" />

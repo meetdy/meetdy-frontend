@@ -12,7 +12,7 @@ import {
 import FriendCard from '../FriendCard';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { fetchFriendsQueryKey } from '@/hooks/friend/useFetchFriends';
+import { fetchFriendsQueryKey } from '@/hooks/friend/useGetFriends';
 
 // ...
 

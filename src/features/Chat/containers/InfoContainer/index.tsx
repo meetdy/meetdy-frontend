@@ -13,8 +13,8 @@ import InfoFriendSearch from '@/features/Chat/components/InfoFriendSearch';
 import InfoMediaSearch from '@/features/Chat/components/InfoMediaSearch';
 import InfoMember from '@/features/Chat/components/InfoMember';
 import InfoNameAndThumbnail from '@/features/Chat/components/InfoNameAndThumbnail';
-import { useFetchAllMedia } from '@/hooks/media/useFetchAllMedia';
-import { useFetchChannel } from '@/hooks/channel/useFetchChannel';
+import { useGetAllMedia } from '@/hooks/media/useGetAllMedia';
+import { useGetChannel } from '@/hooks/channel/useGetChannel';
 import UserCard from '@/components/UserCard';
 import { Button } from '@/components/ui/button';
 import {
@@ -68,11 +68,11 @@ export default function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBl
   const goInfo = () => setNavState({ view: 0, tabpane: 0 });
   const goMembers = (view: number) => setNavState({ view, tabpane: 0 });
   const goMedia = (view: number, tabpane = 0) => setNavState({ view, tabpane });
-  const { data: media = {} as any } = useFetchAllMedia({
+  const { data: media = {} as any } = useGetAllMedia({
     params: { conversationId: currentConversation },
     enabled: !!currentConversation,
   });
-  const { channel: channels = [] } = useFetchChannel({
+  const { channel: channels = [] } = useGetChannel({
     conversationId: currentConversation,
     enabled: !!currentConversation,
   });

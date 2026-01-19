@@ -34,7 +34,7 @@ import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 
 import NavButton from './NavButton';
 
-import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 
 // ...
 
@@ -45,7 +45,7 @@ export default function NavbarContainer() {
   const { user } = useSelector((state: any) => state.global);
   const { amountNotify } = useSelector((state: any) => state.friend);
 
-  const { conversations = [] } = useFetchListConversations({ params: {} });
+  const { conversations = [] } = useGetListConversations({ params: {} });
 
   const toTalUnread = (conversations || []).reduce((acc: number, curr: any) => {
     return acc + (curr.numberUnread || 0);

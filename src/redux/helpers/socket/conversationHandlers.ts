@@ -1,4 +1,4 @@
-import { checkAndFetchConversationById } from "@/hooks/conversation/useFetchConversationById";
+import { checkAndFetchConversationById } from "@/hooks/conversation/useGetConversationById";
 import { ILastGroupMessage, ILastIndividualMessage } from "@/models/message.model";
 import {
     addManagers,

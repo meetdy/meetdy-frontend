@@ -5,8 +5,8 @@ import { Virtuoso } from 'react-virtuoso';
 import conversationApi from '@/api/conversationApi';
 import SubMenuClassify from '@/components/SubMenuClassify';
 import ConversationSingle from '@/features/Chat/components/ConversationSingle';
-import { useFetchListClassify } from '@/hooks/classify/useFetchListClassify';
-import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
+import { useGetListClassify } from '@/hooks/classify/useGetListClassify';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 import {
   fetchChannels,
   getLastViewOfMembers,
@@ -110,8 +110,8 @@ type Props = {
 
 export default function ConversationContainer({ valueClassify }: Props) {
   const dispatch = useDispatch<AppDispatch>();
-  const { conversations } = useFetchListConversations({ params: {} });
-  const { classifies } = useFetchListClassify();
+  const { conversations } = useGetListConversations({ params: {} });
+  const { classifies } = useGetListClassify();
 
   // OPTIMIZATION: Select only needed user state, ignore other global state changes
   const user = useSelector((state: RootState) => state.global.user);
@@ -185,8 +185,8 @@ export default function ConversationContainer({ valueClassify }: Props) {
       {toast.msg && (
         <div
           className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-md text-sm shadow-md ${toast.type === 'success'
-              ? 'bg-green-50 text-green-800'
-              : 'bg-red-50 text-red-800'
+            ? 'bg-green-50 text-green-800'
+            : 'bg-red-50 text-red-800'
             }`}
         >
           {toast.msg}

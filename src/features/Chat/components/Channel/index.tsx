@@ -27,7 +27,7 @@ interface ChannelProps {
 }
 
 import { useAddChannel } from '@/hooks/channel/useAddChannel';
-import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 import { useQueryClient } from '@tanstack/react-query';
 import { createQueryKey } from '@/queries/core';
 
@@ -42,7 +42,7 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
   } = useSelector((state: any) => state.chat);
   const dispatch = useDispatch();
 
-  const { conversations } = useFetchListConversations({ params: {} });
+  const { conversations } = useGetListConversations({ params: {} });
   const mutationAddChannel = useAddChannel();
   const queryClient = useQueryClient();
 

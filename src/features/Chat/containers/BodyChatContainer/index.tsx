@@ -5,9 +5,9 @@ import {
   setRaisePage,
 } from '../../slice/chatSlice';
 import { useInfiniteListMessages } from '@/hooks/message/useInfiniteListMessages';
-import { useFetchLastViewOfMembers } from '@/hooks/conversation/useFetchLastViewOfMembers';
-import { useFetchLastViewChannel } from '@/hooks/channel/useFetchLastViewChannel';
-import { useFetchMessageInChannel } from '@/hooks/channel/useFetchMessageInChannel'; // Add check if used? No, I use useInfiniteListMessages for channels too.
+import { useGetLastViewOfMembers } from '@/hooks/conversation/useGetLastViewOfMembers';
+import { useGetLastViewChannel } from '@/hooks/channel/useGetLastViewChannel';
+import { useGetMessageInChannel } from '@/hooks/channel/useGetMessageInChannel'; // Add check if used? No, I use useInfiniteListMessages for channels too.
 import DividerCustom from '@/features/Chat/components/DividerCustom';
 import ModalShareMessage from '@/features/Chat/components/ModalShareMessage';
 import UserMessage from '@/features/Chat/components/UserMessage';

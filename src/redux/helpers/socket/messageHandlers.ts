@@ -1,4 +1,4 @@
-import { checkAndFetchPinMessages } from "@/hooks/pin-message/useFetchPinMessages";
+import { checkAndFetchPinMessages } from "@/hooks/pin-message/useGetPinMessages";
 import { IUser } from "@/models/auth.model";
 import { ILastGroupMessage, ILastIndividualMessage } from "@/models/message.model";
 import {

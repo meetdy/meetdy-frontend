@@ -6,7 +6,7 @@ import {
   getLastViewOfMembers,
   setCurrentChannel,
 } from '@/features/Chat/slice/chatSlice';
-import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 interface ListChannelProps {
@@ -17,7 +17,7 @@ function ListChannel({ data = [] }: ListChannelProps) {
   const { currentChannel, currentConversation } = useSelector(
     (state: any) => state.chat,
   );
-  const { conversations } = useFetchListConversations({ params: {} });
+  const { conversations } = useGetListConversations({ params: {} });
   const dispatch = useDispatch();
 
   const handleViewGeneralChannel = () => {
@@ -31,9 +31,8 @@ function ListChannel({ data = [] }: ListChannelProps) {
   return (
     <div className="space-y-1 p-2">
       <button
-        className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
-          !currentChannel ? 'bg-primary/10 text-primary' : 'hover:bg-muted/50'
-        }`}
+        className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${!currentChannel ? 'bg-primary/10 text-primary' : 'hover:bg-muted/50'
+          }`}
         onClick={handleViewGeneralChannel}
       >
         <Hash className="h-4 w-4" />

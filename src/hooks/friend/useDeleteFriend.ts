@@ -1,7 +1,7 @@
 import FriendService from "@/api/friendApi";
 import { createQueryKey, queryClient } from "@/queries/core";
 import { useMutation } from "@tanstack/react-query";
-import { fetchFriendsQueryKey } from "./useFetchFriends";
+import { fetchFriendsQueryKey } from "./useGetFriends";
 
 export function useDeleteFriend() {
     return useMutation({

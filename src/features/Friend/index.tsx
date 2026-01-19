@@ -24,12 +24,12 @@ import ListMyFriendRequest from './components/ListMyRequestFriend';
 import ListRequestFriend from './components/ListRequestFriend';
 import SuggestList from './components/SuggestList';
 
-import { useFetchFriends } from '@/hooks/friend/useFetchFriends';
-import { useFetchListRequestFriend } from '@/hooks/friend/useFetchListRequestFriend';
-import { useFetchMyRequestFriend } from '@/hooks/friend/useFetchMyRequestFriend';
-import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
-import { useGetContacts } from '@/hooks/contacts/useFetchContacts';
-import { useFetchSuggestFriend } from '@/hooks/friend/useFetchSuggestFriend';
+import { useGetFriends } from '@/hooks/friend/useGetFriends';
+import { useGetListRequestFriend } from '@/hooks/friend/useGetListRequestFriend';
+import { useGetMyRequestFriend } from '@/hooks/friend/useGetMyRequestFriend';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
+import { useGetContacts } from '@/hooks/contacts/useGetContacts';
+import { useGetSuggestFriend } from '@/hooks/friend/useGetSuggestFriend';
 
 import { getValueFromKey } from '@/constants/filterFriend';
 import { sortGroup } from '@/utils/groupUtils';
@@ -168,14 +168,14 @@ export default function Friend() {
 
   // Hook migrations
   // Hook migrations
-  const { requestFriends = [], isFetching: isFetchingRequest } = useFetchListRequestFriend();
-  const { myRequestFriends: myRequestFriend = [], isFetching: isFetchingMyRequest } = useFetchMyRequestFriend({});
-  const { friends = [], isFetching: isFetchingFriends } = useFetchFriends({ params: { name: '' } });
-  const { conversations: groups = [], isFetching: isFetchingGroups } = useFetchListConversations({ 
-      params: { name: '', type: 2 } 
+  const { requestFriends = [], isFetching: isFetchingRequest } = useGetListRequestFriend();
+  const { myRequestFriends: myRequestFriend = [], isFetching: isFetchingMyRequest } = useGetMyRequestFriend({});
+  const { friends = [], isFetching: isFetchingFriends } = useGetFriends({ params: { name: '' } });
+  const { conversations: groups = [], isFetching: isFetchingGroups } = useGetListConversations({
+    params: { name: '', type: 2 }
   });
   const { contacts: phoneBook = [], isFetching: isFetchingContacts } = useGetContacts();
-  const { suggestFriends = [], isFetching: isFetchingSuggest } = useFetchSuggestFriend({ params: { page: 0, size: 12 } });
+  const { suggestFriends = [], isFetching: isFetchingSuggest } = useGetSuggestFriend({ params: { page: 0, size: 12 } });
 
   const isLoading = isFetchingRequest || isFetchingMyRequest || isFetchingFriends || isFetchingGroups || isFetchingContacts || isFetchingSuggest;
 
@@ -221,7 +221,7 @@ export default function Friend() {
 
       setSingleSearchResult(single);
       setGroupSearchResult(multiple);
-    } catch {}
+    } catch { }
   };
 
   const counts = useMemo(
