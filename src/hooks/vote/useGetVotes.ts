@@ -13,7 +13,7 @@ interface UseFetchVotesProps {
   params: TFetchVotes;
   enabled?: boolean;
 }
-export function useFetchVotes({
+export function useGetVotes({
   params: { conversationId, page, size },
   enabled = true,
 }: UseFetchVotesProps) {

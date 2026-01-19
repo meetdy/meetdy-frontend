@@ -15,7 +15,7 @@ interface UseFetchConversationByIdProps {
   enabled?: boolean;
 }
 
-export function useFetchConversationById({
+export function useGetConversationById({
   id,
   enabled = true,
 }: UseFetchConversationByIdProps) {

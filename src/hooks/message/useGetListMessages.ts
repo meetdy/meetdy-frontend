@@ -13,7 +13,7 @@ type TFetchListMessages = {
   size?: number;
 };
 
-export const fetchListMessagesKey = ({
+export const createKeyGetListMessages = ({
   conversationId,
   page,
   size,
@@ -29,7 +29,7 @@ export function useGetListMessages({
   enabled = true,
 }: UseFetchListMessagesProps) {
   const { data, isFetched } = useQuery<IMessage>({
-    queryKey: fetchListMessagesKey({ conversationId, page, size }),
+    queryKey: createQueryKey('fetchListMessages', { conversationId, page, size }),
     queryFn: () => ServiceMessages.getListMessages(conversationId, page, size),
     enabled,
   });
@@ -45,12 +45,12 @@ export async function checkAndFetchListMessages({
   size,
 }: TFetchListMessages): Promise<IMessage> {
   const cachedMessages = queryClient.getQueryData<IMessage>(
-    fetchListMessagesKey({ conversationId, page, size }),
+    createKeyGetListMessages({ conversationId, page, size }),
   );
   if (cachedMessages) return cachedMessages;
 
   const messages = await queryClient.fetchQuery({
-    queryKey: fetchListMessagesKey({ conversationId, page, size }),
+    queryKey: createKeyGetListMessages({ conversationId, page, size }),
     queryFn: () => ServiceMessages.getListMessages(conversationId, page, size),
     staleTime: Infinity,
   });

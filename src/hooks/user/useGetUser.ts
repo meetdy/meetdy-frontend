@@ -11,7 +11,7 @@ interface UseFetchUserProps {
   params: TFetchUser;
   enabled?: boolean;
 }
-export function useFetchUser({
+export function useGetUser({
   params: { username },
   enabled = true,
 }: UseFetchUserProps) {

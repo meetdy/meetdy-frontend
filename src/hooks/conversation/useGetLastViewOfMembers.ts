@@ -9,7 +9,7 @@ interface UseFetchLastViewOfMembersProps {
   conversationId: string;
   enabled?: boolean;
 }
-export function useFetchLastViewOfMembers({
+export function useGetLastViewOfMembers({
   conversationId,
   enabled = true,
 }: UseFetchLastViewOfMembersProps) {

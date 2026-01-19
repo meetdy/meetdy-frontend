@@ -12,7 +12,7 @@ import {
 import FriendCard from '../FriendCard';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { fetchFriendsQueryKey } from '@/hooks/friend/useGetFriends';
+import { createKeyGetFriends } from '@/hooks/friend/useGetFriends';
 
 // ...
 
@@ -36,7 +36,7 @@ function ListRequestFriend({ data = [] }) {
     dispatch(fetchListRequestFriend() as any);
     dispatch(fetchFriends({ name: '' } as any) as any);
 
-    queryClient.invalidateQueries({ queryKey: fetchFriendsQueryKey({ name: '' }) });
+    queryClient.invalidateQueries({ queryKey: createKeyGetFriends({ name: '' }) });
 
     dispatch(setAmountNotify(amountNotify - 1));
 

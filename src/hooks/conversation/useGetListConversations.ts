@@ -7,21 +7,21 @@ import {
 import ServiceConversation from '@/api/conversationApi';
 import { createQueryKey } from '@/queries/core';
 
-export const fetchListConversationsKey = (params: any) =>
-  createQueryKey('fetchListConversations', params);
+export const createKeyListConversations = (params: any) =>
+  createQueryKey('getListConversations', params);
 
-interface UseFetchListConversationsProps {
+interface UseGetListConversationsProps {
   params: TGetListConversations;
   enabled?: boolean;
 }
-export function useFetchListConversations({
+export function useGetListConversations({
   params,
   enabled = true,
-}: UseFetchListConversationsProps) {
+}: UseGetListConversationsProps) {
   const { data, isFetched, isFetching } = useQuery<
     Array<IIndividualConversation | IGroupConversation>
   >({
-    queryKey: fetchListConversationsKey(params),
+    queryKey: createKeyListConversations(params),
     queryFn: () => ServiceConversation.getListConversations(params),
     enabled,
   });

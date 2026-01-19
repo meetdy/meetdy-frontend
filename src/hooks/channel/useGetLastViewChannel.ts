@@ -6,7 +6,7 @@ interface UseFetchLastViewChannelProps {
   channelId: string;
   enabled?: boolean;
 }
-export function useFetchLastViewChannel({
+export function useGetLastViewChannel({
   channelId,
   enabled = true,
 }: UseFetchLastViewChannelProps) {

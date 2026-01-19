@@ -9,7 +9,7 @@ interface UseFetchMemberInConversationProps {
   id: string;
   enabled?: boolean;
 }
-export function useFetchMemberInConversation({
+export function useGetMemberInConversation({
   id,
   enabled = true,
 }: UseFetchMemberInConversationProps) {

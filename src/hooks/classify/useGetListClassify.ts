@@ -3,7 +3,7 @@ import { IClassify } from '@/models/classify.model';
 import { createQueryKey } from '@/queries/core';
 import { useQuery } from '@tanstack/react-query';
 
-export function useFetchListClassify() {
+export function useGetListClassify() {
   const { data, isFetched, isFetching } = useQuery<IClassify[]>({
     queryKey: createQueryKey('classifies', {}),
     queryFn: async () => {

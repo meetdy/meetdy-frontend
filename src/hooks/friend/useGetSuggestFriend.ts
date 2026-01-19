@@ -15,7 +15,7 @@ interface UseFetchSuggestFriendProps {
   params: TFetchSuggestFriend;
   enabled?: boolean;
 }
-export function useFetchSuggestFriend({
+export function useGetSuggestFriend({
   params: { page, size },
   enabled = true,
 }: UseFetchSuggestFriendProps) {

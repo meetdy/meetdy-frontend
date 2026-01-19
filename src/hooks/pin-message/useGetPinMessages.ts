@@ -6,7 +6,7 @@ interface UseFetchPinMessagesProps {
   conversationId: string;
   enabled?: boolean;
 }
-export function useFetchPinMessages({
+export function useGetPinMessages({
   conversationId,
   enabled = true,
 }: UseFetchPinMessagesProps) {

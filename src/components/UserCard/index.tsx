@@ -45,7 +45,7 @@ interface UserCardProps {
 }
 
 import { useQueryClient } from '@tanstack/react-query';
-import { fetchFriendsQueryKey } from '@/hooks/friend/useGetFriends';
+import { createKeyGetFriends } from '@/hooks/friend/useGetFriends';
 
 import { AppDispatch } from '@/redux/store';
 
@@ -103,7 +103,7 @@ export default function UserCard({
     dispatch(fetchListRequestFriend() as any);
     dispatch(fetchFriends({ name: '' } as any) as any);
 
-    queryClient.invalidateQueries({ queryKey: fetchFriendsQueryKey({ name: '' }) });
+    queryClient.invalidateQueries({ queryKey: createKeyGetFriends({ name: '' }) });
 
     dispatch(setAmountNotify(amountNotify - 1));
     toast('Thêm bạn thành công');

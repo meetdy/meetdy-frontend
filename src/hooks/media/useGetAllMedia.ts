@@ -6,7 +6,7 @@ interface UseFetchAllMediaProps {
   params: TFetchMediaParams;
   enabled?: boolean;
 }
-export function useFetchAllMedia({
+export function useGetAllMedia({
   params,
   enabled = true,
 }: UseFetchAllMediaProps) {

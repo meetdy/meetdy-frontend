@@ -3,7 +3,7 @@ import { createQueryKey } from "@/queries/core";
 import { IRequestFriend } from "@/models/friend.model";
 import FriendService from "@/api/friendApi";
 
-export function useFetchListRequestFriend() {
+export function useGetListRequestFriend() {
     const { data, isFetched, isFetching } = useQuery<IRequestFriend[]>({
         queryKey: createQueryKey("fetchListRequestFriend", {}),
         queryFn: async () => {

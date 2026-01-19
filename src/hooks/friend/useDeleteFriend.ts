@@ -1,7 +1,7 @@
 import FriendService from "@/api/friendApi";
 import { createQueryKey, queryClient } from "@/queries/core";
 import { useMutation } from "@tanstack/react-query";
-import { fetchFriendsQueryKey } from "./useGetFriends";
+import { createKeyGetFriends } from "./useGetFriends";
 
 export function useDeleteFriend() {
     return useMutation({
@@ -10,9 +10,9 @@ export function useDeleteFriend() {
             return await FriendService.deleteFriend(userId);
         },
         onSuccess: () => {
-             queryClient.invalidateQueries({
-                 queryKey: fetchFriendsQueryKey({ name: '' })
-             });
+            queryClient.invalidateQueries({
+                queryKey: createKeyGetFriends({ name: '' })
+            });
         }
     });
 }

@@ -9,7 +9,7 @@ interface UseFetchSummaryInfoGroupProps {
   id: string;
   enabled?: boolean;
 }
-export function useFetchSummaryInfoGroup({
+export function useGetSummaryInfoGroup({
   id,
   enabled = true,
 }: UseFetchSummaryInfoGroupProps) {

@@ -21,7 +21,7 @@ interface UseFetchMessageInChannelProps {
   enabled?: boolean;
 }
 
-export function useFetchMessageInChannel({
+export function useGetMessageInChannel({
   params: { channelId, page, size },
   enabled = true,
 }: UseFetchMessageInChannelProps) {

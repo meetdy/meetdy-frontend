@@ -3,15 +3,15 @@ import { TFetchFriends, IFriend } from "@/models/friend.model";
 import FriendService from "@/api/friendApi";
 import { createQueryKey } from "@/queries/core";
 
-export const fetchFriendsQueryKey = (params: TFetchFriends) => createQueryKey("fetchFriends", params);
+export const createKeyGetFriends = (params: TFetchFriends) => createQueryKey("getFriends", params);
 
-interface UseFetchFriendsProps {
+interface UseGetFriendsProps {
     params: TFetchFriends;
     enabled?: boolean;
 }
-export function useFetchFriends({ params, enabled = true }: UseFetchFriendsProps) {
+export function useGetFriends({ params, enabled = true }: UseGetFriendsProps) {
     const { data, isFetched, isFetching } = useQuery<IFriend[]>({
-        queryKey: fetchFriendsQueryKey(params),
+        queryKey: createKeyGetFriends(params),
         queryFn: () => FriendService.getFriends(params),
         enabled,
     });

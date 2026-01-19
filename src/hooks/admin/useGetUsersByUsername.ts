@@ -16,7 +16,7 @@ interface UseFetchUsersByUsernameProps {
     params: TFetchUsersByUsername;
     enabled?: boolean;
 }
-export function useFetchUsersByUsername({
+export function useGetUsersByUsername({
     params: { username, page, size },
     enabled = true,
 }: UseFetchUsersByUsernameProps) {

@@ -3,7 +3,7 @@ import { IUserProfile } from '@/models/auth.model';
 import { createQueryKey } from '@/queries/core';
 import { useQuery } from '@tanstack/react-query';
 
-export function useFetchProfile({
+export function useGetProfile({
   enabled = true,
 }: { enabled?: boolean } = {}) {
   const { data, isFetched } = useQuery<IUserProfile>({

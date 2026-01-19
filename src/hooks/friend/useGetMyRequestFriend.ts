@@ -3,7 +3,7 @@ import { IRequestFriend } from '@/models/friend.model';
 import { createQueryKey } from '@/queries/core';
 import { useQuery } from '@tanstack/react-query';
 
-export function useFetchMyRequestFriend({
+export function useGetMyRequestFriend({
   enabled = true,
 }: { enabled?: boolean } = {}) {
   const { data, isFetched, isFetching } = useQuery<IRequestFriend[]>({

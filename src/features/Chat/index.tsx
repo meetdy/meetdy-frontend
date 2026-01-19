@@ -56,9 +56,7 @@ import { useGetListClassify } from '@/hooks/classify/useGetListClassify';
 import { usePinnedMessages } from '@/hooks/channel/usePinnedMessages';
 import { useGetChannel } from '@/hooks/channel/useGetChannel';
 import { useQueryClient } from '@tanstack/react-query';
-import { fetchListConversationsKey } from '@/hooks/conversation/useGetListConversations';
-
-// ... existing imports ...
+import { createKeyListConversations } from '@/hooks/conversation/useGetListConversations';
 
 function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
   const dispatch = useDispatch();
@@ -200,7 +198,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
           toast.info(`Nhóm ${conver?.name} đã giải tán`);
         }
         dispatch(removeConversation(conversationId));
-        queryClient.setQueryData(fetchListConversationsKey({}), (old: any[]) =>
+        queryClient.setQueryData(createKeyListConversations({}), (old: any[]) =>
           old ? old.filter((c) => c._id !== conversationId) : []
         );
       });
@@ -210,8 +208,11 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
       });
 
       socket.on('added-group', (conversationId: string) => {
-        dispatch(fetchConversationById({ conversationId }));
-        queryClient.invalidateQueries({ queryKey: fetchListConversationsKey({}) });
+        queryClient.invalidateQueries({
+          queryKey: createKeyListConversations({
+            conversationId
+          })
+        });
       });
 
       socket.on(
@@ -259,7 +260,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         }
         dispatch(isDeletedFromGroup(conversationId));
         socket.emit('leave-conversation', conversationId);
-        queryClient.setQueryData(fetchListConversationsKey({}), (old: any[]) =>
+        queryClient.setQueryData(createKeyListConversations({}), (old: any[]) =>
           old ? old.filter((c) => c._id !== conversationId) : []
         );
       });
@@ -276,7 +277,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         (conversationId: string, conversationName: string, message: any) => {
           dispatch(updateNameOfConver({ conversationId, conversationName }));
           dispatch(addMessage(message));
-          queryClient.invalidateQueries({ queryKey: fetchListConversationsKey({}) });
+          queryClient.invalidateQueries({ queryKey: createKeyListConversations({}) });
         },
       );
 

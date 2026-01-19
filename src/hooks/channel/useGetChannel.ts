@@ -7,7 +7,7 @@ interface UseFetchChannelProps {
   enabled?: boolean;
 }
 
-export function useFetchChannel({
+export function useGetChannel({
   conversationId,
   enabled = true,
 }: UseFetchChannelProps) {
