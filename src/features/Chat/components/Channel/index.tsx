@@ -4,7 +4,7 @@ import { ChevronDown, Hash, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
 import ChannelItem from '../ChannelItem';
-import channelApi from '@/api/channelApi';
+
 import {
   fetchListMessages,
   getLastViewOfMembers,
@@ -27,6 +27,11 @@ interface ChannelProps {
   onOpenInfoBlock?: () => void;
 }
 
+import { useAddChannel } from '@/hooks/channel/useAddChannel';
+import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
+import { useQueryClient } from '@tanstack/react-query';
+import { createQueryKey } from '@/queries/core';
+
 function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
   const [isDrop, setIsDrop] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
@@ -34,10 +39,13 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
   const {
     currentConversation,
     currentChannel,
-    conversations,
     totalChannelNotify,
   } = useSelector((state: any) => state.chat);
   const dispatch = useDispatch();
+  
+  const { conversations } = useFetchListConversations({ params: {} });
+  const mutationAddChannel = useAddChannel();
+  const queryClient = useQueryClient();
 
   const handleOnClick = () => {
     setIsDrop(!isDrop);
@@ -54,7 +62,10 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
 
   const handleOk = async () => {
     try {
-      await channelApi.addChannel(valueInput, currentConversation);
+      await mutationAddChannel.mutateAsync({ name: valueInput, conversationId: currentConversation });
+      queryClient.invalidateQueries({
+         queryKey: createQueryKey('fetchChannel', { conversationId: currentConversation })
+      });
       toast.success('Tạo channel thành công');
       setIsVisible(false);
       setValueInput('');

@@ -24,14 +24,12 @@ import ListMyFriendRequest from './components/ListMyRequestFriend';
 import ListRequestFriend from './components/ListRequestFriend';
 import SuggestList from './components/SuggestList';
 
-import {
-  fetchFriends,
-  fetchListGroup,
-  fetchListMyRequestFriend,
-  fetchListRequestFriend,
-  fetchPhoneBook,
-  fetchSuggestFriend,
-} from './friendSlice';
+import { useFetchFriends } from '@/hooks/friend/useFetchFriends';
+import { useFetchListRequestFriend } from '@/hooks/friend/useFetchListRequestFriend';
+import { useFetchMyRequestFriend } from '@/hooks/friend/useFetchMyRequestFriend';
+import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
+import { useGetContacts } from '@/hooks/contacts/useFetchContacts';
+import { useFetchSuggestFriend } from '@/hooks/friend/useFetchSuggestFriend';
 
 import { getValueFromKey } from '@/constants/filterFriend';
 import { sortGroup } from '@/utils/groupUtils';
@@ -168,15 +166,18 @@ export default function Friend() {
   const dispatch = useDispatch();
   const refOriginalGroups = useRef<any[]>([]);
 
-  const {
-    requestFriends,
-    myRequestFriend,
-    groups,
-    friends,
-    phoneBook,
-    isLoading,
-    suggestFriends,
-  } = useSelector((state: RootState) => state.friend);
+  // Hook migrations
+  // Hook migrations
+  const { requestFriends = [], isFetching: isFetchingRequest } = useFetchListRequestFriend();
+  const { myRequestFriends: myRequestFriend = [], isFetching: isFetchingMyRequest } = useFetchMyRequestFriend({});
+  const { friends = [], isFetching: isFetchingFriends } = useFetchFriends({ params: { name: '' } });
+  const { conversations: groups = [], isFetching: isFetchingGroups } = useFetchListConversations({ 
+      params: { name: '', type: 2 } 
+  });
+  const { contacts: phoneBook = [], isFetching: isFetchingContacts } = useGetContacts();
+  const { suggestFriends = [], isFetching: isFetchingSuggest } = useFetchSuggestFriend({ params: { page: 0, size: 12 } });
+
+  const isLoading = isFetchingRequest || isFetchingMyRequest || isFetchingFriends || isFetchingGroups || isFetchingContacts || isFetchingSuggest;
 
   const [activeTab, setActiveTab] = useState<TabKey>(0);
   const [groupFilterType, setGroupFilterType] = useState('1');
@@ -190,15 +191,6 @@ export default function Friend() {
   const [groupSearchResult, setGroupSearchResult] = useState<any[]>([]);
 
   useEffect(() => {
-    dispatch(fetchListRequestFriend());
-    dispatch(fetchListMyRequestFriend());
-    dispatch(fetchFriends({ name: '' }));
-    dispatch(fetchListGroup({ name: '', type: 2 }));
-    dispatch(fetchPhoneBook());
-    dispatch(fetchSuggestFriend());
-  }, []);
-
-  useEffect(() => {
     if (groups.length) {
       const sorted = sortGroup(groups, 1);
       refOriginalGroups.current = sorted;
@@ -206,9 +198,10 @@ export default function Friend() {
     }
   }, [groups]);
 
-  useEffect(() => {
-    if (activeTab === 2) dispatch(fetchPhoneBook());
-  }, [activeTab]);
+  // Refetch phonebook on tab change if needed, relying on staleTime/cache for now
+  // Or force refetch? The hook handles fetching on mount/update so standard behavior applies.
+  // The original code confused refetching with dispatching thunks.
+  // We can just rely on the query being active.
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);

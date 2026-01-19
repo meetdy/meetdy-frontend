@@ -9,6 +9,10 @@ import NotFoundPage from '@/components/NotFoundPage';
 import Chat from '@/features/Chat';
 import Friend from '@/features/Friend';
 import NavbarContainer from '@/features/Chat/containers/NavbarContainer';
+import { useQueryClient } from '@tanstack/react-query';
+import { fetchListConversationsKey } from '@/hooks/conversation/useFetchListConversations';
+import { fetchListMessagesKey } from '@/hooks/message/useFetchListMessages';
+import dateUtils from '@/utils/dateUtils';
 
 import {
   addMessage,
@@ -43,6 +47,7 @@ init();
 
 function ChatLayout() {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const codeRevokeRef = useRef(null);
 
@@ -115,6 +120,53 @@ function ChatLayout() {
     socket.on('new-message', (conversationId, newMessage) => {
       dispatch(addMessage(newMessage));
       setIdNewMessage(newMessage._id);
+      
+      // Update Conversations List (React Query Cache)
+      queryClient.setQueryData(
+        fetchListConversationsKey({}),
+        (oldData: any[]) => {
+          if (!oldData) return oldData;
+          const index = oldData.findIndex((c: any) => c._id === conversationId);
+          if (index === -1) return oldData;
+          
+          const conversation = { ...oldData[index] };
+          conversation.lastMessage = {
+             ...newMessage,
+             createdAt: dateUtils.toTime(newMessage.createdAt),
+          };
+          
+          // Increment unread only if not current conversation or if window not focused (handled elsewhere?)
+          // Implementation plan says: increment if not current.
+          // In ChatLayout we don't know refCurrentConversation easily unless we stick it in a ref or selector.
+          // But we have `conversations` selector.
+          // Wait, logic in reducer checks state.currentConversation.
+          // Here we are in ChatLayout. We can access store state via valid techniques or just rely on what we have.
+          // Redux `addMessage` handles unread count.
+          // For RQ, we should ideally replicate.
+          // The socket callback here doesn't have access to currentConversation state easily unless we use a Ref updated by effect.
+          
+          // Simple fix: Always increment unread in cache, component will reset it if active? 
+          // No, if active we see unread count jump.
+          // Let's rely on Component to clear unread, but we update cache here.
+          // Actually, reducer says: if (conversationId === state.currentConversation && !state.currentChannel) ... numberUnread=0
+          
+          conversation.numberUnread = (conversation.numberUnread || 0) + 1;
+
+          const newConversations = oldData.filter((c: any) => c._id !== conversationId);
+          return [conversation, ...newConversations];
+        }
+      );
+      
+      // We also need to update message list if it's open.
+      // Since we don't know easily if it's open here without state access,
+      // We can invalidate the specific message list query.
+      queryClient.invalidateQueries({
+         queryKey: fetchListMessagesKey({ conversationId, size: 10 })
+      });
+      // Also invalidate conversation list to be safe/eventual consistent
+      queryClient.invalidateQueries({
+         queryKey: fetchListConversationsKey({})
+      });
     });
 
     socket.on('update-member', async (conversationId) => {

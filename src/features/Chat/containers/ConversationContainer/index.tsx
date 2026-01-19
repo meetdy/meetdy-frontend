@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import conversationApi from '@/api/conversationApi';
 import SubMenuClassify from '@/components/SubMenuClassify';
 import ConversationSingle from '@/features/Chat/components/ConversationSingle';
+import { useFetchListClassify } from '@/hooks/classify/useFetchListClassify';
+import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
 import {
   fetchChannels,
   fetchListMessages,
@@ -14,7 +16,7 @@ import {
   getMembersConversation,
   setTypeOfConversation,
 } from '../../slice/chatSlice';
-import type { RootState, AppDispatch } from '@/store';
+import type { RootState, AppDispatch } from '@/redux/store';
 
 type Props = {
   valueClassify: string;
@@ -22,9 +24,9 @@ type Props = {
 
 export default function ConversationContainer({ valueClassify }: Props) {
   const dispatch = useDispatch<AppDispatch>();
-  const { conversations, classifies } = useSelector(
-    (state: RootState) => state.chat,
-  );
+  const { conversations } = useFetchListConversations({});
+  const { classifies } = useFetchListClassify();
+  
   const { user } = useSelector((state: RootState) => state.global);
 
   const tempClassify =

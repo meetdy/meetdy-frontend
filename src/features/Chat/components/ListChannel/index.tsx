@@ -7,15 +7,17 @@ import {
   getLastViewOfMembers,
   setCurrentChannel,
 } from '@/features/Chat/slice/chatSlice';
+import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
 
 interface ListChannelProps {
   data?: any[];
 }
 
 function ListChannel({ data = [] }: ListChannelProps) {
-  const { currentChannel, currentConversation, conversations } = useSelector(
+  const { currentChannel, currentConversation } = useSelector(
     (state: any) => state.chat,
   );
+  const { conversations } = useFetchListConversations({ params: {} });
   const dispatch = useDispatch();
 
   const handleViewGeneralChannel = () => {

@@ -3,7 +3,7 @@ import { TFetchFriends, IFriend } from "@/models/friend.model";
 import FriendService from "@/api/friendApi";
 import { createQueryKey } from "@/queries/core";
 
-const fetchFriendsQueryKey = (params: TFetchFriends) => createQueryKey("fetchFriends", params);
+export const fetchFriendsQueryKey = (params: TFetchFriends) => createQueryKey("fetchFriends", params);
 
 interface UseFetchFriendsProps {
     params: TFetchFriends;

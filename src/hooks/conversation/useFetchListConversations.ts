@@ -7,7 +7,7 @@ import {
 import ServiceConversation from '@/api/conversationApi';
 import { createQueryKey } from '@/queries/core';
 
-const fetchListConversationsKey = (params: any) =>
+export const fetchListConversationsKey = (params: any) =>
   createQueryKey('fetchListConversations', params);
 
 interface UseFetchListConversationsProps {

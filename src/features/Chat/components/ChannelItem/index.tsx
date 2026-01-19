@@ -10,6 +10,11 @@ import {
 } from '@/features/Chat/slice/chatSlice';
 import channelApi from '@/api/channelApi';
 import ModalChangeNameChannel from '../ModalChangeNameChannel';
+import { useDeleteChannel } from '@/hooks/channel/useDeleteChannel';
+import { useRenameChannel } from '@/hooks/channel/useRenameChannel';
+import { useFetchListConversations } from '@/hooks/conversation/useFetchListConversations';
+import { useQueryClient } from '@tanstack/react-query';
+import { createQueryKey } from '@/queries/core';
 
 import {
   ContextMenu,
@@ -38,12 +43,17 @@ function ChannelItem({ isActive = false, data = {} }: ChannelItemProps) {
   const [visible, setVisible] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const { conversations } = useSelector((state: any) => state.chat);
   const { user } = useSelector((state: any) => state.global);
+  
+  const { conversations } = useFetchListConversations({ params: {} });
+  const mutationRename = useRenameChannel();
+  const mutationDelete = useDeleteChannel();
+  const queryClient = useQueryClient();
+  const { currentConversation } = useSelector((state: any) => state.chat);
 
   const handleViewChannel = () => {
     dispatch(setCurrentChannel(data._id));
-    dispatch(fetchMessageInChannel({ channelId: data._id, size: 10 }) as any);
+    dispatch(fetchMessageInChannel({ channelId: data._id, size: 10, page: 0 }) as any);
     dispatch(getLastViewChannel({ channelId: data._id }) as any);
   };
 
@@ -63,7 +73,10 @@ function ChannelItem({ isActive = false, data = {} }: ChannelItemProps) {
 
   const handleDeleteChannel = async () => {
     try {
-      await channelApi.deleteChannel(data._id);
+      await mutationDelete.mutateAsync(data._id);
+      queryClient.invalidateQueries({
+        queryKey: createQueryKey('fetchChannel', { conversationId: currentConversation })
+      });
       toast.success('Xóa Channel thành công');
     } catch (error) {
       toast.error('Đã có lỗi xảy ra');

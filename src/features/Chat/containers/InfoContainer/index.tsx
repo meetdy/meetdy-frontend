@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { X, Info } from 'lucide-react';
 
 import userApi from '@/api/userApi';
@@ -13,7 +13,8 @@ import InfoFriendSearch from '@/features/Chat/components/InfoFriendSearch';
 import InfoMediaSearch from '@/features/Chat/components/InfoMediaSearch';
 import InfoMember from '@/features/Chat/components/InfoMember';
 import InfoNameAndThumbnail from '@/features/Chat/components/InfoNameAndThumbnail';
-import { fetchAllMedia } from '@/features/Chat/slice/mediaSlice';
+import { useFetchAllMedia } from '@/hooks/media/useFetchAllMedia';
+import { useFetchChannel } from '@/hooks/channel/useFetchChannel';
 import UserCard from '@/components/UserCard';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,7 +23,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-import type { RootState, AppDispatch } from '@/store';
+import type { RootState, AppDispatch } from '@/redux/store';
 
 type Props = {
   socket?: any;
@@ -32,7 +33,6 @@ type Props = {
 };
 
 export default function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBlock, onClose }: Props) {
-  const dispatch = useDispatch<AppDispatch>();
 
   const [navState, setNavState] = useState({ view: 0, tabpane: 0 });
   const [isUserCardVisible, setUserCardVisible] = useState(false);
@@ -43,10 +43,8 @@ export default function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBl
     type,
     currentConversation,
     conversations,
-    channels,
   } = useSelector((state: RootState) => state.chat);
 
-  const { media } = useSelector((state: RootState) => state.media);
 
   const currentConver = useMemo(
     () => conversations.find((c) => c._id === currentConversation) ?? null,
@@ -70,12 +68,14 @@ export default function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBl
   const goInfo = () => setNavState({ view: 0, tabpane: 0 });
   const goMembers = (view: number) => setNavState({ view, tabpane: 0 });
   const goMedia = (view: number, tabpane = 0) => setNavState({ view, tabpane });
-
-  useEffect(() => {
-    if (currentConversation) {
-      dispatch(fetchAllMedia({ conversationId: currentConversation }));
-    }
-  }, [currentConversation, dispatch]);
+  const { data: media = {} as any } = useFetchAllMedia({
+    params: { conversationId: currentConversation },
+    enabled: !!currentConversation,
+  });
+  const { channel: channels = [] } = useFetchChannel({
+    conversationId: currentConversation,
+    enabled: !!currentConversation,
+  });
 
   return (
     <div className="flex h-full w-full flex-col bg-white">

@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { MessageSquare } from 'lucide-react';
 import pinMessageApi from '@/api/pinMessageApi';
 import TypeMessagePin from '@/features/Chat/components/TypeMessagePin';
-import { fetchPinMessages } from '@/features/Chat/slice/chatSlice';
-import { useDispatch, useSelector } from 'react-redux';
+
+import { useSelector } from 'react-redux';
+import { useQueryClient } from '@tanstack/react-query';
+import { createQueryKey } from '@/queries/core';
 import {
   Dialog,
   DialogContent,
@@ -34,7 +36,7 @@ export default function ModalChangePinMessage({
   idMessage = '',
 }: ModalChangePinMessageProps): JSX.Element {
   const [value, setValue] = useState<string>('');
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const { currentConversation } = useSelector((state: any) => state.chat || {});
 
   const handleOnClickItem = (ele: PinMessageItem) => {
@@ -46,7 +48,11 @@ export default function ModalChangePinMessage({
     await pinMessageApi.removePinMessage(value);
     await pinMessageApi.pinMessage(idMessage);
     window.alert('Ghim tin nhắn thành công');
-    dispatch(fetchPinMessages({ conversationId: currentConversation }));
+    
+    queryClient.invalidateQueries({
+      queryKey: createQueryKey('fetchPinMessages', { conversationId: currentConversation })
+    });
+    
     handleOnCancel();
   };
 

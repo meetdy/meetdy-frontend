@@ -1,10 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+
 import { ArrowLeft, Edit, Info, Plus, Tag, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 
 import ServiceClassify from '@/api/classifyApi';
-import { fetchListClassify } from '../../slice/chatSlice';
+import { useAddClassify } from '@/hooks/classify/useAddClassify';
+import { useDeleteClassify } from '@/hooks/classify/useDeleteClassify';
+import { useFetchListColor } from '@/hooks/classify/useFetchColors';
+import { useFetchListClassify } from '@/hooks/classify/useFetchListClassify';
+import { useUpdateClassifyMutation } from '@/hooks/classify/useUpdateClassify';
+import { createQueryKey } from '@/queries/core';
+import { useQueryClient } from '@tanstack/react-query';
 
 import {
   Dialog,
@@ -38,9 +44,14 @@ interface ModalClassifyProps {
 }
 
 function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const previousName = useRef<any>(null);
-  const { classifies, colors } = useSelector((state: any) => state.chat);
+  const { classifies } = useFetchListClassify();
+  const { colors } = useFetchListColor();
+
+  const { mutateAsync: addClassify } = useAddClassify();
+  const { mutateAsync: updateClassify } = useUpdateClassifyMutation();
+  const { mutateAsync: deleteClassify } = useDeleteClassify();
 
   const [isShowModalAdd, setIsShowModalAdd] = useState(false);
   const [nameTag, setNameTag] = useState('');
@@ -106,23 +117,27 @@ function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
   const handleCreateClassify = async () => {
     if (isModalEdit) {
       try {
-        await ServiceClassify.updateClassify(
-          previousName.current._id,
-          { name: nameTag, colorId: color._id },
-        );
+        await updateClassify({
+          classifyId: previousName.current._id,
+          data: { name: nameTag, colorId: color._id },
+        });
         toast.success('Cập nhật thành công');
         setIsShowModalAdd(false);
-        dispatch(fetchListClassify() as any);
+        queryClient.invalidateQueries({
+          queryKey: createQueryKey('classifies', {}),
+        });
         onOpen?.();
       } catch (error) {
         toast.error('Cập nhật thất bại');
       }
     } else {
       try {
-        await ServiceClassify.addClassify({ name: nameTag, colorId: color._id });
+        await addClassify({ name: nameTag, colorId: color._id });
         toast.success('Thêm thành công');
         setIsShowModalAdd(false);
-        dispatch(fetchListClassify() as any);
+        queryClient.invalidateQueries({
+          queryKey: createQueryKey('classifies', {}),
+        });
       } catch (error) {
         toast.error('Thêm thất bại');
       }
@@ -141,9 +156,11 @@ function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
 
   const handleDeleteClasify = async (value: any) => {
     try {
-      await ServiceClassify.deleteClassify(value._id);
+      await deleteClassify(value._id);
       toast.success('Xóa thành công');
-      dispatch(fetchListClassify() as any);
+      queryClient.invalidateQueries({
+        queryKey: createQueryKey('classifies', {}),
+      });
     } catch (error) {
       toast.error('Xóa thất bại');
     }

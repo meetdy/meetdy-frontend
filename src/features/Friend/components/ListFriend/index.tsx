@@ -1,10 +1,7 @@
 import { useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { toast } from 'sonner';
-
-import friendApi from '@/api/friendApi';
+import { useDeleteFriend } from '@/hooks/friend/useDeleteFriend';
 import userApi from '@/api/userApi';
-import { fetchFriends } from '../../friendSlice';
+import { toast } from 'sonner';
 
 import FriendItem from '../FriendItem';
 
@@ -32,7 +29,7 @@ type Props = {
 };
 
 function ListFriend({ data = [] }: Props) {
-  const dispatch = useDispatch();
+  const { mutateAsync: deleteFriend } = useDeleteFriend();
   const [deleteConfirm, setDeleteConfirm] = useState<Friend | null>(null);
 
   const handleOnClickMenu = async (key: string, id: string) => {
@@ -53,8 +50,7 @@ function ListFriend({ data = [] }: Props) {
       return;
     }
     try {
-      await friendApi.deleteFriend(deleteConfirm._id);
-      dispatch(fetchFriends() as any);
+      await deleteFriend(deleteConfirm._id);
       toast.success('Xóa thành công');
     } catch (error) {
       toast.error('Xóa thất bại');

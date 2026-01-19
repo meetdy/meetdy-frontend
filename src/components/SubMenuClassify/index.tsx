@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+
 import { Tag } from 'lucide-react';
 
-import ClassifyApi from '@/api/classifyApi';
-import { fetchListClassify } from '@/features/Chat/slice/chatSlice';
+import { useAddClassifyForConversation } from '@/hooks/classify/useAddClassifyForConversation';
+import { useQueryClient } from '@tanstack/react-query';
+import { createQueryKey } from '@/queries/core';
 import ModalClassify from '@/features/Chat/components/ModalClassify';
 
 import {
@@ -23,11 +24,24 @@ export default function SubMenuClassify({
   chatId,
 }: SubMenuClassifyProps) {
   const [visible, setVisible] = useState(false);
-  const dispatch = useDispatch<any>();
+  const { mutateAsync: addClassifyForConversation } =
+    useAddClassifyForConversation();
+  const queryClient = useQueryClient();
 
   const handleClickClassify = async (id: string) => {
-    await ClassifyApi.addClassifyForConversation(id, chatId);
-    dispatch(fetchListClassify() as any);
+    await addClassifyForConversation({ classifyId: id, conversationId: chatId });
+    queryClient.invalidateQueries({
+      queryKey: createQueryKey('classifies', {}),
+    });
+    // Also invalidate conversation to show the new tag
+    queryClient.invalidateQueries({
+      queryKey: createQueryKey('fetchListConversations', {}),
+    });
+    queryClient.invalidateQueries({
+      queryKey: createQueryKey('fetchConversationById', {
+        conversationId: chatId,
+      }),
+    });
   };
 
   return (

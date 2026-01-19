@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useQueryClient } from '@tanstack/react-query';
+import { createQueryKey } from '@/queries/core';
+import { useFetchPinMessages } from '@/hooks/pin-message/useFetchPinMessages';
 import type { Dispatch } from 'redux';
 
 import {
@@ -17,7 +20,7 @@ import ModalChangePinMessage from '@/components/ModalChangePinMessage';
 import PersonalIcon from '@/features/Chat/components/PersonalIcon';
 import { checkLeader } from '@/utils/groupUtils';
 
-import { deleteMessageClient, fetchPinMessages } from '../../slice/chatSlice';
+import { deleteMessageClient } from '../../slice/chatSlice';
 
 import LastView from '../LastView';
 import ListReaction from '../ListReaction';
@@ -131,9 +134,12 @@ function UserMessage({
     messages,
     currentConversation,
     conversations,
-    pinMessages,
+
     currentChannel,
   } = useSelector((state: RootState) => state.chat);
+
+  const { pinMessages } = useFetchPinMessages({ conversationId: currentConversation, enabled: !!currentConversation });
+  const queryClient = useQueryClient();
 
   const global = useSelector((state: RootState) => state.global);
 
@@ -201,7 +207,9 @@ function UserMessage({
 
     try {
       await pinMessageApi.pinMessage(_id);
-      dispatch(fetchPinMessages({ conversationId: currentConversation }));
+      queryClient.invalidateQueries({
+        queryKey: createQueryKey('fetchPinMessages', { conversationId: currentConversation })
+      });
       toast.success('Ghim tin nhắn thành công');
     } catch {
       toast.error('Ghim tin nhắn thất bại');

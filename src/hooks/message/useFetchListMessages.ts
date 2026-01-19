@@ -13,7 +13,7 @@ type TFetchListMessages = {
   size?: number;
 };
 
-const fetchListMessagesKey = ({
+export const fetchListMessagesKey = ({
   conversationId,
   page,
   size,
@@ -49,7 +49,7 @@ export async function checkAndFetchListMessages({
   );
   if (cachedMessages) return cachedMessages;
 
-  const messages = await queryClient.getQuery({
+  const messages = await queryClient.fetchQuery({
     queryKey: fetchListMessagesKey({ conversationId, page, size }),
     queryFn: () => ServiceMessages.getListMessages(conversationId, page, size),
     staleTime: Infinity,
