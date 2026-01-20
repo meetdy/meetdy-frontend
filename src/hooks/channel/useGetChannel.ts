@@ -30,7 +30,7 @@ export async function checkAndFetchChannel(
   );
   if (cachedChannel) return cachedChannel;
 
-  const channel = await queryClient.getQuery({
+  const channel = await queryClient.fetchQuery({
     queryKey: createQueryKey('fetchChannel', { conversationId }),
     queryFn: () => ServiceChannel.getChannel(conversationId),
     staleTime: Infinity,

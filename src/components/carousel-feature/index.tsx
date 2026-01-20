@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import CarouselFeatureItem from './CarouselFeatureItem';
 
 import {
@@ -6,9 +5,12 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
+import { useGetInfoWeb } from '@/hooks/info-web/useFetchInfoWeb';
 
 export default function CarouselFeature() {
-  const { features } = useSelector((state) => state.home);
+  const { data } = useGetInfoWeb();
+
+  const features = data.features || [];
 
   return (
     <Carousel

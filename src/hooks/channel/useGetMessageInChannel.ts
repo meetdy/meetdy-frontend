@@ -9,7 +9,7 @@ type TFetchMessageInChannel = {
   size: number;
 };
 
-const fetchMessageInChannelKey = ({
+const createKeyMessageInChannel = ({
   channelId,
   page,
   size,
@@ -26,7 +26,7 @@ export function useGetMessageInChannel({
   enabled = true,
 }: UseFetchMessageInChannelProps) {
   return useQuery<{ data: IMessage[]; total: number }>({
-    queryKey: fetchMessageInChannelKey({ channelId, page, size }),
+    queryKey: createKeyMessageInChannel({ channelId, page, size }),
     queryFn: () => ServiceChannel.getMessageInChannel(channelId, page, size),
     enabled,
   });

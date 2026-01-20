@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import AdminProtectedRoute from '@/routes/AdminProtected';
@@ -13,22 +13,22 @@ import Admin from '@/features/Admin';
 
 import ChatLayout from '@/features';
 
-import { fetchUserProfile } from '@/app/globalSlice';
+import { fetchUserProfile } from '@/hooks/me/useGetProfile';
 
 function App() {
-  const dispatch = useDispatch();
   const [isFetch, setIsFetch] = useState(false);
 
-  const user = useSelector((state) => state.global.user);
+  const { user } = useSelector((state: any) => state.global);
+
   const isAuth = !!user;
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.isAdmin;
 
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token');
 
       if (token) {
-        await dispatch(fetchUserProfile());
+        await fetchUserProfile();
       }
 
       setIsFetch(true);
@@ -48,7 +48,7 @@ function App() {
           path="/"
           element={
             isAuth
-              ? user.role === 'admin'
+              ? isAdmin
                 ? <Navigate to="/admin" replace />
                 : <Navigate to="/chat" replace />
               : <Navigate to="/account/login" replace />

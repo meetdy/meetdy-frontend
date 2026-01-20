@@ -38,7 +38,6 @@ import {
   updateMyRequestFriend,
   updateRequestFriends,
 } from '@/features/Friend/friendSlice';
-import { fetchInfoWebs } from '@/features/Home/homeSlice';
 import useWindowUnloadEffect from '@/hooks/useWindowUnloadEffect';
 
 import { createSocketConnection as init, socket } from '@/lib/socket';
@@ -83,7 +82,6 @@ function ChatLayout() {
     dispatch(fetchListColor());
     dispatch(fetchListConversations({}));
     dispatch(fetchAllSticker());
-    dispatch(fetchInfoWebs());
   }, []);
 
   useEffect(() => {

@@ -1,10 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit';
 import global from './globalSlice';
 import account from '@/features/Account/accountSlice';
 import chat from '@/features/Chat/slice/chatSlice';
 import friend from '@/features/Friend/friendSlice';
 import media from '@/features/Chat/slice/mediaSlice';
-import home from '@/features/Home/homeSlice';
+
+import { configureStore } from '@reduxjs/toolkit';
 
 const rootReducer = {
   global,
@@ -12,7 +12,6 @@ const rootReducer = {
   chat,
   friend,
   media,
-  home,
 };
 
 const store = configureStore({
