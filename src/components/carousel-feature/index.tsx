@@ -5,7 +5,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
-import { useGetInfoWeb } from '@/hooks/info-web/useFetchInfoWeb';
+import { useGetInfoWeb } from '@/hooks/info-web/useGetInfoWeb';
 
 export default function CarouselFeature() {
   const { data } = useGetInfoWeb();

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ChevronDown } from 'lucide-react';
 
-import { fetchVotes, updateVote } from '@/features/Chat/slice/chatSlice';
+import { fetchVotes, updateVote } from '@/app/chatSlice';
 import voteApi from '@/api/voteApi';
 import { Button } from '@/components/ui/button';
 import VoteMessage from './message-type/VoteMessage';

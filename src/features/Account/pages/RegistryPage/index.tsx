@@ -6,11 +6,12 @@ import { MessageCircle, ArrowLeft, UserPlus, Sparkles } from 'lucide-react';
 
 import authApi from '@/api/authApi';
 import InputField from '@/components/field/InputField';
-import { setLoading } from '@/features/Account/accountSlice';
 import { registryValues } from '@/features/Account/initValues';
 
 import { Button } from '@/components/ui/button';
 import { Alert } from '@/components/ui/alert';
+
+import { setLoading } from '@/app/globalSlice';
 
 const RESEND_OTP_TIME_LIMIT = 60;
 
@@ -19,7 +20,7 @@ function RegistryPage() {
   const navigate = useNavigate();
   const resendOTPTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const [isError, setError] = useState('');
+  const [isError, setIsError] = useState('');
   const [counter, setCounter] = useState(0);
   const [isSubmit, setIsSubmit] = useState(false);
 
@@ -53,7 +54,7 @@ function RegistryPage() {
     try {
       await authApi.forgot(username);
       openNotification(`Đã gửi lại mã OTP đến ${username}`);
-    } catch (error) { }
+    } catch { }
     dispatch(setLoading(false));
   };
 
@@ -61,8 +62,8 @@ function RegistryPage() {
     try {
       await authApi.confirmAccount({ username, otp });
       success();
-    } catch (error) {
-      setError('OTP không hợp lệ');
+    } catch {
+      setIsError('OTP không hợp lệ');
     }
   };
 
@@ -75,7 +76,7 @@ function RegistryPage() {
     } else {
       try {
         await authApi.getUser(username);
-        setError('Email hoặc số điện thoại đã được đăng ký');
+        setIsError('Email hoặc số điện thoại đã được đăng ký');
       } catch {
         try {
           await authApi.register({ name, username, password });
@@ -84,7 +85,7 @@ function RegistryPage() {
           setCounter(RESEND_OTP_TIME_LIMIT);
           startResendOTPTimer();
         } catch {
-          setError('Đã có lỗi xảy ra');
+          setIsError('Đã có lỗi xảy ra');
         }
       }
     }

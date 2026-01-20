@@ -12,11 +12,11 @@ import {
   getLastViewOfMembers,
   setCurrentChannel,
   setCurrentConversation,
-} from '@/features/Chat/slice/chatSlice';
+} from '@/app/chatSlice';
 import {
   getMembersConversation,
   setTypeOfConversation,
-} from '../../slice/chatSlice';
+} from '../../../../app/chatSlice';
 import type { RootState, AppDispatch } from '@/redux/store';
 
 import {

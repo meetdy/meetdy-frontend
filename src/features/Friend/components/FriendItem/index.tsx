@@ -5,7 +5,7 @@ import conversationApi from '@/api/conversationApi';
 import {
   setConversations,
   setCurrentConversation,
-} from '@/features/Chat/slice/chatSlice';
+} from '@/app/chatSlice';
 import dateUtils from '@/utils/dateUtils';
 
 import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';

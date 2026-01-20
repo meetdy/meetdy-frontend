@@ -6,9 +6,8 @@ import { FastField, Form, Formik } from 'formik';
 import { MessageCircle, ArrowLeft, Sparkles } from 'lucide-react';
 
 import authApi from '@/api/authApi';
-import { setLogin, setUser } from '@/app/globalSlice';
+import { setLogin, setUser, setLoading } from '@/app/globalSlice';
 import InputField from '@/components/field/InputField';
-import { setLoading } from '@/features/Account/accountSlice';
 import { loginValues } from '@/features/Account/initValues';
 
 import { Button } from '@/components/ui/button';

@@ -9,8 +9,7 @@ import NotFoundPage from '@/components/not-found-page';
 
 function Account() {
   const navigate = useNavigate();
-  const { isLoading } = useSelector((state: any) => state.account);
-  const { user } = useSelector((state: any) => state.global);
+  const { isLoading, user } = useSelector((state: any) => state.global);
 
   useEffect(() => {
     if (user) {

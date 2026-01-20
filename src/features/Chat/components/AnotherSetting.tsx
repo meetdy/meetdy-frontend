@@ -4,7 +4,7 @@ import { ChevronDown, LogOut, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 
 import conversationApi from '@/api/conversationApi';
-import { leaveGroup } from '../slice/chatSlice';
+import { leaveGroup } from '../../../app/chatSlice';
 import {
   AlertDialog,
   AlertDialogAction,

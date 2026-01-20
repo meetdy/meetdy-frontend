@@ -7,7 +7,7 @@ import ModalClassify from '../../components/ModalClassify';
 import ModalAddFriend from '@/components/modal-add-friend';
 import UserCard from '@/components/user-card';
 import ModalCreateGroup from '@/features/Chat/components/ModalCreateGroup';
-import { createGroup } from '@/features/Chat/slice/chatSlice';
+import { createGroup } from '@/app/chatSlice';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';

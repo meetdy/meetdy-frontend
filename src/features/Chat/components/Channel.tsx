@@ -8,7 +8,7 @@ import ChannelItem from './ChannelItem';
 import {
     getLastViewOfMembers,
     setCurrentChannel,
-} from '@/features/Chat/slice/chatSlice';
+} from '@/app/chatSlice';
 
 import {
     Dialog,

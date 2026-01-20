@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import ConversationAvatar from './ConversationAvatar';
 import UploadAvatar from '@/components/upload-avatar';
 import conversationApi from '@/api/conversationApi';
-import { updateNameOfConver } from '@/features/Chat/slice/chatSlice';
+import { updateNameOfConver } from '@/app/chatSlice';
 
 import {
     Dialog,

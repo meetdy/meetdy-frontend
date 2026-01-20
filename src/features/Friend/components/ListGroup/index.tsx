@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { AlertCircle } from 'lucide-react';
 
 import conversationApi from '@/api/conversationApi';
-import { fetchListGroup } from '@/features/Friend/friendSlice';
+import { fetchListGroup } from '@/app/friendSlice';
 import { socket } from '@/lib/socket';
 import GroupCard from '../GroupCard';
 

@@ -8,13 +8,13 @@ import friendApi from '@/api/friendApi';
 import {
   setConversations,
   setCurrentConversation,
-} from '@/features/Chat/slice/chatSlice';
+} from '@/app/chatSlice';
 import {
   fetchFriends,
   fetchListMyRequestFriend,
   fetchListRequestFriend,
   setAmountNotify,
-} from '@/features/Friend/friendSlice';
+} from '@/app/friendSlice';
 
 import dateUtils from '@/utils/dateUtils';
 import getSummaryName from '@/utils/nameHelper';

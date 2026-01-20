@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import {
   setCurrentConversation,
-} from '@/features/Chat/slice/chatSlice';
+} from '@/app/chatSlice';
 
 import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
 import { Empty } from '@/components/ui/empty';

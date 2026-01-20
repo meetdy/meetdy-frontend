@@ -7,7 +7,7 @@ import {
     fetchMessageInChannel,
     getLastViewChannel,
     setCurrentChannel,
-} from '@/features/Chat/slice/chatSlice';
+} from '@/app/chatSlice';
 import channelApi from '@/api/channelApi';
 import ModalChangeNameChannel from './ModalChangeNameChannel';
 import { useDeleteChannel } from '@/hooks/channel/useDeleteChannel';
