@@ -5,6 +5,12 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+    EmojiPicker,
+    EmojiPickerContent,
+    EmojiPickerFooter,
+    EmojiPickerSearch,
+} from '@/components/ui/emoji-picker';
 import { cn } from '@/lib/utils';
 
 type ListReactionProps = {
@@ -53,20 +59,16 @@ function ListReaction({
                 <PopoverContent
                     side={isMyMessage ? 'left' : 'right'}
                     align="center"
-                    className="w-auto p-1.5 rounded-md border border-slate-200 bg-white"
+                    className="w-fit p-0"
                 >
-                    <div className="flex items-center gap-0.5">
-                        {listReaction.map((emoji) => (
-                            <button
-                                key={emoji}
-                                type="button"
-                                onClick={() => handleClickReaction(emoji)}
-                                className="w-8 h-8 flex items-center justify-center text-lg rounded-md hover:bg-slate-100 transition-colors"
-                            >
-                                {emoji}
-                            </button>
-                        ))}
-                    </div>
+                    <EmojiPicker
+                        className="h-[342px] rounded-md border border-slate-200 bg-white shadow-sm"
+                        onEmojiSelect={({ emoji }) => handleClickReaction(emoji)}
+                    >
+                        <EmojiPickerSearch />
+                        <EmojiPickerContent />
+                        <EmojiPickerFooter />
+                    </EmojiPicker>
                 </PopoverContent>
             </Popover>
         );
@@ -99,21 +101,17 @@ function ListReaction({
                     side={isMyMessage ? 'left' : 'right'}
                     align="center"
                     sideOffset={4}
-                    className="w-auto p-1.5 rounded-md border border-slate-200 bg-white"
+                    className="w-fit p-0"
                     onMouseLeave={() => setIsOpen(false)}
                 >
-                    <div className="flex items-center gap-0.5">
-                        {listReaction.map((emoji) => (
-                            <button
-                                key={emoji}
-                                type="button"
-                                onClick={() => handleClickReaction(emoji)}
-                                className="w-8 h-8 flex items-center justify-center text-lg rounded-md hover:bg-slate-100 transition-colors"
-                            >
-                                {emoji}
-                            </button>
-                        ))}
-                    </div>
+                    <EmojiPicker
+                        className="h-[342px] rounded-md border border-slate-200 bg-white shadow-sm"
+                        onEmojiSelect={({ emoji }) => handleClickReaction(emoji)}
+                    >
+                        <EmojiPickerSearch />
+                        <EmojiPickerContent />
+                        <EmojiPickerFooter />
+                    </EmojiPicker>
                 </PopoverContent>
             </Popover>
         </div>

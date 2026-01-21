@@ -192,11 +192,15 @@ function UserMessage({
     }, [reacts]);
 
     const transferIcon = (reactionType: string | number) => {
-        const idx = Number.parseInt(String(reactionType), 10) - 1;
-        return listReaction[idx] ?? '';
+        const parsed = Number.parseInt(String(reactionType), 10);
+        if (!Number.isNaN(parsed)) {
+            const idx = parsed - 1;
+            return listReaction[idx] ?? String(reactionType);
+        }
+        return String(reactionType);
     };
 
-    const sendReaction = async (reactionType: number) => {
+    const sendReaction = async (reactionType: string | number) => {
         await messageApi.dropReaction(_id, String(reactionType));
     };
 
@@ -205,10 +209,14 @@ function UserMessage({
     };
 
     const handleClickReaction = (value: string) => {
-        const reactionType =
-            listReaction.findIndex((element) => element === value) + 1;
-        if (reactionType <= 0) return;
-        void sendReaction(reactionType);
+        const legacyIdx = listReaction.findIndex((element) => element === value);
+        if (legacyIdx >= 0) {
+            void sendReaction(legacyIdx + 1);
+            return;
+        }
+
+        if (!value) return;
+        void sendReaction(value);
     };
 
     const handleOnCloseModal = () => {
