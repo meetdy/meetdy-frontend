@@ -24,7 +24,8 @@ import {
   fetchListConversations,
   updateAvatarWhenUpdateMember,
   updateFriendChat,
-} from '@/features/Chat/slice/chatSlice';
+} from '@/app/chatSlice';
+
 import {
   fetchFriends,
   fetchListGroup,
@@ -37,8 +38,8 @@ import {
   updateFriend,
   updateMyRequestFriend,
   updateRequestFriends,
-} from '@/features/Friend/friendSlice';
-import { fetchInfoWebs } from '@/features/Home/homeSlice';
+} from '@/app/friendSlice';
+
 import useWindowUnloadEffect from '@/hooks/useWindowUnloadEffect';
 
 import { createSocketConnection as init, socket } from '@/lib/socket';
@@ -83,7 +84,6 @@ function ChatLayout() {
     dispatch(fetchListColor());
     dispatch(fetchListConversations({}));
     dispatch(fetchAllSticker());
-    dispatch(fetchInfoWebs());
   }, []);
 
   useEffect(() => {

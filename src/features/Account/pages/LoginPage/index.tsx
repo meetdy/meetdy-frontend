@@ -1,22 +1,23 @@
-import authApi from '@/api/authApi';
-import { fetchUserProfile, setLogin } from '@/app/globalSlice';
-import InputField from '@/components/field/InputField';
-import { setLoading } from '@/features/Account/accountSlice';
-import { loginValues } from '@/features/Account/initValues';
 
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { FastField, Form, Formik } from 'formik';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { MessageCircle, ArrowLeft, Sparkles } from 'lucide-react';
+
+import authApi from '@/api/authApi';
+import { setLogin, setUser, setLoading } from '@/app/globalSlice';
+import InputField from '@/components/field/InputField';
+import { loginValues } from '@/features/Account/initValues';
 
 import { Button } from '@/components/ui/button';
 import { Alert } from '@/components/ui/alert';
 
+import { fetchUserProfile } from '@/hooks/me/useGetProfile';
+
 function LoginPage() {
   const dispatch = useDispatch();
-  const [isError, setError] = useState(false);
+  const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
 
   const isVerify = true;
@@ -34,14 +35,17 @@ function LoginPage() {
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
         dispatch(setLogin(true));
-        const { isAdmin } = unwrapResult(await dispatch(fetchUserProfile() as any) as any);
-        navigate(isAdmin ? '/admin' : '/chat');
+
+        const user = await fetchUserProfile();
+        dispatch(setUser(user));
+
+        navigate(user.isAdmin ? '/admin' : '/chat');
       } else {
         alert('Hãy xác thực captcha');
       }
     } catch (error) {
       console.log('Login error:', error);
-      setError(true);
+      setIsError(true);
     }
     dispatch(setLoading(false));
   };
@@ -49,7 +53,7 @@ function LoginPage() {
   return (
     <div className="flex min-h-screen">
       {/* Left side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary via-primary/90 to-blue-600 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-linear-to-br from-primary via-primary/90 to-blue-600 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent)]" />
         <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />

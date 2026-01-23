@@ -7,7 +7,7 @@ type TFetchUser = {
   username: string;
 };
 
-const fetchUserQueryKey = ({ username }: TFetchUser) =>
+const createKeyGetUser = ({ username }: TFetchUser) =>
   createQueryKey('user', { username });
 
 interface UseFetchUserProps {
@@ -20,7 +20,7 @@ export function useGetUser({
   enabled = true,
 }: UseFetchUserProps) {
   return useQuery<IUser>({
-    queryKey: fetchUserQueryKey({ username }),
+    queryKey: createKeyGetUser({ username }),
     queryFn: () => ServiceAuth.getUser(username),
     enabled,
   });
@@ -30,14 +30,15 @@ export async function checkAndFetchUser(
   username: string,
 ): Promise<IUser | null> {
   const cachedUser = queryClient.getQueryData<IUser>(
-    fetchUserQueryKey({ username }),
+    createKeyGetUser({ username }),
   );
   if (cachedUser) return cachedUser;
 
-  const user = await queryClient.getQuery({
-    queryKey: fetchUserQueryKey({ username }),
+  const user = await queryClient.fetchQuery<IUser>({
+    queryKey: createKeyGetUser({ username }),
     queryFn: () => ServiceAuth.getUser(username),
     staleTime: Infinity,
   });
+
   return user;
 }

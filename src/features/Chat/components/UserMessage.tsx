@@ -20,7 +20,7 @@ import ModalChangePinMessage from '@/components/modal-change-pin-message';
 import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import { checkLeader } from '@/utils/groupUtils';
 
-import { deleteMessageClient } from '../slice/chatSlice';
+import { deleteMessageClient } from '../../../app/chatSlice';
 
 import LastView from './LastView';
 import ListReaction from './ListReaction';

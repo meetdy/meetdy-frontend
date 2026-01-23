@@ -8,7 +8,7 @@ type TFetchSuggestFriend = {
   size: number;
 };
 
-const fetchSuggestFriendQueryKey = (page: number, size: number) =>
+const createKeySuggestFriend = (page: number, size: number) =>
   createQueryKey('fetchSuggestFriend', { page, size });
 
 interface UseFetchSuggestFriendProps {
@@ -20,7 +20,7 @@ export function useGetSuggestFriend({
   enabled = true,
 }: UseFetchSuggestFriendProps) {
   const { data, isFetched, isFetching } = useQuery<ISuggestFriend[]>({
-    queryKey: fetchSuggestFriendQueryKey(page, size),
+    queryKey: createKeySuggestFriend(page, size),
     queryFn: () => FriendService.getSuggestFriend(page, size),
     enabled,
   });

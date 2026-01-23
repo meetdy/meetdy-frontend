@@ -43,20 +43,18 @@ import {
   updateNameOfConver,
   updateTimeForConver,
   updateVoteMessage,
-} from './slice/chatSlice';
+} from '@/app/chatSlice';
 
 import renderWidthDrawer from '@/utils/DrawerResponsive';
 
 import { toast } from 'sonner';
 
-import { useInfiniteListMessages } from '@/hooks/message/useInfiniteListMessages';
-import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
+import { createKeyListConversations, useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 import { useGetFriends } from '@/hooks/friend/useGetFriends';
 import { useGetListClassify } from '@/hooks/classify/useGetListClassify';
 import { usePinnedMessages } from '@/hooks/channel/usePinnedMessages';
 import { useGetChannel } from '@/hooks/channel/useGetChannel';
 import { useQueryClient } from '@tanstack/react-query';
-import { createKeyListConversations } from '@/hooks/conversation/useGetListConversations';
 
 function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
   const dispatch = useDispatch();

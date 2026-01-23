@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import friendApi from '@/api/friendApi';
 import FriendCard from '../FriendCard';
 
-import { fetchListMyRequestFriend } from '@/features/Friend/friendSlice';
+import { fetchListMyRequestFriend } from '@/app/friendSlice';
 
 
 function ListMyFriendRequest({ data = [] }) {

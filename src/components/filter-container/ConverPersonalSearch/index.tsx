@@ -4,7 +4,7 @@ import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import { Empty } from '@/components/ui/empty';
 import {
   setCurrentConversation,
-} from '@/features/Chat/slice/chatSlice';
+} from '@/app/chatSlice';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 interface ConverPersonalSearchProps {

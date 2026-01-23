@@ -7,7 +7,7 @@ import {
   fetchFriends,
   fetchListRequestFriend,
   setAmountNotify,
-} from '@/features/Friend/friendSlice';
+} from '@/app/friendSlice';
 
 import FriendCard from '../FriendCard';
 

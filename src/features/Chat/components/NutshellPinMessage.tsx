@@ -4,7 +4,7 @@ import { ChevronDown, MessageSquare, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 
 import pinMessageApi from '@/api/pinMessageApi';
-import { fetchPinMessages } from '../slice/chatSlice';
+import { fetchPinMessages } from '../../../app/chatSlice';
 
 import TypeMessagePin from './TypeMessagePin';
 import ModalDetailMessagePin from './ModalDetailMessagePin';

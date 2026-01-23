@@ -19,7 +19,7 @@ import {
     getLastViewOfMembers,
     setCurrentChannel,
     setCurrentConversation,
-} from '@/features/Chat/slice/chatSlice';
+} from '@/app/chatSlice';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 import dateUtils from '@/utils/dateUtils';
 import ConversationAvatar from './ConversationAvatar';

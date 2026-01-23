@@ -1,16 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import ServiceMe from '@/api/meApi';
-
-const KEY = 'global';
-
-// Async thunk
-export const fetchUserProfile = createAsyncThunk(
-  `${KEY}/fetchUser`,
-  async (_, thunkApi) => {
-    const user = await ServiceMe.getProfile();
-    return user;
-  },
-);
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   isLoading: false,
@@ -22,7 +10,7 @@ const initialState = {
 };
 
 const globalSlice = createSlice({
-  name: KEY,
+  name: 'global',
   initialState,
   reducers: {
     setLoading: (state, action) => {
@@ -30,6 +18,10 @@ const globalSlice = createSlice({
     },
     setLogin: (state, action) => {
       state.isLogin = action.payload;
+    },
+    setUser: (state, action) => {
+      state.isLogin = true;
+      state.user = action.payload;
     },
     setJoinChatLayout: (state, action) => {
       state.isJoinChatLayout = action.payload;
@@ -46,27 +38,12 @@ const globalSlice = createSlice({
       }
     },
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchUserProfile.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(fetchUserProfile.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isLogin = true;
-        state.user = action.payload;
-      })
-      .addCase(fetchUserProfile.rejected, (state) => {
-        state.isLoading = false;
-        state.isLogin = false;
-        localStorage.removeItem('token');
-      });
-  },
 });
 
 export const {
   setLoading,
   setLogin,
+  setUser,
   setJoinChatLayout,
   setJoinFriendLayout,
   setTabActive,

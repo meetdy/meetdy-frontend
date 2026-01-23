@@ -1,7 +1,7 @@
 import { Divider, Input, message, Pagination } from 'antd';
 import 'antd/dist/reset.css';
 import adminApi from '@/api/adminApi';
-import { setLoading } from '@/features/Account/accountSlice';
+import { setLoading } from '@/app/globalSlice';
 import UserTable from '@/features/Admin/components/UserTable';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';

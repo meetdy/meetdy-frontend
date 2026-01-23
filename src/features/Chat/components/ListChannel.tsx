@@ -5,7 +5,7 @@ import ChannelItem from './ChannelItem';
 import {
     getLastViewOfMembers,
     setCurrentChannel,
-} from '@/features/Chat/slice/chatSlice';
+} from '@/app/chatSlice';
 import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 

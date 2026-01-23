@@ -19,7 +19,7 @@ import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
 
 import {
   setCurrentConversation,
-} from '@/features/Chat/slice/chatSlice';
+} from '@/app/chatSlice';
 import classifyUtils from '@/utils/classifyUtils';
 
 import SubMenuClassify from '@/components/sub-menu-classify';

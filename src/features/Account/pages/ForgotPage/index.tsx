@@ -6,7 +6,7 @@ import { MessageCircle, ArrowLeft, KeyRound, Sparkles } from 'lucide-react';
 
 import authApi from '@/api/authApi';
 import InputField from '@/components/field/InputField';
-import { setLoading } from '@/features/Account/accountSlice';
+import { setLoading } from '@/app/globalSlice';
 import { forgotValues } from '@/features/Account/initValues';
 
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,7 @@ function ForgotPage() {
   const navigate = useNavigate();
   const resendOTPTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const [isError, setError] = useState('');
+  const [isError, setIsError] = useState('');
   const [counter, setCounter] = useState(0);
   const [account, setAccount] = useState<any>(null);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -73,7 +73,7 @@ function ForgotPage() {
         }
         success();
       } catch {
-        setError('OTP không hợp lệ');
+        setIsError('OTP không hợp lệ');
       }
     } else {
       try {
@@ -85,7 +85,7 @@ function ForgotPage() {
         openNotification(username);
         setIsSubmit(true);
       } catch {
-        setError('Tài khoản không tồn tại');
+        setIsError('Tài khoản không tồn tại');
       }
     }
     dispatch(setLoading(false));

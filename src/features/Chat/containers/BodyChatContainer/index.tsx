@@ -3,7 +3,7 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setRaisePage,
-} from '../../slice/chatSlice';
+} from '../../../../app/chatSlice';
 import { useInfiniteListMessages } from '@/hooks/message/useInfiniteListMessages';
 import { useGetLastViewOfMembers } from '@/hooks/conversation/useGetLastViewOfMembers';
 import { useGetLastViewChannel } from '@/hooks/channel/useGetLastViewChannel';
