@@ -142,10 +142,10 @@ export default function ConversationContainer({ valueClassify }: Props) {
     async (conversationId: string) => {
       dispatch(setCurrentConversation(conversationId));
       dispatch(setCurrentChannel(''));
-      dispatch(getLastViewOfMembers({ conversationId }));
-
-      dispatch(getMembersConversation({ conversationId }));
       dispatch(setTypeOfConversation(conversationId));
+      // react query invalidate queries related to messages conversation
+      dispatch(getLastViewOfMembers({ conversationId }));
+      dispatch(getMembersConversation({ conversationId }));
       dispatch(fetchChannels({ conversationId }));
     },
     [dispatch],

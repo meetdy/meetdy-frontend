@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useResolvedPath, useLocation } from 'react-router-dom';
 import { ChevronsLeft, ChevronDown, X } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { Socket } from 'socket.io-client';
 
 import { setJoinChatLayout } from '@/app/globalSlice';
 import conversationApi from '@/api/conversationApi';
@@ -54,9 +56,9 @@ import { useGetFriends } from '@/hooks/friend/useGetFriends';
 import { useGetListClassify } from '@/hooks/classify/useGetListClassify';
 import { usePinnedMessages } from '@/hooks/channel/usePinnedMessages';
 import { useGetChannel } from '@/hooks/channel/useGetChannel';
-import { useQueryClient } from '@tanstack/react-query';
 
-function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
+
+function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boolean }) {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -67,7 +69,9 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
     currentConversation,
     isLoading,
     currentChannel,
+    type
   } = useSelector((state: any) => state.chat || {});
+
   const { isJoinChatLayout, user } = useSelector(
     (state: any) => state.global || {},
   );
@@ -88,7 +92,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
 
   const { pinnedMessages: pinMessages = [] } = usePinnedMessages({
     conversationId: currentConversation,
-    enabled: !!currentConversation && !currentChannel
+    enabled: !!currentConversation && !currentChannel && !type
   });
 
   const refCurrentConversation = useRef<string | null>(null);
@@ -115,6 +119,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
   const [valueClassify, setValueClassify] = useState('0');
   const [isOpenInfo, setIsOpenInfo] = useState(true);
   const [openDrawerInfo, setOpenDrawerInfo] = useState(false);
+
   const { width } = useWindowDimensions();
 
   useEffect(() => {
@@ -254,7 +259,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
         );
         toast.info(`Bạn đã bị xóa khỏi nhóm ${conversation?.name}`);
         if (conversationId === refCurrentConversation.current) {
-          dispatch(setCurrentConversation(''));
+          dispatch(setCurrentConversation(null));
         }
         dispatch(isDeletedFromGroup(conversationId));
         socket.emit('leave-conversation', conversationId);
@@ -678,7 +683,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
               <div className="flex-1 overflow-hidden px-4 py-2">
                 <BodyChatContainer
                   scrollId={scrollId}
-                  onSCrollDown={idNewMessage}
+                  hasNewMessage={hasNewMessage}
                   onBackToBottom={handleBackToBottom}
                   onResetScrollButton={hanldeResetScrollButton}
                   turnOnScrollButton={isScroll}
