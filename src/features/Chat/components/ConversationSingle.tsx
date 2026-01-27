@@ -47,12 +47,18 @@ const ConversationSingle = React.memo(({ conversation, onClick }: Props) => {
         <div
             onClick={handleClick}
             className={cn(
-                "flex items-center gap-3 px-3 py-3 cursor-pointer rounded-2xl transition-all duration-200",
-                "hover:bg-slate-50",
-                isActive && "bg-primary/8 hover:bg-primary/10 ring-1 ring-primary/20",
-                !isActive && "hover:shadow-sm"
+                "group relative flex items-center gap-3 px-3 py-2.5 cursor-pointer rounded-xl transition-colors",
+                "hover:bg-accent/60",
+                isActive && "bg-accent text-foreground",
+                !isActive && "text-foreground"
             )}
         >
+            <span
+                className={cn(
+                    "absolute left-0 top-2.5 bottom-2.5 w-0.5 rounded-full transition-opacity",
+                    isActive ? "bg-primary opacity-100" : "opacity-0 group-hover:opacity-40 bg-primary"
+                )}
+            />
             <div className="flex-shrink-0 relative">
                 <ConversationAvatar
                     totalMembers={totalMembers}
@@ -62,7 +68,7 @@ const ConversationSingle = React.memo(({ conversation, onClick }: Props) => {
                     avatarColor={avatarColor}
                 />
                 {numberUnread > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[20px] h-[20px] bg-red-500 text-white text-[10px] font-bold px-1.5 rounded-full shadow-md ring-2 ring-white">
+                    <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[20px] h-[20px] bg-destructive text-destructive-foreground text-[10px] font-semibold px-1.5 rounded-full shadow-sm ring-2 ring-background">
                         {numberUnread > 99 ? '99+' : numberUnread}
                     </span>
                 )}
@@ -72,15 +78,15 @@ const ConversationSingle = React.memo(({ conversation, onClick }: Props) => {
                 <div className="flex-1 min-w-0 flex flex-col gap-1">
                     <div className="flex items-center justify-between gap-2">
                         <span className={cn(
-                            "font-semibold text-[15px] truncate leading-tight",
-                            numberUnread > 0 ? "text-slate-900" : "text-slate-700",
-                            isActive && "text-primary"
+                            "font-semibold text-[14px] truncate leading-tight",
+                            numberUnread > 0 ? "text-foreground" : "text-foreground",
+                            isActive && "text-foreground"
                         )}>
                             {name}
                         </span>
                         <span className={cn(
                             "text-[11px] flex-shrink-0",
-                            numberUnread > 0 ? "text-primary font-semibold" : "text-slate-400"
+                            numberUnread > 0 ? "text-primary font-semibold" : "text-muted-foreground"
                         )}>
                             {createdAt}
                         </span>
@@ -98,7 +104,7 @@ const ConversationSingle = React.memo(({ conversation, onClick }: Props) => {
 
                         <div className={cn(
                             "text-[13px] truncate leading-snug",
-                            numberUnread > 0 ? "text-slate-700 font-medium" : "text-slate-500"
+                            numberUnread > 0 ? "text-foreground/80 font-medium" : "text-muted-foreground"
                         )}>
                             <ShortMessage
                                 message={lastMessage}

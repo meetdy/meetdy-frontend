@@ -78,13 +78,13 @@ export default function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBl
   });
 
   return (
-    <div className="flex h-full w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-background">
       {navState.view === 0 && (
         <>
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background">
             <div className="flex items-center gap-2">
-              <Info className="w-4 h-4 text-slate-500" />
-              <h3 className="font-semibold text-slate-900">
+              <Info className="w-4 h-4 text-muted-foreground" />
+              <h3 className="font-semibold text-foreground">
                 {currentConver?.type ? 'Thông tin nhóm' : 'Thông tin'}
               </h3>
             </div>
@@ -95,9 +95,9 @@ export default function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBl
                     variant="ghost"
                     size="icon"
                     onClick={onClose}
-                    className="h-8 w-8 rounded-lg hover:bg-slate-100"
+                    className="h-8 w-8 rounded-lg hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
-                    <X className="w-4 h-4 text-slate-500" />
+                    <X className="w-4 h-4 text-muted-foreground" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="left">Đóng</TooltipContent>
@@ -109,7 +109,7 @@ export default function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBl
             autoHide
             autoHideTimeout={1000}
             autoHideDuration={200}
-            style={{ height: 'calc(100vh - 56px)' }}
+            style={{ height: '100%' }}
           >
             <div className="space-y-1">
               <InfoNameAndThumbnail conversation={currentConver} />

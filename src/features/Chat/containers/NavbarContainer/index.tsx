@@ -60,6 +60,14 @@ export default function NavbarContainer() {
   // Removed useEffect dispatching setToTalUnread as we derive it now
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const savedIsDark = savedTheme === 'dark';
+    if (savedTheme) {
+      document.documentElement.classList.toggle('dark', savedIsDark);
+      setIsDarkMode(savedIsDark);
+      return;
+    }
+
     const isDark = document.documentElement.classList.contains('dark');
     setIsDarkMode(isDark);
   }, []);
@@ -68,6 +76,7 @@ export default function NavbarContainer() {
     const next = !isDarkMode;
     setIsDarkMode(next);
     document.documentElement.classList.toggle('dark', next);
+    localStorage.setItem('theme', next ? 'dark' : 'light');
   };
 
   const handleLogout = () => {
@@ -168,6 +177,7 @@ export default function NavbarContainer() {
         <nav className="flex-1 p-3 flex flex-col gap-2">
           <NavButton
             to="/chat"
+            label="Tin nhắn"
             active={isActive('/chat')}
             badge={toTalUnread}
             onClick={() => dispatch(setTabActive(1))}
@@ -177,6 +187,7 @@ export default function NavbarContainer() {
 
           <NavButton
             to="/chat/friends"
+            label="Bạn bè"
             active={isActive('/chat/friends')}
             badge={amountNotify}
             onClick={() => dispatch(setTabActive(2))}

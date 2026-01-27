@@ -31,6 +31,18 @@ import {
 } from '@/components/ui/context-menu';
 import { Tag } from 'lucide-react';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { toast } from 'sonner';
+
 // OPTIMIZATION: Extracted to a memoized component to prevent re-rendering the whole list
 type ConversationItemProps = {
   conversation: any;
@@ -142,11 +154,11 @@ export default function ConversationContainer({ valueClassify }: Props) {
     async (conversationId: string) => {
       dispatch(setCurrentConversation(conversationId));
       dispatch(setCurrentChannel(''));
-      dispatch(getLastViewOfMembers({ conversationId }));
+      dispatch(getLastViewOfMembers({ conversationId }) as any);
 
-      dispatch(getMembersConversation({ conversationId }));
-      dispatch(setTypeOfConversation(conversationId));
-      dispatch(fetchChannels({ conversationId }));
+      dispatch(getMembersConversation({ conversationId }) as any);
+      dispatch(setTypeOfConversation(conversationId) as any);
+      dispatch(fetchChannels({ conversationId }) as any);
     },
     [dispatch],
   );
@@ -154,24 +166,15 @@ export default function ConversationContainer({ valueClassify }: Props) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const [toast, setToast] = useState<{
-    msg: string;
-    type: 'success' | 'error' | '';
-  }>({
-    msg: '',
-    type: '',
-  });
-
   const deleteConver = async (id: string) => {
     try {
       await conversationApi.deleteConversation(id);
-      setToast({ msg: 'Xóa thành công', type: 'success' });
+      toast.success('Xóa thành công');
     } catch (error) {
-      setToast({ msg: 'Đã có lỗi xảy ra', type: 'error' });
+      toast.error('Đã có lỗi xảy ra');
     } finally {
       setConfirmOpen(false);
       setDeleteId(null);
-      setTimeout(() => setToast({ msg: '', type: '' }), 3000);
     }
   };
 
@@ -182,66 +185,64 @@ export default function ConversationContainer({ valueClassify }: Props) {
 
   return (
     <div className="relative h-full">
-      {toast.msg && (
-        <div
-          className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-md text-sm shadow-md ${toast.type === 'success'
-            ? 'bg-green-50 text-green-800'
-            : 'bg-red-50 text-red-800'
-            }`}
-        >
-          {toast.msg}
-        </div>
-      )}
-
-      <div style={{ height: '100%', width: '100%' }}>
-        <Virtuoso
-          style={{ height: '100%' }}
-          data={converFilter}
-          itemContent={(index, conversationEle) => (
-            <ConversationItem
-              key={conversationEle._id}
-              conversation={conversationEle}
-              onClick={handleConversationClick}
-              onOpenConfirm={openConfirm}
-              user={user}
-              classifies={classifies}
-            />
-          )}
-        />
-      </div>
-
-      {confirmOpen && deleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-black/40"
-            onClick={() => setConfirmOpen(false)}
-          />
-          <div className="z-50 w-[420px] max-w-full rounded-lg bg-white p-6 shadow-lg">
-            <h3 className="text-lg font-medium">Xác nhận</h3>
-            <p className="mt-2 text-sm text-slate-600">
-              Toàn bộ nội dung cuộc trò chuyện sẽ bị xóa, bạn có chắc chắn muốn
-              xóa?
-            </p>
-            <div className="mt-4 flex justify-end gap-2">
-              <button
-                onClick={() => {
-                  setConfirmOpen(false);
-                  setDeleteId(null);
-                }}
-                className="rounded-md px-4 py-2 text-sm hover:bg-slate-100"
-              >
-                Không
-              </button>
-              <button
-                onClick={() => deleteConver(deleteId)}
-                className="rounded-md bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
-              >
-                Xóa
-              </button>
+      {converFilter.length === 0 ? (
+        <div className="h-full flex items-center justify-center px-6">
+          <div className="max-w-sm text-center">
+            <div className="mx-auto mb-3 h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
+              <Tag className="h-5 w-5 text-muted-foreground" />
             </div>
+            <h3 className="text-sm font-semibold text-foreground">
+              Chưa có cuộc trò chuyện
+            </h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Hãy tìm kiếm hoặc tạo nhóm mới để bắt đầu.
+            </p>
           </div>
         </div>
+      ) : (
+        <div style={{ height: '100%', width: '100%' }}>
+          <Virtuoso
+            style={{ height: '100%' }}
+            data={converFilter}
+            itemContent={(index, conversationEle) => (
+              <ConversationItem
+                key={conversationEle._id}
+                conversation={conversationEle}
+                onClick={handleConversationClick}
+                onOpenConfirm={openConfirm}
+                user={user}
+                classifies={classifies}
+              />
+            )}
+          />
+        </div>
       )}
+
+      <AlertDialog
+        open={confirmOpen && !!deleteId}
+        onOpenChange={(open) => {
+          setConfirmOpen(open);
+          if (!open) setDeleteId(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận</AlertDialogTitle>
+            <AlertDialogDescription>
+              Toàn bộ nội dung cuộc trò chuyện sẽ bị xóa, bạn có chắc chắn muốn xóa?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Không</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => deleteId && deleteConver(deleteId)}
+            >
+              Xóa
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
