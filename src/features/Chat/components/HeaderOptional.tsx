@@ -149,7 +149,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
         channels.find((ele) => ele._id === currentChannel)?.name ?? '';
 
     return (
-        <div id="header-optional" className="w-full bg-white">
+        <div id="header-optional" className="w-full bg-card">
             <div className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-3">
                     <Tooltip>
@@ -158,7 +158,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                 variant="ghost"
                                 size="icon"
                                 onClick={handleBackToListConver}
-                                className="sm:hidden h-9 w-9 rounded-lg hover:bg-slate-100"
+                                className="sm:hidden h-9 w-9 rounded-xl hover:bg-muted"
                             >
                                 <ArrowLeft className="w-5 h-5 text-slate-600" />
                             </Button>
@@ -238,7 +238,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-9 w-9 rounded-lg hover:bg-slate-100 hidden sm:flex"
+                                        className="h-9 w-9 rounded-xl hover:bg-muted hidden sm:flex"
                                     >
                                         <Phone className="w-4 h-4 text-slate-600" />
                                     </Button>
@@ -251,7 +251,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-9 w-9 rounded-lg hover:bg-slate-100 hidden sm:flex"
+                                        className="h-9 w-9 rounded-xl hover:bg-muted hidden sm:flex"
                                     >
                                         <Video className="w-4 h-4 text-slate-600" />
                                     </Button>
@@ -265,7 +265,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                         variant="ghost"
                                         size="icon"
                                         onClick={handleAddMemberToGroup}
-                                        className="h-9 w-9 rounded-lg hover:bg-slate-100"
+                                        className="h-9 w-9 rounded-xl hover:bg-muted"
                                     >
                                         <UserPlus className="w-4 h-4 text-slate-600" />
                                     </Button>
@@ -286,8 +286,8 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                 size="icon"
                                 onClick={handlePopUpInfo}
                                 className={cn(
-                                    "h-9 w-9 rounded-lg hidden sm:flex",
-                                    isPanelOpen ? "bg-slate-100" : "hover:bg-slate-100"
+                                    "h-9 w-9 rounded-xl hidden sm:flex",
+                                    isPanelOpen ? "bg-muted" : "hover:bg-muted"
                                 )}
                             >
                                 {isPanelOpen ? (
@@ -306,7 +306,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                         variant="ghost"
                         size="icon"
                         onClick={handleOpenDraweer}
-                        className="sm:hidden h-9 w-9 rounded-lg hover:bg-slate-100"
+                        className="sm:hidden h-9 w-9 rounded-xl hover:bg-muted"
                     >
                         <MoreHorizontal className="w-4 h-4 text-slate-600" />
                     </Button>

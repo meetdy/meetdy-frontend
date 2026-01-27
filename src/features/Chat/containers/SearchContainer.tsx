@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Search, UserPlus, Users, Plus } from 'lucide-react';
 
 import userApi from '@/api/userApi';
-import ModalClassify from '../../components/ModalClassify';
+import ModalClassify from '../components/ModalClassify';
 import ModalAddFriend from '@/components/modal-add-friend';
 import UserCard from '@/components/user-card';
-import ModalCreateGroup from '@/features/Chat/components/ModalCreateGroup';
+import ModalCreateGroup from '../components/ModalCreateGroup';
 import { createGroup } from '@/app/chatSlice';
 
 import { Input } from '@/components/ui/input';
