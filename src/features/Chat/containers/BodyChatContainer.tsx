@@ -16,7 +16,7 @@ import DividerCustom from '../components/DividerCustom';
 
 type Props = {
   scrollId?: string;
-  onSCrollDown?: any;
+  hasNewMessage?: any;
   onBackToBottom?: (value: boolean, message?: string) => void;
   onResetScrollButton?: (value: boolean) => void;
   turnOnScrollButton?: boolean;
@@ -26,7 +26,7 @@ type Props = {
 
 export default function BodyChatContainer({
   scrollId,
-  onSCrollDown,
+  hasNewMessage,
   onBackToBottom,
   onResetScrollButton,
   turnOnScrollButton,
@@ -103,7 +103,7 @@ export default function BodyChatContainer({
 
   useEffect(() => {
     if (
-      onSCrollDown &&
+      hasNewMessage &&
       scrollbars.current &&
       scrollbars.current.getScrollHeight() >
       scrollbars.current.getClientHeight()
@@ -114,7 +114,7 @@ export default function BodyChatContainer({
         onBackToBottom?.(true, 'Có tin nhắn mới');
       }
     }
-  }, [onSCrollDown, position, onBackToBottom]);
+  }, [hasNewMessage, position, onBackToBottom]);
 
   const renderMessages = (messagesList: any[]) => {
     const result: React.ReactNode[] = [];
