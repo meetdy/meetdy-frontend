@@ -1,9 +1,11 @@
 # Meetdy Chat
 
 ## Overview
+
 A React-based chat application built with Vite, TypeScript, and Tailwind CSS v4. The application is a Vietnamese chat platform (similar to Lark/Microsoft Loop) with features for messaging, contacts, video calls, and user management.
 
 ## Project Structure
+
 - `src/` - Main source code
   - `api/` - API service layer for backend communication
   - `app/` - Redux store configuration
@@ -26,6 +28,7 @@ A React-based chat application built with Vite, TypeScript, and Tailwind CSS v4.
   - `utils/` - Utility functions
 
 ## Tech Stack
+
 - React 18 with TypeScript
 - Vite 7 as build tool
 - Redux Toolkit for state management
@@ -39,6 +42,7 @@ A React-based chat application built with Vite, TypeScript, and Tailwind CSS v4.
 - sonner for toast notifications
 
 ## UI Migration Status (January 2026)
+
 - Migrated from Ant Design (antd) to shadcn/ui with Tailwind CSS v4
 - Applied modern Lark/Loop-inspired design
 - All @ant-design/icons replaced with lucide-react in user-facing components
@@ -46,6 +50,7 @@ A React-based chat application built with Vite, TypeScript, and Tailwind CSS v4.
 - All user-facing components now use shadcn/ui
 
 ## Recently Migrated Components
+
 - FileItem, ReplyBlock, InfoTitle, PinItem, ConversationAvatar
 - ListReaction, ModalCreateGroup, ModalAddMemberToConver
 - CallVideo ActionNavbar (now uses shadcn Button instead of antd Menu)
@@ -54,6 +59,7 @@ A React-based chat application built with Vite, TypeScript, and Tailwind CSS v4.
 - UserMessage toast notifications fixed to use sonner pattern
 
 ## UI Improvements (January 2026)
+
 - **Avatar component**: Now uses forwardRef to fix console warnings with Radix UI
 - **ListReaction**: Modernized with Radix Popover, TypeScript types, ClickUp/Lark-style emoji picker
 - **ListReactionOfUser**: Uses Radix Tooltip, proper TypeScript types, modern pill-style badges
@@ -62,25 +68,29 @@ A React-based chat application built with Vite, TypeScript, and Tailwind CSS v4.
 - **Duplicate key fixes**: BodyChatContainer now handles duplicate message IDs properly
 
 ## Design System (January 2026)
-- **Message bubbles**: 
+
+- **Message bubbles**:
   - Sent: gradient primary background (from-primary to-primary/90), rounded-[18px], max-width 75%
   - Received: slate-100 background, rounded-[18px], max-width 75%
 - **Conversation list**: rounded-2xl cards, ring-based active states, improved unread badges
 - **Timestamps**: 11px font size, 70% opacity for sent messages
 - **Seen indicator**: CheckCheck icon in emerald-500
 - **Modal dialogs**: rounded-2xl containers, rounded-xl inputs/buttons
-- **Hover states**: slate-50 background for list items, subtle shadows
+- **Hover states**: slate-50 background for list items
 
 ## Development
+
 - Run: `npm run dev` (starts Vite dev server on port 5000)
 - Build: `npm run build` (outputs to `dist/`)
 
 ## Notes
+
 - This is a frontend-only application that connects to an external backend API
 - Backend API URL should be configured via `VITE_API_URL` environment variable
 - All UI text is in Vietnamese - maintain language consistency
 
 ## User Preferences
+
 - Use shadcn "new-york" style preset
 - Prefer lucide-react icons over @ant-design/icons
 - Use `--legacy-peer-deps` flag when installing packages due to peer dependency conflicts

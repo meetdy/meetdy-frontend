@@ -21,7 +21,6 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 
@@ -54,8 +53,6 @@ export default function NavbarContainer() {
     const [isModalProfileVisible, setIsModalProfileVisible] = useState(false);
 
     const isActive = (path: string) => location.pathname === path;
-
-    // Removed useEffect dispatching setToTalUnread as we derive it now
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
@@ -196,10 +193,10 @@ export default function NavbarContainer() {
 
                 <Separator />
 
-                <div className="p-3">
+                <div className="p-3 flex justify-center">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="w-full h-12 rounded-xl hover:bg-muted">
+                            <button className="flex items-center justify-center w-10 h-10 rounded-xl hover:bg-muted transition-colors">
                                 <Settings className="h-5 w-5" />
                             </button>
                         </DropdownMenuTrigger>

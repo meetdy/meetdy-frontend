@@ -534,7 +534,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
               onClick={() => setOpenDrawerInfo(false)}
             />
             <div
-              className="fixed top-0 right-0 h-full bg-background shadow-2xl z-50 transition-transform duration-300 ease-out"
+              className="fixed top-0 right-0 h-full bg-background z-50 transition-transform duration-300 ease-out"
               style={{
                 width: `${renderWidthDrawer(width)}%`,
                 transform: openDrawerInfo ? 'translateX(0)' : 'translateX(100%)',
@@ -675,7 +675,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
 
         {path === '/chat' && currentConversation ? (
           <main className="flex-1 flex flex-col bg-background">
-            <header className="border-b border-border bg-background shadow-sm">
+            <header>
               <HeaderChatContainer
                 onPopUpInfo={() => setIsOpenInfo(!isOpenInfo)}
                 onOpenDrawer={() => setOpenDrawerInfo(true)}
@@ -723,7 +723,7 @@ function Chat({ socket, idNewMessage }: { socket: any; idNewMessage?: any }) {
 
               <button
                 id="back-top-button"
-                className={`absolute right-6 bottom-6 z-40 flex items-center justify-center rounded-full bg-background border border-border shadow-lg p-3 transition-all duration-200 hover:shadow-xl hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isShow
+                className={`absolute right-6 bottom-6 z-40 flex items-center justify-center rounded-full bg-background border border-border p-3 transition-all duration-200 hover:shadow-xl hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isShow
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-4 pointer-events-none'
                   }`}

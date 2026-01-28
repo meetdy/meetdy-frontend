@@ -68,7 +68,7 @@ const ConversationSingle = React.memo(({ conversation, onClick }: Props) => {
                     avatarColor={avatarColor}
                 />
                 {numberUnread > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[20px] h-[20px] bg-destructive text-destructive-foreground text-[10px] font-semibold px-1.5 rounded-full shadow-sm ring-2 ring-background">
+                    <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[20px] h-[20px] bg-destructive text-destructive-foreground text-[10px] font-semibold px-1.5 rounded-full ring-2 ring-background">
                         {numberUnread > 99 ? '99+' : numberUnread}
                     </span>
                 )}

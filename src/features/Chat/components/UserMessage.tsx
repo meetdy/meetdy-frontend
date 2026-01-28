@@ -452,7 +452,7 @@ function UserMessage({
                                         {myReact && !isDeleted ? (
                                             <div
                                                 className={cn(
-                                                    'pointer-events-auto inline-flex items-center gap-1 rounded-xl border border-border bg-popover px-2 py-1 shadow-sm',
+                                                    'pointer-events-auto inline-flex items-center gap-1 rounded-xl border border-border bg-popover px-2 py-1',
                                                 )}
                                             >
                                                 <span className="text-sm leading-none">

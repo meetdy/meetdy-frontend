@@ -17,13 +17,9 @@ import { useGetAllMedia } from '@/hooks/media/useGetAllMedia';
 import { useGetChannel } from '@/hooks/channel/useGetChannel';
 import UserCard from '@/components/user-card';
 import { Button } from '@/components/ui/button';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
 
-import type { RootState, AppDispatch } from '@/redux/store';
+import type { RootState } from '@/redux/store';
+import ChatHeader, { HeaderIconButton } from '../components/ChatHeader';
 
 type Props = {
     socket?: any;
@@ -32,7 +28,7 @@ type Props = {
     onClose?: () => void;
 };
 
-export default function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBlock, onClose }: Props) {
+function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBlock, onClose }: Props) {
 
     const [navState, setNavState] = useState({ view: 0, tabpane: 0 });
     const [isUserCardVisible, setUserCardVisible] = useState(false);
@@ -68,10 +64,12 @@ export default function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBl
     const goInfo = () => setNavState({ view: 0, tabpane: 0 });
     const goMembers = (view: number) => setNavState({ view, tabpane: 0 });
     const goMedia = (view: number, tabpane = 0) => setNavState({ view, tabpane });
+
     const { data: media = {} as any } = useGetAllMedia({
         params: { conversationId: currentConversation },
         enabled: !!currentConversation,
     });
+
     const { channel: channels = [] } = useGetChannel({
         conversationId: currentConversation,
         enabled: !!currentConversation,
@@ -81,30 +79,23 @@ export default function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBl
         <div className="flex h-full w-full flex-col bg-card">
             {navState.view === 0 && (
                 <>
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
-                        <div className="flex items-center gap-2">
-                            <Info className="w-4 h-4 text-muted-foreground" />
-                            <h3 className="font-semibold text-foreground">
-                                {currentConver?.type ? 'Thông tin nhóm' : 'Thông tin'}
-                            </h3>
-                        </div>
-                        {onClose && (
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={onClose}
-                                        className="h-8 w-8 rounded-xl hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                                    >
-                                        <X className="w-4 h-4 text-muted-foreground" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent side="left">Đóng</TooltipContent>
-                            </Tooltip>
-                        )}
-                    </div>
-
+                    <ChatHeader
+                        left={
+                            <div className="flex items-center gap-2">
+                                <Info className="w-4 h-4 text-muted-foreground" />
+                                <a className="text-sm font-semibold text-foreground">
+                                    {currentConver?.type ? 'Thông tin nhóm' : 'Thông tin'}
+                                </a>
+                            </div>
+                        }
+                        right={
+                            onClose && (
+                                <HeaderIconButton onClick={onClose}>
+                                    <X className="w-4 h-4 text-muted-foreground" />
+                                </HeaderIconButton>
+                            )
+                        }
+                    />
                     <Scrollbars
                         autoHide
                         autoHideTimeout={1000}
@@ -169,3 +160,5 @@ export default function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBl
         </div>
     );
 }
+
+export default InfoContainer;

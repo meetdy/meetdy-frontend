@@ -400,7 +400,7 @@ export default function FooterChatContainer({
                                     spellCheck={false}
                                 />
                                 {showMentionDropdown && filteredMentions.length > 0 && (
-                                    <div className="absolute left-0 bottom-full mb-2 max-h-48 w-72 overflow-auto rounded-2xl border border-border bg-popover shadow-xl">
+                                    <div className="absolute left-0 bottom-full mb-2 max-h-48 w-72 overflow-auto rounded-2xl border border-border bg-popover">
                                         <div className="p-1">
                                             {filteredMentions.map((m) => (
                                                 <button

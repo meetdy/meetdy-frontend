@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import HeaderOptional from '@/features/Chat/components/HeaderOptional';
+import HeaderOptional from '@/features/Chat/containers/HeaderOptional';
 import { RootState } from '@/redux/store';
 
 type Props = {
@@ -33,18 +33,16 @@ export default function HeaderChatContainer({
     }, [currentConversation, conversations]);
 
     return (
-        <div id="header-main">
-            <HeaderOptional
-                avatar={detailConver.avatar}
-                totalMembers={memberInConversation?.length ?? 0}
-                name={detailConver.name}
-                type={detailConver.type}
-                isLogin={detailConver?.isOnline}
-                lastLogin={detailConver?.lastLogin}
-                avatarColor={detailConver?.avatarColor}
-                onPopUpInfo={onPopUpInfo}
-                onOpenDrawer={onOpenDrawer}
-            />
-        </div>
+        <HeaderOptional
+            avatar={detailConver.avatar}
+            totalMembers={memberInConversation?.length ?? 0}
+            name={detailConver.name}
+            type={detailConver.type}
+            isLogin={detailConver?.isOnline}
+            lastLogin={detailConver?.lastLogin}
+            avatarColor={detailConver?.avatarColor}
+            onPopUpInfo={onPopUpInfo}
+            onOpenDrawer={onOpenDrawer}
+        />
     );
 }

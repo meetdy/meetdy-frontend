@@ -15,7 +15,7 @@ export default function AvatarCustom({
   src = '',
   name = '',
   color = '#408ec6',
-  size = 40,
+  size = 32,
   className,
   ...rest
 }: AvatarCustomProps) {
@@ -37,7 +37,7 @@ export default function AvatarCustom({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Avatar className={cn('flex items-center justify-center text-sm font-medium', className)} style={style} {...rest}>
+        <Avatar className={cn('flex items-center justify-center text-xs font-medium', className)} style={style} {...rest}>
           <AvatarFallback>{getSummaryName(name)}</AvatarFallback>
         </Avatar>
       </TooltipTrigger>

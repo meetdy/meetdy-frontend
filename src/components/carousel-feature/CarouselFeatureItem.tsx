@@ -12,7 +12,7 @@ export default function CarouselFeatureItem({
     detail = '',
 }: CarouselFeatureItemProps) {
     return (
-        <div className="flex flex-col items-center rounded-lg overflow-hidden shadow-sm bg-white">
+        <div className="flex flex-col items-center rounded-lg overflow-hidden bg-white">
             <div className="w-full h-40 md:h-48 lg:h-56 bg-gray-100 flex items-center justify-center">
                 <Image src={src} alt="" className="w-full h-full object-cover" />
             </div>
