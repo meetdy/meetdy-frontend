@@ -27,8 +27,8 @@ type Props = {
     conversation?: {
         _id?: string;
         name?: string;
-        avatar?: string | File;
-        type?: string;
+        avatar?: any;
+        type?: boolean;
         totalMembers?: number;
         avatarColor?: string;
     };
@@ -92,9 +92,7 @@ export default function InfoNameAndThumbnail({ conversation = {} }: Props) {
             }
 
             if (file) {
-                const frmData = new FormData();
-                frmData.append('file', file);
-                await conversationApi.changeAvatarGroup(currentConversation, frmData);
+                await conversationApi.changeAvatarGroup(currentConversation, file);
             }
 
             toast.success('Cập nhật thông tin thành công');
@@ -110,7 +108,7 @@ export default function InfoNameAndThumbnail({ conversation = {} }: Props) {
         (refInitValue?.current === value && !file) || value.trim().length === 0;
 
     return (
-        <div className="flex flex-col items-center py-6 px-4 bg-gradient-to-b from-slate-50/80 to-white">
+        <div className="flex flex-col items-center py-6 px-4 bg-background">
             <Dialog open={isModalVisible} onOpenChange={(open) => !open && handleCancel()}>
                 <DialogContent className="max-w-sm rounded-2xl">
                     <DialogHeader>
@@ -171,17 +169,17 @@ export default function InfoNameAndThumbnail({ conversation = {} }: Props) {
             </div>
 
             <div className="flex items-center gap-2 text-center">
-                <h2 className="font-semibold text-lg text-slate-900">{conversation?.name}</h2>
+                <h2 className="font-semibold text-lg text-foreground">{conversation?.name}</h2>
                 {conversation?.type && (
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-7 w-7 rounded-lg"
+                                className="h-7 w-7 rounded-lg hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                 onClick={handleOnClick}
                             >
-                                <Pencil className="h-3.5 w-3.5 text-slate-400" />
+                                <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>Chỉnh sửa</TooltipContent>
@@ -190,7 +188,7 @@ export default function InfoNameAndThumbnail({ conversation = {} }: Props) {
             </div>
 
             {conversation?.type && conversation?.totalMembers && (
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-sm text-muted-foreground mt-1">
                     {conversation.totalMembers} thành viên
                 </p>
             )}

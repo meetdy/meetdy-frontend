@@ -22,17 +22,15 @@ export const fetchListMyRequestFriend = createAsyncThunk(
 
 export const fetchFriends = createAsyncThunk(
   `${KEY}/fetchFriends`,
-  async (params) => {
-    const { name } = params;
-    const data = await friendApi.getFriends(name);
+  async (params: { name: string }) => {
+    const data = await friendApi.getFriends(params);
     return data;
   },
 );
 export const fetchListGroup = createAsyncThunk(
   `${KEY}/fetchListGroup`,
-  async (param) => {
-    const { name, type } = param;
-    const data = await conversationApi.getListConversations(name, type);
+  async (param: { name: string; type: number }) => {
+    const data = await conversationApi.getListConversations(param);
     return data;
   },
 );

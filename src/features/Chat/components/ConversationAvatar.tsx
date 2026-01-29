@@ -1,12 +1,14 @@
 import { User } from 'lucide-react';
 import AvatarCustom from '@/components/avatar-custom';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+
 
 type Props = {
     avatar: any;
     dimension?: number;
     isGroupCard?: boolean;
     totalMembers: number;
-    type?: string;
+    type?: boolean;
     name?: string;
     isActived?: boolean;
     sizeAvatar?: number;
@@ -16,13 +18,13 @@ type Props = {
 
 export default function ConversationAvatar({
     avatar,
-    dimension = 28,
+    dimension = 24,
     totalMembers,
     type,
     name,
     isActived = false,
-    sizeAvatar = 48,
-    frameSize = 48,
+    sizeAvatar = 40,
+    frameSize = 40,
     avatarColor = '',
 }: Props) {
     const avatarList = Array.isArray(avatar) ? avatar : [];
@@ -30,9 +32,8 @@ export default function ConversationAvatar({
     const renderSingleAvatar = () => (
         <div className="relative inline-block">
             {isActived && (
-                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
+                <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-background"></span>
             )}
-
             <AvatarCustom
                 size={sizeAvatar}
                 src={avatar}
@@ -102,8 +103,8 @@ export default function ConversationAvatar({
                         <AvatarBubble avatar={avatarList[2]} size={dimension} />
                     </div>
 
-                    <div className="absolute right-0 bottom-0 bg-indigo-600 text-white text-xs w-7 h-7 flex items-center justify-center rounded-full border-2 border-white">
-                        +{totalMembers - 3}
+                    <div className="absolute right-0 bottom-0">
+                        <AvatarCustom size={dimension} name={`+ ${totalMembers - 3}`} />
                     </div>
                 </div>
             );
@@ -112,7 +113,7 @@ export default function ConversationAvatar({
         return null;
     };
 
-    const isGroup = type || totalMembers > 3;
+    const isGroup = !!type || totalMembers > 3;
 
     return (
         <div className="flex items-center justify-center">
@@ -128,12 +129,12 @@ function AvatarBubble({ avatar, size }: any) {
     return img ? (
         <img
             src={img}
-            className="rounded-full object-cover border border-white"
+            className="rounded-full object-cover border border-background"
             style={{ width: size, height: size }}
         />
     ) : (
         <div
-            className="flex items-center justify-center rounded-full text-white border border-white"
+            className="flex items-center justify-center rounded-full text-white border border-background"
             style={{ width: size, height: size, backgroundColor: bg }}
         >
             <User className="w-3 h-3" />

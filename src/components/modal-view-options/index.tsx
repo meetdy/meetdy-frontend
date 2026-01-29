@@ -231,7 +231,7 @@ export default function ModalViewOption({
         onClick={handleCancel}
       />
       <div
-        className={`relative w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden transform transition-all ${isModalVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+        className={`relative w-full max-w-2xl mx-auto bg-white rounded-lg overflow-hidden transform transition-all ${isModalVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
           }`}
         style={{ padding: '2rem 1rem', background: '#f4f5f7' }}
       >

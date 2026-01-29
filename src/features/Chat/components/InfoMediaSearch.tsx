@@ -2,12 +2,26 @@ import { useEffect, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';
 import { useSelector } from 'react-redux';
 import { ArrowLeft, Image, Video, FileText } from 'lucide-react';
-import mediaApi from '@/api/mediaApi';
+import MediaService from '@/api/mediaApi';
 import ContentTabPaneFile from './ContentTabPaneFile';
 import ContentTabPaneMedia from './ContentTabPaneMedia';
 import TabPaneMedia from './TabPaneMedia';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+
+
+const getTypeWithTabPane = (value: number) => {
+    if (value === 1) return 'IMAGE';
+    if (value === 2) return 'VIDEO';
+    if (value === 3) return 'FILE';
+    return 'IMAGE';
+};
+
+const getType = (key: string) => {
+    if (key === '2') return 'VIDEO';
+    if (key === '3') return 'FILE';
+    return 'IMAGE';
+};
 
 interface InfoMediaSearchProps {
     onBack?: (value?: any) => void;
@@ -21,16 +35,11 @@ function InfoMediaSearch({ onBack, tabpane }: InfoMediaSearchProps) {
     );
     const [medias, setMedias] = useState<any[]>([]);
 
-    const getTypeWithTabpane = (value: number) => {
-        if (value === 1) return 'IMAGE';
-        if (value === 2) return 'VIDEO';
-        if (value === 3) return 'FILE';
-        return 'IMAGE';
-    };
+
 
     const [query, setQuery] = useState<any>({
         conversationId: currentConversation,
-        type: getTypeWithTabpane(tabpane),
+        type: getTypeWithTabPane(tabpane),
     });
 
     const handleOnBack = (value?: any) => {
@@ -46,21 +55,17 @@ function InfoMediaSearch({ onBack, tabpane }: InfoMediaSearchProps) {
         setQuery({ ...query, ...queryResult });
     };
 
-    const getType = (key: string) => {
-        if (key === '2') return 'VIDEO';
-        if (key === '3') return 'FILE';
-        return 'IMAGE';
-    };
+
 
     useEffect(() => {
         const fetchMedia = async () => {
-            const mediasResult = await mediaApi.fetchAllMedia(
-                query.conversationId,
-                query.type,
-                query.senderId,
-                query.startTime,
-                query.endTime,
-            );
+            const mediasResult = await MediaService.getAllMedia({
+                conversationId: query.conversationId,
+                type: query.type,
+                senderId: query.senderId,
+                startTime: query.startTime,
+                endTime: query.endTime,
+            });
             setMedias(mediasResult);
         };
         fetchMedia();

@@ -168,9 +168,9 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
           }
         } else {
 
-          dispatch(getMembersConversation({ conversationId: tempId }));
-          dispatch(setTypeOfConversation(tempId));
-          dispatch(getLastViewOfMembers({ conversationId: tempId }));
+          dispatch(getMembersConversation({ conversationId: tempId }) as any);
+          dispatch(setTypeOfConversation(tempId) as any);
+          dispatch(getLastViewOfMembers({ conversationId: tempId }) as any);
         }
 
         navigate('/chat', {
@@ -299,7 +299,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
 
       socket.on('update-member', async (conversationId: string) => {
         if (conversationId === refCurrentConversation.current) {
-          await dispatch(getLastViewOfMembers({ conversationId }));
+          await dispatch(getLastViewOfMembers({ conversationId }) as any);
           const newMember = await conversationApi.getMemberInConversation(
             refCurrentConversation.current,
           );
@@ -325,7 +325,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
             dispatch(
               getLastViewOfMembers({
                 conversationId: refCurrentConversation.current,
-              }),
+              }) as any,
             );
           };
           await actionAfterDelete();
@@ -470,8 +470,8 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
     setTabActiveNews(1);
   };
 
-  const handleChangeActiveKey = (key: number) => {
-    setTabActiveNews(key);
+  const handleChangeActiveKey = (key: string) => {
+    setTabActiveNews(Number(key));
   };
 
   const handleOnReply = (mes: any) => {
@@ -507,9 +507,15 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
 
   const handleOnSubmitSearch = async () => {
     try {
-      const single = await conversationApi.getListConversations(valueInput, 1);
+      const single = await conversationApi.getListConversations({
+        name: valueInput,
+        type: 1,
+      });
       setSingleConverFilter(single);
-      const mutiple = await conversationApi.getListConversations(valueInput, 2);
+      const mutiple = await conversationApi.getListConversations({
+        name: valueInput,
+        type: 2,
+      });
       setMultiConverFilter(mutiple);
     } catch (error) { }
   };
@@ -531,22 +537,22 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
               onClick={() => setOpenDrawerInfo(false)}
             />
             <div
-              className="fixed top-0 right-0 h-full bg-white shadow-2xl z-50 transition-transform duration-300 ease-out"
+              className="fixed top-0 right-0 h-full bg-background z-50 transition-transform duration-300 ease-out"
               style={{
                 width: `${renderWidthDrawer(width)}%`,
                 transform: openDrawerInfo ? 'translateX(0)' : 'translateX(100%)',
               }}
             >
               <div className="h-full flex flex-col">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
-                  <h3 className="font-semibold text-slate-900">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background">
+                  <h3 className="font-semibold text-foreground">
                     {visibleNews ? 'Bảng tin nhóm' : 'Thông tin'}
                   </h3>
                   <button
                     onClick={() => setOpenDrawerInfo(false)}
-                    className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+                    className="p-2 rounded-lg hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
-                    <X className="w-5 h-5 text-slate-500" />
+                    <X className="w-5 h-5 text-muted-foreground" />
                   </button>
                 </div>
                 <div className="flex-1 overflow-auto">
@@ -574,7 +580,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
             className={`
               hidden lg:flex flex-col
               transition-all duration-300 ease-out
-              border-l border-slate-200/80 bg-white
+              border-l border-border bg-background
               ${isOpenInfo ? 'lg:w-80' : 'lg:w-0 lg:overflow-hidden lg:border-l-0'}
             `}
           >
@@ -602,9 +608,9 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/60">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/60 backdrop-blur-sm">
         <svg
-          className="w-10 h-10 animate-spin text-slate-700"
+          className="w-10 h-10 animate-spin text-foreground"
           viewBox="0 0 24 24"
           fill="none"
         >
@@ -642,8 +648,8 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
             ${currentConversation ? 'hidden sm:block' : 'block w-full'} 
             sm:w-72 lg:w-80`}
         >
-          <div className="h-full flex flex-col">
-            <div className="px-4 pt-4 pb-3">
+          <div className="h-full flex flex-col border-r border-border">
+            <div className="px-1 pt-2 pb-2">
               <SearchContainer
                 valueText={valueInput}
                 onSearchChange={handleOnSearchChange}
@@ -662,7 +668,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
                   />
                 </div>
               ) : (
-                <div className="px-2 h-full">
+                <div className="px-1 h-full">
                   <ConversationContainer valueClassify={valueClassify} />
                 </div>
               )}
@@ -671,8 +677,8 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
         </aside>
 
         {path === '/chat' && currentConversation ? (
-          <main className="flex-1 flex flex-col bg-white">
-            <header className="border-b border-slate-200/80 bg-white shadow-sm">
+          <main className="flex-1 flex flex-col bg-background">
+            <header>
               <HeaderChatContainer
                 onPopUpInfo={() => setIsOpenInfo(!isOpenInfo)}
                 onOpenDrawer={() => setOpenDrawerInfo(true)}
@@ -720,7 +726,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
 
               <button
                 id="back-top-button"
-                className={`absolute right-6 bottom-6 z-40 flex items-center justify-center rounded-full bg-white border border-slate-200 shadow-lg p-3 transition-all duration-200 hover:shadow-xl hover:scale-105 ${isShow
+                className={`absolute right-6 bottom-6 z-40 flex items-center justify-center rounded-full bg-background border border-border p-3 transition-all duration-200 hover:shadow-xl hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isShow
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-4 pointer-events-none'
                   }`}
@@ -732,17 +738,17 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
                     <span className="text-primary">
                       <ChevronsLeft className="w-4 h-4" />
                     </span>
-                    <span className="whitespace-nowrap text-slate-700">
+                    <span className="whitespace-nowrap text-foreground">
                       {hasMessage}
                     </span>
                   </div>
                 ) : (
-                  <ChevronDown className="w-5 h-5 text-slate-600" />
+                  <ChevronDown className="w-5 h-5 text-muted-foreground" />
                 )}
               </button>
 
               {usersTyping.length > 0 && !refCurrentChannel.current && (
-                <div className="absolute left-6 bottom-4 z-30 rounded-full bg-white/95 backdrop-blur-sm border border-slate-200 px-4 py-2 text-sm text-slate-600 shadow-md flex items-center gap-3">
+                <div className="absolute left-6 bottom-4 z-30 rounded-full bg-background/95 backdrop-blur-sm border border-border px-4 py-2 text-sm text-muted-foreground shadow-md flex items-center gap-3">
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
                     <span
@@ -765,7 +771,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
                     {usersTyping.length > 2
                       ? ` +${usersTyping.length - 2}`
                       : ''}
-                    <span className="text-slate-500 font-normal">
+                    <span className="text-muted-foreground font-normal">
                       {' '}
                       đang nhập...
                     </span>
@@ -773,7 +779,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
                 </div>
               )}
 
-              <footer className="border-t border-slate-200/80 bg-white px-4 py-3">
+              <footer className="border-t border-border bg-background px-4 py-3">
                 <FooterChatContainer
                   onScrollWhenSentText={handleScrollWhenSent}
                   socket={socket}
@@ -788,7 +794,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
             </section>
           </main>
         ) : (
-          <main className="flex-1 flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+          <main className="flex-1 flex items-center justify-center bg-gradient-to-br from-muted/40 via-background to-primary/5">
             <div className="p-8 max-w-lg text-center">
               <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10">
                 <svg
@@ -805,11 +811,11 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
                   />
                 </svg>
               </div>
-              <h2 className="text-2xl font-semibold text-slate-900 mb-3">
+              <h2 className="text-2xl font-semibold text-foreground mb-3">
                 Chào mừng đến với{' '}
                 <span className="text-primary font-bold">Meetdy</span>
               </h2>
-              <p className="text-sm text-slate-500 leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 Khám phá những tiện ích hỗ trợ làm việc và trò chuyện cùng người
                 thân, bạn bè được tối ưu hoá cho máy tính của bạn.
               </p>

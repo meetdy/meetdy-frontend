@@ -286,7 +286,7 @@ export default function Friend() {
       </aside>
 
       <main className="flex-1 hidden sm:flex flex-col bg-white">
-        <header className="border-b border-slate-200/80 bg-white shadow-sm">
+        <header className="border-b border-slate-200/80 bg-white">
           <HeaderFriend subtab={activeTab} />
         </header>
 

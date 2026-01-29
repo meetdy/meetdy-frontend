@@ -108,7 +108,7 @@ export const conversationHandlers = (
       if (conversation?.leaderId === user?._id) {
         dispatch(
           setConversationInfo(
-            'common.groupConversationDeleted' + `${conversation.name}`,
+            'common.groupConversationDeleted' + conversation.name,
           ),
         );
       }
@@ -138,9 +138,7 @@ export const conversationHandlers = (
       );
       if (!conversation) return;
       dispatch(
-        setConversationInfo(
-          'common.removedFromTheGroup' + `${conversation.name}`,
-        ),
+        setConversationInfo('common.removedFromTheGroup' + conversation.name),
       );
       if (conversationId === currentConversation) {
         dispatch(setCurrentConversation(''));

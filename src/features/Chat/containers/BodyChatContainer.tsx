@@ -1,18 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  setRaisePage,
-} from '../../../../app/chatSlice';
 import { useInfiniteListMessages } from '@/hooks/message/useInfiniteListMessages';
 import { useGetLastViewOfMembers } from '@/hooks/conversation/useGetLastViewOfMembers';
 import { useGetLastViewChannel } from '@/hooks/channel/useGetLastViewChannel';
-import { useGetMessageInChannel } from '@/hooks/channel/useGetMessageInChannel'; // Add check if used? No, I use useInfiniteListMessages for channels too.
-import DividerCustom from '@/features/Chat/components/DividerCustom';
+import { useGetMessageInChannel } from '@/hooks/channel/useGetMessageInChannel';
 import ModalShareMessage from '@/features/Chat/components/ModalShareMessage';
 import UserMessage from '@/features/Chat/components/UserMessage';
 import type { RootState, AppDispatch } from '@/redux/store';
 import type { Scrollbars as ScrollbarsType } from 'react-custom-scrollbars-2';
+import DividerCustom from '../components/DividerCustom';
 
 type Props = {
   scrollId?: string;
@@ -81,25 +78,6 @@ export default function BodyChatContainer({
       onResetScrollButton?.(false);
     }
   }, [turnOnScrollButton, onResetScrollButton]);
-
-  useEffect(() => {
-    async function fetchNextListMessage() {
-      if (hasNextPage && !isFetchingNextPage) {
-
-        await fetchNextPage();
-
-        const sb = scrollbars.current;
-        if (sb && previousHeight.current !== null) {
-          // @ts-ignore methods from react-custom-scrollbars-2
-          sb.scrollTop(sb.getScrollHeight() - previousHeight.current);
-        }
-      }
-    }
-    // Logic to fetch next page moved to scroll handler, but keeping this if manual trigger needed
-  }, [dispatch]); // Removed paging deps as hook handles it
-
-  // Scroll handler triggers fetchNextPage
-  /* The original logic triggered fetch when scrollTop === 0. We'll adapt handleOnScrolling. */
 
   useEffect(() => {
     if (
@@ -223,12 +201,6 @@ export default function BodyChatContainer({
       previousHeight.current = scrollHeight;
       fetchNextPage();
     }
-
-    // if (top < 0.85) {
-    //   onBackToBottom?.(true);
-    // } else {
-    //   onBackToBottom?.(false);
-    // }
   };
 
   const handleOnStop = (_value: any) => {
@@ -266,37 +238,43 @@ export default function BodyChatContainer({
       onStop={handleOnStop}
       className="h-full"
     >
-      <div>
-        {isFetchingNextPage && (
-          <div className="flex items-center justify-center py-4">
-            <svg
-              className="w-8 h-8 animate-spin text-slate-700"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-              />
-            </svg>
+      <div className="min-h-full bg-background">
+        <div className="mx-auto w-full max-w-4xl px-6 py-5">
+          {isFetchingNextPage && (
+            <div className="flex items-center justify-center py-4">
+              <svg
+                className="w-8 h-8 animate-spin text-primary"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                />
+              </svg>
+            </div>
+          )}
+
+          <div className="space-y-3">
+            {renderMessages(messages)}
           </div>
-        )}
+
+          <ModalShareMessage
+            visible={visibleModalShare}
+            onCancel={() => setVisibleModalShare(false)}
+            idMessage={idMessageShare}
+          />
+        </div>
       </div>
-      {renderMessages(messages)}
-      <ModalShareMessage
-        visible={visibleModalShare}
-        onCancel={() => setVisibleModalShare(false)}
-        idMessage={idMessageShare}
-      />
     </Scrollbars>
   );
 }
