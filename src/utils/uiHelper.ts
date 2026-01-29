@@ -1,3 +1,5 @@
+import { COLORS } from "./constants";
+
 export const getSummaryName = (name: string) => {
   if (name) {
     let tempName = name.split(' ');
@@ -32,3 +34,8 @@ export function calculateResponsiveDrawer(width: number) {
     return 80;
   }
 }
+
+export const randomColor = () => {
+  const randomIndex = Math.trunc(Math.random() * COLORS.length);
+  return COLORS[randomIndex];
+};

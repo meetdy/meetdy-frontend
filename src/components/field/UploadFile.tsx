@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'sonner';
 import messageApi from '@/api/messageApi';
-import { ACCEPT_FILE } from '@/utils';
+import { ACCEPT_FILE } from '@/utils/constants';
 
 interface UploadFileProps {
   typeOfFile?: 'file' | 'media';

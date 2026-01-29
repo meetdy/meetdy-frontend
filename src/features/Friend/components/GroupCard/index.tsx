@@ -20,10 +20,10 @@ import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
 import {
   setCurrentConversation,
 } from '@/app/chatSlice';
-import classifyUtils from '@/utils/classifyUtils';
 
 import SubMenuClassify from '@/components/sub-menu-classify';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
+import { getClassifyOfObject } from '@/utils';
 
 interface GroupCardProps {
   data: any;
@@ -40,7 +40,7 @@ export default function GroupCard({ data, onRemove }: GroupCardProps) {
 
   useEffect(() => {
     if (classifies.length > 0) {
-      setClassify(classifyUtils.getClassifyOfObject(data._id, classifies));
+      setClassify(getClassifyOfObject(data._id, classifies));
     }
   }, [classifies]);
 

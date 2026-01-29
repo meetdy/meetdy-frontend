@@ -2,10 +2,10 @@ import React, { useMemo } from "react"
 import { useSelector, shallowEqual } from "react-redux"
 import { Tag } from "lucide-react"
 
-import classifyUtils from "@/utils/classifyUtils"
 import ConversationAvatar from "./ConversationAvatar"
 import ShortMessage from "./ShortMessage"
 import { cn } from "@/lib/utils"
+import { getClassifyOfObject } from "@/utils"
 
 type Props = {
     conversation: any
@@ -37,7 +37,7 @@ const ConversationSingle = React.memo(({ conversation, onClick }: Props) => {
 
     const classify = useMemo(() => {
         if (!classifies) return null
-        return classifyUtils.getClassifyOfObject(_id, classifies)
+        return getClassifyOfObject(_id, classifies)
     }, [_id, classifies])
 
     return (

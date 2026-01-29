@@ -3,7 +3,7 @@ const HOURSE_MILISECONDS = 3600000;
 const MINUTE_MILISECONDS = 60000;
 
 const dateUtils = {
-  toTime: (dateString) => {
+  toTime: (dateString: string) => {
     const date = new Date(dateString);
 
     const nowTempt = new Date();
@@ -14,11 +14,11 @@ const dateUtils = {
 
     const dateWasMinus7day = nowTempt.setDate(nowTempt.getDate() - 7);
 
-    if (date < dateWasMinus7day)
+    if (date.getTime() < dateWasMinus7day)
       return `0${date.getDate()}/${date.getMonth() + 1}`.slice(-2);
 
     const now = new Date();
-    const numberMiliseconds = now - date;
+    const numberMiliseconds = now.getTime() - date.getTime();
 
     // tính ngày
     const day = Math.floor(numberMiliseconds / DAY_MILISECONDS);

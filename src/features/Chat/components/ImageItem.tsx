@@ -1,4 +1,4 @@
-import { FALLBACK as IMAGE_FALLBACK } from '@/utils';
+import { FALLBACK as IMAGE_FALLBACK } from '@/utils/constants';
 
 interface ImageItemProps {
     url?: string;

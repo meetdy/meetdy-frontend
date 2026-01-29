@@ -1,5 +1,5 @@
 const fileHelpers = {
-  getFileName: (url) => {
+  getFileName: (url: string) => {
     const splitArrayTempt = url.split('/');
     const splitArrayName = splitArrayTempt[3].split('-');
     if (splitArrayName.length === 3) {
@@ -7,17 +7,28 @@ const fileHelpers = {
     } else {
       let temp = '';
       for (let index = 2; index < splitArrayName.length; index++) {
-        temp = temp.concat(splitArrayName[index]);
+        temp = temp.concat(splitArrayName[index]);  
       }
 
       return temp;
     }
   },
-  getFileExtension: (fileName) => {
+
+  getFileExtension: (fileName: string) => {
     const splitArrayTempt = fileName.split('.');
     return splitArrayTempt[splitArrayTempt.length - 1];
   },
-  convertDateStringsToServerDateObject: (dateStrings) => {
+
+  getBase64: (file: File) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  },
+
+  convertDateStringsToServerDateObject: (dateStrings: string[]) => {
     const startTime = dateStrings[0];
     const endTime = dateStrings[1];
 
