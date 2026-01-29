@@ -61,7 +61,7 @@ export default function BodyChatContainer({
     enabled: !!currentConversation,
   });
 
-  const messages = data?.pages.flatMap((page) => page.data).reverse() || [];
+  const messages = data?.pages.flatMap((page) => page.data) || [];
 
   const handleOpenModalShare = (_id: string) => {
     setVisibleModalShare(true);

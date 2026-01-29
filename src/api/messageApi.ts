@@ -25,7 +25,8 @@ const ServiceMessages = {
     size?: number,
   ): Promise<IMessage> => {
     const url = `${PATH}/${conversationId}`;
-    const response = await get<IMessage>(url, { params: { page, size } });
+    const params = { page, size };
+    const response = await get<IMessage>(url, params);
     return response.data;
   },
 
