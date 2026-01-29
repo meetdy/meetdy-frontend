@@ -86,7 +86,7 @@ export default function SearchContainer({
           <Input
             value={valueText}
             onChange={handleSearchChange}
-            placeholder="Tìm kiếm cuộc trò chuyện"
+            placeholder="Tìm kiếm..."
             className="
               h-9 pl-9 rounded-md
               bg-muted/50 border-border
