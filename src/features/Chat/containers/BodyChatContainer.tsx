@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  setRaisePage,
-} from '../../../app/chatSlice';
 import { useInfiniteListMessages } from '@/hooks/message/useInfiniteListMessages';
 import { useGetLastViewOfMembers } from '@/hooks/conversation/useGetLastViewOfMembers';
 import { useGetLastViewChannel } from '@/hooks/channel/useGetLastViewChannel';
@@ -81,25 +78,6 @@ export default function BodyChatContainer({
       onResetScrollButton?.(false);
     }
   }, [turnOnScrollButton, onResetScrollButton]);
-
-  useEffect(() => {
-    async function fetchNextListMessage() {
-      if (hasNextPage && !isFetchingNextPage) {
-
-        await fetchNextPage();
-
-        const sb = scrollbars.current;
-        if (sb && previousHeight.current !== null) {
-          // @ts-ignore methods from react-custom-scrollbars-2
-          sb.scrollTop(sb.getScrollHeight() - previousHeight.current);
-        }
-      }
-    }
-    // Logic to fetch next page moved to scroll handler, but keeping this if manual trigger needed
-  }, [dispatch]); // Removed paging deps as hook handles it
-
-  // Scroll handler triggers fetchNextPage
-  /* The original logic triggered fetch when scrollTop === 0. We'll adapt handleOnScrolling. */
 
   useEffect(() => {
     if (
@@ -223,12 +201,6 @@ export default function BodyChatContainer({
       previousHeight.current = scrollHeight;
       fetchNextPage();
     }
-
-    // if (top < 0.85) {
-    //   onBackToBottom?.(true);
-    // } else {
-    //   onBackToBottom?.(false);
-    // }
   };
 
   const handleOnStop = (_value: any) => {

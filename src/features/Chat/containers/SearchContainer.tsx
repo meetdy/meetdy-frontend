@@ -1,32 +1,29 @@
-import { useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Search, UserPlus, Users, Plus } from 'lucide-react';
+import { useRef, useState } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { Search, UserPlus, Users, Plus } from 'lucide-react'
 
-import userApi from '@/api/userApi';
-import ModalClassify from '../components/ModalClassify';
-import ModalAddFriend from '@/components/modal-add-friend';
-import UserCard from '@/components/user-card';
-import ModalCreateGroup from '../components/ModalCreateGroup';
-import { createGroup } from '@/app/chatSlice';
+import userApi from '@/api/userApi'
+import { createGroup } from '@/app/chatSlice'
 
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import ModalClassify from '../components/ModalClassify'
+import ModalAddFriend from '@/components/modal-add-friend'
+import ModalCreateGroup from '../components/ModalCreateGroup'
+import UserCard from '@/components/user-card'
+
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 
 type Props = {
-  valueText: string;
-  onSearchChange: (text: string) => void;
-  onSubmitSearch: () => void;
-  isFriendPage?: boolean;
-  onFilterClasify?: (value: string) => void;
-  valueClassify?: string;
-};
+  valueText: string
+  onSearchChange: (text: string) => void
+  onSubmitSearch: () => void
+  isFriendPage?: boolean
+  onFilterClasify?: (value: string) => void
+  valueClassify?: string
+}
 
 export default function SearchContainer({
   valueText,
@@ -36,176 +33,179 @@ export default function SearchContainer({
   onFilterClasify,
   valueClassify,
 }: Props) {
-  const refDebounce = useRef<any>(null);
-  const dispatch = useDispatch();
-  const { classifies } = useSelector((state: any) => state.chat);
+  const dispatch = useDispatch()
+  const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
-  const [isModalCreateGroup, setIsModalCreateGroup] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [isShowModalAddFriend, setShowModalAddFriend] = useState(false);
-  const [userIsFind, setUserIsFind] = useState<any>({});
-  const [visibleUserCard, setVisibleUserCard] = useState(false);
-  const [isModalClassify, setIsModalClassify] = useState(false);
+  const { classifies } = useSelector(
+    (state: any) => ({ classifies: state.chat.classifies }),
+    shallowEqual
+  )
 
-  const handleOnChangeClassify = (value: string) => {
-    onFilterClasify?.(value);
-  };
+  const [modal, setModal] = useState({
+    createGroup: false,
+    addFriend: false,
+    classify: false,
+  })
 
-  const handleCreateGroup = () => setIsModalCreateGroup(true);
-  const handleCancelCreateGroup = () => setIsModalCreateGroup(false);
-  const handleOkCreateGroup = (value: any) => {
-    setConfirmLoading(true);
-    dispatch(createGroup(value) as any);
-    setConfirmLoading(false);
-    setIsModalCreateGroup(false);
-  };
+  const [loadingCreateGroup, setLoadingCreateGroup] = useState(false)
+  const [foundUser, setFoundUser] = useState<any>({})
+  const [showUserCard, setShowUserCard] = useState(false)
 
-  const handleOpenModalAddFriend = () => setShowModalAddFriend(true);
-  const handleCancelAddFriend = () => setShowModalAddFriend(false);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    onSearchChange(value)
 
-  const handFindUser = async (value: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(onSubmitSearch, 400)
+  }
+
+  const handleFindUser = async (value: string) => {
     try {
-      const user = await userApi.getUser(value);
-      setUserIsFind(user);
-      setVisibleUserCard(true);
-      setShowModalAddFriend(false);
-    } catch (error) {
-      toast.error('Không tìm thấy người dùng');
+      const user = await userApi.getUser(value)
+      setFoundUser(user)
+      setShowUserCard(true)
+      setModal((m) => ({ ...m, addFriend: false }))
+    } catch {
+      toast.error('Không tìm thấy người dùng')
     }
-  };
+  }
 
-  const handleInputChange = (e: any) => {
-    const value = e.target.value;
-    onSearchChange?.(value);
-
-    if (refDebounce.current) clearTimeout(refDebounce.current);
-
-    refDebounce.current = setTimeout(() => {
-      onSubmitSearch?.();
-    }, 400);
-  };
-
-  const handleOpenModalClassify = () => setIsModalClassify(true);
-  const handleCancelModalClassify = () => setIsModalClassify(false);
+  const handleCreateGroup = async (payload: any) => {
+    setLoadingCreateGroup(true)
+    await dispatch(createGroup(payload) as any)
+    setLoadingCreateGroup(false)
+    setModal((m) => ({ ...m, createGroup: false }))
+  }
 
   return (
-    <div className="w-full space-y-3">
+    <div className="w-full space-y-3 border-b border-border">
+      {/* Search + Actions */}
       <div className="flex items-center gap-2">
-        <div className="flex-1 relative">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Tìm kiếm cuộc trò chuyện..."
-            className="pl-9 h-10 rounded-xl border-input bg-muted/40 focus:bg-background transition-colors"
             value={valueText}
-            onChange={handleInputChange}
+            onChange={handleSearchChange}
+            placeholder="Tìm kiếm cuộc trò chuyện"
+            className="
+              h-9 pl-9 rounded-md
+              bg-muted/50 border-border
+              focus:bg-background
+            "
           />
         </div>
 
         <Button
           variant="ghost"
           size="icon"
-          onClick={handleOpenModalAddFriend}
-          aria-label="Thêm bạn"
-          className="h-10 w-10 rounded-xl hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          onClick={() => setModal((m) => ({ ...m, addFriend: true }))}
+          className="h-9 w-9 rounded-md hover:bg-muted"
         >
-          <UserPlus className="w-5 h-5 text-muted-foreground" />
+          <UserPlus className="w-4 h-4 text-muted-foreground" />
         </Button>
 
         <Button
           variant="ghost"
           size="icon"
-          onClick={handleCreateGroup}
-          aria-label="Tạo nhóm"
-          className="h-10 w-10 rounded-xl hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          onClick={() => setModal((m) => ({ ...m, createGroup: true }))}
+          className="h-9 w-9 rounded-md hover:bg-muted"
         >
-          <Users className="w-5 h-5 text-muted-foreground" />
+          <Users className="w-4 h-4 text-muted-foreground" />
         </Button>
       </div>
 
-      {!isFriendPage && valueText.trim().length === 0 && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
-          {/* All */}
-          <Button
-            onClick={() => handleOnChangeClassify('0')}
-            variant={
-              valueClassify === '0' || !valueClassify ? 'default' : 'secondary'
-            }
-            size="sm"
-            className={cn(
-              'flex-shrink-0 rounded-full px-3',
-              valueClassify === '0' || !valueClassify
-                ? ''
-                : 'bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground',
-            )}
+      {/* Classify Filter */}
+      {!isFriendPage && !valueText && (
+        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide pb-1">
+          <FilterButton
+            active={!valueClassify || valueClassify === '0'}
+            onClick={() => onFilterClasify?.('0')}
           >
             Tất cả
-          </Button>
+          </FilterButton>
 
-          {classifies?.map((ele: any) => (
-            <Button
-              key={ele._id}
-              onClick={() => handleOnChangeClassify(ele._id)}
-              variant={valueClassify === ele._id ? 'default' : 'secondary'}
-              size="sm"
-              className={cn(
-                'flex-shrink-0 rounded-full px-3 flex items-center gap-1.5',
-                valueClassify === ele._id
-                  ? ''
-                  : 'bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground',
-              )}
+          {classifies?.map((item: any) => (
+            <FilterButton
+              key={item._id}
+              active={valueClassify === item._id}
+              onClick={() => onFilterClasify?.(item._id)}
             >
-              {ele.color?.code && (
+              {item.color?.code && (
                 <span
                   className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: ele.color.code }}
+                  style={{ backgroundColor: item.color.code }}
                 />
               )}
-              {ele.name}
-            </Button>
+              {item.name}
+            </FilterButton>
           ))}
 
-          {/* Add */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                onClick={handleOpenModalClassify}
-                variant="secondary"
                 size="icon"
-                className="flex-shrink-0 w-8 h-8 rounded-full bg-muted hover:bg-muted/80"
+                variant="ghost"
+                onClick={() => setModal((m) => ({ ...m, classify: true }))}
+                className="h-8 w-8 rounded-md hover:bg-muted"
               >
                 <Plus className="w-4 h-4 text-muted-foreground" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">Quản lý phân loại</TooltipContent>
+            <TooltipContent>Quản lý phân loại</TooltipContent>
           </Tooltip>
         </div>
       )}
 
+      {/* Modals */}
       <ModalCreateGroup
-        isVisible={isModalCreateGroup}
-        onCancel={handleCancelCreateGroup}
-        onOk={handleOkCreateGroup}
-        loading={confirmLoading}
+        isVisible={modal.createGroup}
+        onCancel={() => setModal((m) => ({ ...m, createGroup: false }))}
+        onOk={handleCreateGroup}
+        loading={loadingCreateGroup}
       />
 
       <ModalAddFriend
-        isVisible={isShowModalAddFriend}
-        onCancel={handleCancelAddFriend}
-        onSearch={handFindUser}
-        onEnter={handFindUser}
+        isVisible={modal.addFriend}
+        onCancel={() => setModal((m) => ({ ...m, addFriend: false }))}
+        onSearch={handleFindUser}
+        onEnter={handleFindUser}
       />
 
       <ModalClassify
-        isVisible={isModalClassify}
-        onCancel={handleCancelModalClassify}
-        onOpen={handleOpenModalClassify}
+        isVisible={modal.classify}
+        onCancel={() => setModal((m) => ({ ...m, classify: false }))}
+        onOpen={() => setModal((m) => ({ ...m, classify: true }))}
       />
 
       <UserCard
-        user={userIsFind}
-        isVisible={visibleUserCard}
-        onCancel={() => setVisibleUserCard(false)}
+        user={foundUser}
+        isVisible={showUserCard}
+        onCancel={() => setShowUserCard(false)}
       />
     </div>
-  );
+  )
+}
+
+function FilterButton({
+  active,
+  children,
+  onClick,
+}: {
+  active?: boolean
+  children: React.ReactNode
+  onClick: () => void
+}) {
+  return (
+    <Button
+      onClick={onClick}
+      size="sm"
+      variant="ghost"
+      className={cn(
+        'h-8 px-3 rounded-md flex items-center gap-1.5 bg-muted cursor-pointer',
+        active ? 'bg-primary/30 text-primary' : 'bg-muted'
+      )}
+    >
+      {children}
+    </Button>
+  )
 }

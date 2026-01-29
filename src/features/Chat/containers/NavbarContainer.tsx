@@ -81,7 +81,7 @@ export default function NavbarContainer() {
 
     return (
         <>
-            <div className="h-full w-full flex flex-col bg-card">
+            <div className="h-full w-full flex flex-col bg-card border-r border-border">
                 <div className="p-3 flex justify-center">
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center">
                         <MessageSquare className="h-5 w-5 text-primary" />

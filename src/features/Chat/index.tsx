@@ -648,8 +648,8 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
             ${currentConversation ? 'hidden sm:block' : 'block w-full'} 
             sm:w-72 lg:w-80`}
         >
-          <div className="h-full flex flex-col">
-            <div className="px-4 pt-4 pb-3">
+          <div className="h-full flex flex-col border-r border-border">
+            <div className="px-1 pt-2 pb-2">
               <SearchContainer
                 valueText={valueInput}
                 onSearchChange={handleOnSearchChange}
@@ -668,7 +668,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
                   />
                 </div>
               ) : (
-                <div className="px-2 h-full">
+                <div className="px-1 h-full">
                   <ConversationContainer valueClassify={valueClassify} />
                 </div>
               )}

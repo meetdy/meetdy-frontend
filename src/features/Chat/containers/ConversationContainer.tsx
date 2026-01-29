@@ -69,11 +69,6 @@ const ConversationItem = React.memo(
                 <ContextMenuTrigger asChild>
                     <li
                         className={`${numberUnread === 0 ? '' : 'arrived-message'} py-0.5`}
-                        onContextMenu={(e) => {
-                            // Prevent default is handled by ContextMenuTrigger, but we might want to ensure
-                            // any custom logic doesn't interfere.
-                            // e.preventDefault();
-                        }}
                     >
                         <ConversationSingle
                             conversation={conversation}
@@ -82,7 +77,6 @@ const ConversationItem = React.memo(
                     </li>
                 </ContextMenuTrigger>
                 <ContextMenuContent className="w-64">
-                    {/* Classify Submenu */}
                     <ContextMenuSub>
                         <ContextMenuSubTrigger>
                             <Tag className="w-4 h-4 mr-2" />
@@ -116,11 +110,9 @@ const ConversationItem = React.memo(
 
 ConversationItem.displayName = 'ConversationItem';
 
-type Props = {
+function ConversationContainer({ valueClassify }: {
     valueClassify: string;
-};
-
-export default function ConversationContainer({ valueClassify }: Props) {
+}) {
     const dispatch = useDispatch<AppDispatch>();
     const { conversations } = useGetListConversations({ params: {} });
     const { classifies } = useGetListClassify();
@@ -200,7 +192,7 @@ export default function ConversationContainer({ valueClassify }: Props) {
                     </div>
                 </div>
             ) : (
-                <div style={{ height: '100%', width: '100%' }}>
+                <div className='w-full h-full'>
                     <Virtuoso
                         style={{ height: '100%' }}
                         data={converFilter}
@@ -246,3 +238,6 @@ export default function ConversationContainer({ valueClassify }: Props) {
         </div>
     );
 }
+
+export default React.memo(ConversationContainer);
+
