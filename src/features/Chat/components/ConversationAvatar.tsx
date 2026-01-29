@@ -1,5 +1,7 @@
 import { User } from 'lucide-react';
 import AvatarCustom from '@/components/avatar-custom';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+
 
 type Props = {
     avatar: any;
@@ -16,13 +18,13 @@ type Props = {
 
 export default function ConversationAvatar({
     avatar,
-    dimension = 28,
+    dimension = 24,
     totalMembers,
     type,
     name,
     isActived = false,
-    sizeAvatar = 48,
-    frameSize = 48,
+    sizeAvatar = 40,
+    frameSize = 40,
     avatarColor = '',
 }: Props) {
     const avatarList = Array.isArray(avatar) ? avatar : [];
@@ -32,7 +34,6 @@ export default function ConversationAvatar({
             {isActived && (
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-background"></span>
             )}
-
             <AvatarCustom
                 size={sizeAvatar}
                 src={avatar}
@@ -102,8 +103,8 @@ export default function ConversationAvatar({
                         <AvatarBubble avatar={avatarList[2]} size={dimension} />
                     </div>
 
-                    <div className="absolute right-0 bottom-0 bg-primary text-primary-foreground text-xs w-7 h-7 flex items-center justify-center rounded-full border-2 border-background">
-                        +{totalMembers - 3}
+                    <div className="absolute right-0 bottom-0">
+                        <AvatarCustom size={dimension} name={`+ ${totalMembers - 3}`} />
                     </div>
                 </div>
             );

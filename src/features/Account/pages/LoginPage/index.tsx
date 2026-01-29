@@ -128,7 +128,7 @@ function LoginPage() {
 
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30"
+                  className="w-full h-12 text-base font-semibold"
                 >
                   Đăng nhập
                 </Button>

@@ -212,7 +212,7 @@ function ForgotPage() {
 
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-semibold bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-500/25"
+                  className="w-full h-12 text-base font-semibold bg-orange-500 hover:bg-orange-600"
                 >
                   {isSubmit ? 'Đặt lại mật khẩu' : 'Gửi mã xác thực'}
                 </Button>

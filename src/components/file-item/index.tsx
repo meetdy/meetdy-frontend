@@ -11,7 +11,7 @@ function FileItem({ file }: { file: { content: string } }) {
   const fileExtension = fileHelpers.getFileExtension(fileName);
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border bg-card px-3 py-2 shadow-sm hover:shadow transition w-full max-w-md">
+    <div className="flex items-center justify-between gap-3 rounded-lg border bg-card px-3 py-2 transition w-full max-w-md">
       <div className="flex items-center gap-3 flex-1 min-w-0">
         <div className="shrink-0 rounded-md border bg-muted/60 p-2 w-10 h-10 flex items-center justify-center">
           <FileIcon

@@ -75,7 +75,7 @@ const ServiceMessages = {
   },
 
   dropReaction: async (idMessage: string, type: string): Promise<void> => {
-    const url = `${PATH}/${idMessage}/reacts/${type}`;
+    const url = `${PATH}/${idMessage}/reacts/${encodeURIComponent(type)}`;
     const response = await post<void>(url);
     return response.data;
   },

@@ -192,11 +192,15 @@ function UserMessage({
     }, [reacts]);
 
     const transferIcon = (reactionType: string | number) => {
-        const idx = Number.parseInt(String(reactionType), 10) - 1;
-        return listReaction[idx] ?? '';
+        const parsed = Number.parseInt(String(reactionType), 10);
+        if (!Number.isNaN(parsed)) {
+            const idx = parsed - 1;
+            return listReaction[idx] ?? String(reactionType);
+        }
+        return String(reactionType);
     };
 
-    const sendReaction = async (reactionType: number) => {
+    const sendReaction = async (reactionType: string | number) => {
         await messageApi.dropReaction(_id, String(reactionType));
     };
 
@@ -205,10 +209,14 @@ function UserMessage({
     };
 
     const handleClickReaction = (value: string) => {
-        const reactionType =
-            listReaction.findIndex((element) => element === value) + 1;
-        if (reactionType <= 0) return;
-        void sendReaction(reactionType);
+        const legacyIdx = listReaction.findIndex((element) => element === value);
+        if (legacyIdx >= 0) {
+            void sendReaction(legacyIdx + 1);
+            return;
+        }
+
+        if (!value) return;
+        void sendReaction(value);
     };
 
     const handleOnCloseModal = () => {
@@ -298,7 +306,7 @@ function UserMessage({
             >
                 <div
                     className={cn(
-                        'flex items-end gap-2',
+                        'flex items-end gap-3',
                         isMyMessage && 'flex-row-reverse',
                     )}
                 >
@@ -322,15 +330,15 @@ function UserMessage({
                             >
                                 <div
                                     className={cn(
-                                        'relative min-w-0 max-w-[75%]',
-                                        isMediaMessage ? 'rounded-lg' : 'rounded-lg',
+                                        'relative min-w-0 max-w-[72%]',
+                                        isMediaMessage ? 'rounded-2xl' : 'rounded-2xl',
                                         isMyMessage &&
                                         !isMediaMessage &&
-                                        'bg-primary text-primary-foreground border border-primary/20',
+                                        'bg-blue-100 text-foreground border border-transparent',
                                         !isMyMessage &&
                                         !isMediaMessage &&
-                                        'bg-white text-slate-900 border border-slate-200',
-                                        isMediaMessage ? 'bg-transparent' : 'px-3 py-2',
+                                        'bg-muted/50 text-foreground border border-transparent',
+                                        isMediaMessage ? 'bg-transparent' : 'px-4 py-2.5',
                                     )}
                                 >
                                     <span className="sr-only">{name}</span>
@@ -452,7 +460,7 @@ function UserMessage({
                                         {myReact && !isDeleted ? (
                                             <div
                                                 className={cn(
-                                                    'pointer-events-auto inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-1',
+                                                    'pointer-events-auto inline-flex items-center gap-1 rounded-xl border border-border bg-popover px-2 py-1',
                                                 )}
                                             >
                                                 <span className="text-sm leading-none">
@@ -481,30 +489,30 @@ function UserMessage({
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-7 w-7 rounded-md hover:bg-slate-100"
+                                        className="h-7 w-7 rounded-lg hover:bg-accent"
                                         onClick={handleReplyMessage}
                                     >
-                                        <Reply className="h-3.5 w-3.5 text-slate-500" />
+                                        <Reply className="h-3.5 w-3.5 text-muted-foreground" />
                                     </Button>
 
                                     <Button
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-7 w-7 rounded-md hover:bg-slate-100"
+                                        className="h-7 w-7 rounded-lg hover:bg-accent"
                                         onClick={handleOpenModalShare}
                                     >
-                                        <ReplyAll className="h-3.5 w-3.5 text-slate-500" />
+                                        <ReplyAll className="h-3.5 w-3.5 text-muted-foreground" />
                                     </Button>
 
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <button
                                                 type="button"
-                                                className="h-7 w-7 rounded-md hover:bg-slate-100"
+                                                className="h-7 w-7 rounded-lg hover:bg-accent"
                                                 aria-label="More actions"
                                             >
-                                                <MoreHorizontal className="h-3.5 w-3.5 text-slate-500" />
+                                                <MoreHorizontal className="h-3.5 w-3.5 text-muted-foreground" />
                                             </button>
                                         </DropdownMenuTrigger>
 

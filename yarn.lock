@@ -7263,6 +7263,11 @@ fresh@^2.0.0:
   resolved "https://registry.npmjs.org/fresh/-/fresh-2.0.0.tgz"
   integrity sha512-Rx/WycZ60HOaqLKAi6cHRKKI7zxWbJ31MhntmtwMoaTeF7XFH9hhBp8vITaMidfljRQ6eYWCKkaTK+ykVJHP2A==
 
+frimousse@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/frimousse/-/frimousse-0.3.0.tgz#bd8c5dab5e90fc4ba13f1c379211e433e7195717"
+  integrity sha512-kO6LMoKY/cLAYEhXXtqLRaLIE6L/DagpFPrUZaLv3LsUa1/8Iza3HhwZcgN8eZ+weXnhv69eoclNUPohcCa/IQ==
+
 fs-extra@^10.0.0:
   version "10.1.0"
   resolved "https://registry.npmjs.org/fs-extra/-/fs-extra-10.1.0.tgz"
@@ -9307,10 +9312,10 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-lucide-react@^0.554.0:
-  version "0.554.0"
-  resolved "https://registry.npmjs.org/lucide-react/-/lucide-react-0.554.0.tgz"
-  integrity sha512-St+z29uthEJVx0Is7ellNkgTEhaeSoA42I7JjOCBCrc5X6LYMGSv0P/2uS5HDLTExP5tpiqRD2PyUEOS6s9UXA==
+lucide-react@^0.562.0:
+  version "0.562.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.562.0.tgz#217796c2f57624f012b484ea7f08505067c90d51"
+  integrity sha512-82hOAu7y0dbVuFfmO4bYF1XEwYk/mEbM5E+b1jgci/udUBEE/R7LF5Ip0CCEmXe8AybRM8L+04eP+LGZeDvkiw==
 
 magic-string@^0.25.0, magic-string@^0.25.7:
   version "0.25.9"
