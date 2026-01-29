@@ -31,7 +31,7 @@ import { useGetListConversations } from '@/hooks/conversation/useGetListConversa
 import { useGetContacts } from '@/hooks/contacts/useGetContacts';
 import { useGetSuggestFriend } from '@/hooks/friend/useGetSuggestFriend';
 
-import { getValueFromKey } from '@/constants/filterFriend';
+import { getValueFromKey } from '@/utils/friendUtils';
 import { sortGroup } from '@/utils/groupUtils';
 import { Filter, Menu, PhoneOutgoing, UserCheck, Users } from 'lucide-react';
 

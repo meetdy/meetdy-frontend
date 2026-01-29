@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import AdminProtectedRoute from '@/routes/AdminProtected';
@@ -13,25 +11,17 @@ import Admin from '@/features/Admin';
 
 import ChatLayout from '@/features';
 
-import { fetchUserProfile } from '@/hooks/me/useGetProfile';
+import { useGetProfile } from '@/hooks/me/useGetProfile';
 
 function App() {
-  const { user } = useSelector((state: any) => state.global);
+  const token = localStorage.getItem('token');
+
+  const { data: user } = useGetProfile({
+    enabled: !!token
+  });
 
   const isAuth = !!user;
   const isAdmin = user?.isAdmin;
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const token = localStorage.getItem('token');
-
-      if (token) {
-        await fetchUserProfile();
-      }
-    };
-
-    fetchProfile();
-  }, [user]);
 
   return (
     <BrowserRouter>

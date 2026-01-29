@@ -23,7 +23,6 @@ const dateUtils = {
     // tính ngày
     const day = Math.floor(numberMiliseconds / DAY_MILISECONDS);
     if (day > 0) return `0${day}`.slice(-2) + ` ngày`;
-    // `0${date.getHours()}`.slice(-2);
 
     // tính giờ
     const hour = Math.floor(numberMiliseconds / HOURSE_MILISECONDS);
