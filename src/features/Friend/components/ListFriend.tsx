@@ -3,7 +3,7 @@ import { useDeleteFriend } from '@/hooks/friend/useDeleteFriend';
 import userApi from '@/api/userApi';
 import { toast } from 'sonner';
 
-import FriendItem from '../FriendItem';
+import FriendItem from './FriendItem';
 
 import {
   AlertDialog,

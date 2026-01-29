@@ -1,48 +1,53 @@
-const DAY_MILISECONDS = 86400000;
-const HOURSE_MILISECONDS = 3600000;
-const MINUTE_MILISECONDS = 60000;
+import dayjs from 'dayjs';
+import isLeapYear from 'dayjs/plugin/isLeapYear';
+dayjs.extend(isLeapYear);
+
+const DAY_MILLISECONDS = 86400000;
+const HOUR_MILLISECONDS = 3600000;
+const MINUTE_MILLISECONDS = 60000;
 
 const dateUtils = {
   toTime: (dateString: string) => {
-    const date = new Date(dateString);
+    const date = dayjs(dateString);
+    const now = dayjs();
 
-    const nowTempt = new Date();
+    // khác năm → hiển thị full date
+    if (now.year() - date.year() > 0) {
+      return date.format('DD/MM/YYYY');
+    }
 
-    //  tính năm
-    if (nowTempt.getFullYear() - date.getFullYear() > 0)
-      return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    // quá 7 ngày
+    if (date.isBefore(now.subtract(7, 'day'))) {
+      return date.format('DD/MM');
+    }
 
-    const dateWasMinus7day = nowTempt.setDate(nowTempt.getDate() - 7);
+    const diffMs = now.diff(date);
 
-    if (date.getTime() < dateWasMinus7day)
-      return `0${date.getDate()}/${date.getMonth() + 1}`.slice(-2);
+    // ngày
+    const day = Math.floor(diffMs / DAY_MILLISECONDS);
+    if (day > 0) return `${String(day).padStart(2, '0')} ngày`;
 
-    const now = new Date();
-    const numberMiliseconds = now.getTime() - date.getTime();
+    // giờ
+    const hour = Math.floor(diffMs / HOUR_MILLISECONDS);
+    if (hour > 0) return `${String(hour).padStart(2, '0')} giờ`;
 
-    // tính ngày
-    const day = Math.floor(numberMiliseconds / DAY_MILISECONDS);
-    if (day > 0) return `0${day}`.slice(-2) + ` ngày`;
-
-    // tính giờ
-    const hour = Math.floor(numberMiliseconds / HOURSE_MILISECONDS);
-    if (hour > 0) return `0${hour}`.slice(-2) + ` giờ`;
-
-    // tính phút
-    const minute = Math.floor(numberMiliseconds / MINUTE_MILISECONDS);
-    if (minute > 0) return `0${minute}`.slice(-2) + ` phút`;
+    // phút
+    const minute = Math.floor(diffMs / MINUTE_MILLISECONDS);
+    if (minute > 0) return `${String(minute).padStart(2, '0')} phút`;
 
     return 'Vài giây';
   },
 
-  transferDateString: (day, month, year) => {
-    return `0${day}`.slice(-2) + '/' + `0${month}`.slice(-2) + '/' + `${year}`;
+  transferDateString: (day: number, month: number, year: number) => {
+    return dayjs(`${year}-${month}-${day}`).format('DD/MM/YYYY');
   },
-  compareDate: (time, currentTime) => {
-    return time.setHours(0, 0, 0, 0) === currentTime.setHours(0, 0, 0, 0);
+
+  compareDate: (time: Date | string, currentTime: Date | string) => {
+    return dayjs(time).isSame(dayjs(currentTime), 'day');
   },
-  checkLeapYear: (year) => {
-    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+
+  checkLeapYear: (year: number) => {
+    return dayjs(`${year}-01-01`).isLeapYear();
   },
 };
 

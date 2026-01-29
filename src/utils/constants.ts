@@ -7,8 +7,6 @@ export const OPTIONS = [
   { label: 'Gia đình', value: 'Gia đình' },
   { label: 'Công việc', value: 'Công việc' },
   { label: 'Bạn bè', value: 'Bạn bè' },
-  { label: 'Bạn gái', value: 'Bạn gái' },
-  { label: 'Em gái nuôi', value: 'Em gái nuôi' },
 ];
 
 export const ACCEPT_FILE = {
@@ -33,3 +31,27 @@ export const COLORS = [
   '#7a2048',
   '#1e2761',
 ];
+
+export const FILTER_FRIEND = {
+  FILTER_LEFT: [
+    {
+      key: '1',
+      value: 'Tất cả',
+    },
+    {
+      key: '2',
+      value: 'Nhóm tôi quản lý',
+    },
+  ],
+
+  FILTER_RIGHT: [
+    {
+      key: '1',
+      value: 'Theo tên nhóm (A-Z)',
+    },
+    {
+      key: '2',
+      value: 'Theo tên nhóm (Z-A)',
+    },
+  ],
+};

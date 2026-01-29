@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import SuggestCard from '../SuggestCard';
+import SuggestCard from './SuggestCard';
 import UserCard from '@/components/user-card';
 
 type SuggestUser = {

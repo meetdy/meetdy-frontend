@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { setTabActive } from '@/app/globalSlice';
 import conversationApi from '@/api/conversationApi';
 import NotFoundPage from '@/components/not-found-page';
 
+import { createKeyListConversations } from '@/hooks/conversation/useGetListConversations';
+import { createKeyGetListMessages } from '@/hooks/message/useGetListMessages';
+
 import Chat from '@/features/Chat';
 import Friend from '@/features/Friend';
 import NavbarContainer from '@/features/Chat/containers/NavbarContainer';
-import { useQueryClient } from '@tanstack/react-query';
-import { createKeyListConversations } from '@/hooks/conversation/useGetListConversations';
-import { createKeyGetListMessages } from '@/hooks/message/useGetListMessages';
+
 import dateUtils from '@/utils/dateUtils';
 
 import {
