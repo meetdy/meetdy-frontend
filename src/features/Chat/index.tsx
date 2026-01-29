@@ -47,7 +47,7 @@ import {
   updateVoteMessage,
 } from '@/app/chatSlice';
 
-import renderWidthDrawer from '@/utils/DrawerResponsive';
+import { calculateResponsiveDrawer } from '@/utils/uiHelper';
 
 import { toast } from 'sonner';
 
@@ -539,7 +539,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
             <div
               className="fixed top-0 right-0 h-full bg-background z-50 transition-transform duration-300 ease-out"
               style={{
-                width: `${renderWidthDrawer(width)}%`,
+                width: `${calculateResponsiveDrawer(width)}%`,
                 transform: openDrawerInfo ? 'translateX(0)' : 'translateX(100%)',
               }}
             >

@@ -11,7 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import ServiceMe from '@/api/meApi';
-import generateCode from '@/utils/generateCode';
+import { generateCode } from '@/utils';
 
 type Props = {
   onCancel?: () => void;

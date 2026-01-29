@@ -7,13 +7,15 @@ import messageApi from '@/api/messageApi';
 import pinMessageApi from '@/api/pinMessageApi';
 import stickerApi from '@/api/stickerApi';
 import voteApi from '@/api/voteApi';
-import dateUtils from '@/utils/dateUtils';
+
 import {
   IGroupConversation,
   IIndividualConversation,
   TCreateGroup,
   TGetListConversations,
 } from '@/models/conversation.model';
+
+import dateUtils from '@/utils/dateUtils';
 
 const KEY = 'chat';
 

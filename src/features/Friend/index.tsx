@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Filter, Menu, PhoneOutgoing, UserCheck, Users } from 'lucide-react';
+
+import { type LucideIcon } from 'lucide-react';
 
 import { Icon } from '@/components/ui/icon';
 import {
@@ -31,11 +34,8 @@ import { useGetListConversations } from '@/hooks/conversation/useGetListConversa
 import { useGetContacts } from '@/hooks/contacts/useGetContacts';
 import { useGetSuggestFriend } from '@/hooks/friend/useGetSuggestFriend';
 
-import { getValueFromKey } from '@/constants/filterFriend';
-import { sortGroup } from '@/utils/groupUtils';
-import { Filter, Menu, PhoneOutgoing, UserCheck, Users } from 'lucide-react';
-
-import { type LucideIcon } from 'lucide-react';
+import { getValueFromKey } from '@/utils/featureUtils';
+import { sortGroup } from '@/utils/featureUtils';
 
 function Spinner() {
   return (

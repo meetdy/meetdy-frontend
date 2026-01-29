@@ -9,7 +9,7 @@ import {
   setAmountNotify,
 } from '@/app/friendSlice';
 
-import FriendCard from '../FriendCard';
+import FriendCard from './FriendCard';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { createKeyGetFriends } from '@/hooks/friend/useGetFriends';

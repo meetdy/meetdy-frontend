@@ -2,7 +2,7 @@ import React from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import getSummaryName from '@/utils/nameHelper';
+import { getSummaryName } from '@/utils/uiHelper';
 
 type AvatarCustomProps = React.HTMLAttributes<HTMLDivElement> & {
   src?: string;

@@ -1,4 +1,4 @@
-import { fallback } from '@/constants/images';
+import { FALLBACK as IMAGE_FALLBACK } from '@/utils/constants';
 
 interface ImageItemProps {
     url?: string;
@@ -28,11 +28,11 @@ function ImageItem({
             style={{ width, height }}
         >
             <img
-                src={url || fallback}
+                src={url || IMAGE_FALLBACK}
                 alt=""
                 className="w-full h-full object-cover transition-transform group-hover:scale-105"
                 onError={(e) => {
-                    (e.target as HTMLImageElement).src = fallback;
+                    (e.target as HTMLImageElement).src = IMAGE_FALLBACK;
                 }}
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center" />

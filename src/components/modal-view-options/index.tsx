@@ -1,10 +1,11 @@
-import React, { JSX, useEffect, useRef, useState } from 'react';
+import { JSX, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ChevronRight, MinusCircle, Plus } from 'lucide-react';
 
 import voteApi from '@/api/voteApi';
 import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
-import { equalsArray } from '@/utils/arrayHelper';
+
+import { isEqual } from 'lodash';
 
 type OptionItem = {
   name: string;
@@ -171,7 +172,7 @@ export default function ModalViewOption({
 
     setConfirmLoading(true);
     try {
-      if (preValue.current && !equalsArray(preValue.current, checkList)) {
+      if (preValue.current && !isEqual(preValue.current, checkList)) {
         await voteApi.deleteSelect(infoVote._id, preValue.current || []);
         await voteApi.selectVote(infoVote._id, checkList);
         window.alert('Cập nhật lựa chọn thành công');

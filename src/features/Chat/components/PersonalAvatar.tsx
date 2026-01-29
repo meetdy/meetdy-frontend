@@ -1,6 +1,6 @@
 import { Key, User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import getSummaryName from '@/utils/nameHelper';
+import { getSummaryName } from '@/utils/uiHelper';
 
 type Props = {
   avatar?: string;
@@ -27,10 +27,10 @@ export default function PersonalAvatar({
     isActive && common
       ? 'user-icon common'
       : !isActive && common
-      ? 'user-icon no-online common'
-      : isActive && !common
-      ? 'user-icon'
-      : 'user-icon no-online';
+        ? 'user-icon no-online common'
+        : isActive && !common
+          ? 'user-icon'
+          : 'user-icon no-online';
 
   return (
     <div className={wrapClass}>

@@ -18,7 +18,7 @@ import messageApi from '@/api/messageApi';
 import pinMessageApi from '@/api/pinMessageApi';
 import ModalChangePinMessage from '@/components/modal-change-pin-message';
 import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
-import { checkLeader } from '@/utils/groupUtils';
+import { checkLeader } from '@/utils/featureUtils';
 
 import { deleteMessageClient } from '../../../app/chatSlice';
 

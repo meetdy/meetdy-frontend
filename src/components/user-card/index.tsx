@@ -17,7 +17,7 @@ import {
 } from '@/app/friendSlice';
 
 import dateUtils from '@/utils/dateUtils';
-import getSummaryName from '@/utils/nameHelper';
+import { getSummaryName } from '@/utils/uiHelper';
 
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';

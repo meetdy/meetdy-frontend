@@ -1,5 +1,4 @@
 import { Dropdown, Popconfirm, Table, Menu, Tag, Typography } from 'antd';
-import commonFuc from '@/utils/commonFuc';
 
 const { Text } = Typography;
 
@@ -82,10 +81,11 @@ function UserTable({ usersPage, onDeleteUStatusUpdate }) {
 
   return (
     <Table
-      dataSource={commonFuc.addSTTForList(
-        usersPage.data,
-        usersPage.page * usersPage.size,
-      )}
+      dataSource={usersPage.data.map((ele, index) => ({
+        key: index,
+        stt: index + 1 + usersPage.page * usersPage.size,
+        ...ele,
+      }))}
       columns={columns}
       pagination={false}
       bordered
