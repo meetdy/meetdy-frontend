@@ -169,7 +169,7 @@ export default function NavbarContainer() {
 
                 <Separator />
 
-                <nav className="flex-1 p-3 flex flex-col gap-2">
+                <nav className="flex-1 p-2 flex flex-col gap-2">
                     <NavButton
                         to="/chat"
                         label="Tin nhắn"
@@ -177,7 +177,7 @@ export default function NavbarContainer() {
                         badge={toTalUnread}
                         onClick={() => dispatch(setTabActive(1))}
                     >
-                        <MessageSquare className="h-5 w-5" />
+                        <MessageSquare fill='currentColor' className="h-8 w-8" />
                     </NavButton>
 
                     <NavButton
@@ -187,17 +187,17 @@ export default function NavbarContainer() {
                         badge={amountNotify}
                         onClick={() => dispatch(setTabActive(2))}
                     >
-                        <Users className="h-5 w-5" />
+                        <Users fill='currentColor' className="h-8 w-8" />
                     </NavButton>
                 </nav>
 
                 <Separator />
 
-                <div className="p-3 flex justify-center">
+                <div className="px-4 py-2 flex justify-center">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="flex items-center justify-center w-10 h-10 rounded-xl hover:bg-muted transition-colors">
-                                <Settings className="h-5 w-5" />
+                            <button className="flex items-center justify-center w-10 h-10 rounded-md hover:bg-muted transition-colors">
+                                <Settings className="h-6 w-6" />
                             </button>
                         </DropdownMenuTrigger>
 

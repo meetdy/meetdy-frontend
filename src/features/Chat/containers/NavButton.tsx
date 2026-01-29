@@ -34,7 +34,7 @@ function NavButton({
       variant="ghost"
       aria-current={active ? 'page' : undefined}
       className={cn(
-        'relative w-full h-12 rounded-xl transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+        'relative w-full h-12 rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         active
           ? 'bg-primary/10 text-primary'
           : 'text-muted-foreground hover:bg-muted hover:text-foreground',
