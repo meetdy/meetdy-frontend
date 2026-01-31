@@ -2,16 +2,16 @@ import path from 'path';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
-import runtimeEnv from 'vite-plugin-runtime-env';
+// import runtimeEnv from 'vite-plugin-runtime-env';
 
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    runtimeEnv({
-      variableName: 'window.env',
-      substitutionSyntax: 'dollar-curly',
-    }),
+    // runtimeEnv({
+    //   variableName: 'window.env',
+    //   substitutionSyntax: 'dollar-curly',
+    // }),
   ],
   resolve: {
     alias: {
