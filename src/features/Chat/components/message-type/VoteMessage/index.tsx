@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import ModalDetailVote from '../../ModalDetailVote';
+import ModalDetailVote from '../../modal/ModalDetailVote';
 import ModalViewOption from '@/components/modal-view-options';
 
 type Option = {

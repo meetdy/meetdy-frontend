@@ -28,7 +28,7 @@ import { setTabActive } from '@/app/globalSlice';
 
 
 import ModalChangePassword from '@/components/modal-change-password';
-import ModalUpdateProfile from '@/features/Chat/components/ModalUpdateProfile';
+import ModalUpdateProfile from '@/features/Chat/components/modal/ModalUpdateProfile';
 import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 
 import NavButton from './NavButton';

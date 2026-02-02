@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import type { RootState } from '@/redux/store';
 import UploadFile from '@/components/field/UploadFile';
-import ModalCreateVote from './ModalCreateVote';
+import ModalCreateVote from './modal/ModalCreateVote';
 import Sticker from './Sticker';
 import { Button } from '@/components/ui/button';
 import {

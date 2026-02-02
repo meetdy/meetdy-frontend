@@ -5,7 +5,7 @@ import { Tag } from 'lucide-react';
 import { useAddClassifyForConversation } from '@/hooks/classify/useAddClassifyForConversation';
 import { useQueryClient } from '@tanstack/react-query';
 import { createQueryKey } from '@/queries/core';
-import ModalClassify from '@/features/Chat/components/ModalClassify';
+import ModalClassify from '@/features/Chat/components/modal/ModalClassify';
 
 import {
   DropdownMenuItem,

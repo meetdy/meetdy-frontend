@@ -5,7 +5,7 @@ import { useInfiniteListMessages } from '@/hooks/message/useInfiniteListMessages
 import { useGetLastViewOfMembers } from '@/hooks/conversation/useGetLastViewOfMembers';
 import { useGetLastViewChannel } from '@/hooks/channel/useGetLastViewChannel';
 import { useGetMessageInChannel } from '@/hooks/channel/useGetMessageInChannel';
-import ModalShareMessage from '@/features/Chat/components/ModalShareMessage';
+import ModalShareMessage from '@/features/Chat/components/modal/ModalShareMessage';
 import UserMessage from '@/features/Chat/components/UserMessage';
 import type { RootState, AppDispatch } from '@/redux/store';
 import type { Scrollbars as ScrollbarsType } from 'react-custom-scrollbars-2';

@@ -9,7 +9,7 @@ import {
     setCurrentChannel,
 } from '@/app/chatSlice';
 import channelApi from '@/api/channelApi';
-import ModalChangeNameChannel from './ModalChangeNameChannel';
+import ModalChangeNameChannel from './modal/ModalChangeNameChannel';
 import { useDeleteChannel } from '@/hooks/channel/useDeleteChannel';
 import { useRenameChannel } from '@/hooks/channel/useRenameChannel';
 import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';

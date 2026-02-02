@@ -7,7 +7,7 @@ import pinMessageApi from '@/api/pinMessageApi';
 import { fetchPinMessages } from '../../../app/chatSlice';
 
 import TypeMessagePin from './TypeMessagePin';
-import ModalDetailMessagePin from './ModalDetailMessagePin';
+import ModalDetailMessagePin from './modal/ModalDetailMessagePin';
 
 import { Button } from '@/components/ui/button';
 import {

@@ -33,7 +33,7 @@ import { AppDispatch, RootState } from '@/redux/store';
 
 import ChatHeader, { HeaderIconButton } from '../components/ChatHeader';
 import ConversationAvatar from '../components/ConversationAvatar';
-import ModalAddMemberToConver from '../components/ModalAddMemberToConver';
+import ModalAddMemberToConver from '../components/modal/ModalAddMemberToConver';
 
 type Props = {
     avatar?: string | null;

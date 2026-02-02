@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import PersonalAvatar from './PersonalAvatar';
+import PersonalAvatar from '../PersonalAvatar';
 import {
   Dialog,
   DialogContent,

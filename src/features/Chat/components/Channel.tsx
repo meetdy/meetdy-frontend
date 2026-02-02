@@ -3,12 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ChevronDown, Hash, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
-import ChannelItem from './ChannelItem';
-
-import {
-    getLastViewOfMembers,
-    setCurrentChannel,
-} from '@/app/chatSlice';
+import { useQueryClient } from '@tanstack/react-query';
+import { createQueryKey } from '@/queries/core';
 
 import {
     Dialog,
@@ -20,6 +16,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
+import {
+    getLastViewOfMembers,
+    setCurrentChannel,
+} from '@/app/chatSlice';
+
+import ChannelItem from './ChannelItem';
+
+
 interface ChannelProps {
     onViewChannel?: () => void;
     data?: any[];
@@ -28,8 +32,6 @@ interface ChannelProps {
 
 import { useAddChannel } from '@/hooks/channel/useAddChannel';
 import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
-import { useQueryClient } from '@tanstack/react-query';
-import { createQueryKey } from '@/queries/core';
 
 function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
     const [isDrop, setIsDrop] = useState(true);
@@ -148,7 +150,7 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="w-full justify-start text-muted-foreground"
+                        className="w-full justify-start text-sm text-muted-foreground"
                         onClick={handleViewAll}
                     >
                         Xem tất cả

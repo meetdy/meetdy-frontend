@@ -22,9 +22,9 @@ import { checkLeader } from '@/utils/featureUtils';
 
 import { deleteMessageClient } from '../../../app/chatSlice';
 
-import LastView from './LastView';
-import ListReaction from './ListReaction';
-import ListReactionOfUser from './ListReactionOfUser';
+import ListReaction from './reaction/ReactionPopup';
+import ListReactionOfUser from './reaction/ReactionDropped';
+
 import FileMessage from './message-type/FileMessage';
 import HTMLMessage from './message-type/HTMLMessage';
 import ImageMessage from './message-type/ImageMessage';
@@ -33,6 +33,9 @@ import StickerMessage from './message-type/StickerMessage';
 import TextMessage from './message-type/TextMessage';
 import VideoMessage from './message-type/VideoMessage';
 import VoteMessage from './message-type/VoteMessage';
+
+import LastView from './LastView';
+
 
 import { Button } from '@/components/ui/button';
 import {

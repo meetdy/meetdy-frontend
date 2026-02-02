@@ -1,16 +1,12 @@
 import AvatarCustom from '@/components/avatar-custom';
 
-interface LastViewProps {
-    lastView?: any[];
-}
-
-function LastView({ lastView = [] }: LastViewProps) {
+function LastView({ lastView = [] }: any) {
     const displayCount = Math.min(lastView.length, 5);
     const extraCount = lastView.length - displayCount;
 
     return (
         <div className="flex items-center -space-x-1">
-            {lastView.slice(0, displayCount).map((ele, index) => (
+            {lastView.slice(0, displayCount).map((ele: any, index: number) => (
                 <div
                     key={index}
                     className="relative inline-block ring-2 ring-background rounded-full"
@@ -19,7 +15,7 @@ function LastView({ lastView = [] }: LastViewProps) {
                 </div>
             ))}
             {extraCount > 0 && (
-                <div className="relative flex items-center justify-center w-6 h-6 text-xs font-medium text-orange-600 bg-orange-100 rounded-full ring-2 ring-background">
+                <div className="relative flex items-center justify-center w-4 h-4 text-xs font-medium text-orange-600 bg-orange-100 rounded-full ring-2 ring-background">
                     +{extraCount}
                 </div>
             )}

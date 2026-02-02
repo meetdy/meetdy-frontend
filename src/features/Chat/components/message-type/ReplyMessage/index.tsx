@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import fileHelpers from '@/utils/fileHelpers';
-import ModalDetailMessageReply from '../../ModalDetailMessageReply';
+import ModalDetailMessageReply from '../../modal/ModalDetailMessageReply';
 
 type Reply = {
   type: 'IMAGE' | 'VIDEO' | 'FILE' | 'STICKER' | 'HTML' | 'TEXT';

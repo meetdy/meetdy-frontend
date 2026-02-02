@@ -4,7 +4,7 @@ import { defaultStyles, FileIcon } from 'react-file-icon';
 
 import ModalVideoCustom from '@/components/modal-video-custom';
 import fileHelpers from '@/utils/fileHelpers';
-import PinItem from './PinItem';
+import PinItem from '../PinItem';
 import {
   Dialog,
   DialogContent,

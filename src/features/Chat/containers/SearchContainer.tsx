@@ -5,9 +5,9 @@ import { Search, UserPlus, Users, Plus } from 'lucide-react'
 import userApi from '@/api/userApi'
 import { createGroup } from '@/app/chatSlice'
 
-import ModalClassify from '../components/ModalClassify'
+import ModalClassify from '../components/modal/ModalClassify'
 import ModalAddFriend from '@/components/modal-add-friend'
-import ModalCreateGroup from '../components/ModalCreateGroup'
+import ModalCreateGroup from '../components/modal/ModalCreateGroup'
 import UserCard from '@/components/user-card'
 
 import { Input } from '@/components/ui/input'

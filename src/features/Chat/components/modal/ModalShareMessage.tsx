@@ -4,9 +4,9 @@ import { toast } from 'sonner';
 
 import conversationApi from '@/api/conversationApi';
 import messageApi from '@/api/messageApi';
-import ConversationAvatar from './ConversationAvatar';
-import ItemsSelected from './ItemsSelected';
-import PersonalAvatar from './PersonalAvatar';
+import ConversationAvatar from '../ConversationAvatar';
+import ItemsSelected from '../ItemsSelected';
+import PersonalAvatar from '../PersonalAvatar';
 
 import {
   Dialog,

@@ -5,7 +5,7 @@ import parse from 'html-react-parser';
 
 import ModalVideoCustom from '@/components/modal-video-custom';
 import fileHelpers from '@/utils/fileHelpers';
-import PersonalAvatar from './PersonalAvatar';
+import PersonalAvatar from '../PersonalAvatar';
 import {
   Dialog,
   DialogContent,
