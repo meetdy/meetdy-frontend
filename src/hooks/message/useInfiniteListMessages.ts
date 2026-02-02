@@ -35,7 +35,7 @@ export function useInfiniteListMessages({
         const response = await ServiceChannel.getMessageInChannel(
           channelId,
           pageParam as number,
-          size
+          size,
         );
         // Normalize channel response to match IMessage structure
         const totalPages = Math.ceil(response.total / size);
@@ -50,7 +50,7 @@ export function useInfiniteListMessages({
         const response = await ServiceMessages.getListMessages(
           conversationId,
           pageParam as number,
-          size
+          size,
         );
         return response;
       }

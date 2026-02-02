@@ -64,7 +64,7 @@ function TextMessage({
   const matchesLink = CheckLink(content);
 
   const renderMessageText = (contentMes) => {
-    if (!matchesLink) {
+    if (!matchesLink || matchesLink.length === 0) {
       return (
         <div className="text-[15px] leading-relaxed break-words whitespace-pre-wrap">
           {tags.length > 0
@@ -72,40 +72,55 @@ function TextMessage({
             : contentMes}
         </div>
       );
-    } else {
-      if (matchesLink.length === 1) {
-        return (
-          <div className="space-y-2">
+    }
+
+    // Single link - show preview
+    if (matchesLink.length === 1) {
+      const linkUrl = matchesLink[0];
+      const textWithoutLink = replaceConentWithouLink(contentMes, linkUrl).trim();
+
+      return (
+        <div className="space-y-2.5">
+          {textWithoutLink && (
             <div className="text-[15px] leading-relaxed break-words whitespace-pre-wrap">
               {tags.length > 0
-                ? tranferTextToTagUser(
-                    replaceConentWithouLink(contentMes, matchesLink[0]),
-                    tags,
-                  )
-                : replaceConentWithouLink(contentMes, matchesLink[0])}
+                ? tranferTextToTagUser(textWithoutLink, tags)
+                : textWithoutLink}
             </div>
+          )}
+          <div className="rounded-lg overflow-hidden border border-border/60 bg-background/50 hover:bg-background transition-colors">
             <LinkPreview
-              url={matchesLink[0]}
-              imageHeight="20vh"
-              className="rounded-xl overflow-hidden border border-slate-200/60"
+              url={linkUrl}
+              imageHeight="160px"
+              width="100%"
+              fallback={
+                <a
+                  href={linkUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block p-3 text-sm text-primary hover:underline break-all"
+                >
+                  {linkUrl}
+                </a>
+              }
+              showLoader={false}
             />
           </div>
-        );
-      }
-
-      if (matchesLink.length > 1) {
-        return (
-          <div className="text-[15px] leading-relaxed break-words whitespace-pre-wrap">
-            {tags.length > 0
-              ? tranferTextToTagUser(
-                  replaceContentToLink(contentMes, matchesLink),
-                  tags,
-                )
-              : parse(replaceContentToLink(contentMes, matchesLink))}
-          </div>
-        );
-      }
+        </div>
+      );
     }
+
+    // Multiple links - show as clickable text
+    return (
+      <div className="text-[15px] leading-relaxed break-words whitespace-pre-wrap">
+        {tags.length > 0
+          ? tranferTextToTagUser(
+            replaceContentToLink(contentMes, matchesLink),
+            tags,
+          )
+          : parse(replaceContentToLink(contentMes, matchesLink))}
+      </div>
+    );
   };
 
   return (

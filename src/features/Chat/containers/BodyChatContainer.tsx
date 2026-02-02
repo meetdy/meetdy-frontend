@@ -6,7 +6,7 @@ import { useGetLastViewOfMembers } from '@/hooks/conversation/useGetLastViewOfMe
 import { useGetLastViewChannel } from '@/hooks/channel/useGetLastViewChannel';
 import { useGetMessageInChannel } from '@/hooks/channel/useGetMessageInChannel';
 import ModalShareMessage from '@/features/Chat/components/modal/ModalShareMessage';
-import UserMessage from '@/features/Chat/components/UserMessage';
+import UserMessage from '@/features/Chat/components/chat-bubble/UserMessage';
 import type { RootState, AppDispatch } from '@/redux/store';
 import type { Scrollbars as ScrollbarsType } from 'react-custom-scrollbars-2';
 import DividerCustom from '../components/DividerCustom';
@@ -61,7 +61,12 @@ export default function BodyChatContainer({
     enabled: !!currentConversation,
   });
 
-  const messages = data?.pages.flatMap((page) => page.data) || [];
+  // Reverse pages order so oldest messages come first (for infinite scroll upwards)
+  // Then reverse each page's data if API returns newest first
+  const messages = data?.pages
+    .slice()
+    .reverse()
+    .flatMap((page) => page.data.slice()) || [];
 
   const handleOpenModalShare = (_id: string) => {
     setVisibleModalShare(true);
@@ -197,9 +202,10 @@ export default function BodyChatContainer({
       return;
     }
 
+    // Load more older messages when scrolling to top
     if (scrollTop === 0 && hasNextPage && !isFetchingNextPage) {
       previousHeight.current = scrollHeight;
-      fetchNextPage();
+      void fetchNextPage();
     }
   };
 
@@ -217,15 +223,30 @@ export default function BodyChatContainer({
     return new Promise((resolve) => setTimeout(resolve, time));
   }
 
+  // Scroll to bottom on initial load or conversation change
   useEffect(() => {
-    if ((messages || []).length > 0) {
-      sleep(500).then(() => {
+    if ((messages || []).length > 0 && !isFetchingNextPage) {
+      sleep(200).then(() => {
         if (scrollbars.current) {
           scrollbars.current.scrollToBottom();
         }
       });
     }
-  }, [currentConversation, currentChannel, messages]);
+  }, [currentConversation, currentChannel]);
+
+  // Maintain scroll position when loading more messages
+  useEffect(() => {
+    if (previousHeight.current !== null && scrollbars.current) {
+      const currentHeight = scrollbars.current.getScrollHeight();
+      const heightDifference = currentHeight - previousHeight.current;
+
+      if (heightDifference > 0) {
+        scrollbars.current.scrollTop(heightDifference);
+      }
+
+      previousHeight.current = null;
+    }
+  }, [messages]);
 
   return (
     <Scrollbars
