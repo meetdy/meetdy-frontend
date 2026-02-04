@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import SuggestCard from './SuggestCard';
 import UserCard from '@/components/user-card';
+import FriendListItem, { type FriendData } from './FriendListItem';
 
 type SuggestUser = {
   id?: string;
@@ -17,7 +17,7 @@ export default function SuggestList({ data = [] }: SuggestListProps) {
   const [isUserCardVisible, setIsUserCardVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState<SuggestUser>({});
 
-  const handleSelectUser = (user: SuggestUser) => {
+  const handleSelectUser = (user: FriendData) => {
     setSelectedUser(user);
     setIsUserCardVisible(true);
   };
@@ -46,14 +46,16 @@ export default function SuggestList({ data = [] }: SuggestListProps) {
       ) : (
         <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredData.map((item) => (
-            <SuggestCard
+            <FriendListItem
               key={
                 item.id ??
                 item._id ??
                 `${item.username ?? ''}-${item.name ?? ''}`
               }
+              variant="suggestion"
               data={item}
               onClick={handleSelectUser}
+              showCommonInfo
             />
           ))}
         </div>

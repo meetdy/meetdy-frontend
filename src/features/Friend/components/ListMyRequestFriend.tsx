@@ -1,17 +1,11 @@
-import { useDispatch } from 'react-redux';
-
-import friendApi from '@/api/friendApi';
-import FriendCard from './FriendCard';
-
-import { fetchListMyRequestFriend } from '@/app/friendSlice';
-
+import { useDeleteSentRequestFriend } from '@/hooks/friend';
+import FriendListItem, { type FriendData } from './FriendListItem';
 
 function ListMyFriendRequest({ data = [] }) {
-  const dispatch = useDispatch<any>();
+  const { mutate: cancelRequest } = useDeleteSentRequestFriend();
 
-  const handleRemoveMyRequest = async (value) => {
-    await friendApi.deleteSentRequestFriend(value._id);
-    dispatch(fetchListMyRequestFriend());
+  const handleRemoveMyRequest = (friendData: FriendData) => {
+    cancelRequest(friendData._id!);
   };
 
   return (
@@ -19,11 +13,17 @@ function ListMyFriendRequest({ data = [] }) {
       {data &&
         data.length > 0 &&
         data.map((ele) => (
-          <FriendCard
+          <FriendListItem
             key={ele._id ?? ele.id}
-            isMyRequest={true}
+            variant="sent-request"
             data={ele}
-            onCancel={handleRemoveMyRequest}
+            actions={[
+              {
+                label: 'Hủy yêu cầu',
+                variant: 'destructive',
+                onClick: handleRemoveMyRequest,
+              },
+            ]}
           />
         ))}
     </div>

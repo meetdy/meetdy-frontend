@@ -80,11 +80,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
   const { conversations = [] } = useGetListConversations({ params: {} });
   const { friends = [] } = useGetFriends({ params: { name: '' } });
   const { classifies = [] } = useGetListClassify();
-  // Channels: If we fetched a list of channels for currentConversation?
-  // Redux `fetchChannels` fetched *list*. `useGetChannel` returns `channel` (singular?)
-  // Let's assume useGetChannel returns the list for now or check usage.
-  // We'll stick to Redux for channels momentarily if useGetChannel is ambiguous or use it.
-  // Actually, let's use the hook if it matches.
+
   const { channel: channels = [] } = useGetChannel({
     conversationId: currentConversation,
     enabled: !!currentConversation

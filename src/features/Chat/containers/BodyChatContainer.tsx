@@ -58,7 +58,7 @@ export default function BodyChatContainer({
     conversationId: currentConversation,
     channelId: currentChannel,
     size: 20,
-    enabled: !!currentConversation,
+    enabled: !!currentConversation || !!currentChannel ,
   });
 
   // Reverse pages order so oldest messages come first (for infinite scroll upwards)

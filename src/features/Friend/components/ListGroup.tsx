@@ -1,12 +1,18 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, LogOut } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import conversationApi from '@/api/conversationApi';
-import { fetchListGroup } from '@/app/friendSlice';
 import { socket } from '@/lib/socket';
-import GroupCard from './GroupCard';
+import { createKeyListConversations } from '@/hooks/conversation/useGetListConversations';
+import FriendListItem, { type FriendData } from './FriendListItem';
+import { Badge } from '@/components/ui/badge';
+import { getClassifyOfObject } from '@/utils';
+import { setCurrentConversation } from '@/app/chatSlice';
+import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 import {
   AlertDialog,
@@ -20,12 +26,36 @@ import {
 } from '@/components/ui/alert-dialog';
 
 function ListGroup({ data = [] }) {
-  const dispatch = useDispatch();
-  const [selectedGroupId, setSelectedGroupId] = useState(null);
-  const [openConfirm, setOpenConfirm] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch<any>();
+  const queryClient = useQueryClient();
+  const { classifies } = useSelector((state: any) => state.chat);
 
-  const openRemoveDialog = (groupId: string) => {
-    setSelectedGroupId(groupId);
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [groupClassifies, setGroupClassifies] = useState<Map<string, any>>(new Map());
+
+  useEffect(() => {
+    if (classifies.length > 0) {
+      const classifyMap = new Map();
+      data.forEach((group: any) => {
+        const classify = getClassifyOfObject(group._id, classifies);
+        if (classify) {
+          classifyMap.set(group._id, classify);
+        }
+      });
+      setGroupClassifies(classifyMap);
+    }
+  }, [classifies, data]);
+
+  const handleOpenConversation = async (groupData: FriendData) => {
+    fetchListMessagesKey({ conversationId: groupData._id!, size: 10 });
+    dispatch(setCurrentConversation(groupData._id));
+    navigate('/chat');
+  };
+
+  const openRemoveDialog = (groupData: FriendData) => {
+    setSelectedGroupId(groupData._id!);
     setOpenConfirm(true);
   };
 
@@ -38,7 +68,9 @@ function ListGroup({ data = [] }) {
       toast.success('Rời nhóm thành công');
 
       socket.emit('leave-conversation', selectedGroupId);
-      dispatch(fetchListGroup({ name: '', type: 2 }));
+      queryClient.invalidateQueries({
+        queryKey: createKeyListConversations({ name: '', type: 2 }),
+      });
     } catch (error) {
       toast.error('Rời nhóm thất bại');
     }
@@ -46,18 +78,41 @@ function ListGroup({ data = [] }) {
     setOpenConfirm(false);
   };
 
+  const filteredGroups = data.filter((i: any) => i.totalMembers > 2);
+
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {data
-          .filter((i) => i.totalMembers > 2)
-          .map((group) => (
-            <GroupCard
-              key={group.id}
-              data={group}
-              onRemove={() => openRemoveDialog(group.id)}
-            />
-          ))}
+        {filteredGroups.map((group: any) => {
+          const classify = groupClassifies.get(group._id);
+
+          return (
+            <div key={group.id ?? group._id} className="relative">
+              {classify && (
+                <Badge
+                  className="absolute top-2 left-2 z-10 px-2 py-1 text-xs rounded-lg"
+                  style={{ backgroundColor: classify.color.code }}
+                >
+                  {classify.name}
+                </Badge>
+              )}
+
+              <FriendListItem
+                variant="group"
+                data={group}
+                onClick={handleOpenConversation}
+                menuItems={[
+                  {
+                    label: 'Rời nhóm',
+                    icon: LogOut,
+                    onClick: openRemoveDialog,
+                    destructive: true,
+                  },
+                ]}
+              />
+            </div>
+          );
+        })}
       </div>
 
       <AlertDialog open={openConfirm} onOpenChange={setOpenConfirm}>

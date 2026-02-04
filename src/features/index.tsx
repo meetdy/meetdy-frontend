@@ -28,19 +28,7 @@ import {
   updateFriendChat,
 } from '@/app/chatSlice';
 
-import {
-  fetchFriends,
-  fetchListGroup,
-  fetchListMyRequestFriend,
-  fetchListRequestFriend,
-  setAmountNotify,
-  setMyRequestFriend,
-  setNewFriend,
-  setNewRequestFriend,
-  updateFriend,
-  updateMyRequestFriend,
-  updateRequestFriends,
-} from '@/app/friendSlice';
+import { setAmountNotify } from '@/app/friendSlice';
 
 import useWindowUnloadEffect from '@/hooks/useWindowUnloadEffect';
 
@@ -69,19 +57,7 @@ function ChatLayout() {
   useEffect(() => {
     dispatch(setTabActive(1));
 
-    dispatch(fetchListRequestFriend());
-    dispatch(fetchListMyRequestFriend());
-    dispatch(
-      fetchFriends({
-        name: '',
-      }),
-    );
-    dispatch(
-      fetchListGroup({
-        name: '',
-        type: 2,
-      }),
-    );
+    // Data fetching is now handled by React Query hooks in respective components
     dispatch(fetchListClassify());
     dispatch(fetchListColor());
     dispatch(fetchListConversations({}));
@@ -192,29 +168,46 @@ function ChatLayout() {
   }, true);
 
   useEffect(() => {
-    socket.on('accept-friend', (value) => {
-      dispatch(setNewFriend(value));
-      dispatch(setMyRequestFriend(value._id));
+    socket.on('accept-friend', () => {
+      // Invalidate friends and my request friends lists
+      queryClient.invalidateQueries({
+        queryKey: ['getFriends'],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['fetchMyRequestFriend'],
+      });
     });
 
-    socket.on('send-friend-invite', (value) => {
-      dispatch(setNewRequestFriend(value));
+    socket.on('send-friend-invite', () => {
+      // Invalidate request friends list
+      queryClient.invalidateQueries({
+        queryKey: ['fetchListRequestFriend'],
+      });
+      // Update notification count
       dispatch(setAmountNotify(amountNotify + 1));
     });
 
     // xóa lời mời kết bạn
-    socket.on('deleted-friend-invite', (_id) => {
-      dispatch(updateMyRequestFriend(_id));
+    socket.on('deleted-friend-invite', () => {
+      queryClient.invalidateQueries({
+        queryKey: ['fetchMyRequestFriend'],
+      });
     });
 
     //  xóa gởi lời mời kết bạn cho người khác
-    socket.on('deleted-invite-was-send', (_id) => {
-      dispatch(updateRequestFriends(_id));
+    socket.on('deleted-invite-was-send', () => {
+      queryClient.invalidateQueries({
+        queryKey: ['fetchListRequestFriend'],
+      });
     });
 
     // xóa kết bạn
     socket.on('deleted-friend', (_id) => {
-      dispatch(updateFriend(_id));
+      queryClient.invalidateQueries({
+        queryKey: ['getFriends'],
+        exact: false,
+      });
       dispatch(updateFriendChat(_id));
     });
     // revokeToken

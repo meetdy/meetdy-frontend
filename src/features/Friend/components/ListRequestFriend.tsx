@@ -1,57 +1,57 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'sonner';
-
-import friendApi from '@/api/friendApi';
 
 import {
-  fetchFriends,
-  fetchListRequestFriend,
-  setAmountNotify,
-} from '@/app/friendSlice';
-
-import FriendCard from './FriendCard';
-
-import { useQueryClient } from '@tanstack/react-query';
-import { createKeyGetFriends } from '@/hooks/friend/useGetFriends';
-
+  useAcceptRequestFriend,
+  useDeleteRequestFriend,
+} from '@/hooks/friend';
+import { setAmountNotify } from '@/app/friendSlice';
 import { AppDispatch } from '@/redux/store';
+
+import FriendListItem, { type FriendData } from './FriendListItem';
 
 function ListRequestFriend({ data = [] }) {
   const dispatch = useDispatch<AppDispatch>();
-  const queryClient = useQueryClient();
-
   const { amountNotify } = useSelector((state: any) => state.friend);
 
-  const handleRequestDeny = async (value) => {
-    await friendApi.deleteRequestFriend(value._id);
+  const { mutate: denyRequest } = useDeleteRequestFriend();
+  const { mutate: acceptRequest } = useAcceptRequestFriend();
 
-    dispatch(setAmountNotify(amountNotify - 1));
-    dispatch(fetchListRequestFriend() as any);
+  const handleRequestDeny = (friendData: FriendData) => {
+    denyRequest(friendData._id!, {
+      onSuccess: () => {
+        dispatch(setAmountNotify(amountNotify - 1));
+      },
+    });
   };
 
-  const handleOnAccept = async (value) => {
-    await friendApi.acceptRequestFriend(value._id);
-    dispatch(fetchListRequestFriend() as any);
-    dispatch(fetchFriends({ name: '' } as any) as any);
-
-    queryClient.invalidateQueries({ queryKey: createKeyGetFriends({ name: '' }) });
-
-    dispatch(setAmountNotify(amountNotify - 1));
-
-    toast.success('Thêm bạn thành công');
+  const handleOnAccept = (friendData: FriendData) => {
+    acceptRequest(friendData._id!, {
+      onSuccess: () => {
+        dispatch(setAmountNotify(amountNotify - 1));
+      },
+    });
   };
 
   return (
-    <div>
+    <div className="space-y-3">
       {data &&
         data.length > 0 &&
         data.map((ele) => (
-          <FriendCard
+          <FriendListItem
             key={ele._id ?? ele.id}
+            variant="request"
             data={ele}
-            isMyRequest={false}
-            onDeny={handleRequestDeny}
-            onAccept={handleOnAccept}
+            actions={[
+              {
+                label: 'Bỏ qua',
+                variant: 'outline',
+                onClick: handleRequestDeny,
+              },
+              {
+                label: 'Đồng ý',
+                onClick: handleOnAccept,
+              },
+            ]}
           />
         ))}
     </div>

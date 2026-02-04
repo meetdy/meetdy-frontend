@@ -2,19 +2,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
+import type { AppDispatch } from '@/redux/store';
 
 import conversationApi from '@/api/conversationApi';
-import friendApi from '@/api/friendApi';
 import {
   setConversations,
   setCurrentConversation,
 } from '@/app/chatSlice';
-import {
-  fetchFriends,
-  fetchListMyRequestFriend,
-  fetchListRequestFriend,
-  setAmountNotify,
-} from '@/app/friendSlice';
+import { setAmountNotify } from '@/app/friendSlice';
 
 import dateUtils from '@/utils/dateUtils';
 import { getSummaryName } from '@/utils/uiHelper';
@@ -35,6 +30,12 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
+import {
+  useAcceptRequestFriend,
+  useDeleteFriend,
+  useDeleteSentRequestFriend,
+  useSendRequestFriend,
+} from '@/hooks/friend';
 
 interface UserCardProps {
   title?: string;
@@ -42,12 +43,6 @@ interface UserCardProps {
   user: any;
   onCancel?: () => void;
 }
-
-import { useQueryClient } from '@tanstack/react-query';
-import { createKeyGetFriends } from '@/hooks/friend/useGetFriends';
-
-import { AppDispatch } from '@/redux/store';
-import { useGetContacts } from '@/hooks/contacts/useGetContacts';
 
 export default function UserCard({
   title = 'Thông tin',
@@ -57,11 +52,16 @@ export default function UserCard({
 }: UserCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const { amountNotify } = useSelector((state: any) => state.friend);
 
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+
+  // React Query mutation hooks
+  const { mutate: sendRequest } = useSendRequestFriend();
+  const { mutate: acceptRequest } = useAcceptRequestFriend();
+  const { mutate: cancelRequest } = useDeleteSentRequestFriend();
+  const { mutate: deleteFriend } = useDeleteFriend();
 
   const coverImage =
     'https://miro.medium.com/max/1124/1*92adf06PCF91kCYu1nPLQg.jpeg';
@@ -85,48 +85,38 @@ export default function UserCard({
     onCancel?.();
   };
 
-  const handleAddFriend = async () => {
-    try {
-      await friendApi.sendRequestFriend(user._id);
-      dispatch(fetchListMyRequestFriend() as any);
-      queryClient.invalidateQueries({ queryKey: ['contacts'] });
-      toast('Gửi lời mời kết bạn thành công');
-      onCancel?.();
-    } catch {
-      toast('Gửi lời mời kết bạn thất bại');
-    }
+  const handleAddFriend = () => {
+    sendRequest(user._id, {
+      onSuccess: () => {
+        onCancel?.();
+      },
+    });
   };
 
-  const handleAcceptFriend = async () => {
-    await friendApi.acceptRequestFriend(user._id);
-    dispatch(fetchListRequestFriend() as any);
-    dispatch(fetchFriends({ name: '' } as any) as any);
-
-    queryClient.invalidateQueries({ queryKey: createKeyGetFriends({ name: '' }) });
-
-    dispatch(setAmountNotify(amountNotify - 1));
-    toast('Thêm bạn thành công');
-    onCancel?.();
+  const handleAcceptFriend = () => {
+    acceptRequest(user._id, {
+      onSuccess: () => {
+        dispatch(setAmountNotify(amountNotify - 1));
+        onCancel?.();
+      },
+    });
   };
 
-  const handleCancelRequest = async () => {
-    await friendApi.deleteSentRequestFriend(user._id);
-    dispatch(fetchListMyRequestFriend() as any);
-    queryClient.invalidateQueries({ queryKey: ['contacts'] });
-    onCancel?.();
+  const handleCancelRequest = () => {
+    cancelRequest(user._id, {
+      onSuccess: () => {
+        onCancel?.();
+      },
+    });
   };
 
-  const handleDeleteFriend = async () => {
-    try {
-      await friendApi.deleteFriend(user._id);
-      dispatch(fetchFriends({ name: '' } as any) as any);
-      queryClient.invalidateQueries({ queryKey: ['contacts'] });
-      toast('Xóa thành công');
-      setOpenConfirmDelete(false);
-      onCancel?.();
-    } catch {
-      toast('Xóa thất bại');
-    }
+  const handleDeleteFriend = () => {
+    deleteFriend(user._id, {
+      onSuccess: () => {
+        setOpenConfirmDelete(false);
+        onCancel?.();
+      },
+    });
   };
 
 

@@ -1,9 +1,12 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useDeleteFriend } from '@/hooks/friend/useDeleteFriend';
 import userApi from '@/api/userApi';
+import conversationApi from '@/api/conversationApi';
 import { toast } from 'sonner';
 
-import FriendItem from './FriendItem';
+import FriendListItem, { type FriendData } from './FriendListItem';
 
 import {
   AlertDialog,
@@ -15,6 +18,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Delete, Info } from 'lucide-react';
+
+import {
+  setConversations,
+  setCurrentConversation,
+} from '@/app/chatSlice';
+import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 type Friend = {
   _id?: string;
@@ -29,19 +39,37 @@ type Props = {
 };
 
 function ListFriend({ data = [] }: Props) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch<any>();
   const { mutateAsync: deleteFriend } = useDeleteFriend();
   const [deleteConfirm, setDeleteConfirm] = useState<Friend | null>(null);
 
-  const handleOnClickMenu = async (key: string, id: string) => {
-    const tempUser = data.find((ele) => ele?._id === id || ele?.id === id);
-    if (!tempUser) return;
+  const handleOpenConversation = async (friendData: FriendData) => {
+    const res = await conversationApi.createConversationIndividual(friendData._id!);
+    const { _id, isExists } = res;
 
-    if (key === '2') {
-      setDeleteConfirm(tempUser);
-      return;
+    if (!isExists) {
+      const conver = await conversationApi.getConversationById(friendData._id!);
+      dispatch(setConversations(conver));
     }
 
+    fetchListMessagesKey({ conversationId: _id, size: 10 });
+    dispatch(setCurrentConversation(_id));
+
+    navigate('/chat');
+  };
+
+  const handleViewInfo = async (friendData: FriendData) => {
+    const tempUser = data.find((ele) => ele?._id === friendData._id || ele?.id === friendData.id);
+    if (!tempUser) return;
     await userApi.getUser(tempUser.username as any);
+  };
+
+  const handleRequestDelete = (friendData: FriendData) => {
+    const tempUser = data.find((ele) => ele?._id === friendData._id || ele?.id === friendData.id);
+    if (tempUser) {
+      setDeleteConfirm(tempUser);
+    }
   };
 
   const handleDeleteFriend = async () => {
@@ -88,12 +116,28 @@ function ListFriend({ data = [] }: Props) {
   return (
     <>
       <div className="flex-1 min-h-0 overflow-y-auto">
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           {items.map((e) => (
-            <FriendItem
+            <FriendListItem
               key={e._id ?? e.id ?? e.username}
+              variant="friend"
               data={e}
-              onClickMenu={handleOnClickMenu}
+              onClick={handleOpenConversation}
+              showLastLogin
+              isCompact
+              menuItems={[
+                {
+                  label: 'Xem thông tin',
+                  icon: Info,
+                  onClick: handleViewInfo,
+                },
+                {
+                  label: 'Xóa bạn',
+                  icon: Delete,
+                  onClick: handleRequestDelete,
+                  destructive: true,
+                },
+              ]}
             />
           ))}
         </div>
