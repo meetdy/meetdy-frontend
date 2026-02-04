@@ -57,7 +57,6 @@ function ChatLayout() {
   useEffect(() => {
     dispatch(setTabActive(1));
 
-    // Data fetching is now handled by React Query hooks in respective components
     dispatch(fetchListClassify());
     dispatch(fetchListColor());
     dispatch(fetchListConversations({}));

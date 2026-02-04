@@ -17,7 +17,7 @@ const ServiceConversation = {
     const url = PATH;
     const response = await get<
       Array<IIndividualConversation | IGroupConversation>
-    >(url, params);
+    >(url, { params });
     return response.data;
   },
 

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Filter, Menu, PhoneOutgoing, UserCheck, Users } from 'lucide-react';
 
 import { type LucideIcon } from 'lucide-react';
@@ -122,7 +121,7 @@ function GroupFilters(props: GroupFiltersProps) {
     <div className="flex justify-between items-center gap-2 px-4 py-3 border-b bg-white">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="gap-2">
+          <button className="flex align-center gap-2">
             <Icon icon={Menu} />
             <span className="truncate">
               {getValueFromKey('LEFT', groupFilterType)} ({groupCount})
@@ -142,7 +141,7 @@ function GroupFilters(props: GroupFiltersProps) {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="gap-2">
+          <button className="flex align-center gap-2">
             <Icon icon={Filter} className="text-base" />
             <span className="truncate">
               {getValueFromKey('RIGHT', sortFilterType)}
@@ -164,7 +163,6 @@ function GroupFilters(props: GroupFiltersProps) {
 }
 
 export default function Friend() {
-  const dispatch = useDispatch();
   const refOriginalGroups = useRef<any[]>([]);
 
   const { requestFriends = [], isFetching: isFetchingRequest } = useGetListRequestFriend();
@@ -173,6 +171,7 @@ export default function Friend() {
   const { conversations: groups = [], isFetching: isFetchingGroups } = useGetListConversations({
     params: { name: '', type: 2 }
   });
+
   const { contacts: phoneBook = [], isFetching: isFetchingContacts } = useGetContacts();
   const { suggestFriends = [], isFetching: isFetchingSuggest } = useGetSuggestFriend({ params: { page: 0, size: 12 } });
 
