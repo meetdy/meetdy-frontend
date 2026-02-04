@@ -16,10 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import {
-    getLastViewOfMembers,
-    setCurrentChannel,
-} from '@/app/chatSlice';
+import { setCurrentChannel } from '@/app/chatSlice';
 
 import ChannelItem from './ChannelItem';
 
@@ -87,8 +84,7 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
 
     const handleViewGeneralChannel = () => {
         dispatch(setCurrentChannel(''));
-
-        dispatch(getLastViewOfMembers({ conversationId: currentConversation }) as any);
+        // Data will be fetched automatically by the component that needs it
     };
 
     const currentConvo = conversations.find((ele: any) => ele._id === currentConversation);

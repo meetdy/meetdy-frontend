@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import {
   Dialog,
   DialogContent,
@@ -15,28 +14,32 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Pencil, AlertCircle, Search } from "lucide-react";
 import PersonalAvatar from "../PersonalAvatar";
 import ItemsSelected from "../ItemsSelected";
+import { useGetFriends } from "@/hooks/friend";
 
 export default function ModalAddMemberToConver({
-  loading,
   onOk,
   onCancel,
   isVisible,
   typeModal,
 }) {
   const [itemSelected, setItemSelected] = useState<any[]>([]);
-  const { friends, memberInConversation } = useSelector(
-    (state: any) => state.chat
-  );
   const [frInput, setFrInput] = useState("");
-  const initialValue = memberInConversation.map((ele) => ele._id);
   const [checkList, setCheckList] = useState<string[]>([]);
   const [nameGroup, setNameGroup] = useState("");
   const [isShowError, setIsShowError] = useState(false);
   const [initalFriend, setInitalFriend] = useState<any[]>([]);
 
+
+  const { data } = useGetFriends({
+    params: { name: '' },
+  });
+
+  const friends = data.data;
+
+
   useEffect(() => {
     if (isVisible) {
-      setInitalFriend(friends);
+      setInitalFriend(friends || []);
     } else {
       setFrInput("");
       setCheckList([]);
@@ -61,9 +64,9 @@ export default function ModalAddMemberToConver({
     setFrInput(value);
 
     if (!value) {
-      setInitalFriend(friends);
+      setInitalFriend(friends || []);
     } else {
-      const result = friends.filter((ele) =>
+      const result = (friends || []).filter((ele) =>
         ele.name.toLowerCase().includes(value.toLowerCase())
       );
       setInitalFriend(result);
@@ -96,7 +99,7 @@ export default function ModalAddMemberToConver({
   };
 
   const checkInitialValue = (id: string) => {
-    return initialValue.includes(id);
+    return ['']?.includes(id);
   };
 
   return (

@@ -1,60 +1,62 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ChevronDown } from 'lucide-react';
 
-import { fetchVotes, updateVote } from '@/app/chatSlice';
-import voteApi from '@/api/voteApi';
+import { useGetVotes } from '@/hooks/vote/useGetVotes';
 import { Button } from '@/components/ui/button';
 import VoteMessage from './message-type/VoteMessage';
 
 function TabPaneVote() {
-  const { currentConversation, votes, totalPagesVote } = useSelector(
+  const { currentConversation } = useSelector(
     (state: any) => state.chat,
   );
 
-  const dispatch = useDispatch();
-  const [query, setQuery] = useState({
-    page: 0,
-    size: 4,
+  const [page, setPage] = useState(0);
+  const size = 4;
+
+  const { data: voteData } = useGetVotes({
+    params: {
+      conversationId: currentConversation,
+      page,
+      size,
+    },
+    enabled: !!currentConversation,
   });
 
+  const [accumulatedVotes, setAccumulatedVotes] = useState<any[]>([]);
+
   useEffect(() => {
-    setQuery({
-      page: 0,
-      size: 4,
-    });
-    dispatch(
-      fetchVotes({
-        conversationId: currentConversation,
-        ...query,
-      }) as any,
-    );
+    // Reset accumulated votes when conversation changes
+    setAccumulatedVotes([]);
+    setPage(0);
   }, [currentConversation]);
 
-  const handleIncreasePage = async () => {
-    const response = await voteApi.getVotes(
-      currentConversation,
-      query.page + 1,
-      query.size,
-    );
-    const { data } = response;
-    dispatch(updateVote([...votes, ...data]));
+  useEffect(() => {
+    // Accumulate votes as pages are loaded
+    if (voteData?.data) {
+      if (page === 0) {
+        setAccumulatedVotes(voteData.data);
+      } else {
+        setAccumulatedVotes(prev => [...prev, ...voteData.data]);
+      }
+    }
+  }, [voteData, page]);
 
-    setQuery({
-      size: query.size,
-      page: query.page + 1,
-    });
+  const handleIncreasePage = () => {
+    setPage(prev => prev + 1);
   };
+
+  const hasMorePages = voteData ? page + 1 < voteData.totalPages : false;
 
   return (
     <div className="space-y-3 p-4">
-      {votes.map((ele: any, index: number) => (
+      {accumulatedVotes.map((ele: any, index: number) => (
         <div key={index} className="rounded-lg border bg-card p-3">
           <VoteMessage data={ele} />
         </div>
       ))}
 
-      {query.page + 1 < totalPagesVote && (
+      {hasMorePages && (
         <Button
           variant="outline"
           className="w-full"

@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Search, UserPlus, Users, Plus } from 'lucide-react'
 
 import userApi from '@/api/userApi'
-import { createGroup } from '@/app/chatSlice'
+import { useCreateGroup } from '@/hooks/conversation/useCreateGroup'
+import { useGetListClassify } from '@/hooks/classify/useGetListClassify'
 
 import ModalClassify from '../components/modal/ModalClassify'
 import ModalAddFriend from '@/components/modal-add-friend'
@@ -33,13 +34,9 @@ export default function SearchContainer({
   onFilterClasify,
   valueClassify,
 }: Props) {
-  const dispatch = useDispatch()
   const debounceRef = useRef<NodeJS.Timeout | null>(null)
-
-  const { classifies } = useSelector(
-    (state: any) => ({ classifies: state.chat.classifies }),
-    shallowEqual
-  )
+  const { mutateAsync: createGroupMutation, isPending: loadingCreateGroup } = useCreateGroup()
+  const { classifies } = useGetListClassify()
 
   const [modal, setModal] = useState({
     createGroup: false,
@@ -47,7 +44,6 @@ export default function SearchContainer({
     classify: false,
   })
 
-  const [loadingCreateGroup, setLoadingCreateGroup] = useState(false)
   const [foundUser, setFoundUser] = useState<any>({})
   const [showUserCard, setShowUserCard] = useState(false)
 
@@ -71,10 +67,13 @@ export default function SearchContainer({
   }
 
   const handleCreateGroup = async (payload: any) => {
-    setLoadingCreateGroup(true)
-    await dispatch(createGroup(payload) as any)
-    setLoadingCreateGroup(false)
-    setModal((m) => ({ ...m, createGroup: false }))
+    try {
+      await createGroupMutation(payload)
+      toast.success('Tạo nhóm thành công')
+      setModal((m) => ({ ...m, createGroup: false }))
+    } catch (error) {
+      toast.error('Tạo nhóm thất bại')
+    }
   }
 
   return (

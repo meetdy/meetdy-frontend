@@ -1,7 +1,8 @@
 import React, { useMemo } from "react"
-import { useSelector, shallowEqual } from "react-redux"
+import { useSelector } from "react-redux"
 import { Tag } from "lucide-react"
 
+import { useGetListClassify } from "@/hooks/classify/useGetListClassify"
 import ConversationAvatar from "./ConversationAvatar"
 import ShortMessage from "./ShortMessage"
 import { cn } from "@/lib/utils"
@@ -24,12 +25,9 @@ const ConversationSingle = React.memo(({ conversation, onClick }: Props) => {
         type,
     } = conversation
 
-    const { classifies, currentConversation } = useSelector(
-        (state: any) => ({
-            classifies: state.chat.classifies,
-            currentConversation: state.chat.currentConversation,
-        }),
-        shallowEqual
+    const { classifies } = useGetListClassify()
+    const currentConversation = useSelector(
+        (state: any) => state.chat.currentConversation
     )
 
     const isActive = currentConversation === _id

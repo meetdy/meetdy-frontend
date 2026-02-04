@@ -2,10 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Hash } from 'lucide-react';
 
 import ChannelItem from './ChannelItem';
-import {
-    getLastViewOfMembers,
-    setCurrentChannel,
-} from '@/app/chatSlice';
+import { setCurrentChannel } from '@/app/chatSlice';
 import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
@@ -23,7 +20,7 @@ function ListChannel({ data = [] }: ListChannelProps) {
     const handleViewGeneralChannel = () => {
         dispatch(setCurrentChannel(''));
         fetchListMessagesKey({ conversationId: currentConversation, size: 10 });
-        dispatch(getLastViewOfMembers({ conversationId: currentConversation }));
+        // Data will be fetched automatically by the component that needs it
     };
 
     const currentConvo = conversations.find((ele: any) => ele._id === currentConversation);

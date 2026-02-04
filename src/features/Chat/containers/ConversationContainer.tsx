@@ -1,23 +1,17 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Virtuoso } from 'react-virtuoso';
+import { useQueryClient } from '@tanstack/react-query';
 
 import conversationApi from '@/api/conversationApi';
+import channelApi from '@/api/channelApi';
 import SubMenuClassify from '@/components/sub-menu-classify';
 import ConversationSingle from '@/features/Chat/components/ConversationSingle';
 import { useGetListClassify } from '@/hooks/classify/useGetListClassify';
 import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
-import {
-    fetchChannels,
-    getLastViewOfMembers,
-    setCurrentChannel,
-    setCurrentConversation,
-} from '@/app/chatSlice';
-import {
-    getMembersConversation,
-    setTypeOfConversation,
-} from '@/app/chatSlice';
+import { setCurrentChannel, setCurrentConversation } from '@/app/chatSlice';
 import type { RootState, AppDispatch } from '@/redux/store';
+import { createQueryKey } from '@/queries/core';
 
 import {
     ContextMenu,
@@ -114,6 +108,7 @@ function ConversationContainer({ valueClassify }: {
     valueClassify: string;
 }) {
     const dispatch = useDispatch<AppDispatch>();
+    const queryClient = useQueryClient();
     const { conversations } = useGetListConversations({ params: {} });
     const { classifies } = useGetListClassify();
 
@@ -146,13 +141,24 @@ function ConversationContainer({ valueClassify }: {
         async (conversationId: string) => {
             dispatch(setCurrentConversation(conversationId));
             dispatch(setCurrentChannel(''));
-            dispatch(getLastViewOfMembers({ conversationId }) as any);
 
-            dispatch(getMembersConversation({ conversationId }) as any);
-            dispatch(setTypeOfConversation(conversationId) as any);
-            dispatch(fetchChannels({ conversationId }) as any);
+            // Prefetch data for the selected conversation
+            queryClient.prefetchQuery({
+                queryKey: createQueryKey('fetchLastViewOfMembers', { conversationId }),
+                queryFn: () => conversationApi.getLastViewOfMembers(conversationId),
+            });
+
+            queryClient.prefetchQuery({
+                queryKey: createQueryKey('fetchMemberInConversation', { id: conversationId }),
+                queryFn: () => conversationApi.getMemberInConversation(conversationId),
+            });
+
+            queryClient.prefetchQuery({
+                queryKey: createQueryKey('fetchChannel', { conversationId }),
+                queryFn: () => channelApi.getChannel(conversationId),
+            });
         },
-        [dispatch],
+        [dispatch, queryClient],
     );
 
     const [confirmOpen, setConfirmOpen] = useState(false);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useQueryClient } from '@tanstack/react-query';
 import {
     ArrowLeft,
     Hash,
@@ -15,12 +16,12 @@ import {
 
 import conversationApi from '@/api/conversationApi';
 import {
-    createGroup,
-    getLastViewOfMembers,
     setCurrentChannel,
     setCurrentConversation,
 } from '@/app/chatSlice';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
+import { useCreateGroup } from '@/hooks/conversation/useCreateGroup';
+import { useAddMembersToConversation } from '@/hooks/conversation/useAddMembersToConversation';
 import dateUtils from '@/utils/dateUtils';
 import { Button } from '@/components/ui/button';
 import {
@@ -66,9 +67,10 @@ const HeaderOptional: React.FC<Props> = (props) => {
 
     const dispatch = useDispatch<AppDispatch>();
     const { width } = useWindowDimensions();
+    const { mutate: createGroupMutation, isPending: isCreatingGroup } = useCreateGroup();
+    const { mutate: addMembersMutation, isPending: isAddingMembers } = useAddMembersToConversation();
 
     const [isVisible, setIsVisible] = useState(false);
-    const [confirmLoading, setConfirmLoading] = useState(false);
     const [typeModal, setTypeModal] = useState<number>(1);
     const [isPanelOpen, setIsPanelOpen] = useState(true);
 
@@ -97,25 +99,30 @@ const HeaderOptional: React.FC<Props> = (props) => {
 
     const handleOk = async (userIds: string[], groupName?: string) => {
         if (typeModal === 1) {
-            setConfirmLoading(true);
-            await dispatch(
-                createGroup({
+            createGroupMutation(
+                {
                     name: groupName ?? '',
                     userIds,
-                }),
+                },
+                {
+                    onSuccess: () => {
+                        setIsVisible(false);
+                    },
+                }
             );
-            setConfirmLoading(false);
         } else {
-            setConfirmLoading(true);
-            await conversationApi.addMembersToConversation(
-                userIds,
-                currentConversation,
+            addMembersMutation(
+                {
+                    userIds,
+                    conversationId: currentConversation,
+                },
+                {
+                    onSuccess: () => {
+                        setIsVisible(false);
+                    },
+                }
             );
-            setConfirmLoading(false);
         }
-
-        setIsVisible(true);
-        (false);
     };
 
     const hanleOnCancel = (value: boolean) => {
@@ -134,7 +141,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
 
     const handleViewGeneralChannel = () => {
         dispatch(setCurrentChannel(''));
-        dispatch(getLastViewOfMembers({ conversationId: currentConversation }));
+        // Data will be fetched automatically by the component that needs it
     };
 
     const handleOpenDrawer = () => {
@@ -316,13 +323,12 @@ const HeaderOptional: React.FC<Props> = (props) => {
                 }
             />
 
-            <ModalAddMemberToConver
+            {/* <ModalAddMemberToConver
                 isVisible={isVisible}
                 onCancel={hanleOnCancel}
                 onOk={handleOk}
-                loading={confirmLoading}
                 typeModal={typeModal}
-            />
+            /> */}
         </div >
     );
 };

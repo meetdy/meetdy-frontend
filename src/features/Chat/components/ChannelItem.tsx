@@ -3,11 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Hash, Trash, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 
-import {
-    fetchMessageInChannel,
-    getLastViewChannel,
-    setCurrentChannel,
-} from '@/app/chatSlice';
+import { setCurrentChannel } from '@/app/chatSlice';
 import channelApi from '@/api/channelApi';
 import ModalChangeNameChannel from './modal/ModalChangeNameChannel';
 import { useDeleteChannel } from '@/hooks/channel/useDeleteChannel';
@@ -53,8 +49,17 @@ function ChannelItem({ isActive = false, data = {} }: ChannelItemProps) {
 
     const handleViewChannel = () => {
         dispatch(setCurrentChannel(data._id));
-        dispatch(fetchMessageInChannel({ channelId: data._id, size: 10, page: 0 }) as any);
-        dispatch(getLastViewChannel({ channelId: data._id }) as any);
+
+        // Prefetch channel messages and last view
+        queryClient.prefetchQuery({
+            queryKey: createQueryKey('fetchMessageInChannel', { channelId: data._id, size: 10, page: 0 }),
+            queryFn: () => channelApi.getMessageInChannel(data._id, 0, 10),
+        });
+
+        queryClient.prefetchQuery({
+            queryKey: createQueryKey('fetchLastViewChannel', { channelId: data._id }),
+            queryFn: () => channelApi.getLastViewChannel(data._id),
+        });
     };
 
     const handleOnCancel = () => {

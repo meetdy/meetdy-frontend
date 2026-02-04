@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, MessageSquare, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 
-import pinMessageApi from '@/api/pinMessageApi';
-import { fetchPinMessages } from '../../../app/chatSlice';
+import { useRemovePinMessage } from '@/hooks/pin-message/useRemovePinMessage';
+import { createQueryKey } from '@/queries/core';
 
 import TypeMessagePin from './TypeMessagePin';
 import ModalDetailMessagePin from './modal/ModalDetailMessagePin';
@@ -42,22 +43,27 @@ function NutshellPinMessage({
     quantity = 0,
     isHover = true,
 }: NutshellPinMessageProps) {
-    const dispatch = useDispatch();
+    const queryClient = useQueryClient();
     const { currentConversation } = useSelector((state: any) => state.chat);
+    const { mutate: removePinMessageMutation } = useRemovePinMessage();
+
     const [visible, setVisible] = useState(false);
     const [confirmUnpin, setConfirmUnpin] = useState(false);
 
     const handleUnpin = async () => {
-        try {
-            await pinMessageApi.removePinMessage(message._id);
-            toast.success('Xóa thành công');
-            dispatch(
-                fetchPinMessages({ conversationId: currentConversation }) as any,
-            );
-        } catch (error) {
-            toast.error('Xóa thất bại');
-        }
-        setConfirmUnpin(false);
+        removePinMessageMutation(message._id, {
+            onSuccess: () => {
+                toast.success('Xóa thành công');
+                queryClient.invalidateQueries({
+                    queryKey: createQueryKey('fetchPinMessages', { conversationId: currentConversation }, {})
+                });
+                setConfirmUnpin(false);
+            },
+            onError: () => {
+                toast.error('Xóa thất bại');
+                setConfirmUnpin(false);
+            }
+        });
     };
 
     const handleOnClickVisbleList = () => {
