@@ -3,12 +3,12 @@ import fileHelpers from '@/utils/fileHelpers';
 import { Download, Share2 } from 'lucide-react';
 
 function FileItem({ file }: { file: { content: string } }) {
+  const fileName = fileHelpers.getFileName(file.content);
+  const fileExtension = fileHelpers.getFileExtension(fileName);
+
   const handleOnClickDownLoad = () => {
     window.open(file.content, '_blank');
   };
-
-  const fileName = fileHelpers.getFileName(file.content);
-  const fileExtension = fileHelpers.getFileExtension(fileName);
 
   return (
     <div className="flex items-center justify-between gap-3 rounded-lg border bg-card px-3 py-2 transition w-full max-w-md">

@@ -34,7 +34,7 @@ export default function ModalChangePinMessage({
   message = [],
   onCloseModal,
   idMessage = '',
-}: ModalChangePinMessageProps): JSX.Element {
+}: ModalChangePinMessageProps) {
   const [value, setValue] = useState<string>('');
   const queryClient = useQueryClient();
   const { currentConversation } = useSelector((state: any) => state.chat || {});
@@ -48,11 +48,11 @@ export default function ModalChangePinMessage({
     await pinMessageApi.removePinMessage(value);
     await pinMessageApi.pinMessage(idMessage);
     window.alert('Ghim tin nhắn thành công');
-    
+
     queryClient.invalidateQueries({
       queryKey: createQueryKey('fetchPinMessages', { conversationId: currentConversation })
     });
-    
+
     handleOnCancel();
   };
 

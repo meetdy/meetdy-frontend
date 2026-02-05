@@ -1,6 +1,8 @@
 import conversationApi from '@/api/conversationApi';
+
 import ConversationAvatar from '@/features/Chat/components/ConversationAvatar';
 import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
+
 import {
   Dialog,
   DialogContent,

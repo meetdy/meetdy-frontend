@@ -8,7 +8,7 @@ function JoinFromLink() {
     state: { conversationId },
   });
 
-  return <div>{conversationId}</div>;
+  return <>{conversationId}</>;
 }
 
 export default JoinFromLink;

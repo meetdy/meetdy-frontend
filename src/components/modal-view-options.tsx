@@ -244,7 +244,7 @@ export default function ModalViewOption({
             </small>
           </div>
 
-          {getNumberVotes() > 0 && (
+          {+getNumberVotes() > 0 && (
             <p
               className="overview-text text-sm text-primary-600 cursor-pointer flex items-center gap-2"
               onClick={handleShowDetail}
@@ -255,11 +255,11 @@ export default function ModalViewOption({
             </p>
           )}
 
-          <div className="modal-view-option_list mt-4">
+          <div className="mt-4">
             {(infoVote.options || []).map((ele, index) => (
               <div
                 key={index}
-                className="modal-view-option_item flex items-center justify-between gap-4 p-3 rounded-md hover:bg-gray-50"
+                className="flex items-center justify-between gap-4 p-3 rounded-md hover:bg-gray-50"
               >
                 <div className="flex items-start gap-3">
                   <div className="flex items-center justify-center w-10 h-10 rounded-md bg-gray-100">
@@ -295,15 +295,15 @@ export default function ModalViewOption({
                     />
                   </div>
 
-                  <div className="vote-message_item">
-                    <div className="vote-message_name-option text-sm">
+                  <div>
+                    <div className="text-sm">
                       {ele.name}
                     </div>
-                    <strong className="vote-message_munber-voted text-sm ml-1">
+                    <strong className="text-sm ml-1">
                       {ele.userIds.length}
                     </strong>
                     <div
-                      className="vote-message_progress h-2 bg-primary-200 rounded mt-2"
+                      className="h-2 bg-primary-200 rounded mt-2"
                       style={{
                         width: `${countingPercent(ele.userIds.length)}%`,
                       }}
@@ -311,7 +311,7 @@ export default function ModalViewOption({
                   </div>
                 </div>
 
-                <div className="modal-view-option_avatar flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <div className="flex -space-x-2">
                     {ele.userIds.length > 0 && memberInConversation.length > 0
                       ? ele.userIds.map((uid, i) => {
