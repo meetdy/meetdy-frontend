@@ -9,7 +9,7 @@ import { setJoinChatLayout } from '@/app/globalSlice';
 import conversationApi from '@/api/conversationApi';
 import FilterContainer from '@/components/filter-container';
 import ModalJoinGroupFromLink from '@/components/modal-join-group-from-link';
-import Slider from '@/components/carousel-feature';
+import CarouselFeature from '@/components/carousel-feature';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 
 import DrawerPinMessage from './components/DrawerPinMessage';
@@ -816,7 +816,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
                 thân, bạn bè được tối ưu hoá cho máy tính của bạn.
               </p>
               <div className="mt-8">
-                <Slider />
+                <CarouselFeature />
               </div>
             </div>
           </main>
