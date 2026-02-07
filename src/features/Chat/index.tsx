@@ -686,7 +686,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
               )}
 
             <section className="flex-1 flex flex-col overflow-hidden relative">
-              <div className="flex-1 overflow-hidden px-4 py-2">
+              <div className="flex-1 overflow-hidden px-1">
                 <BodyChatContainer
                   scrollId={scrollId}
                   hasNewMessage={hasNewMessage}

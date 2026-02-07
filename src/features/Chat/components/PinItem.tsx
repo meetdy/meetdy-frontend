@@ -1,4 +1,3 @@
-import React from 'react';
 import PersonalAvatar from './PersonalAvatar';
 import { Pin } from 'lucide-react';
 import timeUtils from '@/utils/time-utils';
@@ -11,16 +10,11 @@ function PinItem({ children, message }) {
   return (
     <div>
       <div>
+        <PersonalAvatar avatar={message.user.avatar} name={message.user.name} />
+        <div>{message.user.name}</div>
         <div>
-          <PersonalAvatar avatar={message.user.avatar} name={message.user.name} />
-        </div>
-
-        <div>
-          <div>{message.user.name}</div>
-          <div>
-            <Pin className="w-4 h-4 text-primary" />
-            &nbsp;Tin ghim
-          </div>
+          <Pin className="w-4 h-4 text-primary" />
+          &nbsp;Tin ghim
         </div>
       </div>
       <div>{children}</div>

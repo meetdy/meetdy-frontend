@@ -58,7 +58,7 @@ export default function BodyChatContainer({
     conversationId: currentConversation,
     channelId: currentChannel,
     size: 20,
-    enabled: !!currentConversation || !!currentChannel ,
+    enabled: !!currentConversation || !!currentChannel,
   });
 
   // Reverse pages order so oldest messages come first (for infinite scroll upwards)
@@ -260,7 +260,7 @@ export default function BodyChatContainer({
       className="h-full"
     >
       <div className="min-h-full bg-background">
-        <div className="mx-auto w-full max-w-4xl px-6 py-5">
+        <div className="mx-auto w-full px-6">
           {isFetchingNextPage && (
             <div className="flex items-center justify-center py-4">
               <svg

@@ -90,12 +90,11 @@ function ReplyBlock({ replyMessage, onCloseReply }: ReplyBlockProps) {
   };
 
   return (
-    <div className="flex items-center gap-3 px-4 py-2.5 bg-slate-50 border-l-3 border-primary rounded-r-lg">
+    <div className="flex items-center gap-3 px-4 py-2 bg-slate-50 border-l-3 border-primary rounded-r-lg">
       {renderPreview()}
-
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5 text-xs text-slate-600">
-          <MessageSquareReply className="w-3.5 h-3.5 text-primary" />
+        <div className="flex items-center gap-2 text-xs text-slate-600">
+          <MessageSquareReply className="w-3 h-3 text-primary" />
           <span>
             Trả lời{' '}
             <strong className="font-semibold text-primary">
@@ -103,16 +102,15 @@ function ReplyBlock({ replyMessage, onCloseReply }: ReplyBlockProps) {
             </strong>
           </span>
         </div>
-        <p className="text-sm text-slate-500 truncate mt-0.5">
+        <div className="text-sm text-slate-500 truncate mt-1">
           {getContentPreview()}
-        </p>
+        </div>
       </div>
-
       <button
         type="button"
         onClick={handleOnCloseReply}
         className={cn(
-          'shrink-0 w-7 h-7 rounded-full flex items-center justify-center',
+          'shrink-0 w-8 h-8 rounded-full flex items-center justify-center',
           'text-slate-400 hover:text-slate-600 hover:bg-slate-200',
           'transition-colors duration-150'
         )}
