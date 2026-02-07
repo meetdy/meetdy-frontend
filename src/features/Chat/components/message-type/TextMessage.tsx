@@ -1,30 +1,15 @@
 import { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import CheckLink, {
   replaceConentWithouLink,
   replaceContentToLink,
 } from '@/utils/linkHelper';
+
 import { LinkPreview } from '@dhaiwat10/react-link-preview';
 import parse from 'html-react-parser';
-import { Check, CheckCheck } from 'lucide-react';
+import { CheckCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-import ReplyMessage from '../ReplyMessage';
-TextMessage.propTypes = {
-  content: PropTypes.string,
-  dateAt: PropTypes.object,
-  isVisibleTime: PropTypes.bool.isRequired,
-  isSeen: PropTypes.bool,
-  tags: PropTypes.array,
-  replyMessage: PropTypes.object,
-};
-
-TextMessage.defaultProps = {
-  dateAt: null,
-  isSeen: false,
-  tags: [],
-  replyMessage: null,
-};
+import ReplyMessage from './ReplyMessage';
 
 function TextMessage({
   content,

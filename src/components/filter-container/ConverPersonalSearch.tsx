@@ -7,11 +7,7 @@ import {
 } from '@/app/chatSlice';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
-interface ConverPersonalSearchProps {
-  data?: any[];
-}
-
-function ConverPersonalSearch({ data = [] }: ConverPersonalSearchProps) {
+function ConverPersonalSearch({ data = [] }: any) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

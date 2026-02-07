@@ -10,7 +10,7 @@ import UploadAvatar from '@/components/upload-avatar';
 import UploadCoverImage from '@/components/upload-conver-image';
 import DateOfBirthField from '@/components/field/DateOfBirthField';
 import GenderRadioField from '@/components/field/GenderRadioField';
-import InputFieldNotTitle from '@/components/field/InputFieldNotTitle';
+import InputField from '@/components/field/InputField';
 
 import {
   Dialog,
@@ -161,7 +161,7 @@ function ModalUpdateProfile({
                   <label className="text-sm font-medium">Tên</label>
                   <FastField
                     name="name"
-                    component={InputFieldNotTitle}
+                    component={InputField}
                     type="text"
                     maxLength={100}
                   />

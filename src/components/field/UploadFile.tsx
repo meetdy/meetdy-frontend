@@ -1,7 +1,8 @@
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'sonner';
-import messageApi from '@/api/messageApi';
+
+import MessageService from '@/api/messageApi';
 import { ACCEPT_FILE } from '@/utils/constants';
 
 interface UploadFileProps {
@@ -18,6 +19,9 @@ const UploadFile = ({ typeOfFile = 'file', children }: UploadFileProps) => {
   const handleClick = () => {
     inputRef.current?.click();
   };
+
+  const acceptTypes =
+    typeOfFile === 'media' ? ACCEPT_FILE.IMAGE_VIDEO : ACCEPT_FILE.FILE;
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -45,7 +49,7 @@ const UploadFile = ({ typeOfFile = 'file', children }: UploadFileProps) => {
       }
 
       try {
-        await messageApi.sendFileThroughMessage(
+        await MessageService.sendFileThroughMessage(
           formData,
           attachInfo,
           (percentCompleted: number) => {
@@ -63,8 +67,7 @@ const UploadFile = ({ typeOfFile = 'file', children }: UploadFileProps) => {
     }
   };
 
-  const acceptTypes =
-    typeOfFile === 'media' ? ACCEPT_FILE.IMAGE_VIDEO : ACCEPT_FILE.FILE;
+
 
   return (
     <div onClick={handleClick} className="cursor-pointer">

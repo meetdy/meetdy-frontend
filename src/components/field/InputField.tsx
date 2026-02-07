@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ErrorMessage } from 'formik';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import TagCustom from '@/components/tag-custom';
+import MessageAlert from '@/components/message-alert';
 
 interface InputFieldProps {
   field: any;
@@ -12,9 +12,6 @@ interface InputFieldProps {
   maxLength?: number;
   isRequire?: boolean;
   disabled?: boolean;
-  titleCol?: number;
-  inputCol?: number;
-  size?: 'sm' | 'md' | 'lg';
 }
 
 const InputField: React.FC<InputFieldProps> = (props) => {
@@ -47,7 +44,7 @@ const InputField: React.FC<InputFieldProps> = (props) => {
         className="w-full"
       />
       <ErrorMessage name={name}>
-        {(msg) => <TagCustom title={msg} color="error" />}
+        {(msg) => <MessageAlert title={msg} color="error" />}
       </ErrorMessage>
     </div>
   );
