@@ -6,11 +6,10 @@ import { toast } from 'sonner';
 import { setCurrentChannel } from '@/app/chatSlice';
 import channelApi from '@/api/channelApi';
 import ModalChangeNameChannel from './modal/ModalChangeNameChannel';
-import { useDeleteChannel } from '@/hooks/channel/useDeleteChannel';
-import { useRenameChannel } from '@/hooks/channel/useRenameChannel';
+
+import { useRenameChannel, useDeleteChannel } from '@/hooks/channel';
 import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
-import { useQueryClient } from '@tanstack/react-query';
-import { createQueryKey } from '@/queries/core';
+import { createQueryKey, queryClient } from '@/queries/core';
 
 import {
     ContextMenu,
@@ -42,15 +41,12 @@ function ChannelItem({ isActive = false, data = {} }: ChannelItemProps) {
     const { user } = useSelector((state: any) => state.global);
 
     const { conversations } = useGetListConversations({ params: {} });
-    const mutationRename = useRenameChannel();
-    const mutationDelete = useDeleteChannel();
-    const queryClient = useQueryClient();
-    const { currentConversation } = useSelector((state: any) => state.chat);
+    const { doRenameChannel } = useRenameChannel();
+    const { doDeleteChannel } = useDeleteChannel();
 
     const handleViewChannel = () => {
         dispatch(setCurrentChannel(data._id));
 
-        // Prefetch channel messages and last view
         queryClient.prefetchQuery({
             queryKey: createQueryKey('fetchMessageInChannel', { channelId: data._id, size: 10, page: 0 }),
             queryFn: () => channelApi.getMessageInChannel(data._id, 0, 10),
@@ -68,7 +64,7 @@ function ChannelItem({ isActive = false, data = {} }: ChannelItemProps) {
 
     const handleOnOk = async (name: string) => {
         try {
-            await channelApi.renameChannel(name, data._id);
+            doRenameChannel({ id: data._id, name });
             setVisible(false);
             toast.success('Đổi tên channel thành công');
         } catch (error) {
@@ -76,12 +72,9 @@ function ChannelItem({ isActive = false, data = {} }: ChannelItemProps) {
         }
     };
 
-    const handleDeleteChannel = async () => {
+    const handleDeleteChannel = () => {
         try {
-            await mutationDelete.mutateAsync(data._id);
-            queryClient.invalidateQueries({
-                queryKey: createQueryKey('fetchChannel', { conversationId: currentConversation })
-            });
+            doDeleteChannel({ id: data._id });
             toast.success('Xóa Channel thành công');
         } catch (error) {
             toast.error('Đã có lỗi xảy ra');

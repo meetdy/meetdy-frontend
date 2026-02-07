@@ -145,7 +145,7 @@ function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
     setIsModalEdit(false);
   };
 
-  const handleEditClasify = (value: any) => {
+  const handleEditClassify = (value: any) => {
     setIsModalEdit(true);
     setIsShowModalAdd(true);
     onCancel?.();
@@ -154,7 +154,7 @@ function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
     previousName.current = value;
   };
 
-  const handleDeleteClasify = async (value: any) => {
+  const handleDeleteClassify = async (value: any) => {
     try {
       await deleteClassify(value._id);
       toast.success('Xóa thành công');
@@ -202,7 +202,7 @@ function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8"
-                    onClick={() => handleEditClasify(ele)}
+                    onClick={() => handleEditClassify(ele)}
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
@@ -306,7 +306,7 @@ function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Hủy</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleDeleteClasify(deleteConfirm)}>
+            <AlertDialogAction onClick={() => handleDeleteClassify(deleteConfirm)}>
               Đồng ý
             </AlertDialogAction>
           </AlertDialogFooter>

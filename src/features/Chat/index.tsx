@@ -52,10 +52,8 @@ import { calculateResponsiveDrawer } from '@/utils/ui-utils';
 import { toast } from 'sonner';
 
 import { createKeyListConversations, useGetListConversations } from '@/hooks/conversation/useGetListConversations';
-import { useGetFriends } from '@/hooks/friend/useGetFriends';
-import { useGetListClassify } from '@/hooks/classify/useGetListClassify';
 import { usePinnedMessages } from '@/hooks/channel/usePinnedMessages';
-import { useGetChannel } from '@/hooks/channel/useGetChannel';
+import { useGetChannel } from '@/hooks/channel';
 
 
 function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boolean }) {
@@ -76,12 +74,9 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
     (state: any) => state.global || {},
   );
 
-  // React Query Hooks
   const { conversations = [] } = useGetListConversations({ params: {} });
-  const { friends = [] } = useGetFriends({ params: { name: '' } });
-  const { classifies = [] } = useGetListClassify();
 
-  const { channel: channels = [] } = useGetChannel({
+  const { data: channels = [] } = useGetChannel({
     conversationId: currentConversation,
     enabled: !!currentConversation
   });
@@ -436,7 +431,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
     setIsShow(value);
   };
 
-  const hanldeResetScrollButton = (value: boolean) => {
+  const handleResetScrollButton = (value: boolean) => {
     setIsScroll(value);
   };
 
@@ -559,11 +554,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
                       onChange={handleChangeActiveKey}
                     />
                   ) : (
-                    <InfoContainer
-                      onViewChannel={handleChangeViewChannel}
-                      socket={socket}
-                      onOpenInfoBlock={() => setIsOpenInfo(true)}
-                    />
+                    <InfoContainer onViewChannel={handleChangeViewChannel} />
                   )}
                 </div>
               </div>
@@ -590,8 +581,6 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
               ) : (
                 <InfoContainer
                   onViewChannel={handleChangeViewChannel}
-                  socket={socket}
-                  onOpenInfoBlock={() => setIsOpenInfo(true)}
                   onClose={() => setIsOpenInfo(false)}
                 />
               )}
@@ -687,7 +676,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
                   scrollId={scrollId}
                   hasNewMessage={hasNewMessage}
                   onBackToBottom={handleBackToBottom}
-                  onResetScrollButton={hanldeResetScrollButton}
+                  onResetScrollButton={handleResetScrollButton}
                   turnOnScrollButton={isScroll}
                   onReply={handleOnReply}
                   onMention={handleOnMention}
@@ -697,27 +686,23 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
               {pinMessages.length > 1 &&
                 (currentConverObj as any).type &&
                 !currentChannel && (
-                  <div className="absolute right-4 bottom-24 hidden lg:block">
-                    <DrawerPinMessage
-                      isOpen={isOpenDrawer}
-                      onClose={() => setIsOpenDrawer(false)}
-                      message={pinMessages}
-                    />
-                  </div>
+                  <DrawerPinMessage
+                    isOpen={isOpenDrawer}
+                    onClose={() => setIsOpenDrawer(false)}
+                    message={pinMessages}
+                  />
                 )}
 
               {pinMessages.length > 0 &&
                 (currentConverObj as any).type &&
                 !currentChannel && (
-                  <div className="absolute left-4 bottom-24 hidden lg:block">
-                    <NutshellPinMessage
-                      isHover={false}
-                      isItem={pinMessages.length > 1 ? false : true}
-                      message={pinMessages[0]}
-                      quantity={pinMessages.length}
-                      onOpenDrawer={() => setIsOpenDrawer(true)}
-                    />
-                  </div>
+                  <NutshellPinMessage
+                    isHover={false}
+                    isItem={pinMessages.length > 1 ? false : true}
+                    message={pinMessages[0]}
+                    quantity={pinMessages.length}
+                    onOpenDrawer={() => setIsOpenDrawer(true)}
+                  />
                 )}
 
               <button

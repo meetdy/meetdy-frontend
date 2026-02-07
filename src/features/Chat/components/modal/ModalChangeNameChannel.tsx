@@ -10,56 +10,95 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 interface ModalChangeNameChannelProps {
+  initialValue?: string;
   visible?: boolean;
   onConfirm?: (name: string) => void;
   onCancel?: () => void;
-  initialValue?: string;
 }
 
 function ModalChangeNameChannel({
+  initialValue = '',
   visible = false,
   onConfirm,
   onCancel,
-  initialValue = '',
 }: ModalChangeNameChannelProps) {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string>('');
 
   useEffect(() => {
-    setValue(initialValue);
+    if (visible) {
+      setValue(initialValue);
+    }
   }, [initialValue, visible]);
 
-  const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setValue(e.target.value);
   };
 
   const handleCancel = () => {
     onCancel?.();
-    setValue('');
+    setValue(initialValue);
   };
 
   const handleConfirm = () => {
-    onConfirm?.(value);
+    const trimmed = value.trim();
+    if (!trimmed) return;
+
+    onConfirm?.(trimmed);
   };
 
+  const isDisabled =
+    !value.trim() || value.trim() === initialValue.trim();
+
   return (
-    <Dialog open={visible} onOpenChange={(open) => !open && handleCancel()}>
+    <Dialog
+      open={visible}
+      onOpenChange={(open) => {
+        if (!open) handleCancel();
+      }}
+    >
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Đổi tên Channel</DialogTitle>
+          <DialogTitle>
+            Đổi tên Channel
+          </DialogTitle>
         </DialogHeader>
+
+        {/* BODY */}
         <div className="py-4">
           <Input
+            autoFocus
             placeholder="Nhập tên mới"
             value={value}
-            onChange={handleOnchange}
-            onKeyDown={(e) => e.key === 'Enter' && value.trim() && handleConfirm()}
+            maxLength={100}
+            onChange={handleChange}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !isDisabled) {
+                handleConfirm();
+              }
+            }}
           />
+
+          {/* Helper text */}
+          <p className="text-xs text-slate-500 mt-2">
+            Tối đa 100 ký tự
+          </p>
         </div>
+
+        {/* FOOTER */}
         <DialogFooter>
-          <Button variant="outline" onClick={handleCancel}>
+          <Button
+            variant="outline"
+            onClick={handleCancel}
+          >
             Hủy
           </Button>
-          <Button onClick={handleConfirm} disabled={value.trim().length === 0}>
+
+          <Button
+            onClick={handleConfirm}
+            disabled={isDisabled}
+          >
             Thay đổi
           </Button>
         </DialogFooter>

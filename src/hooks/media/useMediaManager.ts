@@ -34,7 +34,7 @@ export function useMediaManager({
   conversationId,
   type = 'ALL',
   enabled = true,
-}: UseMediaManagerOptions): UseMediaManagerReturn {
+}: UseMediaManagerOptions) {
   const [currentType, setCurrentType] = useState<MediaType>(type);
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);

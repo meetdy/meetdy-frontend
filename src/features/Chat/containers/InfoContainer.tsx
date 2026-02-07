@@ -5,6 +5,9 @@ import { X, Info } from 'lucide-react';
 
 import userApi from '@/api/userApi';
 
+import { useGetAllMedia } from '@/hooks/media/useGetAllMedia';
+import { useGetChannel } from '@/hooks/channel';
+
 import Channel from '@/features/Chat/components/Channel';
 import AnotherSetting from '@/features/Chat/components/AnotherSetting';
 import ArchiveFile from '@/features/Chat/components/ArchiveFile';
@@ -13,24 +16,18 @@ import InfoFriendSearch from '@/features/Chat/components/InfoFriendSearch';
 import InfoMediaSearch from '@/features/Chat/components/InfoMediaSearch';
 import InfoMember from '@/features/Chat/components/InfoMember';
 import InfoNameAndThumbnail from '@/features/Chat/components/InfoNameAndThumbnail';
-import { useGetAllMedia } from '@/hooks/media/useGetAllMedia';
-import { useGetChannel } from '@/hooks/channel/useGetChannel';
 import UserCard from '@/components/user-card';
-import { Button } from '@/components/ui/button';
 
-import type { RootState } from '@/redux/store';
 import ChatHeader, { HeaderIconButton } from '../components/ChatHeader';
 
 type Props = {
-    socket?: any;
     onViewChannel?: (id?: string) => void;
-    onOpenInfoBlock?: () => void;
     onClose?: () => void;
 };
 
-function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBlock, onClose }: Props) {
+function InfoContainer({ onViewChannel, onClose }: Props) {
 
-    const [navState, setNavState] = useState({ view: 0, tabpane: 0 });
+    const [navState, setNavState] = useState({ view: 0, tabPane: 0 });
     const [isUserCardVisible, setUserCardVisible] = useState(false);
     const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
@@ -39,8 +36,7 @@ function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBlock, onClose }:
         type,
         currentConversation,
         conversations,
-    } = useSelector((state: RootState) => state.chat);
-
+    } = useSelector((state: any) => state.chat);
 
     const currentConver = useMemo(
         () => conversations.find((c) => c._id === currentConversation) ?? null,
@@ -61,16 +57,16 @@ function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBlock, onClose }:
         [],
     );
 
-    const goInfo = () => setNavState({ view: 0, tabpane: 0 });
-    const goMembers = (view: number) => setNavState({ view, tabpane: 0 });
-    const goMedia = (view: number, tabpane = 0) => setNavState({ view, tabpane });
+    const goInfo = () => setNavState({ view: 0, tabPane: 0 });
+    const goMembers = (view: number) => setNavState({ view, tabPane: 0 });
+    const goMedia = (view: number, tabPane = 0) => setNavState({ view, tabPane });
 
     const { data: media = {} as any } = useGetAllMedia({
         params: { conversationId: currentConversation },
         enabled: !!currentConversation,
     });
 
-    const { channel: channels = [] } = useGetChannel({
+    const { data: channels = [] } = useGetChannel({
         conversationId: currentConversation,
         enabled: !!currentConversation,
     });
@@ -111,7 +107,6 @@ function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBlock, onClose }:
                                         viewMemberClick={goMembers}
                                         quantity={memberInConversation?.length ?? 0}
                                     />
-
                                     <Channel onViewChannel={onViewChannel} data={channels} />
                                 </>
                             )}
@@ -131,7 +126,7 @@ function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBlock, onClose }:
                             <ArchiveFile items={media.files} viewMediaClick={goMedia} />
 
                             {currentConver?.type && (
-                                <AnotherSetting socket={socket} />
+                                <AnotherSetting />
                             )}
                         </div>
                     </Scrollbars>
@@ -139,7 +134,7 @@ function InfoContainer({ socket = {}, onViewChannel, onOpenInfoBlock, onClose }:
             )}
 
             {navState.view === 2 && (
-                <InfoMediaSearch onBack={goInfo} tabpane={navState.tabpane} />
+                <InfoMediaSearch onBack={goInfo} tabPane={navState.tabPane} />
             )}
 
             {navState.view === 1 && (

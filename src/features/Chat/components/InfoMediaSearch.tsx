@@ -25,21 +25,19 @@ const getType = (key: string) => {
 
 interface InfoMediaSearchProps {
     onBack?: (value?: any) => void;
-    tabpane: number;
+    tabPane: number;
 }
 
-function InfoMediaSearch({ onBack, tabpane }: InfoMediaSearchProps) {
-    const [activeKey, setActiveKey] = useState(tabpane.toString());
+function InfoMediaSearch({ onBack, tabPane }: InfoMediaSearchProps) {
+    const [activeKey, setActiveKey] = useState(tabPane.toString());
     const { memberInConversation, currentConversation } = useSelector(
         (state: any) => state.chat,
     );
     const [medias, setMedias] = useState<any[]>([]);
 
-
-
     const [query, setQuery] = useState<any>({
         conversationId: currentConversation,
-        type: getTypeWithTabPane(tabpane),
+        type: getTypeWithTabPane(tabPane),
     });
 
     const handleOnBack = (value?: any) => {
@@ -54,8 +52,6 @@ function InfoMediaSearch({ onBack, tabpane }: InfoMediaSearchProps) {
     const handleQueryChange = async (queryResult: any) => {
         setQuery({ ...query, ...queryResult });
     };
-
-
 
     useEffect(() => {
         const fetchMedia = async () => {

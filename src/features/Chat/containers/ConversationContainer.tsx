@@ -155,7 +155,7 @@ function ConversationContainer({ valueClassify }: {
 
             queryClient.prefetchQuery({
                 queryKey: createQueryKey('fetchChannel', { conversationId }),
-                queryFn: () => channelApi.getChannel(conversationId),
+                queryFn: () => channelApi.getChannel({ id: conversationId }),
             });
         },
         [dispatch, queryClient],

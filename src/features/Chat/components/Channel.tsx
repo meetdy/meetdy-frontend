@@ -3,9 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ChevronDown, Hash, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { useQueryClient } from '@tanstack/react-query';
-import { createQueryKey } from '@/queries/core';
-
 import {
     Dialog,
     DialogContent,
@@ -20,15 +17,14 @@ import { setCurrentChannel } from '@/app/chatSlice';
 
 import ChannelItem from './ChannelItem';
 
+import { useAddChannel } from '@/hooks/channel';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 
 interface ChannelProps {
     onViewChannel?: () => void;
     data?: any[];
     onOpenInfoBlock?: () => void;
 }
-
-import { useAddChannel } from '@/hooks/channel/useAddChannel';
-import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 
 function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
     const [isDrop, setIsDrop] = useState(true);
@@ -42,8 +38,7 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
     const dispatch = useDispatch();
 
     const { conversations } = useGetListConversations({ params: {} });
-    const mutationAddChannel = useAddChannel();
-    const queryClient = useQueryClient();
+    const { doAddChannel } = useAddChannel();
 
     const handleOnClick = () => {
         setIsDrop(!isDrop);
@@ -60,10 +55,7 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
 
     const handleConfirm = async () => {
         try {
-            await mutationAddChannel.mutateAsync({ name: valueInput, conversationId: currentConversation });
-            queryClient.invalidateQueries({
-                queryKey: createQueryKey('fetchChannel', { conversationId: currentConversation })
-            });
+            doAddChannel({ id: currentConversation, name: valueInput });
             toast.success('Tạo channel thành công');
             setIsVisible(false);
             setValueInput('');
@@ -84,7 +76,6 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
 
     const handleViewGeneralChannel = () => {
         dispatch(setCurrentChannel(''));
-        // Data will be fetched automatically by the component that needs it
     };
 
     const currentConvo = conversations.find((ele: any) => ele._id === currentConversation);

@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, MessageSquare, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { useRemovePinMessage } from '@/hooks/pin-message/useRemovePinMessage';
+import { useUnpinMessage } from '@/hooks/pin-message/useRemovePinMessage';
 import { createQueryKey } from '@/queries/core';
 
 import TypeMessagePin from './TypeMessagePin';
@@ -45,13 +45,13 @@ function NutshellPinMessage({
 }: NutshellPinMessageProps) {
     const queryClient = useQueryClient();
     const { currentConversation } = useSelector((state: any) => state.chat);
-    const { mutate: removePinMessageMutation } = useRemovePinMessage();
+    const { mutate: unpinMessageMutation } = useUnpinMessage();
 
     const [visible, setVisible] = useState(false);
     const [confirmUnpin, setConfirmUnpin] = useState(false);
 
-    const handleUnpin = async () => {
-        removePinMessageMutation(message._id, {
+    const handleUnpin = () => {
+        unpinMessageMutation(message._id, {
             onSuccess: () => {
                 toast.success('Xóa thành công');
                 queryClient.invalidateQueries({

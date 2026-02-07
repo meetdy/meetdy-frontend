@@ -20,7 +20,7 @@ import ModalChangePinMessage from '@/components/modal-change-pin-message';
 import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import { checkLeader } from '@/utils/feature-utils';
 
-import { deleteMessageClient } from '../../../../app/chatSlice';
+import { deleteMessageClient } from '@/app/chatSlice';
 import { useMessageReactions } from '../../hooks/useMessageReactions';
 import type { UserMessageProps, ChatMessage } from '../../types/message.types';
 
@@ -353,7 +353,7 @@ function UserMessage({
                                 <div
                                     className={cn(
                                         'relative min-w-0 max-w-[72%] transition-all duration-200',
-                                        isMediaMessage ? 'rounded-2xl' : 'rounded-2xl shadow-sm',
+                                        isMediaMessage ? 'rounded-xl' : 'rounded-xl shadow-sm',
                                         isMyMessage &&
                                         !isMediaMessage &&
                                         'bg-blue-100 text-foreground border border-blue-200/40',
@@ -441,7 +441,7 @@ function UserMessage({
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-8 w-8 rounded-lg hover:bg-accent/80 active:scale-95 transition-all duration-150"
+                                                className="h-8 w-8 rounded-md hover:bg-accent/80 active:scale-95 transition-all duration-150"
                                                 aria-label="More actions"
                                             >
                                                 <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
@@ -450,7 +450,7 @@ function UserMessage({
 
                                         <DropdownMenuContent
                                             align={isMyMessage ? 'end' : 'start'}
-                                            className="min-w-48 rounded-lg shadow-lg"
+                                            className="min-w-48 rounded-md shadow-lg"
                                         >
                                             {isGroup && !currentChannel && type !== 'STICKER' ? (
                                                 <DropdownMenuItem

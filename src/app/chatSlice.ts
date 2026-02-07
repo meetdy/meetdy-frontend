@@ -178,7 +178,7 @@ export const fetchChannels = createAsyncThunk(
   `${KEY}/fetchChannels`,
   async (params: { conversationId: string }) => {
     const { conversationId } = params;
-    const data = await channelApi.getChannel(conversationId);
+    const data = await channelApi.getChannel({ id: conversationId });
     return data;
   },
 );

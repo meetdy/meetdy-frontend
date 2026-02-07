@@ -9,16 +9,8 @@ interface DrawerPinMessageProps {
 }
 
 function DrawerPinMessage({ isOpen, onClose, message }: DrawerPinMessageProps) {
-    const handleViewNews = () => {
-        onClose?.();
-    };
-
-    const handleOnCloseDrawer = () => {
-        onClose?.();
-    };
-
     return (
-        <Sheet open={isOpen} onOpenChange={(open) => !open && handleOnCloseDrawer()}>
+        <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <SheetContent side="top" className="p-0">
                 <div className="flex flex-col">
                     <div className="flex items-center justify-between px-4 py-3 border-b bg-muted/50">
@@ -26,7 +18,7 @@ function DrawerPinMessage({ isOpen, onClose, message }: DrawerPinMessageProps) {
                             Danh sách ghim ({message.length})
                         </span>
                         <button
-                            onClick={handleOnCloseDrawer}
+                            onClick={onClose}
                             className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Thu gọn
@@ -41,7 +33,7 @@ function DrawerPinMessage({ isOpen, onClose, message }: DrawerPinMessageProps) {
                     </div>
 
                     <button
-                        onClick={handleViewNews}
+                        onClick={onClose}
                         className="flex items-center justify-center py-2 border-t hover:bg-muted/50 transition-colors"
                     >
                         <ChevronDown className="h-4 w-4 text-muted-foreground" />

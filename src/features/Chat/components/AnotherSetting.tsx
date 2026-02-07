@@ -15,12 +15,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { socket } from '@/lib/socket';
 
-interface AnotherSettingProps {
-  socket: any;
-}
-
-function AnotherSetting({ socket }: AnotherSettingProps) {
+function AnotherSetting() {
   const [isDrop, setIsDrop] = useState(true);
   const { currentConversation, conversations } = useSelector(
     (state: any) => state.chat,
@@ -50,6 +47,7 @@ function AnotherSetting({ socket }: AnotherSettingProps) {
     try {
       await conversationApi.deleteConversation(currentConversation);
       toast.success('Xóa thành công');
+      socket.emit('delete-conversation', currentConversation);
     } catch (error) {
       toast.error('Đã có lỗi xảy ra');
     }
