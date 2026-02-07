@@ -5,8 +5,12 @@ import { ChevronsLeft, ChevronDown, X } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Socket } from 'socket.io-client';
 
-import { setJoinChatLayout } from '@/app/globalSlice';
 import conversationApi from '@/api/conversationApi';
+
+import { createKeyListConversations, useGetListConversations } from '@/hooks/conversation/useGetListConversations';
+import { usePinnedMessages } from '@/hooks/channel/usePinnedMessages';
+import { useGetChannel } from '@/hooks/channel';
+
 import FilterContainer from '@/components/filter-container';
 import ModalJoinGroupFromLink from '@/components/modal-join-group-from-link';
 import CarouselFeature from '@/components/carousel-feature';
@@ -21,11 +25,12 @@ import FooterChatContainer from './containers/FooterChatContainer';
 import HeaderChatContainer from './containers/HeaderChatContainer';
 import InfoContainer from './containers/InfoContainer';
 import SearchContainer from './containers/SearchContainer';
+
+import { setJoinChatLayout } from '@/app/globalSlice';
 import {
   addManagers,
   addMessage,
   deleteManager,
-  fetchConversationById,
   getLastViewOfMembers,
   getMembersConversation,
   isDeletedFromGroup,
@@ -39,21 +44,15 @@ import {
   setTypeOfConversation,
   updateAvatarConver,
   updateChannel,
-  updateLastViewOfMembers,
   updateMemberInconver,
   updateNameChannel,
   updateNameOfConver,
   updateTimeForConver,
-  updateVoteMessage,
 } from '@/app/chatSlice';
 
 import { calculateResponsiveDrawer } from '@/utils/ui-utils';
 
 import { toast } from 'sonner';
-
-import { createKeyListConversations, useGetListConversations } from '@/hooks/conversation/useGetListConversations';
-import { usePinnedMessages } from '@/hooks/channel/usePinnedMessages';
-import { useGetChannel } from '@/hooks/channel';
 
 
 function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boolean }) {
@@ -348,7 +347,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
         'update-vote-message',
         (conversationId: string, voteMessage: any) => {
           if (refCurrentConversation.current === conversationId) {
-            dispatch(updateVoteMessage({ voteMessage }));
+            //TODO: Update vote message
           }
         },
       );

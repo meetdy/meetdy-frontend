@@ -9,7 +9,6 @@ import {
   ILastIndividualMessage,
 } from '@/models/message.model';
 import { IFriend } from '@/models/friend.model';
-import { IClassify, IColor } from '@/models/classify.model';
 import { IUser } from '@/models/auth.model';
 
 type Conversation = IIndividualConversation | IGroupConversation;

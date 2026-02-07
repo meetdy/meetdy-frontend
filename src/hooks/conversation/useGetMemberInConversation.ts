@@ -32,7 +32,7 @@ export async function checkAndFetchMemberInConversation(
   );
   if (cachedMember) return cachedMember;
 
-  const member = await queryClient.getQuery({
+  const member = await queryClient.fetchQuery({
     queryKey: fetchMemberInConversationKey(id),
     queryFn: () => ServiceConversation.getMemberInConversation(id),
     staleTime: Infinity,

@@ -7,7 +7,7 @@ import { setTabActive } from '@/app/globalSlice';
 import conversationApi from '@/api/conversationApi';
 import NotFoundPage from '@/components/not-found-page';
 
-import { createKeyListConversations } from '@/hooks/conversation/useGetListConversations';
+import { createKeyListConversations, useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 import { createKeyGetListMessages } from '@/hooks/message/useGetListMessages';
 
 import Chat from '@/features/Chat';
@@ -22,7 +22,6 @@ import {
   fetchConversationById,
   fetchListConversations,
   updateAvatarWhenUpdateMember,
-  updateFriendChat,
 } from '@/app/chatSlice';
 import { setNumberOfNotification } from '@/app/globalSlice';
 
@@ -41,6 +40,8 @@ function ChatLayout() {
 
   const [idNewMessage, setIdNewMessage] = useState('');
 
+  const { conversations: chat } = useGetListConversations({ params: {} });
+  console.log('🚀 ~ ChatLayout ~ chat:', chat)
 
   const { user, numberOfNotification } = useSelector((state: any) => state.global);
   const { conversations } = useSelector((state: any) => state.chat);
@@ -173,7 +174,6 @@ function ChatLayout() {
     // xóa kết bạn
     socket.on('deleted-friend', (_id) => {
       invalidateFriendCore();
-      dispatch(updateFriendChat(_id));
     });
 
     // revokeToken

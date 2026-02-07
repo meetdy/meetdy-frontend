@@ -41,7 +41,7 @@ export async function checkAndFetchConversationById(
   >(fetchConversationByIdKey(id));
   if (cachedConversation) return cachedConversation;
 
-  const conversation = await queryClient.getQuery({
+  const conversation = await queryClient.fetchQuery({
     queryKey: fetchConversationByIdKey(id),
     queryFn: () => ServiceConversation.getConversationById(id),
     staleTime: Infinity,

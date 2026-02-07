@@ -1,10 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
-import { createQueryKey } from "@/queries/core";
-import ServiceConversation from "@/api/conversationApi";
+import { useMutation } from '@tanstack/react-query';
+import { createQueryKey } from '@/queries/core';
+import ServiceConversation from '@/api/conversationApi';
 
-export function useLeaveGroup() {
-    return useMutation<void, unknown, string>({
-        mutationKey: createQueryKey("leaveGroup", {}),
-        mutationFn: (conversationId: string) => ServiceConversation.leaveGroup(conversationId),
-    });
+export function useLeaveConversationGroup() {
+  return useMutation<void, unknown, string>({
+    mutationKey: createQueryKey('leaveConversationGroup', {}),
+    mutationFn: (conversationId: string) =>
+      ServiceConversation.leaveGroup(conversationId),
+  });
 }

@@ -32,7 +32,7 @@ export async function checkAndFetchLastViewOfMembers(
   );
   if (cachedLastViewOfMembers) return cachedLastViewOfMembers;
 
-  const lastViewOfMembers = await queryClient.getQuery({
+  const lastViewOfMembers = await queryClient.fetchQuery({
     queryKey: fetchLastViewOfMembersKey(conversationId),
     queryFn: () => ServiceConversation.getLastViewOfMembers(conversationId),
     staleTime: Infinity,

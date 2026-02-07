@@ -1,12 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
 import channelApi from '@/api/channelApi';
-import classifyApi from '@/api/classifyApi';
 import conversationApi from '@/api/conversationApi';
-import friendApi from '@/api/friendApi';
 import messageApi from '@/api/messageApi';
-import pinMessageApi from '@/api/pinMessageApi';
-import stickerApi from '@/api/stickerApi';
-import voteApi from '@/api/voteApi';
 
 import {
   IGroupConversation,
@@ -45,56 +41,6 @@ export const fetchListMessages = createAsyncThunk(
       messages,
       conversationId,
     };
-  },
-);
-
-export const fetchNextPageMessage = createAsyncThunk(
-  `${KEY}/fetchNextPageMessage`,
-  async (params: { conversationId: string; page: number; size: number }) => {
-    const { conversationId, page, size } = params;
-
-    const messages = await messageApi.getListMessages(
-      conversationId,
-      page,
-      size,
-    );
-
-    return {
-      messages,
-    };
-  },
-);
-
-export const fetchNextPageMessageOfChannel = createAsyncThunk(
-  `${KEY}/fetchNextPageMessageOfChannel`,
-  async (params: { page: number; size: number; channelId: string }) => {
-    const { page, size, channelId } = params;
-
-    const messages = await channelApi.getMessageInChannel(
-      channelId,
-      page,
-      size,
-    );
-
-    const totalPages = size ? Math.max(1, Math.ceil(messages.total / size)) : 1;
-
-    return {
-      messages: {
-        data: messages.data,
-        page,
-        totalPages,
-      },
-      channelId,
-    };
-  },
-);
-
-export const fetchListFriends = createAsyncThunk(
-  `${KEY}/fetchListFriends`,
-  async (params: { name: string }) => {
-    const { name } = params;
-    const friends = await friendApi.getFriends({ name });
-    return friends;
   },
 );
 
@@ -187,23 +133,6 @@ export const getLastViewChannel = createAsyncThunk(
   },
 );
 
-export const fetchAllSticker = createAsyncThunk(
-  `${KEY}/fetchAllSticker`,
-  async () => {
-    const data = await stickerApi.getAllSticker();
-    return data;
-  },
-);
-
-export const fetchVotes = createAsyncThunk(
-  `${KEY}/fetchVotes`,
-  async (params: { conversationId: string; page: number; size: number }) => {
-    const { conversationId, page, size } = params;
-    const data = await voteApi.getVotes(conversationId, page, size);
-    return data;
-  },
-);
-
 const chatSlice = createSlice({
   name: KEY,
   initialState: {
@@ -211,7 +140,6 @@ const chatSlice = createSlice({
     conversations: [],
     currentConversation: '',
     messages: [],
-    friends: [],
     memberInConversation: [],
     type: false,
     currentPage: 0,
@@ -222,8 +150,6 @@ const chatSlice = createSlice({
     currentChannel: '',
     channels: [],
     totalChannelNotify: 0,
-    stickers: [],
-    votes: [],
     totalPagesVote: 0,
   },
   reducers: {
@@ -312,10 +238,6 @@ const chatSlice = createSlice({
       if (currentPage < totalPages - 1) {
         state.currentPage = currentPage + 1;
       }
-    },
-
-    setFriends: (state, action) => {
-      state.friends = action.payload;
     },
 
     removeConversation: (state, action) => {
@@ -517,10 +439,6 @@ const chatSlice = createSlice({
         state.messages[index] = voteMessage;
       }
     },
-    updateFriendChat: (state, action) => {
-      const id = action.payload;
-      state.friends = state.friends.filter((ele) => ele._id !== id);
-    },
 
     deletedMember: (state, action) => {
       const { conversationId } = action.payload;
@@ -570,9 +488,6 @@ const chatSlice = createSlice({
       }
     },
 
-    updateVote: (state, action) => {
-      state.votes = action.payload;
-    },
     updateMemberInconver: (state, action) => {
       const { conversationId, newMember } = action.payload;
       state.memberInConversation = newMember;
@@ -659,44 +574,18 @@ const chatSlice = createSlice({
         state.isLoading = false;
       })
 
-      // Pagination
-      .addCase(fetchNextPageMessage.fulfilled, (state, action) => {
-        state.messages = [...action.payload.messages.data, ...state.messages];
-        state.currentPage = action.payload.messages.page ?? state.currentPage;
-        state.totalPages =
-          action.payload.messages.totalPages ?? state.totalPages;
-      })
-      .addCase(fetchNextPageMessageOfChannel.fulfilled, (state, action) => {
-        const { messages } = action.payload;
-        state.messages = [...messages.data, ...state.messages];
-        state.currentPage = messages.page ?? state.currentPage;
-        state.totalPages = messages.totalPages ?? state.totalPages;
-      })
-
-      // Friends
-      .addCase(fetchListFriends.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(fetchListFriends.fulfilled, (state, action) => {
-        state.friends = action.payload;
-        state.isLoading = false;
-      })
-      .addCase(fetchListFriends.rejected, (state) => {
-        state.isLoading = false;
-      })
-
       // Single conversation
       .addCase(fetchConversationById.fulfilled, (state, action) => {
         state.conversations = [action.payload, ...state.conversations];
       })
 
       // Members
-      .addCase(getMembersConversation.fulfilled, (state, action) => {
-        state.memberInConversation = action.payload.map((member) => {
-          const isFriend = state.friends.some((f) => f._id === member._id);
-          return { ...member, isFriend };
-        });
-      })
+      // .addCase(getMembersConversation.fulfilled, (state, action) => {
+      //   state.memberInConversation = action.payload.map((member) => {
+      //     const isFriend = state.friends.some((f) => f._id === member._id);
+      //     return { ...member, isFriend };
+      //   });
+      // })
 
       // Last view
       .addCase(getLastViewOfMembers.fulfilled, (state, action) => {
@@ -718,32 +607,14 @@ const chatSlice = createSlice({
       })
       .addCase(fetchChannels.rejected, (state) => {
         state.isLoading = false;
-      })
-
-      // Stickers
-      .addCase(fetchAllSticker.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(fetchAllSticker.fulfilled, (state, action) => {
-        state.stickers = action.payload;
-        state.isLoading = false;
-      })
-      .addCase(fetchAllSticker.rejected, (state) => {
-        state.isLoading = false;
-      })
-
-      // Votes
-      .addCase(fetchVotes.fulfilled, (state, action) => {
-        state.votes = action.payload.data;
-        state.totalPagesVote = action.payload.totalPages;
       });
   },
 });
 
 const { reducer, actions } = chatSlice;
+
 export const {
   addMessage,
-  setFriends,
   removeConversation,
   setTypeOfConversation,
   setRaisePage,
@@ -767,10 +638,7 @@ export const {
   updateAvatarConver,
   removeChannel,
   setTotalChannelNotify,
-  updateVoteMessage,
-  updateFriendChat,
   deletedMember,
-  updateVote,
   addManagers,
   deleteManager,
   updateMemberInconver,

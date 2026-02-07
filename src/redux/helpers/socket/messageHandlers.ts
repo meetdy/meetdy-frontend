@@ -9,7 +9,6 @@ import {
   addTypingUser,
   removeTypingUser,
   setIdNewMessage,
-  setPinMessages,
   setReactionMessage,
   updateLastViewOfMembers,
   updateVoteMessage,

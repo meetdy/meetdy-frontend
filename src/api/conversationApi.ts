@@ -112,6 +112,7 @@ const ServiceConversation = {
     conversationId: string,
     isStatus: boolean,
   ): Promise<void> => {
+    // isStatus: true => enable link, false => disable link (allow/deny join from link)
     const url = `${PATH}/${conversationId}/join-from-link/${isStatus}`;
     const response = await patch<void>(url);
     return response.data;
