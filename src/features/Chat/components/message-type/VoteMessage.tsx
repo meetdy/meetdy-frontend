@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ModalDetailVote from '../modal/ModalDetailVote';
-import ModalViewOption from '@/components/modal-view-options';
+import ModalVoteInteractions from '@/components/modal-vote-interactions';
 
 type Option = {
   name: string;
@@ -21,8 +21,8 @@ type Props = {
 export default function VoteMessage({
   data = { content: '', options: [] },
 }: Props) {
-  const [isVisibleDetail, setIsVisibleDetail] = useState(false);
-  const [isVisibleOption, setIsVisibleOption] = useState(false);
+  const [isVisibleVoteDetail, setIsVisibleVoteDetail] = useState(false);
+  const [isVisibleVoteInteractions, setIsVisibleVoteInteractions] = useState(false);
 
   const getNumberJoinVote = useMemo(() => {
     const tempUserIds: string[] = [];
@@ -50,7 +50,7 @@ export default function VoteMessage({
         {getNumberJoinVote.length > 0 && (
           <button
             type="button"
-            onClick={() => setIsVisibleDetail(true)}
+            onClick={() => setIsVisibleVoteDetail(true)}
             className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700"
           >
             <span>Đã có {checkNumberUserSelected()} lượt bình chọn</span>
@@ -85,24 +85,22 @@ export default function VoteMessage({
           </div>
         )}
 
-        <div>
-          <Button onClick={() => setIsVisibleOption(true)} className="w-full">
-            Xem lựa chọn
-          </Button>
-        </div>
+        <Button onClick={() => setIsVisibleVoteInteractions(true)} className="w-full mt-2">
+          Xem lựa chọn
+        </Button>
       </div>
 
-      <ModalDetailVote
-        visible={isVisibleDetail}
-        onCancel={() => setIsVisibleDetail(false)}
-        data={data.options}
+      <ModalVoteInteractions
+        visible={isVisibleVoteInteractions}
+        onCancel={() => setIsVisibleVoteInteractions(false)}
+        data={data}
+        onShowDetail={() => setIsVisibleVoteDetail(true)}
       />
 
-      <ModalViewOption
-        isModalVisible={isVisibleOption}
-        onCancel={() => setIsVisibleOption(false)}
-        data={data}
-        onShowDetail={() => setIsVisibleDetail(true)}
+      <ModalDetailVote
+        visible={isVisibleVoteDetail}
+        onCancel={() => setIsVisibleVoteDetail(false)}
+        data={data.options}
       />
     </div>
   );

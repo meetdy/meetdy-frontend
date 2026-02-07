@@ -30,7 +30,7 @@ export function usePinnedMessages({
 
   const { data, isLoading, error } = useQuery({
     queryKey,
-    queryFn: () => ServicePinMessage.getPinMessages(conversationId),
+    queryFn: () => ServicePinMessage.getPinMessages({ conversationId }),
     enabled: enabled && !!conversationId,
     staleTime: 1000 * 60 * 5,
   });
@@ -40,7 +40,7 @@ export function usePinnedMessages({
 
   const pinMutation = useMutation({
     mutationFn: async (messageId: string) => {
-      return ServicePinMessage.pinMessage(messageId);
+      return ServicePinMessage.pinMessage({ messageId });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
@@ -53,7 +53,7 @@ export function usePinnedMessages({
 
   const unpinMutation = useMutation({
     mutationFn: async (messageId: string) => {
-      return ServicePinMessage.removePinMessage(messageId);
+      return ServicePinMessage.unpinMessage({ messageId });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });

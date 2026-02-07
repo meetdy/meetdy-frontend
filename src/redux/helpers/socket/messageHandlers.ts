@@ -1,4 +1,3 @@
-import { checkAndFetchPinMessages } from '@/hooks/pin-message/useGetPinMessages';
 import { IUser } from '@/models/auth.model';
 import {
   ILastGroupMessage,
@@ -101,8 +100,7 @@ export const messageHandlers = (
 
       if (currentConversation === conversationId) {
         try {
-          const pinMessages = await checkAndFetchPinMessages(conversationId);
-          dispatch(setPinMessages(pinMessages));
+          console.log('Fetching pin messages via socket...');
         } catch (error) {
           dispatch(socketError('error.errorWhileFetchingPinMessages'));
         }

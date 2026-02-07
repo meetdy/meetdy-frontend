@@ -20,16 +20,16 @@ type DataType = {
 };
 
 type Props = {
-  isModalVisible: boolean;
-  onCancel?: () => void;
+  visible: boolean;
   data: DataType;
+  onCancel?: () => void;
   onShowDetail?: () => void;
 };
 
-export default function ModalViewOption({
-  isModalVisible,
-  onCancel,
+export default function ModalVoteInteractions({
+  visible,
   data,
+  onCancel,
   onShowDetail,
 }: Props): JSX.Element {
   const preValue = useRef<string[] | undefined>(undefined);
@@ -50,14 +50,14 @@ export default function ModalViewOption({
   }, [data]);
 
   useEffect(() => {
-    if (isModalVisible) {
+    if (visible) {
       preValue.current = getDefaultValues();
       setCheckList(getDefaultValues());
       setNewOptions([]);
     } else {
       setNewOptions([]);
     }
-  }, [isModalVisible]);
+  }, [visible]);
 
   const handleCancel = () => {
     if (onCancel) onCancel();
@@ -222,17 +222,17 @@ export default function ModalViewOption({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center ${isModalVisible ? '' : 'pointer-events-none'
+      className={`fixed inset-0 z-50 flex items-center justify-center ${visible ? '' : 'pointer-events-none'
         }`}
-      aria-hidden={!isModalVisible}
+      aria-hidden={!visible}
     >
       <div
-        className={`fixed inset-0 bg-black/40 transition-opacity ${isModalVisible ? 'opacity-100' : 'opacity-0'
+        className={`fixed inset-0 bg-black/40 transition-opacity ${visible ? 'opacity-100' : 'opacity-0'
           }`}
         onClick={handleCancel}
       />
       <div
-        className={`relative w-full max-w-2xl mx-auto bg-white rounded-lg overflow-hidden transform transition-all ${isModalVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+        className={`relative w-full max-w-2xl mx-auto bg-white rounded-lg overflow-hidden transform transition-all ${visible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
           }`}
         style={{ padding: '2rem 1rem', background: '#f4f5f7' }}
       >

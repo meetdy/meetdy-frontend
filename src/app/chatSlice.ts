@@ -157,7 +157,7 @@ export const fetchPinMessages = createAsyncThunk(
   `${KEY}/fetchPinMessages`,
   async (params: { conversationId: string }) => {
     const { conversationId } = params;
-    const pinMessages = await pinMessageApi.getPinMessages(conversationId);
+    const pinMessages = await pinMessageApi.getPinMessages({ conversationId });
     return pinMessages;
   },
 );

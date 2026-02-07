@@ -23,6 +23,10 @@ export type TDropReactionPayload = {
   type: string;
 };
 
+export type TConversationId = {
+  conversationId: string;
+};
+
 const ServiceMessages = {
   getListMessages: async (
     conversationId: string,

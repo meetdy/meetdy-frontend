@@ -1,11 +1,7 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, MessageSquare, MoreHorizontal } from 'lucide-react';
-import { toast } from 'sonner';
 
-import { useUnpinMessage } from '@/hooks/pin-message/useRemovePinMessage';
-import { createQueryKey } from '@/queries/core';
+import { useUnpinMessage } from '@/hooks/message/pin-message';
 
 import TypeMessagePin from './TypeMessagePin';
 import ModalDetailMessagePin from './modal/ModalDetailMessagePin';
@@ -43,40 +39,10 @@ function NutshellPinMessage({
     quantity = 0,
     isHover = true,
 }: NutshellPinMessageProps) {
-    const queryClient = useQueryClient();
-    const { currentConversation } = useSelector((state: any) => state.chat);
-    const { mutate: unpinMessageMutation } = useUnpinMessage();
+    const { doUnpinMessage } = useUnpinMessage();
 
     const [visible, setVisible] = useState(false);
     const [confirmUnpin, setConfirmUnpin] = useState(false);
-
-    const handleUnpin = () => {
-        unpinMessageMutation(message._id, {
-            onSuccess: () => {
-                toast.success('Xóa thành công');
-                queryClient.invalidateQueries({
-                    queryKey: createQueryKey('fetchPinMessages', { conversationId: currentConversation }, {})
-                });
-                setConfirmUnpin(false);
-            },
-            onError: () => {
-                toast.error('Xóa thất bại');
-                setConfirmUnpin(false);
-            }
-        });
-    };
-
-    const handleOnClickVisbleList = () => {
-        onOpenDrawer?.();
-    };
-
-    const handleOnClick = () => {
-        setVisible(true);
-    };
-
-    const handleCloseModal = () => {
-        setVisible(false);
-    };
 
     return (
         <>
@@ -85,7 +51,7 @@ function NutshellPinMessage({
                     } ${isHover ? 'hover:bg-muted/50' : ''}`}
             >
                 <button
-                    onClick={handleOnClick}
+                    onClick={() => setVisible(true)}
                     className="flex items-center gap-3 flex-1 text-left"
                 >
                     <div className="flex-shrink-0 p-2 rounded-lg bg-primary/10">
@@ -124,7 +90,7 @@ function NutshellPinMessage({
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={handleOnClickVisbleList}
+                            onClick={onOpenDrawer}
                             className="text-primary"
                         >
                             {`${quantity} ghim tin khác`}
@@ -137,7 +103,7 @@ function NutshellPinMessage({
             <ModalDetailMessagePin
                 visible={visible}
                 message={message}
-                onClose={handleCloseModal}
+                onClose={() => setVisible(false)}
             />
 
             <AlertDialog open={confirmUnpin} onOpenChange={setConfirmUnpin}>
@@ -151,7 +117,10 @@ function NutshellPinMessage({
                     <AlertDialogFooter>
                         <AlertDialogCancel>Không</AlertDialogCancel>
                         <AlertDialogAction
-                            onClick={handleUnpin}
+                            onClick={() => {
+                                doUnpinMessage({ messageId: message._id });
+                                setConfirmUnpin(false);
+                            }}
                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         >
                             Bỏ ghim

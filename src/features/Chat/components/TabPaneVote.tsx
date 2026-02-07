@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ChevronDown } from 'lucide-react';
 
-import { useGetVotes } from '@/hooks/vote/useGetVotes';
+import { useGetVotes } from '@/hooks/vote';
 import { Button } from '@/components/ui/button';
 import VoteMessage from './message-type/VoteMessage';
 
@@ -15,24 +15,19 @@ function TabPaneVote() {
   const size = 4;
 
   const { data: voteData } = useGetVotes({
-    params: {
-      conversationId: currentConversation,
-      page,
-      size,
-    },
-    enabled: !!currentConversation,
+    conversationId: currentConversation,
+    page,
+    size,
   });
 
   const [accumulatedVotes, setAccumulatedVotes] = useState<any[]>([]);
 
   useEffect(() => {
-    // Reset accumulated votes when conversation changes
     setAccumulatedVotes([]);
     setPage(0);
   }, [currentConversation]);
 
   useEffect(() => {
-    // Accumulate votes as pages are loaded
     if (voteData?.data) {
       if (page === 0) {
         setAccumulatedVotes(voteData.data);
@@ -51,7 +46,7 @@ function TabPaneVote() {
   return (
     <div className="space-y-3 p-4">
       {accumulatedVotes.map((ele: any, index: number) => (
-        <div key={index} className="rounded-lg border bg-card p-3">
+        <div key={index} className="rounded-md border bg-card p-3">
           <VoteMessage data={ele} />
         </div>
       ))}

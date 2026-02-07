@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useQueryClient } from '@tanstack/react-query';
 import { createQueryKey } from '@/queries/core';
-import { useGetPinMessages } from '@/hooks/pin-message/useGetPinMessages';
+import { useGetPinMessages, usePinMessage } from '@/hooks/message/pin-message';
 import type { Dispatch } from 'redux';
 
 import {
@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 import messageApi from '@/api/messageApi';
-import pinMessageApi from '@/api/pinMessageApi';
+
 import ModalChangePinMessage from '@/components/modal-change-pin-message';
 import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import { checkLeader } from '@/utils/feature-utils';
@@ -69,6 +69,13 @@ function UserMessage({
     onReply,
     onMention,
 }: UserMessageProps) {
+    const dispatch = useDispatch<Dispatch>();
+
+    const global = useSelector((state: RootState) => state.global);
+
+    const [isLeader, setIsLeader] = useState(false);
+    const [isVisibleModal, setVisibleModal] = useState(false);
+
     const {
         _id,
         content,
@@ -90,17 +97,14 @@ function UserMessage({
         currentChannel,
     } = useSelector((state: RootState) => state.chat);
 
-    const { pinMessages } = useGetPinMessages({
+    const queryClient = useQueryClient();
+
+    const { data: pinMessages } = useGetPinMessages({
         conversationId: currentConversation,
         enabled: !!currentConversation
     });
 
-    const queryClient = useQueryClient();
-    const global = useSelector((state: RootState) => state.global);
-    const dispatch = useDispatch<Dispatch>();
-
-    const [isLeader, setIsLeader] = useState(false);
-    const [isVisibleModal, setVisibleModal] = useState(false);
+    const { doPinMessage } = usePinMessage();
 
     const {
         myReact,
@@ -136,12 +140,8 @@ function UserMessage({
             setVisibleModal(true);
             return;
         }
-
         try {
-            await pinMessageApi.pinMessage(_id);
-            queryClient.invalidateQueries({
-                queryKey: createQueryKey('fetchPinMessages', { conversationId: currentConversation })
-            });
+            doPinMessage({ messageId: _id });
             toast.success('Ghim tin nhắn thành công');
         } catch {
             toast.error('Ghim tin nhắn thất bại');

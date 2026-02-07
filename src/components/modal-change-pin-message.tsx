@@ -45,8 +45,12 @@ export default function ModalChangePinMessage({
 
   const handleOnOk = async () => {
     if (!value) return;
-    await pinMessageApi.removePinMessage(value);
-    await pinMessageApi.pinMessage(idMessage);
+    await pinMessageApi.unpinMessage({
+      messageId: value,
+    });
+    await pinMessageApi.pinMessage({
+      messageId: idMessage,
+    });
     window.alert('Ghim tin nhắn thành công');
 
     queryClient.invalidateQueries({
