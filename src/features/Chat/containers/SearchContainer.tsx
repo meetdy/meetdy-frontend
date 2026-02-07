@@ -76,7 +76,7 @@ export default function SearchContainer({
   }
 
   return (
-    <div className="w-full space-y-3 border-b border-border">
+    <div className="w-full space-y-3">
       {/* Search + Actions */}
       <div className="flex items-center gap-2">
         <div className="relative flex-1">

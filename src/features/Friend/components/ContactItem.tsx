@@ -13,8 +13,10 @@ function ContactItem({ data }: ContactItemProps) {
   const [userIsFind, setUserIsFind] = useState<any>({});
   const [visibleUserCard, setVisibleUserCard] = useState(false);
 
-  const handleViewDetail = async (contactData: FriendData) => {
-    const user = await userApi.getUser(contactData.username!);
+  const handleViewDetail = async (data: FriendData) => {
+    console.log('🚀 ~ handleViewDetail ~ data:', data)
+
+    const user = await userApi.getUser(data.username!);
     setUserIsFind(user);
     setVisibleUserCard(true);
   };

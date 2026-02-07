@@ -11,7 +11,7 @@ interface DrawerPinMessageProps {
 function DrawerPinMessage({ isOpen, onClose, message }: DrawerPinMessageProps) {
     return (
         <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <SheetContent side="top" className="p-0">
+            <SheetContent side="top">
                 <div className="flex flex-col">
                     <div className="flex items-center justify-between px-4 py-3 border-b bg-muted/50">
                         <span className="font-medium text-sm">
@@ -40,7 +40,7 @@ function DrawerPinMessage({ isOpen, onClose, message }: DrawerPinMessageProps) {
                     </button>
                 </div>
             </SheetContent>
-        </Sheet>
+        </Sheet >
     );
 }
 

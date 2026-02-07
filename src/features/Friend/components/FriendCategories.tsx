@@ -1,7 +1,7 @@
 import { Icon } from '@/components/ui/icon';
 import { User, Users, PhoneCall } from 'lucide-react';
 
-function HeaderFriend({ subtab = 0 }) {
+function FriendCategories({ subtab = 0 }) {
   const icon = subtab === 0 ? User : subtab === 1 ? Users : PhoneCall;
 
   const title =
@@ -22,4 +22,4 @@ function HeaderFriend({ subtab = 0 }) {
   );
 }
 
-export default HeaderFriend;
+export default FriendCategories;

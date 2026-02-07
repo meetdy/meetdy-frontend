@@ -21,7 +21,7 @@ import GroupNews from './components/GroupNews';
 import NutshellPinMessage from './components/NutshellPinMessage';
 import BodyChatContainer from './containers/BodyChatContainer';
 import ConversationContainer from './containers/ConversationContainer';
-import FooterChatContainer from './containers/FooterChatContainer';
+import ChatInputContainer from './containers/ChatInputContainer';
 import HeaderChatContainer from './containers/HeaderChatContainer';
 import InfoContainer from './containers/InfoContainer';
 import SearchContainer from './containers/SearchContainer';
@@ -53,7 +53,6 @@ import {
 import { calculateResponsiveDrawer } from '@/utils/ui-utils';
 
 import { toast } from 'sonner';
-
 
 function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boolean }) {
   const dispatch = useDispatch();
@@ -438,11 +437,6 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
     setVisibleNews(false);
   };
 
-  const handleViewNews = () => {
-    setVisibleNews(true);
-    setTabActiveNews(0);
-  };
-
   const handleCancelModalJoinGroup = () => {
     setIsVisibleJoinGroup(false);
   };
@@ -669,6 +663,28 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
               />
             </header>
 
+            {pinMessages.length > 1 &&
+              (currentConverObj as any).type &&
+              !currentChannel && (
+                <DrawerPinMessage
+                  isOpen={isOpenDrawer}
+                  onClose={() => setIsOpenDrawer(false)}
+                  message={pinMessages}
+                />
+              )}
+
+            {pinMessages.length > 0 &&
+              (currentConverObj as any).type &&
+              !currentChannel && (
+                <NutshellPinMessage
+                  isHover={false}
+                  isItem={pinMessages.length > 1 ? false : true}
+                  message={pinMessages[0]}
+                  quantity={pinMessages.length}
+                  onOpenDrawer={() => setIsOpenDrawer(true)}
+                />
+              )}
+
             <section className="flex-1 flex flex-col overflow-hidden relative">
               <div className="flex-1 overflow-hidden px-4 py-2">
                 <BodyChatContainer
@@ -681,28 +697,6 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
                   onMention={handleOnMention}
                 />
               </div>
-
-              {pinMessages.length > 1 &&
-                (currentConverObj as any).type &&
-                !currentChannel && (
-                  <DrawerPinMessage
-                    isOpen={isOpenDrawer}
-                    onClose={() => setIsOpenDrawer(false)}
-                    message={pinMessages}
-                  />
-                )}
-
-              {pinMessages.length > 0 &&
-                (currentConverObj as any).type &&
-                !currentChannel && (
-                  <NutshellPinMessage
-                    isHover={false}
-                    isItem={pinMessages.length > 1 ? false : true}
-                    message={pinMessages[0]}
-                    quantity={pinMessages.length}
-                    onOpenDrawer={() => setIsOpenDrawer(true)}
-                  />
-                )}
 
               <button
                 id="back-top-button"
@@ -760,7 +754,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
               )}
 
               <footer className="border-t border-border bg-background px-4 py-3">
-                <FooterChatContainer
+                <ChatInputContainer
                   onScrollWhenSentText={handleScrollWhenSent}
                   socket={socket}
                   replyMessage={replyMessage}

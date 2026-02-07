@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useDeleteFriend } from '@/hooks/friend';
+
 import userApi from '@/api/userApi';
 import conversationApi from '@/api/conversationApi';
 import { toast } from 'sonner';
@@ -41,7 +42,7 @@ type Props = {
 function ListFriend({ data = [] }: Props) {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const { mutateAsync: deleteFriend } = useDeleteFriend();
+  const { mutate: deleteFriend } = useDeleteFriend();
   const [deleteConfirm, setDeleteConfirm] = useState<Friend | null>(null);
 
   const handleOpenConversation = async (friendData: FriendData) => {
@@ -62,7 +63,7 @@ function ListFriend({ data = [] }: Props) {
   const handleViewInfo = async (friendData: FriendData) => {
     const tempUser = data.find((ele) => ele?._id === friendData._id || ele?.id === friendData.id);
     if (!tempUser) return;
-    await userApi.getUser(tempUser.username as any);
+    await userApi.getUser(tempUser.username);
   };
 
   const handleRequestDelete = (friendData: FriendData) => {
@@ -72,13 +73,13 @@ function ListFriend({ data = [] }: Props) {
     }
   };
 
-  const handleDeleteFriend = async () => {
+  const handleDeleteFriend = () => {
     if (!deleteConfirm?._id) {
       setDeleteConfirm(null);
       return;
     }
     try {
-      await deleteFriend(deleteConfirm._id);
+      deleteFriend(deleteConfirm._id);
       toast.success('Xóa thành công');
     } catch (error) {
       toast.error('Xóa thất bại');

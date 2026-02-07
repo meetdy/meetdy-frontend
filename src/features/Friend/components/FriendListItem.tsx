@@ -11,7 +11,7 @@ import {
     DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Icon } from '@/components/ui/icon';
-import { Delete, Info, Menu, MoreVertical } from 'lucide-react';
+import { InfoIcon, MoreVertical } from 'lucide-react';
 import timeUtils from '@/utils/time-utils';
 
 // ============ TYPES ============
@@ -163,7 +163,7 @@ export default function FriendListItem({
                                 type="button"
                                 className="h-8 w-8 rounded-full hover:bg-muted flex items-center justify-center"
                             >
-                                <Icon icon={variant === 'group' ? MoreVertical : Menu} />
+                                <Icon icon={variant === 'group' ? MoreVertical : InfoIcon} />
                             </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-40" onClick={(e) => e.stopPropagation()}>

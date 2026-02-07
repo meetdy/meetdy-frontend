@@ -5,9 +5,10 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { setTabActive } from '@/app/globalSlice';
 import conversationApi from '@/api/conversationApi';
+
 import NotFoundPage from '@/components/not-found-page';
 
-import { createKeyListConversations, useGetListConversations } from '@/hooks/conversation/useGetListConversations';
+import { createKeyListConversations } from '@/hooks/conversation/useGetListConversations';
 import { createKeyGetListMessages } from '@/hooks/message/useGetListMessages';
 
 import Chat from '@/features/Chat';
@@ -40,10 +41,8 @@ function ChatLayout() {
 
   const [idNewMessage, setIdNewMessage] = useState('');
 
-  const { conversations: chat } = useGetListConversations({ params: {} });
-  console.log('🚀 ~ ChatLayout ~ chat:', chat)
-
   const { user, numberOfNotification } = useSelector((state: any) => state.global);
+
   const { conversations } = useSelector((state: any) => state.chat);
 
   useEffect(() => {
@@ -59,10 +58,10 @@ function ChatLayout() {
   useEffect(() => {
     if (conversations.length === 0) return;
 
-    const conversationIds = conversations.map(
-      (conversationEle) => conversationEle._id,
+    const conversationId = conversations.map(
+      (i) => i._id,
     );
-    socket.emit('join-conversations', conversationIds);
+    socket.emit('join-conversations', conversationId);
   }, [conversations]);
 
   useEffect(() => {

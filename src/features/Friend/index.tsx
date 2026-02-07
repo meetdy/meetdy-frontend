@@ -18,7 +18,7 @@ import conversationApi from '@/api/conversationApi';
 import FilterContainer from '@/components/filter-container';
 import SearchContainer from '@/features/Chat/containers/SearchContainer';
 
-import HeaderFriend from './components/HeaderFiend';
+import FriendCategories from './components/FriendCategories';
 import ContactItem from './components/ContactItem';
 import ListFriend from './components/ListFriend';
 import ListGroup from './components/ListGroup';
@@ -244,7 +244,7 @@ export default function Friend() {
               isFriendPage
             />
           </div>
-
+          <Separator />
           <div className="flex-1 overflow-auto">
             {showFilterResult ? (
               <div className="px-2 pb-4">
@@ -254,7 +254,7 @@ export default function Friend() {
                 />
               </div>
             ) : (
-              <div className="px-2 pb-4 space-y-3">
+              <div className="px-2 py-4 space-y-3">
                 <SidebarItem
                   active={activeTab === 0}
                   icon={UserCheck}
@@ -289,7 +289,7 @@ export default function Friend() {
 
       <main className="flex-1 hidden sm:flex flex-col bg-white">
         <header className="border-b border-slate-200/80 bg-white">
-          <HeaderFriend subtab={activeTab} />
+          <FriendCategories subtab={activeTab} />
         </header>
 
         <section className="flex-1 overflow-hidden bg-slate-50/40">

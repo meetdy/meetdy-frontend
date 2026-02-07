@@ -29,7 +29,7 @@ type Props = {
     onViewVotes?: () => void;
 };
 
-export default function FooterChatContainer({
+export default function ChatInputContainer({
     onScrollWhenSentText,
     onOpenInfoBlock,
     socket,

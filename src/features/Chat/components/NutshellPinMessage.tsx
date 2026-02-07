@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, MessageSquare, MoreHorizontal } from 'lucide-react';
+import { ChevronDown, MessageSquare, MoreHorizontal, Pin } from 'lucide-react';
 
 import { useUnpinMessage } from '@/hooks/message/pin-message';
 
@@ -33,7 +33,7 @@ interface NutshellPinMessageProps {
 }
 
 function NutshellPinMessage({
-    isItem = false,
+    isItem = true,
     onOpenDrawer,
     message,
     quantity = 0,
@@ -47,15 +47,15 @@ function NutshellPinMessage({
     return (
         <>
             <div
-                className={`flex items-center justify-between p-3 rounded-lg transition-colors ${isItem ? 'bg-muted/50' : ''
+                className={`flex items-center justify-between px-4 py-2 rounded-lg transition-colors ${isItem ? 'bg-muted/50' : ''
                     } ${isHover ? 'hover:bg-muted/50' : ''}`}
             >
                 <button
                     onClick={() => setVisible(true)}
                     className="flex items-center gap-3 flex-1 text-left"
                 >
-                    <div className="flex-shrink-0 p-2 rounded-lg bg-primary/10">
-                        <MessageSquare className="h-4 w-4 text-primary" />
+                    <div className="shrink-0 p-2 rounded-lg bg-red/10">
+                        <Pin className="h-4 w-4 text-red-500" />
                     </div>
                     <div className="min-w-0">
                         <div className="text-xs text-muted-foreground">Tin nhắn</div>
@@ -69,11 +69,11 @@ function NutshellPinMessage({
                     </div>
                 </button>
 
-                <div className={`flex-shrink-0 ${isItem ? 'hidden' : ''}`}>
+                <div className={`flex-shrink-0 ${isItem ? '' : 'hidden'}`}>
                     {isItem ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <button className="h-8 w-8">
+                                <button className="h-4 w-4">
                                     <MoreHorizontal className="h-4 w-4" />
                                 </button>
                             </DropdownMenuTrigger>
