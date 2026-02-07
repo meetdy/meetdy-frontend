@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import fileHelpers from '@/utils/fileHelpers';
+import fileHelpers from '@/utils/file-utils';
 import PersonalAvatar from './PersonalAvatar';
 import RangeCalendarCustom from '@/components/range-calendar';
 import {

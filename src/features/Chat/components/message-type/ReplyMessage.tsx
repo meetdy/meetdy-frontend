@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
-import fileHelpers from '@/utils/fileHelpers';
+import fileHelpers from '@/utils/file-utils';
 import ModalDetailMessageReply from '../modal/ModalDetailMessageReply';
 
 type Reply = {

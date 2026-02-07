@@ -6,7 +6,8 @@ import { FastField, Form, Formik } from 'formik';
 import { MessageCircle, ArrowLeft, Sparkles } from 'lucide-react';
 
 import authApi from '@/api/authApi';
-import { setLogin, setUser, setLoading } from '@/app/globalSlice';
+import { setLogin, setUser } from '@/app/globalSlice';
+
 import InputField from '@/components/field/InputField';
 import { loginValues } from '@/features/Account/initValues';
 
@@ -26,7 +27,6 @@ function LoginPage() {
     const { username, password } = values;
     try {
       if (isVerify) {
-        dispatch(setLoading(true));
         const { token, refreshToken } = await authApi.login({
           username,
           password,
@@ -47,7 +47,6 @@ function LoginPage() {
       console.log('Login error:', error);
       setIsError(true);
     }
-    dispatch(setLoading(false));
   };
 
   return (

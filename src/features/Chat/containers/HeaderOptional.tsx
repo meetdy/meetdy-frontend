@@ -22,7 +22,7 @@ import {
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 import { useCreateGroup } from '@/hooks/conversation/useCreateGroup';
 import { useAddMembersToConversation } from '@/hooks/conversation/useAddMembersToConversation';
-import dateUtils from '@/utils/dateUtils';
+import dateUtils from '@/utils/time-utils';
 import { Button } from '@/components/ui/button';
 import {
     Tooltip,

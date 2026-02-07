@@ -3,7 +3,7 @@ import parse from 'html-react-parser';
 import { defaultStyles, FileIcon } from 'react-file-icon';
 
 import ModalVideoCustom from '@/components/modal-video-custom';
-import fileHelpers from '@/utils/fileHelpers';
+import fileHelpers from '@/utils/file-utils';
 import PinItem from '../PinItem';
 import {
   Dialog,

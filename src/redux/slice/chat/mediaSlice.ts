@@ -1,22 +1,22 @@
-import { IMedia } from "@/api/mediaApi";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IMedia } from '@/api/mediaApi';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface MediaState {
-    media: IMedia | null;
+  media: IMedia | null;
 }
 
 const initialState: MediaState = {
-    media: null,
+  media: null,
 };
 
 const mediaSlice = createSlice({
-    name: "MEDIA",
-    initialState,
-    reducers: {
-        setMedia: (state, action: PayloadAction<IMedia>) => {
-            state.media = action.payload;
-        },
+  name: 'MEDIA',
+  initialState,
+  reducers: {
+    setMedia: (state, action: PayloadAction<IMedia>) => {
+      state.media = action.payload;
     },
+  },
 });
 
 const { reducer, actions } = mediaSlice;

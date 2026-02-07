@@ -21,7 +21,7 @@ export function useMessageReactions(
   useEffect(() => {
     const unique = new Set<string | number>();
     for (const ele of reacts ?? []) unique.add(ele.type);
-    setListReactionCurrent(Array.from(unique));
+    // setListReactionCurrent(Array.from(unique));
   }, [reacts]);
 
   const transferIcon = useCallback((reactionType: string | number) => {

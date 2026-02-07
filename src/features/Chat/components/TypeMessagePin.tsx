@@ -1,6 +1,6 @@
 import { FileText, PlaySquare, Type } from 'lucide-react';
 import { defaultStyles, FileIcon } from 'react-file-icon';
-import fileHelpers from '@/utils/fileHelpers';
+import fileHelpers from '@/utils/file-utils';
 
 interface TypeMessagePinProps {
   type?: string;

@@ -47,7 +47,7 @@ import {
   updateVoteMessage,
 } from '@/app/chatSlice';
 
-import { calculateResponsiveDrawer } from '@/utils/uiHelper';
+import { calculateResponsiveDrawer } from '@/utils/ui-utils';
 
 import { toast } from 'sonner';
 

@@ -33,8 +33,8 @@ import { useGetListConversations } from '@/hooks/conversation/useGetListConversa
 import { useGetContacts } from '@/hooks/contacts/useGetContacts';
 import { useGetSuggestFriend } from '@/hooks/friend/useGetSuggestFriend';
 
-import { getValueFromKey } from '@/utils/featureUtils';
-import { sortGroup } from '@/utils/featureUtils';
+import { getValueFromKey } from '@/utils/feature-utils';
+import { sortGroup } from '@/utils/feature-utils';
 
 function Spinner() {
   return (

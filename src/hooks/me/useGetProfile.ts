@@ -4,13 +4,11 @@ import { createQueryKey, queryClient } from '@/queries/core';
 import { useQuery } from '@tanstack/react-query';
 
 export function useGetProfile({ enabled = true }: { enabled?: boolean } = {}) {
-  const { data, isFetched } = useQuery<IUserProfile>({
+  return useQuery<IUserProfile>({
     queryKey: createQueryKey('profile', {}),
     queryFn: () => ServiceMe.getProfile(),
     enabled,
   });
-
-  return { data: data as IUserProfile, isFetched };
 }
 
 export async function fetchUserProfile(): Promise<IUserProfile> {

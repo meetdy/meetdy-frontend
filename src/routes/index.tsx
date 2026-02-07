@@ -11,16 +11,29 @@ import Admin from '@/features/Admin';
 
 import ChatLayout from '@/features';
 
+import { useDispatch, useSelector } from 'react-redux';
 import { useGetProfile } from '@/hooks/me/useGetProfile';
+import { useEffect } from 'react';
+import { setUser } from '@/app/globalSlice';
 
 function App() {
+  const dispatch = useDispatch();
+
   const token = localStorage.getItem('token');
 
-  const { data: user } = useGetProfile({
-    enabled: !!token
+  const user = useSelector((state: any) => state.global.user);
+
+  const { data } = useGetProfile({
+    enabled: !!token,
   });
 
-  const isAuth = !!user;
+  useEffect(() => {
+    if (data) {
+      dispatch(setUser(data));
+    }
+  }, [data]);
+
+  const isAuth = !!data;
   const isAdmin = user?.isAdmin;
 
   return (
@@ -48,7 +61,7 @@ function App() {
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-    </BrowserRouter>
+    </BrowserRouter >
   );
 }
 

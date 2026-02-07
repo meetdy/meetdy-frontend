@@ -15,7 +15,7 @@ import {
   TGetListConversations,
 } from '@/models/conversation.model';
 
-import dateUtils from '@/utils/dateUtils';
+import dateUtils from '@/utils/time-utils';
 
 const KEY = 'chat';
 
@@ -318,7 +318,7 @@ const chatSlice = createSlice({
     setTotalChannelNotify: (state, action) => {
       let notify = state.conversations.find(
         (ele) => ele._id === state.currentConversation,
-      ).numberUnread;
+      )?.numberUnread;
 
       if (state.channels.length > 0) {
         state.channels.forEach((ele) => {

@@ -1,5 +1,3 @@
-import account from '@/redux/slice/accountSlice';
-import admin from '@/redux/slice/adminSlice';
 import chat from '@/redux/slice/chat/chatSlice';
 import media from '@/redux/slice/chat/mediaSlice';
 import friend from '@/redux/slice/friendSlice';
@@ -10,8 +8,6 @@ import { combineReducers } from '@reduxjs/toolkit';
 
 const rootReducer = combineReducers({
   global,
-  account,
-  admin,
   friend,
   chat,
   media,

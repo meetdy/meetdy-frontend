@@ -11,8 +11,8 @@ import {
 } from '@/app/chatSlice';
 import { setAmountNotify } from '@/app/friendSlice';
 
-import dateUtils from '@/utils/dateUtils';
-import { getSummaryName } from '@/utils/uiHelper';
+import dateUtils from '@/utils/time-utils';
+import { getSummaryName } from '@/utils/ui-utils';
 
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';

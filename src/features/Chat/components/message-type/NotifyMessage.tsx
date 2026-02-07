@@ -75,7 +75,7 @@ export function NotifyRow({ icon, title, description }: NotifyRowProps) {
   return (
     <div className="flex items-center gap-3">
       {icon}
-      <div>
+      <div className="flex gap-1">
         <div className="flex items-center gap-2">{title}</div>
         {description && (
           <div className="text-sm text-slate-500">{description}</div>
@@ -84,8 +84,6 @@ export function NotifyRow({ icon, title, description }: NotifyRowProps) {
     </div>
   );
 }
-
-
 
 type ManipulatedUser = {
   _id: string;

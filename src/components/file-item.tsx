@@ -1,5 +1,5 @@
 import { FileIcon, defaultStyles } from 'react-file-icon';
-import fileHelpers from '@/utils/fileHelpers';
+import fileHelpers from '@/utils/file-utils';
 import { Download, Share2 } from 'lucide-react';
 
 function FileItem({ file }: { file: { content: string } }) {

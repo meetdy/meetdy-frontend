@@ -1,129 +1,180 @@
-import { useEffect } from 'react';
-import CheckLink, {
-  replaceConentWithouLink,
-  replaceContentToLink,
-} from '@/utils/linkHelper';
-
-import { LinkPreview } from '@dhaiwat10/react-link-preview';
+import { useMemo } from 'react';
 import parse from 'html-react-parser';
 import { CheckCheck } from 'lucide-react';
-import { cn } from '@/lib/utils';
+
+import {
+  checkValidUrl,
+  replaceContentToLink,
+} from '@/utils/url-utils';
 
 import ReplyMessage from './ReplyMessage';
 
 function TextMessage({
-  content,
+  content = '',
   children,
   dateAt,
   isSeen,
   replyMessage,
-  tags,
+  tags = [],
 }) {
-  const handleOnClickTag = () => {
-    console.log('tag');
+  /* ---------------- TAG CLICK ---------------- */
+  const handleTagClick = (tag) => {
+    console.log('Clicked tag:', tag);
   };
-  useEffect(() => {
-    tags.forEach((tag) => {
-      const temp = document.getElementById(`mtc-${tag._id}`);
 
-      if (temp) {
-        temp.onclick = handleOnClickTag;
+  /* ---------------- MEMO: LINKS ---------------- */
+  const matchesLink = useMemo(() => {
+    return checkValidUrl(content);
+  }, [content]);
+
+  /* ---------------- TAG RENDER ---------------- */
+  const renderContentWithTags = (text) => {
+    if (!tags.length) return text;
+
+    const elements = [];
+    let remaining = text;
+
+    tags.forEach((tag) => {
+      const split = remaining.split(`@${tag.name}`);
+
+      if (split.length > 1) {
+        elements.push(split[0]);
+
+        elements.push(
+          <span
+            key={tag._id}
+            onClick={() => handleTagClick(tag)}
+            className="
+              text-primary font-medium cursor-pointer
+              hover:underline hover:text-primary/80
+              transition-colors
+            "
+          >
+            @{tag.name}
+          </span>,
+        );
+
+        remaining = split.slice(1).join(`@${tag.name}`);
       }
     });
-  }, [tags]);
 
-  const tranferTextToTagUser = (contentMes, tagUser) => {
-    let tempContent = contentMes;
+    elements.push(remaining);
 
-    if (tagUser.length > 0) {
-      tags.forEach((ele) => {
-        tempContent = tempContent.replace(
-          `@${ele.name}`,
-          `<span id='mtc-${ele._id}' class="text-primary font-medium cursor-pointer hover:underline">@${ele.name}</span>`,
-        );
-      });
-    }
-    return parse(tempContent);
+    return elements;
   };
 
-  const matchesLink = CheckLink(content);
-
-  const renderMessageText = (contentMes) => {
-    if (!matchesLink || matchesLink.length === 0) {
+  /* ---------------- MESSAGE RENDER ---------------- */
+  const renderMessageText = () => {
+    /* ---------- NO LINK ---------- */
+    if (!matchesLink?.length) {
       return (
-        <div className="text-[15px] leading-relaxed break-words whitespace-pre-wrap">
-          {tags.length > 0
-            ? tranferTextToTagUser(contentMes, tags)
-            : contentMes}
+        <div
+          className="
+            text-[15px] leading-relaxed
+            break-words whitespace-pre-wrap
+          "
+        >
+          {renderContentWithTags(content)}
         </div>
       );
     }
 
-    // Single link - show preview
+    /* ---------- SINGLE LINK ---------- */
     if (matchesLink.length === 1) {
       const linkUrl = matchesLink[0];
-      const textWithoutLink = replaceConentWithouLink(contentMes, linkUrl).trim();
+      const textWithoutLink =
+        content.replace(linkUrl, '').trim();
 
       return (
         <div className="space-y-2.5">
           {textWithoutLink && (
-            <div className="text-[15px] leading-relaxed break-words whitespace-pre-wrap">
-              {tags.length > 0
-                ? tranferTextToTagUser(textWithoutLink, tags)
-                : textWithoutLink}
+            <div
+              className="
+                text-[15px] leading-relaxed
+                break-words whitespace-pre-wrap
+              "
+            >
+              {renderContentWithTags(textWithoutLink)}
             </div>
           )}
-          <div className="rounded-lg overflow-hidden border border-border/60 bg-background/50 hover:bg-background transition-colors">
-            <LinkPreview
-              url={linkUrl}
-              imageHeight="160px"
-              width="100%"
-              fallback={
-                <a
-                  href={linkUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block p-3 text-sm text-primary hover:underline break-all"
-                >
-                  {linkUrl}
-                </a>
-              }
-              showLoader={false}
-            />
+
+          <div
+            className="
+              rounded-xl overflow-hidden
+              border border-border/60
+              bg-background/50
+              hover:bg-background
+              transition-colors
+            "
+          >
+            <a
+              href={linkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                block p-3 text-sm
+                text-primary hover:underline
+                break-all
+              "
+            >
+              {linkUrl}
+            </a>
           </div>
         </div>
       );
     }
 
-    // Multiple links - show as clickable text
+    /* ---------- MULTIPLE LINKS ---------- */
     return (
-      <div className="text-[15px] leading-relaxed break-words whitespace-pre-wrap">
-        {tags.length > 0
-          ? tranferTextToTagUser(
-            replaceContentToLink(contentMes, matchesLink),
-            tags,
-          )
-          : parse(replaceContentToLink(contentMes, matchesLink))}
+      <div
+        className="
+          text-[15px] leading-relaxed
+          break-words whitespace-pre-wrap
+        "
+      >
+        {parse(
+          replaceContentToLink(content, matchesLink),
+        )}
       </div>
     );
   };
 
+  /* ---------------- TIME FORMAT ---------------- */
+  const time = useMemo(() => {
+    const h = `0${dateAt.getHours()}`.slice(-2);
+    const m = `0${dateAt.getMinutes()}`.slice(-2);
+    return `${h}:${m}`;
+  }, [dateAt]);
+
   return (
-    <div className="space-y-1">
-      {replyMessage && Object.keys(replyMessage).length > 0 && (
-        <ReplyMessage replyMessage={replyMessage} />
-      )}
+    <div className="space-y-1.5 max-w-full">
+      {/* Reply */}
+      {replyMessage &&
+        Object.keys(replyMessage).length > 0 && (
+          <ReplyMessage replyMessage={replyMessage} />
+        )}
 
-      {renderMessageText(content)}
+      {/* Message content */}
+      {renderMessageText()}
 
-      <div className="flex items-center gap-1.5 text-[11px] opacity-70 select-none">
-        <span>
-          {`0${dateAt.getHours()}`.slice(-2)}:
-          {`0${dateAt.getMinutes()}`.slice(-2)}
-        </span>
+      {/* Footer */}
+      <div
+        className="
+          flex items-center gap-1.5
+          text-[11px] opacity-70
+          select-none
+        "
+      >
+        <span>{time}</span>
+
         {isSeen && (
-          <span className="flex items-center gap-0.5 text-emerald-500">
-            <CheckCheck className="w-3.5 h-3.5" />
+          <span
+            className="
+              flex items-center gap-0.5
+              text-emerald-500
+            "
+          >
+            <CheckCheck className="w-4 h-4" />
           </span>
         )}
       </div>

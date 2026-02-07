@@ -1,7 +1,7 @@
 import React from 'react';
 import PersonalAvatar from './PersonalAvatar';
 import { Pin } from 'lucide-react';
-import dateUtils from '@/utils/dateUtils';
+import dateUtils from '@/utils/time-utils';
 
 function PinItem({ children, message }) {
   const time = new Date(message.createdAt);

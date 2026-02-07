@@ -14,7 +14,7 @@ import Chat from '@/features/Chat';
 import Friend from '@/features/Friend';
 import NavbarContainer from '@/features/Chat/containers/NavbarContainer';
 
-import dateUtils from '@/utils/dateUtils';
+import dateUtils from '@/utils/time-utils';
 
 import {
   addMessage,

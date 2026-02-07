@@ -1,6 +1,6 @@
 import { X, MessageSquareReply, Video } from 'lucide-react';
 import { defaultStyles, FileIcon } from 'react-file-icon';
-import fileHelpers from '@/utils/fileHelpers';
+import fileHelpers from '@/utils/file-utils';
 import { cn } from '@/lib/utils';
 
 type ReplyMessage = {

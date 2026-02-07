@@ -1,6 +1,6 @@
 import { Key, User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { getSummaryName } from '@/utils/uiHelper';
+import { getSummaryName } from '@/utils/ui-utils';
 
 type Props = {
   avatar?: string;

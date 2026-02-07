@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Icon } from '@/components/ui/icon';
 import { Delete, Info, Menu, MoreVertical } from 'lucide-react';
-import dateUtils from '@/utils/dateUtils';
+import dateUtils from '@/utils/time-utils';
 
 // ============ TYPES ============
 

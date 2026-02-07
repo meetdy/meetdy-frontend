@@ -1,14 +1,13 @@
-function validURL(str: string) {
+export function checkValidUrl(str: string) {
   var pattern =
     /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
   return str.match(pattern);
 }
 
-export const replaceConentWithouLink = (content: string, replace: string) => {
-  return content.replace(replace, '');
-};
-
-export const replaceContentToLink = (content: string, replaceArray: string[]) => {
+export const replaceContentToLink = (
+  content: string,
+  replaceArray: string[],
+) => {
   let tempContent = content.split(' ');
 
   tempContent.forEach((temp, i, theArray) => {
@@ -23,5 +22,3 @@ export const replaceContentToLink = (content: string, replaceArray: string[]) =>
 
   return tempContent.join(' ');
 };
-
-export default validURL;

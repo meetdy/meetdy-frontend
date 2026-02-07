@@ -1,6 +1,6 @@
 import React from 'react';
 import { Download, CheckCheck } from 'lucide-react';
-import fileHelpers from '@/utils/fileHelpers';
+import fileHelpers from '@/utils/file-utils';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import { Button } from '@/components/ui/button';
 
