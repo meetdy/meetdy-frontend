@@ -46,25 +46,6 @@ export function getNotifyType(content: string): NotifyType {
   return NotifyType.UNKNOWN;
 }
 
-type NotifyUserAvatarProps = {
-  user?: {
-    name?: string;
-    avatar?: string;
-    avatarColor?: string;
-  };
-};
-
-export function NotifyUserAvatar({ user }: NotifyUserAvatarProps) {
-  return (
-    <AvatarCustom
-      size={16}
-      src={user?.avatar}
-      name={user?.name}
-      color={user?.avatarColor}
-    />
-  );
-}
-
 type NotifyRowProps = {
   icon?: React.ReactNode;
   title: React.ReactNode;
@@ -135,7 +116,12 @@ export default function NotifyMessage({ message }: Props) {
     case NotifyType.CREATE_GROUP:
       return (
         <NotifyRow
-          icon={<NotifyUserAvatar user={user} />}
+          icon={<AvatarCustom
+            size={16}
+            src={user?.avatar}
+            name={user?.name}
+            color={user?.avatarColor}
+          />}
           title={<span className="font-medium">{actorName}</span>}
           description="đã tạo nhóm"
         />
@@ -187,7 +173,12 @@ export default function NotifyMessage({ message }: Props) {
         <NotifyRow
           icon={
             <>
-              <NotifyUserAvatar user={user} />
+              <AvatarCustom
+                size={16}
+                src={user?.avatar}
+                name={user?.name}
+                color={user?.avatarColor}
+              />
               <Edit className="w-4 h-4 text-slate-600" />
             </>
           }
@@ -201,7 +192,12 @@ export default function NotifyMessage({ message }: Props) {
         <NotifyRow
           icon={
             <>
-              <NotifyUserAvatar user={user} />
+              <AvatarCustom
+                size={16}
+                src={user?.avatar}
+                name={user?.name}
+                color={user?.avatarColor}
+              />
               <Key className="w-4 h-4 text-slate-600" />
             </>
           }

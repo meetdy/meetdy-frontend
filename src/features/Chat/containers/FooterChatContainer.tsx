@@ -396,7 +396,7 @@ export default function FooterChatContainer({
                                     placeholder={`Nhắn tin tới ${detailConversation?.name ?? ''
                                         }...`}
                                     rows={1}
-                                    className="w-full resize-none overflow-auto rounded-xl border-none bg-transparent px-1 py-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+                                    className="w-full resize-none overflow-auto rounded-md border-none bg-transparent px-1 py-2 text-sm placeholder:text-muted-foreground focus:outline-none"
                                     spellCheck={false}
                                 />
                                 {showMentionDropdown && filteredMentions.length > 0 && (
@@ -410,7 +410,7 @@ export default function FooterChatContainer({
                                                         e.preventDefault();
                                                         handleSelectMention(m);
                                                     }}
-                                                    className="flex w-full items-center gap-3 px-3 py-2 rounded-xl hover:bg-accent transition-colors text-left"
+                                                    className="flex w-full items-center gap-3 px-3 py-2 rounded-md hover:bg-accent transition-colors text-left"
                                                 >
                                                     <div className="w-8 h-8 shrink-0">
                                                         <PersonalAvatar
@@ -442,7 +442,7 @@ export default function FooterChatContainer({
                             disabled={!valueText.trim()}
                             size="icon"
                             className={cn(
-                                'h-9 w-9 rounded-xl transition-all duration-200',
+                                'h-9 w-9 rounded-md transition-all duration-200',
                                 valueText.trim()
                                     ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg'
                                     : 'bg-muted text-muted-foreground cursor-not-allowed',

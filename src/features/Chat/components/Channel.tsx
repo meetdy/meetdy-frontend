@@ -58,7 +58,7 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
         setIsVisible(true);
     };
 
-    const handleOk = async () => {
+    const handleConfirm = async () => {
         try {
             await mutationAddChannel.mutateAsync({ name: valueInput, conversationId: currentConversation });
             queryClient.invalidateQueries({
@@ -164,14 +164,14 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
                             placeholder="Nhập tên channel"
                             value={valueInput}
                             onChange={handleInputChange}
-                            onKeyDown={(e) => e.key === 'Enter' && valueInput.trim() && handleOk()}
+                            onKeyDown={(e) => e.key === 'Enter' && valueInput.trim() && handleConfirm()}
                         />
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={handleCancel}>
                             Hủy
                         </Button>
-                        <Button onClick={handleOk} disabled={valueInput.trim().length === 0}>
+                        <Button onClick={handleConfirm} disabled={valueInput.trim().length === 0}>
                             Tạo
                         </Button>
                     </DialogFooter>

@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import messageApi from '@/api/messageApi';
 import type { ReactionType } from '../types/message.types';
+import { useDropReaction } from '@/hooks/message/useDropReaction';
 
 const DEFAULT_REACTIONS = ['👍', '❤️', '😆', '😮', '😭', '😡'];
 
@@ -9,6 +9,8 @@ export function useMessageReactions(
   reacts: ReactionType[] = [],
   currentUserId: string,
 ) {
+  const { doDropReaction } = useDropReaction();
+
   const [listReactionCurrent, setListReactionCurrent] = useState<
     Array<string | number>
   >([]);
@@ -18,11 +20,11 @@ export function useMessageReactions(
     return reacts.find((ele) => ele.user?._id === currentUserId);
   }, [reacts, currentUserId]);
 
-  useEffect(() => {
-    const unique = new Set<string | number>();
-    for (const ele of reacts ?? []) unique.add(ele.type);
-    // setListReactionCurrent(Array.from(unique));
-  }, [reacts]);
+  // useEffect(() => {
+  //   const unique = new Set<string | number>();
+  //   for (const ele of reacts ?? []) unique.add(ele.type);
+  //   // setListReactionCurrent(Array.from(unique));
+  // }, [reacts]);
 
   const transferIcon = useCallback((reactionType: string | number) => {
     const parsed = Number.parseInt(String(reactionType), 10);
@@ -34,14 +36,17 @@ export function useMessageReactions(
   }, []);
 
   const sendReaction = useCallback(
-    async (reactionType: string | number) => {
-      await messageApi.dropReaction(messageId, String(reactionType));
+    (reactionType: string | number) => {
+      doDropReaction({
+        messageId,
+        type: String(reactionType),
+      });
     },
-    [messageId],
+    [messageId, doDropReaction],
   );
 
   const handleClickLike = useCallback(() => {
-    void sendReaction(1);
+    sendReaction(1);
   }, [sendReaction]);
 
   const handleClickReaction = useCallback(
@@ -50,12 +55,12 @@ export function useMessageReactions(
         (element) => element === value,
       );
       if (legacyIdx >= 0) {
-        void sendReaction(legacyIdx + 1);
+        sendReaction(legacyIdx + 1);
         return;
       }
 
       if (!value) return;
-      void sendReaction(value);
+      sendReaction(value);
     },
     [sendReaction],
   );

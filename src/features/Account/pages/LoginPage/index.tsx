@@ -77,7 +77,7 @@ function LoginPage() {
         <div className="max-w-md w-full mx-auto">
           {/* Mobile logo */}
           <div className="lg:hidden flex justify-center mb-8">
-            <div className="p-3 bg-primary rounded-xl">
+            <div className="p-3 bg-primary rounded-md">
               <MessageCircle className="h-8 w-8 text-primary-foreground" />
             </div>
           </div>

@@ -233,8 +233,8 @@ export default function FriendListItem({
     // Default: Horizontal layout (request, sent-request, contact, friend)
     const isClickable = variant === 'friend' || variant === 'contact';
     const containerClasses = isCompact
-        ? 'flex items-center justify-between p-3 rounded-xl border bg-card hover:shadow-sm transition select-none'
-        : 'flex items-center justify-between p-4 bg-card rounded-xl border hover:shadow-sm transition';
+        ? 'flex items-center justify-between p-3 rounded-md border bg-card hover:shadow-sm transition select-none'
+        : 'flex items-center justify-between p-4 bg-card rounded-md border hover:shadow-sm transition';
 
     return (
         <div className={containerClasses}>

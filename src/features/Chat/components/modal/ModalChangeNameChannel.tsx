@@ -11,14 +11,14 @@ import { Input } from '@/components/ui/input';
 
 interface ModalChangeNameChannelProps {
   visible?: boolean;
-  onOk?: (name: string) => void;
+  onConfirm?: (name: string) => void;
   onCancel?: () => void;
   initialValue?: string;
 }
 
 function ModalChangeNameChannel({
   visible = false,
-  onOk,
+  onConfirm,
   onCancel,
   initialValue = '',
 }: ModalChangeNameChannelProps) {
@@ -37,8 +37,8 @@ function ModalChangeNameChannel({
     setValue('');
   };
 
-  const handleOk = () => {
-    onOk?.(value);
+  const handleConfirm = () => {
+    onConfirm?.(value);
   };
 
   return (
@@ -52,14 +52,14 @@ function ModalChangeNameChannel({
             placeholder="Nhập tên mới"
             value={value}
             onChange={handleOnchange}
-            onKeyDown={(e) => e.key === 'Enter' && value.trim() && handleOk()}
+            onKeyDown={(e) => e.key === 'Enter' && value.trim() && handleConfirm()}
           />
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={handleCancel}>
             Hủy
           </Button>
-          <Button onClick={handleOk} disabled={value.trim().length === 0}>
+          <Button onClick={handleConfirm} disabled={value.trim().length === 0}>
             Thay đổi
           </Button>
         </DialogFooter>

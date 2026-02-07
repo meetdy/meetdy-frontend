@@ -102,7 +102,6 @@ function UserMessage({
     const [isLeader, setIsLeader] = useState(false);
     const [isVisibleModal, setVisibleModal] = useState(false);
 
-    // Use custom hook for reactions
     const {
         myReact,
         listReactionCurrent,
@@ -175,6 +174,7 @@ function UserMessage({
     }, [message, user, onReply, onMention]);
 
     const dateAt = useMemo(() => new Date(createdAt), [createdAt]);
+
     const safeContent = useMemo(
         () => (typeof content === 'string' ? content : ''),
         [content],
@@ -388,7 +388,7 @@ function UserMessage({
                                         {myReact && !isDeleted ? (
                                             <div
                                                 className={cn(
-                                                    'pointer-events-auto inline-flex items-center gap-1.5 rounded-xl border border-border bg-popover px-2.5 py-1.5 shadow-sm transition-all duration-200 hover:shadow-md',
+                                                    'pointer-events-auto inline-flex items-center gap-1.5 rounded-md border border-border bg-popover px-2.5 py-1.5 shadow-sm transition-all duration-200 hover:shadow-md',
                                                 )}
                                             >
                                                 <span className="text-sm leading-none">
@@ -417,7 +417,7 @@ function UserMessage({
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8 rounded-lg hover:bg-accent/80 active:scale-95 transition-all duration-150"
+                                        className="h-8 w-8 rounded-md hover:bg-accent/80 active:scale-95 transition-all duration-150"
                                         onClick={handleReplyMessage}
                                         aria-label="Reply to message"
                                     >
@@ -428,7 +428,7 @@ function UserMessage({
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8 rounded-lg hover:bg-accent/80 active:scale-95 transition-all duration-150"
+                                        className="h-8 w-8 rounded-md hover:bg-accent/80 active:scale-95 transition-all duration-150"
                                         onClick={handleOpenModalShare}
                                         aria-label="Forward message"
                                     >

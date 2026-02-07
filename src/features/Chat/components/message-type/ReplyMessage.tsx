@@ -15,6 +15,8 @@ type Props = {
 };
 
 export default function ReplyMessage({ replyMessage }: Props) {
+  const [visible, setVisible] = useState(false);
+
   if (!replyMessage) return null;
 
   const fileName =
@@ -22,21 +24,16 @@ export default function ReplyMessage({ replyMessage }: Props) {
     fileHelpers.getFileName(replyMessage.content);
   const fileExtension = fileName ? fileHelpers.getFileExtension(fileName) : '';
 
-  const [visible, setVisible] = useState(false);
-
-  const handleOpenModal = () => setVisible(true);
-  const handleCancelModal = () => setVisible(false);
-
   return (
     <>
       <ModalDetailMessageReply
         visible={visible}
-        onCancel={handleCancelModal}
+        onCancel={() => setVisible(false)}
         data={replyMessage}
       />
       <div
         className="flex items-start gap-3 p-2 rounded-md bg-slate-50 cursor-pointer"
-        onClick={handleOpenModal}
+        onClick={() => setVisible(true)}
       >
         <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center">
           {replyMessage.type === 'IMAGE' ? (

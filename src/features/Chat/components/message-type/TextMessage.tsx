@@ -100,7 +100,7 @@ function TextMessage({
 
           <div
             className="
-              rounded-xl overflow-hidden
+              rounded-md overflow-hidden
               border border-border/60
               bg-background/50
               hover:bg-background

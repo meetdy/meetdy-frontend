@@ -89,7 +89,7 @@ export default function NavigationChatBox({
             </TooltipTrigger>
             <TooltipContent side="top">Sticker & Emoji</TooltipContent>
           </Tooltip>
-          <PopoverContent align="start" className="p-2 w-[280px] rounded-xl">
+          <PopoverContent align="start" className="p-2 w-[280px] rounded-md">
             <Sticker
               onClose={() => setVisiblePop(false)}
               data={stickers}
@@ -118,7 +118,7 @@ export default function NavigationChatBox({
         <Tooltip>
           <TooltipTrigger asChild>
             <span>
-              <UploadFile typeOfFile="File">
+              <UploadFile typeOfFile="file">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -166,7 +166,7 @@ export default function NavigationChatBox({
             <DropdownMenuContent
               align="start"
               side="top"
-              className="w-52 rounded-xl"
+              className="w-52 rounded-md"
             >
               <DropdownMenuItem
                 onSelect={() => handleOnClickMenu('VOTE')}

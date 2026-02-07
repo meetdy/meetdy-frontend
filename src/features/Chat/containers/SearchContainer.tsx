@@ -159,7 +159,7 @@ export default function SearchContainer({
       <ModalCreateGroup
         isVisible={modal.createGroup}
         onCancel={() => setModal((m) => ({ ...m, createGroup: false }))}
-        onOk={handleCreateGroup}
+        onConfirm={handleCreateGroup}
         loading={loadingCreateGroup}
       />
 

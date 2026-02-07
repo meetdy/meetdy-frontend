@@ -11,7 +11,7 @@ const PATH = '/friends';
 const FriendService = {
   getFriends: async (params: TFetchFriends): Promise<IFriend[]> => {
     const url = PATH;
-    const response = await get<IFriend[]>(url, params);
+    const response = await get<IFriend[]>(url, { params });
     return response.data;
   },
 

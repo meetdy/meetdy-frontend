@@ -162,7 +162,7 @@ export default function ModalViewOption({
     return { valid: true };
   };
 
-  const handleOk = async () => {
+  const handleConfirm = async () => {
     if (!infoVote?._id) return;
     const validation = validateNewOptions();
     if (!validation.valid) {
@@ -208,7 +208,7 @@ export default function ModalViewOption({
       </button>
       <button
         type="button"
-        onClick={handleOk}
+        onClick={handleConfirm}
         className="py-1 px-4 rounded-md bg-primary-600 text-white text-sm disabled:opacity-60 flex items-center gap-2"
         disabled={confirmLoading}
       >

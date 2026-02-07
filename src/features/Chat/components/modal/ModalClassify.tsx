@@ -188,7 +188,7 @@ function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
             {classifies.map((ele: any, index: number) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"
+                className="flex items-center justify-between p-3 bg-slate-50 rounded-md hover:bg-slate-100 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <Tag
@@ -218,7 +218,7 @@ function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
               </div>
             ))}
             <Button
-              className="w-full mt-4 rounded-xl"
+              className="w-full mt-4 rounded-md"
               onClick={handleShowModalAdd}
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -253,7 +253,7 @@ function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
                   value={nameTag}
                   placeholder="Nhập tên thẻ phân loại"
                   onChange={handleInputChange}
-                  className="flex-1 rounded-xl"
+                  className="flex-1 rounded-xmdl"
                 />
                 <Popover>
                   <PopoverTrigger asChild>
@@ -286,10 +286,10 @@ function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={handleCancelModalAdd} className="rounded-xl">
+            <Button variant="outline" onClick={handleCancelModalAdd} className="rounded-md">
               Hủy
             </Button>
-            <Button onClick={handleCreateClassify} disabled={isSubmitDisabled} className="rounded-xl">
+            <Button onClick={handleCreateClassify} disabled={isSubmitDisabled} className="rounded-md">
               {isModalEdit ? 'Cập nhật' : 'Thêm phân loại'}
             </Button>
           </DialogFooter>

@@ -18,6 +18,11 @@ export interface IAttachInfo {
   channelId?: string;
 }
 
+export type TDropReactionPayload = {
+  messageId: string;
+  type: string;
+};
+
 const ServiceMessages = {
   getListMessages: async (
     conversationId: string,
@@ -75,8 +80,11 @@ const ServiceMessages = {
     return response.data;
   },
 
-  dropReaction: async (idMessage: string, type: string): Promise<void> => {
-    const url = `${PATH}/${idMessage}/reacts/${encodeURIComponent(type)}`;
+  dropReaction: async ({
+    messageId,
+    type,
+  }: TDropReactionPayload): Promise<void> => {
+    const url = `${PATH}/${messageId}/reacts/${encodeURIComponent(type)}`;
     const response = await post<void>(url);
     return response.data;
   },

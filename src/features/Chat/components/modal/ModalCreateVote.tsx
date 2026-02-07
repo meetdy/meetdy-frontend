@@ -67,7 +67,7 @@ function ModalCreateVote({ visible = false, onCancel }: ModalCreateVoteProps) {
     return isValid;
   };
 
-  const handleOk = async () => {
+  const handleConfirm = async () => {
     if (!validateForm()) return;
 
     setLoading(true);
@@ -154,7 +154,7 @@ function ModalCreateVote({ visible = false, onCancel }: ModalCreateVoteProps) {
           <Button variant="outline" onClick={handleCancel}>
             Hủy
           </Button>
-          <Button onClick={handleOk} disabled={loading}>
+          <Button onClick={handleConfirm} disabled={loading}>
             {loading ? 'Đang tạo...' : 'Tạo bình chọn'}
           </Button>
         </DialogFooter>

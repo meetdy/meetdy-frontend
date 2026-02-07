@@ -46,7 +46,7 @@ export default function ModalJoinGroupFromLink({
     avatarColor: ele.avatarColor,
   }));
 
-  const handleOk = async () => {
+  const handleConfirm = async () => {
     try {
       if (!_id) return;
       await conversationApi.joinGroupFromLink(_id);
@@ -109,7 +109,7 @@ export default function ModalJoinGroupFromLink({
           <Button variant="ghost" onClick={handleCancel}>
             Hủy
           </Button>
-          <Button onClick={handleOk}>Tham gia</Button>
+          <Button onClick={handleConfirm}>Tham gia</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

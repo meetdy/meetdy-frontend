@@ -83,7 +83,7 @@ export default function NavbarContainer() {
         <>
             <div className="h-full w-full flex flex-col bg-card border-r border-border">
                 <div className="p-3 flex justify-center">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-md flex items-center justify-center">
                         <MessageSquare className="h-5 w-5 text-primary" />
                     </div>
                 </div>
@@ -93,7 +93,7 @@ export default function NavbarContainer() {
                 <div className="p-3 flex justify-center">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="flex items-center justify-center w-10 h-10 rounded-xl hover:bg-muted transition-colors">
+                            <button className="flex items-center justify-center w-10 h-10 rounded-md hover:bg-muted transition-colors">
                                 <PersonalAvatar
                                     isActive
                                     common={false}
@@ -214,7 +214,7 @@ export default function NavbarContainer() {
                             <DropdownMenuSeparator />
 
                             <div className="p-2 space-y-1">
-                                <div className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-muted">
+                                <div className="flex items-center justify-between px-3 py-2.5 rounded-md hover:bg-muted">
                                     <div className="flex items-center gap-3">
                                         {isDarkMode ? (
                                             <Moon className="h-4 w-4 text-amber-500" />

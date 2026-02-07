@@ -16,7 +16,7 @@ export function HeaderIconButton({ className, ...props }: Props) {
             variant="ghost"
             size="icon"
             className={cn(
-                'h-9 w-9 rounded-xl hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                'h-9 w-9 rounded-md hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                 className,
             )}
             {...props}

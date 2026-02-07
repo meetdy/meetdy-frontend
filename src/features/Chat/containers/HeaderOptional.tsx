@@ -14,7 +14,6 @@ import {
     PanelRightClose,
 } from 'lucide-react';
 
-import conversationApi from '@/api/conversationApi';
 import {
     setCurrentChannel,
     setCurrentConversation,
@@ -34,7 +33,7 @@ import { AppDispatch, RootState } from '@/redux/store';
 
 import ChatHeader, { HeaderIconButton } from '../components/ChatHeader';
 import ConversationAvatar from '../components/ConversationAvatar';
-import ModalAddMemberToConver from '../components/modal/ModalAddMemberToConver';
+import ModalAddMemberIntoChat from '../components/modal/ModalAddMemberIntoChat';
 
 type Props = {
     avatar?: string | null;
@@ -97,7 +96,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
         }
     };
 
-    const handleOk = async (userIds: string[], groupName?: string) => {
+    const handleConfirm = async (userIds: string[], groupName?: string) => {
         if (typeModal === 1) {
             createGroupMutation(
                 {
@@ -125,8 +124,8 @@ const HeaderOptional: React.FC<Props> = (props) => {
         }
     };
 
-    const hanleOnCancel = (value: boolean) => {
-        setIsVisible(true);
+    const handleOnCancel = (value: boolean) => {
+        setIsVisible(false);
         (value);
     };
 
@@ -232,7 +231,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                             variant="ghost"
                                             size="icon"
                                             onClick={handleViewGeneralChannel}
-                                            className="h-9 w-9 rounded-xl hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                            className="h-9 w-9 rounded-md hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                         >
                                             <RotateCcw className="w-4 h-4 text-muted-foreground" />
                                         </Button>
@@ -246,7 +245,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-9 w-9 rounded-xl hover:bg-accent hidden sm:flex focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                className="h-9 w-9 rounded-md hover:bg-accent hidden sm:flex focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                             >
                                                 <Phone className="w-4 h-4 text-muted-foreground" />
                                             </Button>
@@ -259,7 +258,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-9 w-9 rounded-xl hover:bg-accent hidden sm:flex focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                className="h-9 w-9 rounded-md hover:bg-accent hidden sm:flex focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                             >
                                                 <Video className="w-4 h-4 text-muted-foreground" />
                                             </Button>
@@ -273,7 +272,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={handleAddMemberToGroup}
-                                                className="h-9 w-9 rounded-xl hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                className="h-9 w-9 rounded-md hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                             >
                                                 <UserPlus className="w-4 h-4 text-muted-foreground" />
                                             </Button>
@@ -294,7 +293,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                         size="icon"
                                         onClick={handlePopUpInfo}
                                         className={cn(
-                                            'h-9 w-9 rounded-xl hidden sm:flex focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                                            'h-9 w-9 rounded-md hidden sm:flex focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                                             isPanelOpen ? 'bg-accent' : 'hover:bg-accent',
                                         )}
                                     >
@@ -314,7 +313,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                 variant="ghost"
                                 size="icon"
                                 onClick={handleOpenDrawer}
-                                className="sm:hidden h-9 w-9 rounded-xl hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                className="sm:hidden h-9 w-9 rounded-md hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                             >
                                 <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
                             </Button>
@@ -323,12 +322,12 @@ const HeaderOptional: React.FC<Props> = (props) => {
                 }
             />
 
-            {/* <ModalAddMemberToConver
+            <ModalAddMemberIntoChat
                 isVisible={isVisible}
-                onCancel={hanleOnCancel}
-                onOk={handleOk}
+                onCancel={handleOnCancel}
+                onConfirm={handleConfirm}
                 typeModal={typeModal}
-            /> */}
+            />
         </div >
     );
 };

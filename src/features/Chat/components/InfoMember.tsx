@@ -94,7 +94,7 @@ function InfoMember({ viewMemberClick, quantity }: InfoMemberProps) {
                     className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors"
                     onClick={handleViewAll}
                 >
-                    <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-md bg-primary/10 flex items-center justify-center">
                         <Users className="h-4 w-4 text-primary" />
                     </div>
                     <div className="text-left">
@@ -104,7 +104,7 @@ function InfoMember({ viewMemberClick, quantity }: InfoMemberProps) {
                 </button>
 
                 <div className="flex items-center gap-3 px-4 py-3">
-                    <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                    <div className="w-9 h-9 rounded-md bg-blue-50 flex items-center justify-center flex-shrink-0">
                         <Link className="h-4 w-4 text-blue-500" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -160,8 +160,8 @@ function InfoMember({ viewMemberClick, quantity }: InfoMemberProps) {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel className="rounded-xl">Hủy</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleChangeStatus} className="rounded-xl">
+                        <AlertDialogCancel className="rounded-md">Hủy</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleChangeStatus} className="rounded-md">
                             Xác nhận
                         </AlertDialogAction>
                     </AlertDialogFooter>

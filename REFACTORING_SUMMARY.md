@@ -45,7 +45,7 @@ Refactored the UserMessage component for better clarity, maintainability, and im
 <LinkPreview
   url={matchesLink[0]}
   imageHeight="20vh"
-  className="rounded-xl overflow-hidden border border-slate-200/60"
+  className="rounded-md overflow-hidden border border-slate-200/60"
 />
 ```
 

@@ -24,7 +24,7 @@ export default function ModalAddFriend({
 }: ModalAddFriendProps): JSX.Element {
   const [value, setValue] = useState('');
 
-  const handleOk = () => {
+  const handleConfirm = () => {
     if (onSearch) onSearch(value);
   };
 
@@ -66,7 +66,7 @@ export default function ModalAddFriend({
           <Button variant="ghost" onClick={handleCancel}>
             Hủy
           </Button>
-          <Button onClick={handleOk} disabled={!(value.trim().length > 0)}>
+          <Button onClick={handleConfirm} disabled={!(value.trim().length > 0)}>
             Tìm kiếm
           </Button>
         </DialogFooter>

@@ -167,7 +167,7 @@ export default function Friend() {
 
   const { requestFriends = [], isFetching: isFetchingRequest } = useGetListRequestFriend();
   const { myRequestFriends: myRequestFriend = [], isFetching: isFetchingMyRequest } = useGetMyRequestFriend({});
-  const { friends = [], isFetching: isFetchingFriends } = useGetFriends({ params: { name: '' } });
+  const { data: friends = [], isFetching: isFetchingFriends } = useGetFriends({});
   const { conversations: groups = [], isFetching: isFetchingGroups } = useGetListConversations({
     params: { name: '', type: 2 }
   });

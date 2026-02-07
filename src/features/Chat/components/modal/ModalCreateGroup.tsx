@@ -19,14 +19,14 @@ import ItemsSelected from '../ItemsSelected';
 type Props = {
   isVisible: boolean;
   onCancel: (v: boolean) => void;
-  onOk: (v: any) => void;
+  onConfirm: (v: any) => void;
   loading?: boolean;
 };
 
 export default function ModalCreateGroup({
   isVisible,
   onCancel,
-  onOk,
+  onConfirm,
   loading,
 }: Readonly<Props>) {
   const [checkList, setCheckList] = useState<string[]>([]);
@@ -57,9 +57,9 @@ export default function ModalCreateGroup({
     );
   }, [friends, frInput, isVisible]);
 
-  const handleOk = () => {
+  const handleConfirm = () => {
     const userIds = itemSelected.map((item) => item._id);
-    onOk?.({ name: nameGroup, userIds });
+    onConfirm?.({ name: nameGroup, userIds });
   };
 
   const handleChangeName = (e: any) => {
@@ -115,7 +115,7 @@ export default function ModalCreateGroup({
               value={nameGroup}
               onChange={handleChangeName}
               onBlur={handleOnBlur}
-              className="rounded-xl"
+              className="rounded-md"
             />
           </div>
         </div>
@@ -132,7 +132,7 @@ export default function ModalCreateGroup({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
             placeholder="Nhập tên"
-            className="pl-9 rounded-xl"
+            className="pl-9 rounded-md"
             value={frInput}
             onChange={handleChangeFriend}
           />
@@ -190,14 +190,14 @@ export default function ModalCreateGroup({
           <Button
             variant="outline"
             onClick={() => onCancel(false)}
-            className="rounded-xl"
+            className="rounded-md"
           >
             Hủy
           </Button>
           <Button
             disabled={!(itemSelected.length > 0 && nameGroup.length > 0)}
-            onClick={handleOk}
-            className="rounded-xl"
+            onClick={handleConfirm}
+            className="rounded-md"
           >
             Tạo nhóm
           </Button>

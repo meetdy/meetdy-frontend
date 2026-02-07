@@ -78,7 +78,7 @@ export default function InfoNameAndThumbnail({ conversation = {} }: Props) {
         setFile(f);
     };
 
-    const handleOk = async () => {
+    const handleConfirm = async () => {
         setConfirmLoading(true);
         try {
             if (refInitValue.current !== value && value.trim().length > 0) {
@@ -131,17 +131,17 @@ export default function InfoNameAndThumbnail({ conversation = {} }: Props) {
                             placeholder="Nhập tên mới"
                             onChange={handleInputChange}
                             value={value}
-                            className="rounded-xl text-center"
+                            className="rounded-md text-center"
                         />
                     </div>
                     <DialogFooter className="gap-2">
-                        <Button variant="outline" onClick={handleCancel} className="rounded-xl">
+                        <Button variant="outline" onClick={handleCancel} className="rounded-md">
                             Hủy
                         </Button>
                         <Button
-                            onClick={handleOk}
+                            onClick={handleConfirm}
                             disabled={isButtonDisabled || confirmLoading}
-                            className="rounded-xl"
+                            className="rounded-md"
                         >
                             {confirmLoading ? 'Đang lưu...' : 'Lưu thay đổi'}
                         </Button>

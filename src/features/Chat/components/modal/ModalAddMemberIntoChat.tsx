@@ -14,32 +14,27 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Pencil, AlertCircle, Search } from "lucide-react";
 import PersonalAvatar from "../PersonalAvatar";
 import ItemsSelected from "../ItemsSelected";
+
 import { useGetFriends } from "@/hooks/friend";
 
-export default function ModalAddMemberToConver({
-  onOk,
+export default function ModalAddMemberIntoChat({
+  onConfirm,
   onCancel,
   isVisible,
   typeModal,
 }) {
+  const { data: friends = [] } = useGetFriends({});
+
   const [itemSelected, setItemSelected] = useState<any[]>([]);
   const [frInput, setFrInput] = useState("");
   const [checkList, setCheckList] = useState<string[]>([]);
   const [nameGroup, setNameGroup] = useState("");
   const [isShowError, setIsShowError] = useState(false);
-  const [initalFriend, setInitalFriend] = useState<any[]>([]);
-
-
-  const { data } = useGetFriends({
-    params: { name: '' },
-  });
-
-  const friends = data.data;
-
+  const [initialFriend, setInitialFriend] = useState<any[]>([]);
 
   useEffect(() => {
     if (isVisible) {
-      setInitalFriend(friends || []);
+      setInitialFriend(friends || []);
     } else {
       setFrInput("");
       setCheckList([]);
@@ -49,13 +44,13 @@ export default function ModalAddMemberToConver({
     }
   }, [isVisible]);
 
-  const handleOk = () => {
+  const handleConfirm = () => {
     const userIds = itemSelected.map((ele) => ele._id);
 
     if (typeModal === 1) {
-      onOk?.([...checkList], nameGroup);
+      onConfirm?.([...checkList], nameGroup);
     } else {
-      onOk?.(userIds);
+      onConfirm?.(userIds);
     }
   };
 
@@ -64,12 +59,12 @@ export default function ModalAddMemberToConver({
     setFrInput(value);
 
     if (!value) {
-      setInitalFriend(friends || []);
+      setInitialFriend(friends || []);
     } else {
       const result = (friends || []).filter((ele) =>
         ele.name.toLowerCase().includes(value.toLowerCase())
       );
-      setInitalFriend(result);
+      setInitialFriend(result);
     }
   };
 
@@ -83,7 +78,7 @@ export default function ModalAddMemberToConver({
       newItems = newItems.filter((ele) => ele._id !== value);
     } else {
       newCheck.push(value);
-      const user = initalFriend.find((ele) => ele._id === value);
+      const user = initialFriend.find((ele) => ele._id === value);
       if (user) newItems.push(user);
     }
 
@@ -95,7 +90,7 @@ export default function ModalAddMemberToConver({
     setCheckList((prev) => prev.filter((ele) => ele !== id));
     setItemSelected((prev) => prev.filter((ele) => ele._id !== id));
     setFrInput("");
-    setInitalFriend(friends);
+    setInitialFriend(friends);
   };
 
   const checkInitialValue = (id: string) => {
@@ -127,7 +122,7 @@ export default function ModalAddMemberToConver({
                     onBlur={() =>
                       setIsShowError(!(nameGroup.trim().length > 0))
                     }
-                    className="rounded-xl"
+                    className="rounded-md"
                   />
                   {isShowError && (
                     <div className="text-sm text-red-500 flex items-center gap-1 mt-1">
@@ -147,7 +142,7 @@ export default function ModalAddMemberToConver({
               placeholder="Nhập tên bạn muốn tìm kiếm"
               value={frInput}
               onChange={handleSearch}
-              className="pl-10 rounded-xl"
+              className="pl-10 rounded-md"
             />
           </div>
 
@@ -159,7 +154,7 @@ export default function ModalAddMemberToConver({
 
               <ScrollArea className="h-64 pr-2">
                 <div className="flex flex-col gap-3">
-                  {initalFriend.map((ele) => (
+                  {initialFriend.map((ele) => (
                     <label
                       key={ele._id}
                       className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${checkInitialValue(ele._id)
@@ -190,16 +185,21 @@ export default function ModalAddMemberToConver({
             </div>
 
             {itemSelected.length > 0 && (
-              <div className="w-1/3">
-                <div className="font-medium mb-2">
-                  Đã chọn: {itemSelected.length}
+              <div className="w-2/5 flex flex-col">
+                {/* Header */}
+                <div className="font-medium mb-2 flex items-center justify-between">
+                  <span>Đã chọn</span>
+                  <span className="text-sm text-slate-500">
+                    {itemSelected.length}
+                  </span>
                 </div>
-
                 <ScrollArea className="h-64 pr-2">
-                  <ItemsSelected
-                    items={itemSelected}
-                    onRemove={handleRemoveItem}
-                  />
+                  <div className="flex flex-col gap-1">
+                    <ItemsSelected
+                      items={itemSelected}
+                      onRemove={handleRemoveItem}
+                    />
+                  </div>
                 </ScrollArea>
               </div>
             )}
@@ -207,7 +207,7 @@ export default function ModalAddMemberToConver({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onCancel(false)} className="rounded-xl">
+          <Button variant="outline" onClick={() => onCancel(false)} className="rounded-md">
             Hủy
           </Button>
           <Button
@@ -215,8 +215,8 @@ export default function ModalAddMemberToConver({
               (typeModal === 1 && !nameGroup.trim().length) ||
               checkList.length < 1
             }
-            onClick={handleOk}
-            className="rounded-xl"
+            onClick={handleConfirm}
+            className="rounded-md"
           >
             Xác nhận
           </Button>

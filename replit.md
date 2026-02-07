@@ -75,7 +75,7 @@ A React-based chat application built with Vite, TypeScript, and Tailwind CSS v4.
 - **Conversation list**: rounded-2xl cards, ring-based active states, improved unread badges
 - **Timestamps**: 11px font size, 70% opacity for sent messages
 - **Seen indicator**: CheckCheck icon in emerald-500
-- **Modal dialogs**: rounded-2xl containers, rounded-xl inputs/buttons
+- **Modal dialogs**: rounded-2xl containers, rounded-md inputs/buttons
 - **Hover states**: slate-50 background for list items
 
 ## Development

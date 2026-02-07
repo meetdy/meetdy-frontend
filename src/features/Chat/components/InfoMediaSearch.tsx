@@ -88,7 +88,7 @@ function InfoMediaSearch({ onBack, tabpane }: InfoMediaSearchProps) {
             <div className="flex-1 flex flex-col overflow-hidden">
                 <Tabs value={activeKey} onValueChange={handleChangeTab} className="flex-1 flex flex-col">
                     <div className="px-4 pt-3">
-                        <TabsList className="w-full grid grid-cols-3 h-10 rounded-xl bg-slate-100/80 p-1">
+                        <TabsList className="w-full grid grid-cols-3 h-10 rounded-md bg-slate-100/80 p-1">
                             <TabsTrigger
                                 value="1"
                                 className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm flex items-center gap-1.5"

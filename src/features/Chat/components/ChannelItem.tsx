@@ -129,7 +129,7 @@ function ChannelItem({ isActive = false, data = {} }: ChannelItemProps) {
             <ModalChangeNameChannel
                 visible={visible}
                 onCancel={handleOnCancel}
-                onOk={handleOnOk}
+                onConfirm={handleOnOk}
                 initialValue={data.name}
             />
 

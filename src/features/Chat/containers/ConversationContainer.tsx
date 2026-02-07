@@ -186,7 +186,7 @@ function ConversationContainer({ valueClassify }: {
             {converFilter.length === 0 ? (
                 <div className="h-full flex items-center justify-center px-6">
                     <div className="max-w-sm text-center">
-                        <div className="mx-auto mb-3 h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
+                        <div className="mx-auto mb-3 h-10 w-10 rounded-md bg-muted flex items-center justify-center">
                             <Tag className="h-5 w-5 text-muted-foreground" />
                         </div>
                         <h3 className="text-sm font-semibold text-foreground">

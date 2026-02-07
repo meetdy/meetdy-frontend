@@ -34,14 +34,14 @@ function ModalShareMessage({ visible = false, onCancel, idMessage }: ModalShareM
   const [loading, setLoading] = useState(false);
 
   const fetchData = async (name = '', type = 0) => {
-    const data = await conversationApi.fetchListConversations(name, type);
-    const tempdata: any[] = [];
+    const data = await conversationApi.getListConversations({ name, type });
+    const tempData: any[] = [];
     data.forEach((ele: any) => {
       if (ele.lastMessage) {
-        tempdata.push(ele);
+        tempData.push(ele);
       }
     });
-    setConversations(tempdata);
+    setConversations(tempData);
   };
 
   useEffect(() => {
@@ -58,7 +58,7 @@ function ModalShareMessage({ visible = false, onCancel, idMessage }: ModalShareM
     onCancel?.();
   };
 
-  const handleOk = async () => {
+  const handleConfirm = async () => {
     if (!idMessage) return;
     setLoading(true);
     try {
@@ -118,7 +118,7 @@ function ModalShareMessage({ visible = false, onCancel, idMessage }: ModalShareM
 
   return (
     <Dialog open={visible} onOpenChange={(open) => !open && handleCancel()}>
-      <DialogContent className="max-w-lg max-h-[80vh] rounded-2xl">
+      <DialogContent className="max-w-lg max-h-[80vh] rounded-md">
         <DialogHeader>
           <DialogTitle>Chuyển tiếp tin nhắn</DialogTitle>
         </DialogHeader>
@@ -127,7 +127,7 @@ function ModalShareMessage({ visible = false, onCancel, idMessage }: ModalShareM
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Nhập cuộc trò chuyện bạn muốn tìm kiếm"
-              className="pl-9 rounded-xl"
+              className="pl-9 rounded-md"
               onChange={handleSearch}
               value={frInput}
             />
@@ -142,7 +142,7 @@ function ModalShareMessage({ visible = false, onCancel, idMessage }: ModalShareM
                 {conversations.map((element, index) => (
                   <label
                     key={index}
-                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors"
+                    className="flex items-center gap-3 p-2 rounded-md hover:bg-slate-50 cursor-pointer transition-colors"
                   >
                     <Checkbox
                       checked={checkList.includes(element._id)}
@@ -184,10 +184,10 @@ function ModalShareMessage({ visible = false, onCancel, idMessage }: ModalShareM
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={handleCancel} className="rounded-xl">
+          <Button variant="outline" onClick={handleCancel} className="rounded-md">
             Hủy
           </Button>
-          <Button onClick={handleOk} disabled={loading || itemSelected.length === 0} className="rounded-xl">
+          <Button onClick={handleConfirm} disabled={loading || itemSelected.length === 0} className="rounded-md">
             {loading ? 'Đang chia sẻ...' : 'Chia sẻ'}
           </Button>
         </DialogFooter>
