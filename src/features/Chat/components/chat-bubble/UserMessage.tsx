@@ -500,7 +500,7 @@ function UserMessage({
             <ModalChangePinMessage
                 message={pinMessageModalItems}
                 visible={isVisibleModal}
-                idMessage={_id}
+                messageId={_id}
                 onCloseModal={handleOnCloseModal}
             />
         </>

@@ -11,7 +11,7 @@ import {
 } from '@/app/chatSlice';
 import { setAmountNotify } from '@/app/friendSlice';
 
-import dateUtils from '@/utils/time-utils';
+import timeUtils from '@/utils/time-utils';
 import { getSummaryName } from '@/utils/ui-utils';
 
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -207,7 +207,7 @@ export default function UserCard({
               <div className="flex justify-between">
                 <span className="font-medium">Ngày sinh</span>
                 <span>
-                  {dateUtils.transferDateString(
+                  {timeUtils.transferDateString(
                     user.dateOfBirth?.day,
                     user.dateOfBirth?.month,
                     user.dateOfBirth?.year,

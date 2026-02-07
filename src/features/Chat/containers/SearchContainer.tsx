@@ -35,7 +35,7 @@ export default function SearchContainer({
 }: Props) {
   const debounceRef = useRef<NodeJS.Timeout | null>(null)
   const { mutateAsync: createGroupMutation, isPending: loadingCreateGroup } = useCreateGroup()
-  const { data: classifies } = useGetListClassify()
+  const { data: classifies = [] } = useGetListClassify()
 
   const [modal, setModal] = useState({
     createGroup: false,

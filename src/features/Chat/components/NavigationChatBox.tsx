@@ -48,7 +48,7 @@ export default function NavigationChatBox({
   onOpenInfoBlock,
 }: Props) {
   const [visiblePop, setVisiblePop] = useState(false);
-  const { stickers, currentConversation, conversations } = useSelector(
+  const { currentConversation, conversations } = useSelector(
     (state: RootState) => state.chat,
   );
   const [isVisibleVote, setIsVisibleVote] = useState(false);
@@ -89,13 +89,13 @@ export default function NavigationChatBox({
             </TooltipTrigger>
             <TooltipContent side="top">Sticker & Emoji</TooltipContent>
           </Tooltip>
-          <PopoverContent align="start" className="p-2 w-[280px] rounded-md">
+          {/* <PopoverContent align="start" className="p-2 w-[280px] rounded-md">
             <Sticker
               onClose={() => setVisiblePop(false)}
               data={stickers}
               onScroll={onScroll}
             />
-          </PopoverContent>
+          </PopoverContent> */}
         </Popover>
 
         <Tooltip>

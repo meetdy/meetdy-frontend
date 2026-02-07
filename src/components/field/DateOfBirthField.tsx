@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import dateUtils from '@/utils/time-utils';
+import timeUtils from '@/utils/time-utils';
 import {
   Select,
   SelectContent,
@@ -22,7 +22,7 @@ function DateOfBirthField({ field }: DateOfBirthFieldProps) {
     const { month, year } = dateOfBirth;
     if (month === 4 || month === 6 || month === 9 || month === 11) end = 30;
     if (month === 2) {
-      end = dateUtils.checkLeapYear(year) ? 29 : 28;
+      end = timeUtils.checkLeapYear(year) ? 29 : 28;
     }
     return end;
   };
@@ -33,7 +33,7 @@ function DateOfBirthField({ field }: DateOfBirthFieldProps) {
       if ([2, 4, 6, 9, 11].includes(monthNum)) return true;
     }
     if (day === 30 && monthNum === 2) return true;
-    if (day === 29 && monthNum === 2 && !dateUtils.checkLeapYear(year)) return true;
+    if (day === 29 && monthNum === 2 && !timeUtils.checkLeapYear(year)) return true;
     return false;
   };
 

@@ -14,23 +14,20 @@ import Chat from '@/features/Chat';
 import Friend from '@/features/Friend';
 import NavbarContainer from '@/features/Chat/containers/NavbarContainer';
 
-import dateUtils from '@/utils/time-utils';
+import timeUtils from '@/utils/time-utils';
 
 import {
   addMessage,
   addMessageInChannel,
-  fetchAllSticker,
   fetchConversationById,
-  fetchListClassify,
-  fetchListColor,
   fetchListConversations,
   updateAvatarWhenUpdateMember,
   updateFriendChat,
 } from '@/app/chatSlice';
-
 import { setAmountNotify } from '@/app/friendSlice';
 
-import useWindowUnloadEffect from '@/hooks/useWindowUnloadEffect';
+import { invalidateFriendCore } from '@/hooks/friend';
+import useWindowUnloadEffect from '@/hooks/utils/useWindowUnloadEffect';
 
 import { createSocketConnection as init, socket } from '@/lib/socket';
 
@@ -42,25 +39,16 @@ function ChatLayout() {
 
   const codeRevokeRef = useRef(null);
 
-  const { isJoinChatLayout, user } = useSelector((state: any) => state.global);
+  const [idNewMessage, setIdNewMessage] = useState('');
+
+
+  const { user } = useSelector((state: any) => state.global);
   const { conversations } = useSelector((state: any) => state.chat);
   const { amountNotify } = useSelector((state: any) => state.friend);
 
-  const [idNewMessage, setIdNewMessage] = useState('');
-
-  useEffect(() => {
-    return () => {
-      socket.close();
-    };
-  }, []);
-
   useEffect(() => {
     dispatch(setTabActive(1));
-
-    dispatch(fetchListClassify());
-    dispatch(fetchListColor());
     dispatch(fetchListConversations({}));
-    dispatch(fetchAllSticker());
   }, []);
 
   useEffect(() => {
@@ -109,7 +97,7 @@ function ChatLayout() {
           const conversation = { ...oldData[index] };
           conversation.lastMessage = {
             ...newMessage,
-            createdAt: dateUtils.toTime(newMessage.createdAt),
+            createdAt: timeUtils.toTime(newMessage.createdAt),
           };
           conversation.numberUnread = (conversation.numberUnread || 0) + 1;
 
@@ -153,14 +141,10 @@ function ChatLayout() {
     });
   }, []);
 
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   useWindowUnloadEffect(async () => {
     async function leaveApp() {
       socket.emit('leave', user._id);
-      await sleep(2000);
+      await timeUtils.sleep(2000);
     }
 
     await leaveApp();
@@ -168,56 +152,46 @@ function ChatLayout() {
 
   useEffect(() => {
     socket.on('accept-friend', () => {
-      // Invalidate friends and my request friends lists
-      queryClient.invalidateQueries({
-        queryKey: ['getFriends'],
-        exact: false,
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['fetchMyRequestFriend'],
-      });
+      invalidateFriendCore();
     });
 
     socket.on('send-friend-invite', () => {
-      // Invalidate request friends list
-      queryClient.invalidateQueries({
-        queryKey: ['fetchListRequestFriend'],
-      });
-      // Update notification count
+      invalidateFriendCore();
       dispatch(setAmountNotify(amountNotify + 1));
     });
 
     // xóa lời mời kết bạn
     socket.on('deleted-friend-invite', () => {
-      queryClient.invalidateQueries({
-        queryKey: ['fetchMyRequestFriend'],
-      });
+      invalidateFriendCore();
     });
 
     //  xóa gởi lời mời kết bạn cho người khác
     socket.on('deleted-invite-was-send', () => {
-      queryClient.invalidateQueries({
-        queryKey: ['fetchListRequestFriend'],
-      });
+      invalidateFriendCore();
+
     });
 
     // xóa kết bạn
     socket.on('deleted-friend', (_id) => {
-      queryClient.invalidateQueries({
-        queryKey: ['getFriends'],
-        exact: false,
-      });
+      invalidateFriendCore();
       dispatch(updateFriendChat(_id));
     });
-    // revokeToken
 
+    // revokeToken
     socket.on('revoke-token', ({ key }) => {
       if (codeRevokeRef.current !== key) {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
+        queryClient.clear();
         window.location.reload();
       }
     });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      socket.close();
+    };
   }, []);
 
   return (
@@ -235,7 +209,7 @@ function ChatLayout() {
               index
               element={
                 <div className="h-full overflow-auto">
-                  <Chat socket={socket} idNewMessage={idNewMessage} />
+                  <Chat socket={socket} hasNewMessage={!!idNewMessage} />
                 </div>
               }
             />

@@ -92,7 +92,7 @@ export function useGetContacts() {
 /*                                  Mutations                                 */
 /* -------------------------------------------------------------------------- */
 
-function invalidateFriendCore() {
+export function invalidateFriendCore() {
   queryClient.invalidateQueries({
     queryKey: friendFactory.all(),
   });

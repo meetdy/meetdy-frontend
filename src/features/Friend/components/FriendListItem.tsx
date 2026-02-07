@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Icon } from '@/components/ui/icon';
 import { Delete, Info, Menu, MoreVertical } from 'lucide-react';
-import dateUtils from '@/utils/time-utils';
+import timeUtils from '@/utils/time-utils';
 
 // ============ TYPES ============
 
@@ -116,7 +116,7 @@ export default function FriendListItem({
 
             {showLastLogin && data.lastLogin && (
                 <div className="text-xs text-muted-foreground mt-1">
-                    Truy cập {dateUtils.toTime(data.lastLogin)} trước
+                    Truy cập {timeUtils.toTime(data.lastLogin)} trước
                 </div>
             )}
 

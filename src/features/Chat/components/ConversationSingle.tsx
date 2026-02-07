@@ -25,7 +25,7 @@ const ConversationSingle = React.memo(({ conversation, onClick }: Props) => {
         type,
     } = conversation
 
-    const { data: classifies } = useGetListClassify()
+    const { data: classifies = [] } = useGetListClassify()
     const currentConversation = useSelector(
         (state: any) => state.chat.currentConversation
     )

@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 
 import adminApi from '@/api/adminApi';
 
-StickerPage.propTypes = {};
 function StickerPage(props) {
   const stickers = props.location.state;
   const navigate = useNavigate();

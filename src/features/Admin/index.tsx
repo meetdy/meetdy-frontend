@@ -39,8 +39,6 @@ function Admin(props) {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Content>
-
-        <AdminFooter />
       </Layout>
     </Layout>
   );

@@ -24,12 +24,13 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
+import { useGetListClassify } from '@/hooks/classify';
 
 function ListGroup({ data = [] }) {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const queryClient = useQueryClient();
-  const { classifies } = useSelector((state: any) => state.chat);
+  const { data: classifies = [] } = useGetListClassify()
 
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [openConfirm, setOpenConfirm] = useState(false);

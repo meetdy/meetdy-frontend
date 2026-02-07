@@ -1,7 +1,7 @@
 import React from 'react';
 import PersonalAvatar from './PersonalAvatar';
 import { Pin } from 'lucide-react';
-import dateUtils from '@/utils/time-utils';
+import timeUtils from '@/utils/time-utils';
 
 function PinItem({ children, message }) {
   const time = new Date(message.createdAt);
@@ -25,9 +25,9 @@ function PinItem({ children, message }) {
       </div>
       <div>{children}</div>
       <div className="text-sm text-muted-foreground mt-2">
-        {`${dateUtils.compareDate(tempTime, currentTime)
+        {`${timeUtils.compareDate(tempTime, currentTime)
           ? 'Hôm nay'
-          : dateUtils.transferDateString(
+          : timeUtils.transferDateString(
             time.getDate(),
             time.getMonth(),
             time.getFullYear(),

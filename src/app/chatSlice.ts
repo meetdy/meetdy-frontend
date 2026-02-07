@@ -15,25 +15,9 @@ import {
   TGetListConversations,
 } from '@/models/conversation.model';
 
-import dateUtils from '@/utils/time-utils';
+import timeUtils from '@/utils/time-utils';
 
 const KEY = 'chat';
-
-export const fetchListColor = createAsyncThunk(
-  `${KEY}/fetchListColor`,
-  async () => {
-    const colors = await classifyApi.getColors();
-    return colors;
-  },
-);
-
-export const fetchListClassify = createAsyncThunk(
-  `${KEY}/fetchListClassify`,
-  async () => {
-    const classifies = await classifyApi.getClassifies();
-    return classifies;
-  },
-);
 
 export const fetchListConversations = createAsyncThunk(
   `${KEY}/fetchListConversations`,
@@ -153,15 +137,6 @@ export const getMembersConversation = createAsyncThunk(
   },
 );
 
-export const fetchPinMessages = createAsyncThunk(
-  `${KEY}/fetchPinMessages`,
-  async (params: { conversationId: string }) => {
-    const { conversationId } = params;
-    const pinMessages = await pinMessageApi.getPinMessages({ conversationId });
-    return pinMessages;
-  },
-);
-
 export const getLastViewOfMembers = createAsyncThunk(
   `${KEY}/getLastViewOfMembers`,
   async (params: { conversationId: string }) => {
@@ -242,8 +217,6 @@ const chatSlice = createSlice({
     currentPage: 0,
     totalPages: 0,
     toTalUnread: 0,
-    classifies: [],
-    colors: [],
     pinMessages: [],
     lastViewOfMember: [],
     currentChannel: '',
@@ -268,7 +241,7 @@ const chatSlice = createSlice({
       seachConversation.numberUnread = seachConversation.numberUnread + 1;
       seachConversation.lastMessage = {
         ...newMessage,
-        createdAt: dateUtils.toTime(newMessage.createdAt),
+        createdAt: timeUtils.toTime(newMessage.createdAt),
       };
       // xóa conversation đó ra
       const conversationTempt = state.conversations.filter(
@@ -723,29 +696,6 @@ const chatSlice = createSlice({
           const isFriend = state.friends.some((f) => f._id === member._id);
           return { ...member, isFriend };
         });
-      })
-
-      // Classify
-      .addCase(fetchListClassify.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(fetchListClassify.fulfilled, (state, action) => {
-        state.classifies = action.payload;
-        state.isLoading = false;
-      })
-      .addCase(fetchListClassify.rejected, (state, action) => {
-        state.isLoading = false;
-      })
-
-      // Colors
-      .addCase(fetchListColor.fulfilled, (state, action) => {
-        state.colors = action.payload;
-      })
-
-      // Pin messages
-      .addCase(fetchPinMessages.fulfilled, (state, action) => {
-        const reversed = [...(action.payload || [])].reverse();
-        state.pinMessages = reversed;
       })
 
       // Last view

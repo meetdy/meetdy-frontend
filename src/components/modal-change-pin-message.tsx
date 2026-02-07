@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { MessageSquare } from 'lucide-react';
-import pinMessageApi from '@/api/pinMessageApi';
-import TypeMessagePin from '@/features/Chat/components/TypeMessagePin';
 
-import { useSelector } from 'react-redux';
-import { useQueryClient } from '@tanstack/react-query';
-import { createQueryKey } from '@/queries/core';
 import {
   Dialog,
   DialogContent,
@@ -14,6 +9,9 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { usePinMessage, useUnpinMessage } from '@/hooks/message/pin-message';
+
+import TypeMessagePin from '@/features/Chat/components/TypeMessagePin';
 
 interface PinMessageItem {
   _id: string;
@@ -25,7 +23,7 @@ interface PinMessageItem {
 interface ModalChangePinMessageProps {
   visible: boolean;
   message?: PinMessageItem[];
-  idMessage?: string;
+  messageId?: string;
   onCloseModal?: () => void;
 }
 
@@ -33,31 +31,24 @@ export default function ModalChangePinMessage({
   visible,
   message = [],
   onCloseModal,
-  idMessage = '',
+  messageId = '',
 }: ModalChangePinMessageProps) {
-  const [value, setValue] = useState<string>('');
-  const queryClient = useQueryClient();
-  const { currentConversation } = useSelector((state: any) => state.chat || {});
+  const [messageIdState, setMessageIdState] = useState<string>('');
 
-  const handleOnClickItem = (ele: PinMessageItem) => {
-    setValue(ele._id);
-  };
+  const { doPinMessage } = usePinMessage();
+  const { doUnpinMessage } = useUnpinMessage();
 
-  const handleOnOk = async () => {
-    if (!value) return;
-    await pinMessageApi.unpinMessage({
-      messageId: value,
-    });
-    await pinMessageApi.pinMessage({
-      messageId: idMessage,
-    });
-    window.alert('Ghim tin nhắn thành công');
+  const handleConfirm = async () => {
+    doPinMessage({ messageId });
 
-    queryClient.invalidateQueries({
-      queryKey: createQueryKey('fetchPinMessages', { conversationId: currentConversation })
-    });
+    if (!messageIdState) return;
+    doUnpinMessage({ messageId: messageIdState });
 
     handleOnCancel();
+  };
+
+  const handleOnClickItem = (ele: PinMessageItem) => {
+    setMessageIdState(ele._id);
   };
 
   const handleOnCancel = () => {
@@ -118,8 +109,8 @@ export default function ModalChangePinMessage({
                   <input
                     type="radio"
                     name="pin-message-select"
-                    checked={value === ele._id}
-                    onChange={() => setValue(ele._id)}
+                    checked={messageIdState === ele._id}
+                    onChange={() => setMessageIdState(ele._id)}
                     className="h-4 w-4 text-primary-600 accent-primary-600"
                   />
                 </div>
@@ -132,7 +123,7 @@ export default function ModalChangePinMessage({
           <Button variant="ghost" onClick={handleOnCancel}>
             Hủy
           </Button>
-          <Button onClick={handleOnOk} disabled={!value}>
+          <Button onClick={handleConfirm} disabled={!messageIdState}>
             Xác nhận
           </Button>
         </DialogFooter>

@@ -21,7 +21,7 @@ import {
 import useWindowDimensions from '@/hooks/utils/useWindowDimensions';
 import { useCreateGroup } from '@/hooks/conversation/useCreateGroup';
 import { useAddMembersToConversation } from '@/hooks/conversation/useAddMembersToConversation';
-import dateUtils from '@/utils/time-utils';
+import timeUtils from '@/utils/time-utils';
 import { Button } from '@/components/ui/button';
 import {
     Tooltip,
@@ -210,7 +210,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
                                         ) : (
                                             lastLogin && (
                                                 <span className="text-muted-foreground/70">
-                                                    Hoạt động {dateUtils.toTime(lastLogin).toLowerCase()}{' '}
+                                                    Hoạt động {timeUtils.toTime(lastLogin).toLowerCase()}{' '}
                                                     {checkTime() ? 'trước' : ''}
                                                 </span>
                                             )

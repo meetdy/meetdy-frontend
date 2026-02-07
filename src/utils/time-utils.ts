@@ -6,7 +6,7 @@ const DAY_MILLISECONDS = 86400000;
 const HOUR_MILLISECONDS = 3600000;
 const MINUTE_MILLISECONDS = 60000;
 
-const dateUtils = {
+const timeUtils = {
   toTime: (dateString: string) => {
     const date = dayjs(dateString);
     const now = dayjs();
@@ -49,6 +49,10 @@ const dateUtils = {
   checkLeapYear: (year: number) => {
     return dayjs(`${year}-01-01`).isLeapYear();
   },
+
+  sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  },
 };
 
-export default dateUtils;
+export default timeUtils;

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import dateUtils from '@/utils/time-utils';
+import timeUtils from '@/utils/time-utils';
 import {
   IGroupConversation,
   IIndividualConversation,
@@ -26,14 +26,11 @@ interface ChatState {
   currentPage: string | number;
   totalPages: string;
   toTalUnread: number;
-  classifies: IClassify[];
-  colors: IColor[];
   pinMessages: any[];
   lastViewOfMember: any[];
   currentChannel: string;
   channels: any[];
   totalChannelNotify: number;
-  stickers: any[];
   votes: any[];
   totalPagesVote: number;
   usersTyping: IUser[];
@@ -53,14 +50,11 @@ const initialState: ChatState = {
   currentPage: '',
   totalPages: '',
   toTalUnread: 0,
-  classifies: [],
-  colors: [],
   pinMessages: [],
   lastViewOfMember: [],
   currentChannel: '',
   channels: [],
   totalChannelNotify: 0,
-  stickers: [],
   votes: [],
   totalPagesVote: 0,
   usersTyping: [],
@@ -89,7 +83,7 @@ const chatSlice = createSlice({
         (searchConversation.numberUnread || 0) + 1;
       searchConversation.lastMessage = {
         ...newMessage,
-        createdAt: dateUtils.toTime(newMessage.createdAt),
+        createdAt: timeUtils.toTime(newMessage.createdAt),
       };
 
       const updatedConversations = state.conversations.filter(
@@ -209,24 +203,8 @@ const chatSlice = createSlice({
       }
     },
 
-    setClassifies: (state, action: PayloadAction<IClassify[]>) => {
-      state.classifies = action.payload;
-    },
-
-    setColors: (state, action: PayloadAction<IColor[]>) => {
-      state.colors = action.payload;
-    },
-
-    setStickers: (state, action: PayloadAction<any[]>) => {
-      state.stickers = action.payload;
-    },
-
     setCurrentConversation: (state, action: PayloadAction<string>) => {
       state.currentConversation = action.payload;
-    },
-
-    updateClassifyToConver: (state, action: PayloadAction<IClassify[]>) => {
-      state.classifies = action.payload;
     },
 
     setConversations: (state, action: PayloadAction<Conversation[]>) => {
@@ -735,9 +713,6 @@ const chatSlice = createSlice({
 });
 
 export const {
-  setClassifies,
-  setColors,
-  setStickers,
   addMessage,
   setMessages,
   setChannels,
@@ -753,7 +728,6 @@ export const {
   leaveGroup,
   isDeletedFromGroup,
   setCurrentConversation,
-  updateClassifyToConver,
   setConversations,
   setNumberUnreadForNewFriend,
   updateTimeForConver,

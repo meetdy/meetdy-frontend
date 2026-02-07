@@ -50,8 +50,8 @@ function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
   const queryClient = useQueryClient();
   const previousName = useRef<any>(null);
 
-  const { data: classifies } = useGetListClassify();
-  const { data: colors } = useGetListColor();
+  const { data: classifies = [] } = useGetListClassify();
+  const { data: colors = [] } = useGetListColor();
 
   const { mutateAsync: addClassify } = useAddClassify();
   const { mutateAsync: updateClassify } = useUpdateClassify();

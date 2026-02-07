@@ -111,7 +111,7 @@ function ConversationContainer({ valueClassify }: {
     const dispatch = useDispatch<AppDispatch>();
     const queryClient = useQueryClient();
     const { conversations } = useGetListConversations({ params: {} });
-    const { data: classifies } = useGetListClassify();
+    const { data: classifies = [] } = useGetListClassify();
 
     // OPTIMIZATION: Select only needed user state, ignore other global state changes
     const user = useSelector((state: RootState) => state.global.user);
