@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { Search, UserPlus, Users, Plus } from 'lucide-react'
 
 import userApi from '@/api/userApi'
 import { useCreateGroup } from '@/hooks/conversation/useCreateGroup'
-import { useGetListClassify } from '@/hooks/classify/useGetListClassify'
+import { useGetListClassify } from '@/hooks/classify'
 
 import ModalClassify from '../components/modal/ModalClassify'
 import ModalAddFriend from '@/components/modal-add-friend'
@@ -22,7 +21,7 @@ type Props = {
   onSearchChange: (text: string) => void
   onSubmitSearch: () => void
   isFriendPage?: boolean
-  onFilterClasify?: (value: string) => void
+  onFilterClassify?: (value: string) => void
   valueClassify?: string
 }
 
@@ -31,12 +30,12 @@ export default function SearchContainer({
   onSearchChange,
   onSubmitSearch,
   isFriendPage,
-  onFilterClasify,
+  onFilterClassify,
   valueClassify,
 }: Props) {
   const debounceRef = useRef<NodeJS.Timeout | null>(null)
   const { mutateAsync: createGroupMutation, isPending: loadingCreateGroup } = useCreateGroup()
-  const { classifies } = useGetListClassify()
+  const { data: classifies } = useGetListClassify()
 
   const [modal, setModal] = useState({
     createGroup: false,
@@ -118,7 +117,7 @@ export default function SearchContainer({
         <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide pb-1">
           <FilterButton
             active={!valueClassify || valueClassify === '0'}
-            onClick={() => onFilterClasify?.('0')}
+            onClick={() => onFilterClassify?.('0')}
           >
             Tất cả
           </FilterButton>
@@ -127,7 +126,7 @@ export default function SearchContainer({
             <FilterButton
               key={item._id}
               active={valueClassify === item._id}
-              onClick={() => onFilterClasify?.(item._id)}
+              onClick={() => onFilterClassify?.(item._id)}
             >
               {item.color?.code && (
                 <span

@@ -12,7 +12,7 @@ import Admin from '@/features/Admin';
 import ChatLayout from '@/features';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetProfile } from '@/hooks/me/useGetProfile';
+import { useGetProfile } from '@/hooks/me';
 import { useEffect } from 'react';
 import { setUser } from '@/app/globalSlice';
 

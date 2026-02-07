@@ -4,7 +4,6 @@ import FriendListItem, { type FriendData } from './FriendListItem';
 
 type SuggestUser = {
   id?: string;
-  _id?: string;
   status?: string;
   [key: string]: any;
 };
@@ -17,7 +16,7 @@ export default function SuggestList({ data = [] }: SuggestListProps) {
   const [isUserCardVisible, setIsUserCardVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState<SuggestUser>({});
 
-  const handleSelectUser = (user: FriendData) => {
+  const handleSelectUser = (user: SuggestUser) => {
     setSelectedUser(user);
     setIsUserCardVisible(true);
   };
@@ -27,7 +26,7 @@ export default function SuggestList({ data = [] }: SuggestListProps) {
   };
 
   const filteredData = useMemo(
-    () => data.filter((u) => u.status === 'NOT_FRIEND'),
+    () => data.filter((u) => u.status === 'FOLLOWING' || u.status === 'NOT_FRIEND'),
     [data],
   );
 
@@ -49,12 +48,11 @@ export default function SuggestList({ data = [] }: SuggestListProps) {
             <FriendListItem
               key={
                 item.id ??
-                item._id ??
                 `${item.username ?? ''}-${item.name ?? ''}`
               }
               variant="suggestion"
               data={item}
-              onClick={handleSelectUser}
+              onClick={() => handleSelectUser(item)}
               showCommonInfo
             />
           ))}

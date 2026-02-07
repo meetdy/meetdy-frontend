@@ -26,12 +26,15 @@ import ListMyFriendRequest from './components/ListMyRequestFriend';
 import ListRequestFriend from './components/ListRequestFriend';
 import SuggestList from './components/SuggestList';
 
-import { useGetFriends } from '@/hooks/friend/useGetFriends';
-import { useGetListRequestFriend } from '@/hooks/friend/useGetListRequestFriend';
-import { useGetMyRequestFriend } from '@/hooks/friend/useGetMyRequestFriend';
 import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
-import { useGetContacts } from '@/hooks/contacts/useGetContacts';
-import { useGetSuggestFriend } from '@/hooks/friend/useGetSuggestFriend';
+
+import {
+  useGetFriends,
+  useGetListRequestFriend,
+  useGetMyRequestFriend,
+  useGetSuggestFriend,
+  useGetContacts,
+} from '@/hooks/friend';
 
 import { getValueFromKey } from '@/utils/feature-utils';
 import { sortGroup } from '@/utils/feature-utils';
@@ -165,15 +168,15 @@ function GroupFilters(props: GroupFiltersProps) {
 export default function Friend() {
   const refOriginalGroups = useRef<any[]>([]);
 
-  const { requestFriends = [], isFetching: isFetchingRequest } = useGetListRequestFriend();
-  const { myRequestFriends: myRequestFriend = [], isFetching: isFetchingMyRequest } = useGetMyRequestFriend({});
-  const { data: friends = [], isFetching: isFetchingFriends } = useGetFriends({});
   const { conversations: groups = [], isFetching: isFetchingGroups } = useGetListConversations({
     params: { name: '', type: 2 }
   });
 
-  const { contacts: phoneBook = [], isFetching: isFetchingContacts } = useGetContacts();
-  const { suggestFriends = [], isFetching: isFetchingSuggest } = useGetSuggestFriend({ params: { page: 0, size: 12 } });
+  const { data: requestFriends = [], isFetching: isFetchingRequest } = useGetListRequestFriend();
+  const { data: myRequestFriends = [], isFetching: isFetchingMyRequest } = useGetMyRequestFriend();
+  const { data: friends = [], isFetching: isFetchingFriends } = useGetFriends({});
+  const { data: phoneBook = [], isFetching: isFetchingContacts } = useGetContacts();
+  const { data: suggestFriends = [], isFetching: isFetchingSuggest } = useGetSuggestFriend();
 
   const isLoading = isFetchingRequest || isFetchingMyRequest || isFetchingFriends || isFetchingGroups || isFetchingContacts || isFetchingSuggest;
 
@@ -221,10 +224,10 @@ export default function Friend() {
     () => ({
       friends: friends?.length ?? 0,
       request: requestFriends?.length ?? 0,
-      sent: myRequestFriend?.length ?? 0,
+      sent: myRequestFriends?.length ?? 0,
       suggest: suggestFriends?.length ?? 0,
     }),
-    [friends, requestFriends, myRequestFriend, suggestFriends],
+    [friends, requestFriends, myRequestFriends, suggestFriends],
   );
 
   if (isLoading) return <Spinner />;
@@ -297,7 +300,7 @@ export default function Friend() {
               </Section>
 
               <Section title={`Đã gửi (${counts.sent})`}>
-                <ListMyFriendRequest data={myRequestFriend} />
+                <ListMyFriendRequest data={myRequestFriends} />
               </Section>
 
               <Section title={`Gợi ý (${counts.suggest})`}>

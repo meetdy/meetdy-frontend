@@ -1,8 +1,8 @@
-import { useDeleteSentRequestFriend } from '@/hooks/friend';
+import { useCancelSentRequestFriend } from '@/hooks/friend';
 import FriendListItem, { type FriendData } from './FriendListItem';
 
 function ListMyFriendRequest({ data = [] }) {
-  const { mutate: cancelRequest } = useDeleteSentRequestFriend();
+  const { mutate: cancelRequest } = useCancelSentRequestFriend();
 
   const handleRemoveMyRequest = (friendData: FriendData) => {
     cancelRequest(friendData._id!);

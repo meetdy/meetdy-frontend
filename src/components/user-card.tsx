@@ -33,7 +33,7 @@ import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 import {
   useAcceptRequestFriend,
   useDeleteFriend,
-  useDeleteSentRequestFriend,
+  useCancelSentRequestFriend,
   useSendRequestFriend,
 } from '@/hooks/friend';
 
@@ -60,7 +60,7 @@ export default function UserCard({
   // React Query mutation hooks
   const { mutate: sendRequest } = useSendRequestFriend();
   const { mutate: acceptRequest } = useAcceptRequestFriend();
-  const { mutate: cancelRequest } = useDeleteSentRequestFriend();
+  const { mutate: cancelRequest } = useCancelSentRequestFriend();
   const { mutate: deleteFriend } = useDeleteFriend();
 
   const coverImage =

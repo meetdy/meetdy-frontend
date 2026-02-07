@@ -14,5 +14,6 @@ export function useGetAllMedia({
     queryKey: createQueryKey('fetchAllMedia', params, {}),
     queryFn: () => ServiceMedia.getAllMedia(params),
     enabled,
+    staleTime: 1000 * 60 * 5,
   });
 }

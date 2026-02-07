@@ -3,7 +3,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
-import { useGetInfoWeb } from '@/hooks/info-web/useGetInfoWeb';
+import { useGetGeneralInformation } from '@/hooks/useGetGeneralInformation';
 
 import Image from './ui/image';
 
@@ -35,7 +35,7 @@ function CarouselFeatureItem({
 
 
 export default function CarouselFeature() {
-  const { data } = useGetInfoWeb();
+  const { data } = useGetGeneralInformation();
 
   const features = data.features || [];
 

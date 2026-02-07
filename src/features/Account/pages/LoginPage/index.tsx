@@ -14,7 +14,7 @@ import { loginValues } from '@/features/Account/initValues';
 import { Button } from '@/components/ui/button';
 import { Alert } from '@/components/ui/alert';
 
-import { fetchUserProfile } from '@/hooks/me/useGetProfile';
+import { fetchUserProfile } from '@/hooks/me';
 
 function LoginPage() {
   const dispatch = useDispatch();

@@ -33,7 +33,7 @@ const FriendService = {
     return response.data;
   },
 
-  deleteRequestFriend: async (userId: string): Promise<void> => {
+  rejectRequestFriend: async (userId: string): Promise<void> => {
     const url = `${PATH}/invites/${userId}`;
     const response = await del<void>(url);
     return response.data;
@@ -45,7 +45,7 @@ const FriendService = {
     return response.data;
   },
 
-  deleteSentRequestFriend: async (userId: string): Promise<void> => {
+  cancelSentRequestFriend: async (userId: string): Promise<void> => {
     const url = `${PATH}/invites/me/${userId}`;
     const response = await del<void>(url);
     return response.data;
@@ -57,11 +57,9 @@ const FriendService = {
     return response.data;
   },
 
-  getSuggestFriend: async (page = 0, size = 12): Promise<ISuggestFriend[]> => {
+  getSuggestFriend: async (): Promise<ISuggestFriend[]> => {
     const url = `${PATH}/suggest`;
-    const response = await get<ISuggestFriend[]>(url, {
-      params: { page, size },
-    });
+    const response = await get<ISuggestFriend[]>(url);
     return response.data;
   },
 };

@@ -164,17 +164,6 @@ export function useChannelChat({
     },
   });
 
-  const fetchedMessages = (data?.pages.flatMap((page) => page.messages) ||
-    []) as unknown as ChannelMessage[];
-  const messages: ChannelMessage[] = [
-    ...getedMessages,
-    ...pendingMessages,
-  ].sort(
-    (a, b) =>
-      new Date(a.createdAt || 0).getTime() -
-      new Date(b.createdAt || 0).getTime(),
-  );
-
   const loadMore = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -274,7 +263,12 @@ export function useChannelChat({
   }, []);
 
   return {
-    messages,
+    messages: [
+      ...pendingMessages,
+      ...(data
+        ? data.pages.flatMap((page) => page.messages as any[])
+        : []),
+    ],
     isLoading,
     isLoadingMore: isFetchingNextPage,
     hasNextPage: !!hasNextPage,

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useDeleteFriend } from '@/hooks/friend/useDeleteFriend';
+import { useDeleteFriend } from '@/hooks/friend';
 import userApi from '@/api/userApi';
 import conversationApi from '@/api/conversationApi';
 import { toast } from 'sonner';

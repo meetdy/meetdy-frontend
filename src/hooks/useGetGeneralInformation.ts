@@ -7,7 +7,7 @@ const findValue = (data = [], name: string) => {
   return data.find((ele: any) => ele.name === name)?.value ?? null;
 };
 
-export function useGetInfoWeb({ enabled = true }: { enabled?: boolean } = {}) {
+export function useGetGeneralInformation({ enabled = true }: { enabled?: boolean } = {}) {
   const { data } = useQuery<IWebInfo[]>({
     queryKey: createQueryKey('getInfoWeb', {}),
     queryFn: () => ServiceInfoWeb.getInfoWeb(),

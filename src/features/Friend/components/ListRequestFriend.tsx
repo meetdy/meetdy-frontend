@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {
   useAcceptRequestFriend,
-  useDeleteRequestFriend,
+  useRejectRequestFriend,
 } from '@/hooks/friend';
 import { setAmountNotify } from '@/app/friendSlice';
 import { AppDispatch } from '@/redux/store';
@@ -13,7 +13,7 @@ function ListRequestFriend({ data = [] }) {
   const dispatch = useDispatch<AppDispatch>();
   const { amountNotify } = useSelector((state: any) => state.friend);
 
-  const { mutate: denyRequest } = useDeleteRequestFriend();
+  const { mutate: denyRequest } = useRejectRequestFriend();
   const { mutate: acceptRequest } = useAcceptRequestFriend();
 
   const handleRequestDeny = (friendData: FriendData) => {

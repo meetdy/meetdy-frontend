@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import ServiceMedia, { IMedia, TFetchMediaParams } from '@/api/mediaApi';
-import { createQueryKey } from '@/queries/core';
+import { IMedia, TFetchMediaParams } from '@/api/mediaApi';
+import { useGetAllMedia } from './useGetAllMedia';
 
 export type MediaType = 'ALL' | 'IMAGE' | 'VIDEO' | 'FILE';
 
@@ -39,20 +38,12 @@ export function useMediaManager({
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  const queryKey = createQueryKey('conversationMedia', {
-    conversationId,
-    type: currentType,
-  });
-
-  const { data, isLoading, error } = useQuery({
-    queryKey,
-    queryFn: () =>
-      ServiceMedia.getAllMedia({
-        conversationId,
-        type: currentType,
-      } as TFetchMediaParams),
+  const { data, isLoading, error } = useGetAllMedia({
+    params: {
+      conversationId,
+      type: currentType,
+    } as TFetchMediaParams,
     enabled: enabled && !!conversationId,
-    staleTime: 1000 * 60 * 5,
   });
 
   const media: MediaItem[] = (data || []).map((item) => ({

@@ -3,12 +3,15 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Edit, Info, Plus, Tag, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 
-import ServiceClassify from '@/api/classifyApi';
-import { useAddClassify } from '@/hooks/classify/useAddClassify';
-import { useDeleteClassify } from '@/hooks/classify/useDeleteClassify';
-import { useGetListColor } from '@/hooks/classify/useGetColors';
-import { useGetListClassify } from '@/hooks/classify/useGetListClassify';
-import { useUpdateClassifyMutation } from '@/hooks/classify/useUpdateClassify';
+import {
+  useGetListClassify,
+  useGetListColor,
+  useAddClassify,
+  useUpdateClassify,
+  useDeleteClassify
+} from '@/hooks/classify';
+
+
 import { createQueryKey } from '@/queries/core';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -46,11 +49,12 @@ interface ModalClassifyProps {
 function ModalClassify({ isVisible, onCancel, onOpen }: ModalClassifyProps) {
   const queryClient = useQueryClient();
   const previousName = useRef<any>(null);
-  const { classifies } = useGetListClassify();
-  const { colors } = useGetListColor();
+
+  const { data: classifies } = useGetListClassify();
+  const { data: colors } = useGetListColor();
 
   const { mutateAsync: addClassify } = useAddClassify();
-  const { mutateAsync: updateClassify } = useUpdateClassifyMutation();
+  const { mutateAsync: updateClassify } = useUpdateClassify();
   const { mutateAsync: deleteClassify } = useDeleteClassify();
 
   const [isShowModalAdd, setIsShowModalAdd] = useState(false);

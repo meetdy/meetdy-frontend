@@ -7,7 +7,8 @@ import conversationApi from '@/api/conversationApi';
 import channelApi from '@/api/channelApi';
 import SubMenuClassify from '@/components/sub-menu-classify';
 import ConversationSingle from '@/features/Chat/components/ConversationSingle';
-import { useGetListClassify } from '@/hooks/classify/useGetListClassify';
+
+import { useGetListClassify } from '@/hooks/classify';
 import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 import { setCurrentChannel, setCurrentConversation } from '@/app/chatSlice';
 import type { RootState, AppDispatch } from '@/redux/store';
@@ -110,7 +111,7 @@ function ConversationContainer({ valueClassify }: {
     const dispatch = useDispatch<AppDispatch>();
     const queryClient = useQueryClient();
     const { conversations } = useGetListConversations({ params: {} });
-    const { classifies } = useGetListClassify();
+    const { data: classifies } = useGetListClassify();
 
     // OPTIMIZATION: Select only needed user state, ignore other global state changes
     const user = useSelector((state: RootState) => state.global.user);

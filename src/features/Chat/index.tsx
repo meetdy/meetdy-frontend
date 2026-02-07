@@ -639,7 +639,7 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
                 valueText={valueInput}
                 onSearchChange={handleOnSearchChange}
                 onSubmitSearch={handleOnSubmitSearch}
-                onFilterClasify={handleOnFilterClassfiy}
+                onFilterClassify={handleOnFilterClassfiy}
                 valueClassify={valueClassify}
               />
             </div>
