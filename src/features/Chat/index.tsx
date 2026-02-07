@@ -10,7 +10,7 @@ import conversationApi from '@/api/conversationApi';
 import FilterContainer from '@/components/filter-container';
 import ModalJoinGroupFromLink from '@/components/modal-join-group-from-link';
 import CarouselFeature from '@/components/carousel-feature';
-import useWindowDimensions from '@/hooks/useWindowDimensions';
+import useWindowDimensions from '@/hooks/utils/useWindowDimensions';
 
 import DrawerPinMessage from './components/DrawerPinMessage';
 import GroupNews from './components/GroupNews';

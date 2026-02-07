@@ -18,7 +18,7 @@ import {
     setCurrentChannel,
     setCurrentConversation,
 } from '@/app/chatSlice';
-import useWindowDimensions from '@/hooks/useWindowDimensions';
+import useWindowDimensions from '@/hooks/utils/useWindowDimensions';
 import { useCreateGroup } from '@/hooks/conversation/useCreateGroup';
 import { useAddMembersToConversation } from '@/hooks/conversation/useAddMembersToConversation';
 import dateUtils from '@/utils/time-utils';
