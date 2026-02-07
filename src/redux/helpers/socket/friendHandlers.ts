@@ -1,6 +1,6 @@
 import { updateFriendChat } from '@/redux/slice/chat/chatSlice';
 import {
-  setAmountNotify,
+  setNumberOfNotification,
   setNewFriend,
   setNewRequestFriend,
   updateFriend,
@@ -20,9 +20,9 @@ export const friendHandlers = (socket: Socket, storeApi: StoreApi) => {
   });
 
   socket.on(SocketEvent.SendFriendInvite, (value: any) => {
-    const { amountNotify } = getState().friend;
+    const { numberOfNotification } = getState().global;
     dispatch(setNewRequestFriend(value));
-    dispatch(setAmountNotify(amountNotify + 1));
+    dispatch(setNumberOfNotification(numberOfNotification + 1));
   });
 
   socket.on(SocketEvent.DeletedFriendInvite, (_id: string) => {

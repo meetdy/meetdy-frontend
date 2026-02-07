@@ -24,7 +24,7 @@ import {
   updateAvatarWhenUpdateMember,
   updateFriendChat,
 } from '@/app/chatSlice';
-import { setAmountNotify } from '@/app/friendSlice';
+import { setNumberOfNotification } from '@/app/globalSlice';
 
 import { invalidateFriendCore } from '@/hooks/friend';
 import useWindowUnloadEffect from '@/hooks/utils/useWindowUnloadEffect';
@@ -42,13 +42,12 @@ function ChatLayout() {
   const [idNewMessage, setIdNewMessage] = useState('');
 
 
-  const { user } = useSelector((state: any) => state.global);
+  const { user, numberOfNotification } = useSelector((state: any) => state.global);
   const { conversations } = useSelector((state: any) => state.chat);
-  const { amountNotify } = useSelector((state: any) => state.friend);
 
   useEffect(() => {
     dispatch(setTabActive(1));
-    dispatch(fetchListConversations({}));
+    dispatch(fetchListConversations());
   }, []);
 
   useEffect(() => {
@@ -66,9 +65,9 @@ function ChatLayout() {
   }, [conversations]);
 
   useEffect(() => {
-    socket.on('create-individual-conversation', (converId) => {
-      socket.emit('join-conversation', converId);
-      dispatch(fetchConversationById({ conversationId: converId }));
+    socket.on('create-individual-conversation', (conversationId) => {
+      socket.emit('join-conversation', conversationId);
+      dispatch(fetchConversationById({ conversationId }));
     });
   }, []);
 
@@ -157,7 +156,7 @@ function ChatLayout() {
 
     socket.on('send-friend-invite', () => {
       invalidateFriendCore();
-      dispatch(setAmountNotify(amountNotify + 1));
+      dispatch(setNumberOfNotification(numberOfNotification + 1));
     });
 
     // xóa lời mời kết bạn

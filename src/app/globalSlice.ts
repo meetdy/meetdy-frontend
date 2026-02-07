@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState = {
   isLoading: false,
@@ -7,6 +7,7 @@ const initialState = {
   isJoinChatLayout: false,
   isJoinFriendLayout: false,
   tabActive: 0,
+  numberOfNotification: 0,
 };
 
 const globalSlice = createSlice({
@@ -37,6 +38,9 @@ const globalSlice = createSlice({
         state.user.avatar = action.payload;
       }
     },
+    setNumberOfNotification: (state, action: PayloadAction<number>) => {
+      state.numberOfNotification = action.payload;
+    },
   },
 });
 
@@ -48,6 +52,7 @@ export const {
   setJoinFriendLayout,
   setTabActive,
   setAvatarProfile,
+  setNumberOfNotification,
 } = globalSlice.actions;
 
 export default globalSlice.reducer;

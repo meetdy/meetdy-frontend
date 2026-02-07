@@ -17,7 +17,7 @@ interface FriendState {
   myRequestFriend: IRequestFriend[];
   friends: IFriend[];
   groups: Group[];
-  amountNotify: number;
+  numberOfNotification: number;
   phoneBook: IContact[];
   suggestFriends: ISuggestFriend[];
 }
@@ -28,7 +28,7 @@ const initialState: FriendState = {
   myRequestFriend: [],
   friends: [],
   groups: [],
-  amountNotify: 0,
+  numberOfNotification: 0,
   phoneBook: [],
   suggestFriends: [],
 };
@@ -64,8 +64,8 @@ const friendSlice = createSlice({
     setMyRequestFriend: (state, action: PayloadAction<IRequestFriend[]>) => {
       state.myRequestFriend = action.payload;
     },
-    setAmountNotify: (state, action: PayloadAction<number>) => {
-      state.amountNotify = action.payload;
+    setNumberOfNotification: (state, action: PayloadAction<number>) => {
+      state.numberOfNotification = action.payload;
     },
     setSuggestFriends: (state, action: PayloadAction<ISuggestFriend[]>) => {
       state.suggestFriends = action.payload;
@@ -101,7 +101,7 @@ export const {
   setGroup,
   setGroups,
   setMyRequestFriend,
-  setAmountNotify,
+  setNumberOfNotification,
   setSuggestFriends,
   updateSuggestFriend,
   updateFriend,

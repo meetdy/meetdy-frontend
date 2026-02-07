@@ -4,14 +4,14 @@ import {
   useAcceptRequestFriend,
   useRejectRequestFriend,
 } from '@/hooks/friend';
-import { setAmountNotify } from '@/app/friendSlice';
+import { setNumberOfNotification } from '@/app/globalSlice';
 import { AppDispatch } from '@/redux/store';
 
 import FriendListItem, { type FriendData } from './FriendListItem';
 
 function ListRequestFriend({ data = [] }) {
   const dispatch = useDispatch<AppDispatch>();
-  const { amountNotify } = useSelector((state: any) => state.friend);
+  const { numberOfNotification } = useSelector((state: any) => state.global);
 
   const { mutate: denyRequest } = useRejectRequestFriend();
   const { mutate: acceptRequest } = useAcceptRequestFriend();
@@ -19,7 +19,7 @@ function ListRequestFriend({ data = [] }) {
   const handleRequestDeny = (friendData: FriendData) => {
     denyRequest(friendData._id!, {
       onSuccess: () => {
-        dispatch(setAmountNotify(amountNotify - 1));
+        dispatch(setNumberOfNotification(numberOfNotification - 1));
       },
     });
   };
@@ -27,7 +27,7 @@ function ListRequestFriend({ data = [] }) {
   const handleOnAccept = (friendData: FriendData) => {
     acceptRequest(friendData._id!, {
       onSuccess: () => {
-        dispatch(setAmountNotify(amountNotify - 1));
+        dispatch(setNumberOfNotification(numberOfNotification - 1));
       },
     });
   };

@@ -11,6 +11,7 @@ interface GlobalState {
   isJoinFriendLayout: boolean;
   tabActive: number;
   conversationInfo: string | null;
+  numberOfNotification: number;
 }
 
 const initialState: GlobalState = {
@@ -21,6 +22,7 @@ const initialState: GlobalState = {
   isJoinFriendLayout: false,
   tabActive: 0,
   conversationInfo: null,
+  numberOfNotification: 0,
 };
 
 const globalSlice = createSlice({
@@ -41,6 +43,9 @@ const globalSlice = createSlice({
     },
     setTabActive: (state, action: PayloadAction<number>) => {
       state.tabActive = action.payload;
+    },
+    setNumberOfNotification: (state, action: PayloadAction<number>) => {
+      state.numberOfNotification = action.payload;
     },
     setAvatarProfile: (state, action: PayloadAction<string>) => {
       if (state.user) {
@@ -85,5 +90,6 @@ export const {
   setConversationInfo,
   clearUser,
   updateUserProfile,
+  setNumberOfNotification,
 } = actions;
 export default reducer;

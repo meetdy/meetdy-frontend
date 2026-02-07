@@ -9,7 +9,7 @@ import {
   setConversations,
   setCurrentConversation,
 } from '@/app/chatSlice';
-import { setAmountNotify } from '@/app/friendSlice';
+import { setNumberOfNotification } from '@/app/globalSlice';
 
 import timeUtils from '@/utils/time-utils';
 import { getSummaryName } from '@/utils/ui-utils';
@@ -53,7 +53,7 @@ export default function UserCard({
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const { amountNotify } = useSelector((state: any) => state.friend);
+  const { numberOfNotification } = useSelector((state: any) => state.global);
 
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
 
@@ -96,7 +96,7 @@ export default function UserCard({
   const handleAcceptFriend = () => {
     acceptRequest(user._id, {
       onSuccess: () => {
-        dispatch(setAmountNotify(amountNotify - 1));
+        dispatch(setNumberOfNotification(numberOfNotification - 1));
         onCancel?.();
       },
     });

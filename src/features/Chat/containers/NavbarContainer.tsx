@@ -39,8 +39,7 @@ export default function NavbarContainer() {
     const dispatch = useDispatch();
     const location = useLocation();
 
-    const { user } = useSelector((state: any) => state.global);
-    const { amountNotify } = useSelector((state: any) => state.friend);
+    const { user, numberOfNotification } = useSelector((state: any) => state.global);
 
     const { conversations = [] } = useGetListConversations({ params: {} });
 
@@ -184,7 +183,7 @@ export default function NavbarContainer() {
                         to="/chat/friends"
                         label="Bạn bè"
                         active={isActive('/chat/friends')}
-                        badge={amountNotify}
+                        badge={numberOfNotification}
                         onClick={() => dispatch(setTabActive(2))}
                     >
                         <Users fill='currentColor' className="h-8 w-8" />
