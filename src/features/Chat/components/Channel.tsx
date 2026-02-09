@@ -13,7 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import { setCurrentChannel } from '@/app/chatSlice';
+import { setCurrentChannel } from '@/redux/slice/chatUiSlice';
 
 import ChannelItem from './ChannelItem';
 
@@ -33,6 +33,8 @@ function Channel({ onViewChannel, data = [], onOpenInfoBlock }: ChannelProps) {
     const {
         currentConversation,
         currentChannel,
+    } = useSelector((state: any) => state.chatUi);
+    const {
         totalChannelNotify,
     } = useSelector((state: any) => state.chat);
     const dispatch = useDispatch();

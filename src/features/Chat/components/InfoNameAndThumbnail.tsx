@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Pencil, Camera } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import ConversationAvatar from './ConversationAvatar';
 import UploadAvatar from '@/components/upload-avatar';
 import conversationApi from '@/api/conversationApi';
-import { updateNameOfConver } from '@/app/chatSlice';
+import { chatKeys } from '@/hooks/chat';
+import { patchConversation } from '@/hooks/chat/conversationCacheUtils';
 
 import {
     Dialog,
@@ -35,8 +37,8 @@ type Props = {
 };
 
 export default function InfoNameAndThumbnail({ conversation = {} }: Props) {
-    const dispatch = useDispatch();
-    const { currentConversation } = useSelector((state: any) => state.chat);
+    const queryClient = useQueryClient();
+    const { currentConversation } = useSelector((state: any) => state.chatUi || {});
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [value, setValue] = useState<string>('');
@@ -83,11 +85,12 @@ export default function InfoNameAndThumbnail({ conversation = {} }: Props) {
         try {
             if (refInitValue.current !== value && value.trim().length > 0) {
                 await conversationApi.changeNameConversation(currentConversation, value);
-                dispatch(
-                    updateNameOfConver({
-                        conversationId: currentConversation,
-                        conversationName: value,
-                    }),
+                queryClient.setQueryData(
+                    chatKeys.conversations.list({}),
+                    (old: any[] | undefined) =>
+                        patchConversation(old, currentConversation, {
+                            name: value,
+                        } as any),
                 );
             }
 

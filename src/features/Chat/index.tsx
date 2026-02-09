@@ -7,7 +7,7 @@ import { Socket } from 'socket.io-client';
 
 import conversationApi from '@/api/conversationApi';
 
-import { createKeyListConversations, useGetListConversations } from '@/hooks/conversation/useGetListConversations';
+import { useConversations, useChatSocket, chatKeys } from '@/hooks/chat';
 import { usePinnedMessages } from '@/hooks/channel/usePinnedMessages';
 import { useGetChannel } from '@/hooks/channel';
 
@@ -28,27 +28,10 @@ import SearchContainer from './containers/SearchContainer';
 
 import { setJoinChatLayout } from '@/app/globalSlice';
 import {
-  addManagers,
-  addMessage,
-  deleteManager,
-  getLastViewOfMembers,
-  getMembersConversation,
-  isDeletedFromGroup,
-  removeChannel,
-  removeConversation,
-  setCurrentChannel,
   setCurrentConversation,
-  setReactionMessage,
-  setRedoMessage,
-  setTotalChannelNotify,
-  setTypeOfConversation,
-  updateAvatarConver,
-  updateChannel,
-  updateMemberInconver,
-  updateNameChannel,
-  updateNameOfConver,
-  updateTimeForConver,
-} from '@/app/chatSlice';
+  setCurrentChannel,
+  setConversationType,
+} from '@/redux/slice/chatUiSlice';
 
 import { calculateResponsiveDrawer } from '@/utils/ui-utils';
 
@@ -63,16 +46,16 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
 
   const {
     currentConversation,
-    isLoading,
     currentChannel,
     type
-  } = useSelector((state: any) => state.chat || {});
+  } = useSelector((state: any) => state.chatUi || {});
 
   const { isJoinChatLayout, user } = useSelector(
     (state: any) => state.global || {},
   );
 
-  const { conversations = [] } = useGetListConversations({ params: {} });
+  // React Query: conversations list (replaces Redux state.chat.conversations)
+  const { conversations = [], isFetching: isLoading } = useConversations();
 
   const { data: channels = [] } = useGetChannel({
     conversationId: currentConversation,
@@ -83,6 +66,10 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
     conversationId: currentConversation,
     enabled: !!currentConversation && !currentChannel && !type
   });
+
+  // Bridge all socket events → React Query cache
+  // This replaces the massive useEffect with socket.on() dispatches
+  useChatSocket({ socket });
 
   const refCurrentConversation = useRef<string | null>(null);
   const refConversations = useRef<any[]>([]);
@@ -156,10 +143,18 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
             );
           }
         } else {
-
-          dispatch(getMembersConversation({ conversationId: tempId }) as any);
-          dispatch(setTypeOfConversation(tempId) as any);
-          dispatch(getLastViewOfMembers({ conversationId: tempId }) as any);
+          // Prefetch data via React Query instead of Redux dispatches
+          queryClient.invalidateQueries({
+            queryKey: chatKeys.members.list(tempId),
+          });
+          queryClient.invalidateQueries({
+            queryKey: chatKeys.members.lastView(tempId),
+          });
+          // Set the conversation type from the conversations list
+          const conv = conversations.find((c: any) => c._id === tempId);
+          if (conv) {
+            dispatch(setConversationType(conv.type ?? false));
+          }
         }
 
         navigate('/chat', {
@@ -176,52 +171,14 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
   // Kept logic for setTotalChannelNotify
   useEffect(() => {
     if (currentConversation) {
-      dispatch(setTotalChannelNotify(undefined));
+      // Channel notify calculation is now derived from React Query cache
+      // TODO: Compute totalChannelNotify from channels + conversations queries if needed
     }
   }, [currentConversation, channels, conversations, dispatch]);
 
+  // Typing indicators (UI-only state, kept as local state)
   useEffect(() => {
     if (!isJoinChatLayout) {
-      socket.on('delete-conversation', (conversationId: string) => {
-        const conver = refConversations.current.find(
-          (ele) => ele._id === conversationId,
-        );
-        if (conver?.leaderId !== user?._id) {
-          toast.info(`Nhóm ${conver?.name} đã giải tán`);
-        }
-        dispatch(removeConversation(conversationId));
-        queryClient.setQueryData(createKeyListConversations({}), (old: any[]) =>
-          old ? old.filter((c) => c._id !== conversationId) : []
-        );
-      });
-
-      socket.on('delete-message', ({ conversationId, channelId, id }: any) => {
-        handleDeleteMessage(conversationId, channelId, id);
-      });
-
-      socket.on('added-group', (conversationId: string) => {
-        queryClient.invalidateQueries({
-          queryKey: createKeyListConversations({
-            conversationId
-          })
-        });
-      });
-
-      socket.on(
-        'add-reaction',
-        ({ conversationId, channelId, messageId, user: u, type }: any) => {
-          if (
-            refCurrentConversation.current === conversationId &&
-            refCurrentChannel.current === channelId
-          ) {
-            dispatch(setReactionMessage({ messageId, user: u, type }));
-          }
-          if (!channelId && refCurrentConversation.current === conversationId) {
-            dispatch(setReactionMessage({ messageId, user: u, type }));
-          }
-        },
-      );
-
       socket.on('typing', (conversationId: string, userTyping: any) => {
         if (conversationId === refCurrentConversation.current) {
           setUsersTyping((prev) => {
@@ -241,125 +198,13 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
           );
         }
       });
-
-      socket.on('deleted-group', (conversationId: string) => {
-        const conversation = refConversations.current.find(
-          (ele) => ele._id === conversationId,
-        );
-        toast.info(`Bạn đã bị xóa khỏi nhóm ${conversation?.name}`);
-        if (conversationId === refCurrentConversation.current) {
-          dispatch(setCurrentConversation(null));
-        }
-        dispatch(isDeletedFromGroup(conversationId));
-        socket.emit('leave-conversation', conversationId);
-        queryClient.setQueryData(createKeyListConversations({}), (old: any[]) =>
-          old ? old.filter((c) => c._id !== conversationId) : []
-        );
-      });
-
-      socket.on('action-pin-message', (conversationId: string) => {
-        if (conversationId === refCurrentConversation.current) {
-
-          queryClient.invalidateQueries({ queryKey: ['pinnedMessages', { conversationId }] });
-        }
-      });
-
-      socket.on(
-        'rename-conversation',
-        (conversationId: string, conversationName: string, message: any) => {
-          dispatch(updateNameOfConver({ conversationId, conversationName }));
-          dispatch(addMessage(message));
-          queryClient.invalidateQueries({ queryKey: createKeyListConversations({}) });
-        },
-      );
-
-      socket.on(
-        'user-last-view',
-        ({ conversationId, userId, lastView, channelId }: any) => {
-          if (userId !== user?._id) {
-            if (channelId) {
-              queryClient.invalidateQueries({ queryKey: ['fetchLastViewChannel', { channelId }] });
-            } else {
-              queryClient.invalidateQueries({ queryKey: ['fetchLastViewOfMembers', { conversationId }] });
-            }
-          }
-        },
-      );
-
-      socket.on('update-member', async (conversationId: string) => {
-        if (conversationId === refCurrentConversation.current) {
-          await dispatch(getLastViewOfMembers({ conversationId }) as any);
-          const newMember = await conversationApi.getMemberInConversation(
-            refCurrentConversation.current,
-          );
-          dispatch(updateMemberInconver({ conversationId, newMember }));
-        }
-      });
-
-      socket.on(
-        'new-channel',
-        ({ _id, name, conversationId, createdAt }: any) => {
-          if (conversationId === refCurrentConversation.current) {
-            dispatch(updateChannel({ _id, name, createdAt }));
-          }
-        },
-      );
-
-      socket.on(
-        'delete-channel',
-        async ({ conversationId, channelId }: any) => {
-          const actionAfterDelete = async () => {
-            await dispatch(setCurrentChannel(''));
-
-            dispatch(
-              getLastViewOfMembers({
-                conversationId: refCurrentConversation.current,
-              }) as any,
-            );
-          };
-          await actionAfterDelete();
-
-          if (refCurrentConversation.current === conversationId) {
-            dispatch(removeChannel({ channelId }));
-          }
-        },
-      );
-
-      socket.on('update-channel', ({ _id, name, conversationId }: any) => {
-        if (refCurrentConversation.current === conversationId) {
-          dispatch(updateNameChannel({ channelId: _id, name }));
-        }
-      });
-
-      socket.on(
-        'update-avatar-conversation',
-        (conversationId: string, conversationAvatar: string, message: any) => {
-          if (refCurrentConversation.current === conversationId) {
-            dispatch(
-              updateAvatarConver({ conversationId, conversationAvatar }),
-            );
-          }
-        },
-      );
-
-      socket.on(
-        'update-vote-message',
-        (conversationId: string, voteMessage: any) => {
-          if (refCurrentConversation.current === conversationId) {
-            //TODO: Update vote message
-          }
-        },
-      );
-
-      socket.on('add-managers', ({ conversationId, managerIds }: any) => {
-        dispatch(addManagers({ conversationId, managerIds }));
-      });
-
-      socket.on('delete-managers', ({ conversationId, managerIds }: any) => {
-        dispatch(deleteManager({ conversationId, managerIds }));
-      });
     }
     dispatch(setJoinChatLayout(true));
+
+    return () => {
+      socket.off('typing');
+      socket.off('not-typing');
+    };
   }, [socket, dispatch, isJoinChatLayout, user]);
 
   const emitUserOnline = (currentConver: string | null) => {
@@ -373,8 +218,17 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
           'get-user-online',
           userId,
           ({ isOnline, lastLogin }: any) => {
-            dispatch(
-              updateTimeForConver({ id: currentConver, isOnline, lastLogin }),
+            // Update conversation online status directly in React Query cache
+            queryClient.setQueryData(
+              chatKeys.conversations.list({}),
+              (old: any[] | undefined) =>
+                old
+                  ? old.map((c: any) =>
+                    c._id === currentConver
+                      ? { ...c, isOnline, lastLogin }
+                      : c,
+                  )
+                  : [],
             );
           },
         );
@@ -395,22 +249,6 @@ function Chat({ socket, hasNewMessage }: { socket: Socket; hasNewMessage?: boole
       clearInterval(intervalCall);
     };
   }, [currentConversation, conversations]);
-
-  const handleDeleteMessage = (
-    conversationId: string,
-    channelId: string | null,
-    id: string,
-  ) => {
-    if (
-      refCurrentConversation.current === conversationId &&
-      refCurrentChannel.current === channelId
-    ) {
-      dispatch(setRedoMessage({ id }));
-    }
-    if (!channelId && refCurrentConversation.current === conversationId) {
-      dispatch(setRedoMessage({ id, conversationId }));
-    }
-  };
 
   const handleScrollWhenSent = (value: string) => {
     setScrollId(value);

@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { setCurrentConversation } from '@/app/chatSlice';
+import { setCurrentConversation } from '@/redux/slice/chatUiSlice';
 
 const useRedirectToChatBox = (chatId) => {
   const navigate = useNavigate();

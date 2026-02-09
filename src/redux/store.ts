@@ -6,8 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(socketMiddleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(),
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

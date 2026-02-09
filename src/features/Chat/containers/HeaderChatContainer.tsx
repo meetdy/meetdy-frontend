@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import HeaderOptional from '@/features/Chat/containers/HeaderOptional';
 import { RootState } from '@/redux/store';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 
 type Props = {
     onPopUpInfo?: () => void;
@@ -13,11 +14,12 @@ export default function HeaderChatContainer({
     onOpenDrawer,
 }: Props) {
     const [detailConver, setDetailConver] = useState<any>({});
+
+    const { conversations } = useGetListConversations({ params: {} });
+
     const {
         currentConversation,
-        conversations,
-        memberInConversation = [],
-    } = useSelector((state: RootState) => state.chat);
+    } = useSelector((state: RootState) => state.chatUi);
 
     useEffect(() => {
         if (currentConversation) {
@@ -35,7 +37,7 @@ export default function HeaderChatContainer({
     return (
         <HeaderOptional
             avatar={detailConver.avatar}
-            totalMembers={memberInConversation?.length ?? 0}
+            totalMembers={detailConver?.memberInConversation?.length ?? 0}
             name={detailConver.name}
             type={detailConver.type}
             isLogin={detailConver?.isOnline}

@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Send } from 'lucide-react';
 import { useSelector } from 'react-redux';
 
-import messageApi from '@/api/messageApi';
+import { useConversations, useSendMessage } from '@/hooks/chat';
+import { useGetMemberInConversation } from '@/hooks/conversation/useGetMemberInConversation';
 
 import NavigationChatBox from '@/features/Chat/components/NavigationChatBox';
 import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
@@ -44,11 +45,21 @@ export default function ChatInputContainer({
 
     const {
         currentConversation,
-        conversations,
         currentChannel,
-        memberInConversation,
-    } = useSelector((state: RootState) => state.chat);
+    } = useSelector((state: RootState) => state.chatUi);
     const { user } = useSelector((state: RootState) => state.global);
+
+    // React Query: conversations list (replaces Redux state.chat.conversations)
+    const { conversations } = useConversations();
+
+    // React Query: members in conversation (replaces Redux state.chat.memberInConversation)
+    const { member: memberInConversation = [] } = useGetMemberInConversation({
+        id: currentConversation,
+        enabled: !!currentConversation,
+    });
+
+    // React Query: send message mutation with optimistic updates
+    const sendMessageMutation = useSendMessage();
 
     const [showTextFormat, setShowTextFormat] = useState(false);
     const [isShowLike, setShowLike] = useState(true);
@@ -140,52 +151,38 @@ export default function ChatInputContainer({
     async function sendMessage(value: string, type: 'TEXT' | 'HTML') {
         const listId = mentionSelect.map((ele) => ele._id);
 
-        const newMessage: any = {
+        const newMessage = {
             content: value,
             type,
             conversationId: currentConversation,
             tags: listId,
+            replyMessageId: replyMessage?._id,
+            channelId: currentChannel || undefined,
         };
 
-        if (replyMessage && Object.keys(replyMessage || {}).length > 0) {
-            newMessage.replyMessageId = replyMessage._id;
-        }
-
-        if (currentChannel) {
-            newMessage.channelId = currentChannel;
-        }
-
-        const sendViaSocket = async () => {
-            if (!socket?.connected) {
-                throw new Error('Socket not connected');
-            }
-
-            const emitter = socket.timeout ? socket.timeout(5000) : socket;
-            const response = await emitter.emitWithAck('send-message', newMessage);
-
-            if (response?.error) {
-                throw new Error(response.error);
-            }
-
-            return response;
-        };
-
-        try {
-            const res = await sendViaSocket();
-            if (res?._id) {
-                handleOnScroll(res._id);
-            }
-        } catch (err) {
-            console.warn('Send via socket failed, fallback to REST', err);
-            // Fallback to REST in case socket send fails
-            try {
-                const res = await messageApi.sendTextMessage(newMessage);
+        // Use the optimistic mutation – temp message appears immediately
+        sendMessageMutation.mutate(newMessage, {
+            onSuccess: (res) => {
                 if (res?._id) {
                     handleOnScroll(res._id);
                 }
-            } catch (error_) {
-                // Optionally log the error; UI feedback handled by socket listeners elsewhere
-                console.error('Send message failed via socket and REST', error_);
+            },
+        });
+
+        // Also try socket for real-time delivery to other users
+        if (socket?.connected) {
+            try {
+                const emitter = socket.timeout ? socket.timeout(5000) : socket;
+                await emitter.emitWithAck('send-message', {
+                    content: value,
+                    type,
+                    conversationId: currentConversation,
+                    tags: listId,
+                    replyMessageId: replyMessage?._id,
+                    channelId: currentChannel || undefined,
+                });
+            } catch {
+                // Socket delivery is best-effort; REST via mutation handles persistence
             }
         }
 

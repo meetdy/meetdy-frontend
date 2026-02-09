@@ -28,7 +28,10 @@ interface InfoMemberProps {
 
 function InfoMember({ viewMemberClick, quantity }: InfoMemberProps) {
     const [isDrop, setIsDrop] = useState(true);
-    const { currentConversation, conversations } = useSelector(
+    const { currentConversation } = useSelector(
+        (state: any) => state.chatUi,
+    );
+    const { conversations } = useSelector(
         (state: any) => state.chat,
     );
     const [status, setStatus] = useState(false);

@@ -10,7 +10,7 @@ import ConversationSingle from '@/features/Chat/components/ConversationSingle';
 
 import { useGetListClassify } from '@/hooks/classify';
 import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
-import { setCurrentChannel, setCurrentConversation } from '@/app/chatSlice';
+import { setCurrentChannel, setCurrentConversation } from '@/redux/slice/chatUiSlice';
 import type { RootState, AppDispatch } from '@/redux/store';
 import { createQueryKey } from '@/queries/core';
 

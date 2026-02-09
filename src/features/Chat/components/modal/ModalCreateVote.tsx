@@ -22,7 +22,7 @@ interface ModalCreateVoteProps {
 }
 
 function ModalCreateVote({ visible = false, onCancel }: ModalCreateVoteProps) {
-  const { currentConversation } = useSelector((state: any) => state.chat);
+  const { currentConversation } = useSelector((state: any) => state.chatUi);
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '']);
   const [errors, setErrors] = useState<{ question?: string; options?: string[] }>({});

@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import PersonalAvatar from '../PersonalAvatar';
 import {
   Dialog,
@@ -14,14 +13,11 @@ interface ModalDetailVoteProps {
 }
 
 function ModalDetailVote({ visible, onCancel, data = [] }: ModalDetailVoteProps) {
-  const { memberInConversation } = useSelector((state: any) => state.chat);
 
-  const handleCancel = () => {
-    onCancel?.();
-  };
+  const memberInConversation = [] // TODO: get from store
 
   return (
-    <Dialog open={visible} onOpenChange={(open) => !open && handleCancel()}>
+    <Dialog open={visible} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Chi tiết bình chọn</DialogTitle>
@@ -36,7 +32,7 @@ function ModalDetailVote({ visible, onCancel, data = [] }: ModalDetailVoteProps)
                   </div>
                   <div className="space-y-1">
                     {ele.userIds.map((userId: string, idx: number) => {
-                      const user = memberInConversation.find(
+                      const user = memberInConversation?.find(
                         (member: any) => member._id === userId,
                       );
 

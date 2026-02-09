@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import { useDispatch, useSelector } from 'react-redux';
-import { useInfiniteListMessages } from '@/hooks/message/useInfiniteListMessages';
+import { useSelector } from 'react-redux';
+import { useMessages } from '@/hooks/chat/useMessages';
 import { useGetLastViewOfMembers } from '@/hooks/conversation/useGetLastViewOfMembers';
-import { useGetLastViewChannel } from '@/hooks/channel/useGetLastViewChannel';
-import { useGetMessageInChannel } from '@/hooks/channel/useGetMessageInChannel';
 import ModalShareMessage from '@/features/Chat/components/modal/ModalShareMessage';
 import UserMessage from '@/features/Chat/components/chat-bubble/UserMessage';
-import type { RootState, AppDispatch } from '@/redux/store';
+import type { RootState } from '@/redux/store';
 import type { Scrollbars as ScrollbarsType } from 'react-custom-scrollbars-2';
 import DividerCustom from '../components/DividerCustom';
 
@@ -30,43 +28,38 @@ export default function BodyChatContainer({
   onReply,
   onMention,
 }: Props) {
-  const dispatch = useDispatch<AppDispatch>();
-
   const scrollbars = useRef<ScrollbarsType | null>(null);
   const previousHeight = useRef<number | null>(null);
   const tempPosition = useRef<number | null>(null);
 
   const {
     currentConversation,
-    lastViewOfMember = [],
     currentChannel,
-  } = useSelector((state: RootState) => state.chat);
+  } = useSelector((state: RootState) => state.chatUi);
 
   const { user } = useSelector((state: RootState) => state.global);
   const [position, setPosition] = useState<number>(1);
   const [visibleModalShare, setVisibleModalShare] = useState<boolean>(false);
   const [idMessageShare, setIdMessageShare] = useState<string>('');
 
-  // Use new hook for infinite scrolling
+  // React Query: infinite message list (replaces Redux state.chat.messages)
   const {
-    data,
+    messages,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isLoading: isLoadingMessages
-  } = useInfiniteListMessages({
+  } = useMessages({
     conversationId: currentConversation,
-    channelId: currentChannel,
+    channelId: currentChannel || undefined,
     size: 20,
     enabled: !!currentConversation || !!currentChannel,
   });
 
-  // Reverse pages order so oldest messages come first (for infinite scroll upwards)
-  // Then reverse each page's data if API returns newest first
-  const messages = data?.pages
-    .slice()
-    .reverse()
-    .flatMap((page) => page.data.slice()) || [];
+  // React Query: last view of members (replaces Redux state.chat.lastViewOfMember)
+  const { lastViewOfMembers: lastViewOfMember = [] } = useGetLastViewOfMembers({
+    conversationId: currentConversation,
+    enabled: !!currentConversation,
+  });
 
   const handleOpenModalShare = (_id: string) => {
     setVisibleModalShare(true);

@@ -19,6 +19,7 @@ import InfoNameAndThumbnail from '@/features/Chat/components/InfoNameAndThumbnai
 import UserCard from '@/components/user-card';
 
 import ChatHeader, { HeaderIconButton } from '../components/ChatHeader';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 
 type Props = {
     onViewChannel?: (id?: string) => void;
@@ -31,12 +32,17 @@ function InfoContainer({ onViewChannel, onClose }: Props) {
     const [isUserCardVisible, setUserCardVisible] = useState(false);
     const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
+    const { conversations } = useGetListConversations({ params: {} });
+
     const {
-        memberInConversation,
         type,
         currentConversation,
-        conversations,
-    } = useSelector((state: any) => state.chat);
+    } = useSelector((state: any) => state.chatUi);
+
+    // const {
+    //     memberInConversation,
+    //     conversations,
+    // } = useSelector((state: any) => state.chat);
 
     const currentConver = useMemo(
         () => conversations.find((c) => c._id === currentConversation) ?? null,
@@ -105,7 +111,7 @@ function InfoContainer({ onViewChannel, onClose }: Props) {
                                 <>
                                     <InfoMember
                                         viewMemberClick={goMembers}
-                                        quantity={memberInConversation?.length ?? 0}
+                                        quantity={[]?.length ?? 0}
                                     />
                                     <Channel onViewChannel={onViewChannel} data={channels} />
                                 </>
@@ -140,7 +146,7 @@ function InfoContainer({ onViewChannel, onClose }: Props) {
             {navState.view === 1 && (
                 <InfoFriendSearch
                     onBack={goInfo}
-                    members={memberInConversation}
+                    members={[]}
                     onChoseUser={handleChoseUser}
                 />
             )}

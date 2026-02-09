@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
   Dialog,
   DialogContent,
@@ -15,6 +14,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Pencil, AlertCircle, Search } from 'lucide-react';
 import PersonalAvatar from '../PersonalAvatar';
 import ItemsSelected from '../ItemsSelected';
+import { useGetFriends } from '@/hooks/friend';
 
 type Props = {
   isVisible: boolean;
@@ -35,7 +35,7 @@ export default function ModalCreateGroup({
   const [nameGroup, setNameGroup] = useState('');
   const [frInput, setFrInput] = useState('');
 
-  const { friends } = useSelector((state: any) => state.chat);
+  const { data: friends = [] } = useGetFriends();
 
   useEffect(() => {
     if (!isVisible) {

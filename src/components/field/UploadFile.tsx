@@ -13,7 +13,7 @@ interface UploadFileProps {
 const UploadFile = ({ typeOfFile = 'file', children }: UploadFileProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { currentConversation, currentChannel } = useSelector(
-    (state: any) => state.chat,
+    (state: any) => state.chatUi,
   );
 
   const handleClick = () => {

@@ -48,7 +48,7 @@ export function useChannelChat({
 }: UseChannelChatOptions): UseChannelChatReturn {
   const queryClient = useQueryClient();
   const { user } = useAppSelector((state) => state.global);
-  const { usersTyping } = useAppSelector((state) => state.chat);
+  const { usersTyping } = useAppSelector((state) => state.chatUi);
 
   const [pendingMessages, setPendingMessages] = useState<ChannelMessage[]>([]);
   const pendingFilesRef = useRef<Map<string, File>>(new Map());
@@ -265,9 +265,7 @@ export function useChannelChat({
   return {
     messages: [
       ...pendingMessages,
-      ...(data
-        ? data.pages.flatMap((page) => page.messages as any[])
-        : []),
+      ...(data ? data.pages.flatMap((page) => page.messages as any[]) : []),
     ],
     isLoading,
     isLoadingMore: isFetchingNextPage,

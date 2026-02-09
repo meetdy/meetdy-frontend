@@ -30,7 +30,10 @@ interface InfoMediaSearchProps {
 
 function InfoMediaSearch({ onBack, tabPane }: InfoMediaSearchProps) {
     const [activeKey, setActiveKey] = useState(tabPane.toString());
-    const { memberInConversation, currentConversation } = useSelector(
+    const { currentConversation } = useSelector(
+        (state: any) => state.chatUi,
+    );
+    const { memberInConversation } = useSelector(
         (state: any) => state.chat,
     );
     const [medias, setMedias] = useState<any[]>([]);

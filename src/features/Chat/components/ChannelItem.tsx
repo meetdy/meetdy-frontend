@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Hash, Trash, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { setCurrentChannel } from '@/app/chatSlice';
+import { setCurrentChannel } from '@/redux/slice/chatUiSlice';
 import channelApi from '@/api/channelApi';
 import ModalChangeNameChannel from './modal/ModalChangeNameChannel';
 

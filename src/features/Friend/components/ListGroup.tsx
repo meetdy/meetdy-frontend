@@ -11,7 +11,7 @@ import { createKeyListConversations } from '@/hooks/conversation/useGetListConve
 import FriendListItem, { type FriendData } from './FriendListItem';
 import { Badge } from '@/components/ui/badge';
 import { getClassifyOfObject } from '@/utils';
-import { setCurrentConversation } from '@/app/chatSlice';
+import { setCurrentConversation } from '@/redux/slice/chatUiSlice';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 import {

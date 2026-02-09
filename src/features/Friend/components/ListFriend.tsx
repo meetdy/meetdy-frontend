@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useQueryClient } from '@tanstack/react-query';
 import { useDeleteFriend } from '@/hooks/friend';
 
 import userApi from '@/api/userApi';
@@ -22,9 +23,9 @@ import {
 import { Delete, Info } from 'lucide-react';
 
 import {
-  setConversations,
   setCurrentConversation,
-} from '@/app/chatSlice';
+} from '@/redux/slice/chatUiSlice';
+import { chatKeys } from '@/hooks/chat';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 type Friend = {
@@ -42,6 +43,7 @@ type Props = {
 function ListFriend({ data = [] }: Props) {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
+  const queryClient = useQueryClient();
   const { mutate: deleteFriend } = useDeleteFriend();
   const [deleteConfirm, setDeleteConfirm] = useState<Friend | null>(null);
 
@@ -51,7 +53,9 @@ function ListFriend({ data = [] }: Props) {
 
     if (!isExists) {
       const conver = await conversationApi.getConversationById(friendData._id!);
-      dispatch(setConversations(conver));
+      queryClient.setQueryData(chatKeys.conversations.list({}), (old: any[] | undefined) =>
+        old ? [conver, ...old] : [conver],
+      );
     }
 
     fetchListMessagesKey({ conversationId: _id, size: 10 });

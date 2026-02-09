@@ -4,7 +4,7 @@ import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import { Empty } from '@/components/ui/empty';
 import {
   setCurrentConversation,
-} from '@/app/chatSlice';
+} from '@/redux/slice/chatUiSlice';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
 function ConverPersonalSearch({ data = [] }: any) {

@@ -20,7 +20,9 @@ import ModalChangePinMessage from '@/components/modal-change-pin-message';
 import PersonalAvatar from '@/features/Chat/components/PersonalAvatar';
 import { checkLeader } from '@/utils/feature-utils';
 
-import { deleteMessageClient } from '@/app/chatSlice';
+import { chatKeys } from '@/hooks/chat';
+import { removeMessageById } from '@/hooks/chat/messageCacheUtils';
+import type { MessagesCache } from '@/hooks/chat/messageCacheUtils';
 import { useMessageReactions } from '../../hooks/useMessageReactions';
 import type { UserMessageProps, ChatMessage } from '../../types/message.types';
 
@@ -50,10 +52,11 @@ import { cn } from '@/lib/utils';
 type RootState = {
     chat: {
         messages: ChatMessage[];
-        currentConversation: string;
         conversations: Array<{ _id: string; type: unknown }>;
-        pinMessages: unknown[];
-        currentChannel: unknown;
+    };
+    chatUi: {
+        currentConversation: string;
+        currentChannel: string;
     };
     global: {
         user: { _id: string };
@@ -69,8 +72,6 @@ function UserMessage({
     onReply,
     onMention,
 }: UserMessageProps) {
-    const dispatch = useDispatch<Dispatch>();
-
     const global = useSelector((state: RootState) => state.global);
 
     const [isLeader, setIsLeader] = useState(false);
@@ -91,11 +92,9 @@ function UserMessage({
     const { name, avatar, avatarColor } = user;
 
     const {
-        messages,
         currentConversation,
-        conversations,
         currentChannel,
-    } = useSelector((state: RootState) => state.chat);
+    } = useSelector((state: RootState) => state.chatUi);
 
     const queryClient = useQueryClient();
 
@@ -120,16 +119,16 @@ function UserMessage({
         [type],
     );
 
-    const isGroup = useMemo(() => {
-        const conversation = conversations.find(
-            (c) => c._id === currentConversation,
-        );
-        return Boolean(conversation?.type);
-    }, [conversations, currentConversation]);
+    // const isGroup = useMemo(() => {
+    //     const conversation = conversations.find(
+    //         (c) => c._id === currentConversation,
+    //     );
+    //     return Boolean(conversation?.type);
+    // }, [conversations, currentConversation]);
 
-    useEffect(() => {
-        setIsLeader(checkLeader(user._id, conversations, currentConversation));
-    }, [messages, user._id, conversations, currentConversation]);
+    // useEffect(() => {
+    //     setIsLeader(checkLeader(user._id, conversations, currentConversation));
+    // }, [messages, user._id, conversations, currentConversation]);
 
     const handleOnCloseModal = useCallback(() => {
         setVisibleModal(false);
@@ -154,15 +153,22 @@ function UserMessage({
 
     const handleDeleteMessageClientSide = useCallback(async () => {
         await messageApi.deleteMessageClientSide(_id);
-        dispatch(deleteMessageClient(_id));
-    }, [_id, dispatch]);
+        // Remove from React Query cache
+        const key = chatKeys.messages.infinite(
+            currentConversation,
+            currentChannel ? String(currentChannel) : undefined,
+        );
+        queryClient.setQueryData<MessagesCache>(key, (old) =>
+            removeMessageById(old, _id),
+        );
+    }, [_id, queryClient, currentConversation, currentChannel]);
 
-    const setMarginTopAndBottom = useCallback((id: string) => {
-        const index = messages.findIndex((m) => m._id === id);
-        if (index === 0) return 'top';
-        if (index === messages.length - 1) return 'bottom';
-        return '';
-    }, [messages]);
+    // const setMarginTopAndBottom = useCallback((id: string) => {
+    //     const index = messages.findIndex((m) => m._id === id);
+    //     if (index === 0) return 'top';
+    //     if (index === messages.length - 1) return 'bottom';
+    //     return '';
+    // }, [messages]);
 
     const handleOpenModalShare = useCallback(() => {
         onOpenModalShare?.(_id);
@@ -318,7 +324,7 @@ function UserMessage({
 
             <div
                 className={cn(
-                    setMarginTopAndBottom(_id),
+                    // setMarginTopAndBottom(_id),
                     'group relative transition-all duration-150',
                     type === 'VOTE' && 'hidden',
                 )}
@@ -452,7 +458,7 @@ function UserMessage({
                                             align={isMyMessage ? 'end' : 'start'}
                                             className="min-w-48 rounded-md shadow-lg"
                                         >
-                                            {isGroup && !currentChannel && type !== 'STICKER' ? (
+                                            {/* {isGroup && !currentChannel && type !== 'STICKER' ? (
                                                 <DropdownMenuItem
                                                     onClick={() => void handlePinMessage()}
                                                     className="cursor-pointer gap-3 py-2.5"
@@ -460,7 +466,7 @@ function UserMessage({
                                                     <Pin className="h-4 w-4" />
                                                     <span>Ghim tin nhắn</span>
                                                 </DropdownMenuItem>
-                                            ) : null}
+                                            ) : null} */}
 
                                             {isMyMessage ? (
                                                 <DropdownMenuItem

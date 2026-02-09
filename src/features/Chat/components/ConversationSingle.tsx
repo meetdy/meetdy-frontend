@@ -27,7 +27,7 @@ const ConversationSingle = React.memo(({ conversation, onClick }: Props) => {
 
     const { data: classifies = [] } = useGetListClassify()
     const currentConversation = useSelector(
-        (state: any) => state.chat.currentConversation
+        (state: any) => state.chatUi.currentConversation
     )
 
     const isActive = currentConversation === _id

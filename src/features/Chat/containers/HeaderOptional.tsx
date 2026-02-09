@@ -17,7 +17,7 @@ import {
 import {
     setCurrentChannel,
     setCurrentConversation,
-} from '@/app/chatSlice';
+} from '@/redux/slice/chatUiSlice';
 import useWindowDimensions from '@/hooks/utils/useWindowDimensions';
 import { useCreateGroup } from '@/hooks/conversation/useCreateGroup';
 import { useAddMembersToConversation } from '@/hooks/conversation/useAddMembersToConversation';
@@ -34,6 +34,7 @@ import { AppDispatch, RootState } from '@/redux/store';
 import ChatHeader, { HeaderIconButton } from '../components/ChatHeader';
 import ConversationAvatar from '../components/ConversationAvatar';
 import ModalAddMemberIntoChat from '../components/modal/ModalAddMemberIntoChat';
+import { useGetChannel } from '@/hooks/channel';
 
 type Props = {
     avatar?: string | null;
@@ -60,9 +61,10 @@ const HeaderOptional: React.FC<Props> = (props) => {
         onOpenDrawer,
     } = props;
 
-    const { currentConversation, currentChannel, channels } = useSelector(
-        (state: RootState) => state.chat,
+    const { currentConversation, currentChannel } = useSelector(
+        (state: RootState) => state.chatUi,
     );
+    const { data: channels } = useGetChannel({ conversationId: currentConversation });
 
     const dispatch = useDispatch<AppDispatch>();
     const { width } = useWindowDimensions();
@@ -154,7 +156,7 @@ const HeaderOptional: React.FC<Props> = (props) => {
     };
 
     const currentChannelName =
-        channels.find((ele) => ele._id === currentChannel)?.name ?? '';
+        channels?.find((ele) => ele._id === currentChannel)?.name ?? '';
 
     return (
         <div>

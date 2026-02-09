@@ -2,13 +2,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import type { AppDispatch } from '@/redux/store';
 
 import conversationApi from '@/api/conversationApi';
-import {
-  setConversations,
-  setCurrentConversation,
-} from '@/app/chatSlice';
+import { setCurrentConversation } from '@/redux/slice/chatUiSlice';
+import { chatKeys } from '@/hooks/chat';
 import { setNumberOfNotification } from '@/app/globalSlice';
 
 import timeUtils from '@/utils/time-utils';
@@ -52,6 +51,7 @@ export default function UserCard({
 }: UserCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { numberOfNotification } = useSelector((state: any) => state.global);
 
@@ -75,7 +75,9 @@ export default function UserCard({
 
     if (!isExists) {
       const conver = await conversationApi.getConversationById(_id);
-      dispatch(setConversations(conver));
+      queryClient.setQueryData(chatKeys.conversations.list({}), (old: any[] | undefined) =>
+        old ? [conver, ...old] : [conver],
+      );
     }
 
     fetchListMessagesKey({ conversationId: _id, size: 10 });

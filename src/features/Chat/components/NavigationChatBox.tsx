@@ -31,6 +31,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 
 type Props = {
   onClickTextFormat?: () => void;
@@ -48,9 +49,11 @@ export default function NavigationChatBox({
   onOpenInfoBlock,
 }: Props) {
   const [visiblePop, setVisiblePop] = useState(false);
-  const { currentConversation, conversations } = useSelector(
-    (state: RootState) => state.chat,
+  const { currentConversation } = useSelector(
+    (state: RootState) => state.chatUi,
   );
+  const { conversations } = useGetListConversations({ params: {} });
+
   const [isVisibleVote, setIsVisibleVote] = useState(false);
   const [isTextFormatActive, setIsTextFormatActive] = useState(false);
 

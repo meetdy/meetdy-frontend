@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, LogOut, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 
 import conversationApi from '@/api/conversationApi';
-import { leaveGroup } from '../../../app/chatSlice';
+import { chatKeys } from '@/hooks/chat';
+import { removeConversation as removeConvFromList } from '@/hooks/chat/conversationCacheUtils';
+import { setCurrentConversation } from '@/redux/slice/chatUiSlice';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,12 +19,17 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { socket } from '@/lib/socket';
+import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 
 function AnotherSetting() {
   const [isDrop, setIsDrop] = useState(true);
-  const { currentConversation, conversations } = useSelector(
-    (state: any) => state.chat,
+  const queryClient = useQueryClient();
+  const { currentConversation } = useSelector(
+    (state: any) => state.chatUi,
   );
+
+  const { conversations } = useGetListConversations({ params: {} });
+
   const { user } = useSelector((state: any) => state.global);
   const dispatch = useDispatch();
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
@@ -36,7 +44,12 @@ function AnotherSetting() {
       await conversationApi.leaveGroup(currentConversation);
       toast.success('Rời nhóm thành công');
       socket.emit('leave-conversation', currentConversation);
-      dispatch(leaveGroup(currentConversation));
+      // Remove from React Query cache + reset current conversation
+      queryClient.setQueryData(
+        chatKeys.conversations.list({}),
+        (old: any[] | undefined) => removeConvFromList(old, currentConversation),
+      );
+      dispatch(setCurrentConversation(''));
     } catch (error) {
       toast.error('Rời nhóm thất bại');
     }
@@ -55,7 +68,7 @@ function AnotherSetting() {
   };
 
   const convo = conversations.find((ele: any) => ele._id === currentConversation);
-  const isLeader = convo?.leaderId === user._id;
+  const isLeader = convo?.managerIds?.includes(user._id);
 
   return (
     <div className="border-b py-3">

@@ -7,8 +7,7 @@ import { persistOptions, PersistQueryClientProvider, queryClient } from "@/queri
 
 import App from './routes';
 
-import legacyStore from '@/app/store';
-// import store from '@/redux/store';
+import store from '@/redux/store';
 
 const container = document.getElementById('root');
 if (!container) throw new Error('Root element not found');
@@ -17,7 +16,7 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <Provider store={legacyStore}>
+    <Provider store={store}>
       <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
         <App />
       </PersistQueryClientProvider>

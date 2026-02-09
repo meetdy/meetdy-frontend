@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Hash } from 'lucide-react';
 
 import ChannelItem from './ChannelItem';
-import { setCurrentChannel } from '@/app/chatSlice';
+import { setCurrentChannel } from '@/redux/slice/chatUiSlice';
 import { useGetListConversations } from '@/hooks/conversation/useGetListConversations';
 import { fetchListMessagesKey } from '@/hooks/message/useInfiniteListMessages';
 
@@ -12,7 +12,7 @@ interface ListChannelProps {
 
 function ListChannel({ data = [] }: ListChannelProps) {
     const { currentChannel, currentConversation } = useSelector(
-        (state: any) => state.chat,
+        (state: any) => state.chatUi,
     );
     const { conversations } = useGetListConversations({ params: {} });
     const dispatch = useDispatch();
